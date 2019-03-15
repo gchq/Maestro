@@ -28,11 +28,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import uk.gov.gchq.maestro.exception.SerialisationException;
 import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.operation.DefaultOperation;
+import uk.gov.gchq.maestro.operation.DoGetOperation;
+import uk.gov.gchq.maestro.util.Config;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Objects.nonNull;
@@ -43,13 +44,15 @@ public class Executor {
     public static final String OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S = "DoGetOperation %s is not supported by the %s.";
     public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
-    private final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap;
-    private final Map<String, String> config;
+    private Config config;
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
 
+    // This is just as a note to remind that this must be removed and added
+    // as a util
+    //private JobTracker jobTracker;
+
     public Executor() {
-        this.operationHandlerMap = new HashMap<>();
-        this.config = new HashMap<>();
+        this.config = new Config();
     }
 
     public static Executor deserialise(final byte[] jsonBytes) {
@@ -78,11 +81,7 @@ public class Executor {
                     @JsonProperty("config") final Map<String, String> config) {
         this();
         if (nonNull(operationHandlerMap) && !operationHandlerMap.isEmpty()) {
-            this.operationHandlerMap.putAll(operationHandlerMap);
-        }
-
-        if (nonNull(config) && !config.isEmpty()) {
-            this.config.putAll(config);
+            this.config.getOperationHandlers().putAll(operationHandlerMap);
         }
     }
 
@@ -112,16 +111,16 @@ public class Executor {
 
     @JsonIgnore
     private <O, Op extends DoGetOperation<O>> OperationHandler<O, Op> getHandler(final Op operation) {
-        return operationHandlerMap.get(operation.getClass());
+        return config.getOperationHandler(operation);
     }
 
     public Map<Class<? extends DoGetOperation>, OperationHandler> getOperationHandlerMap() {
-        return ImmutableMap.copyOf(operationHandlerMap);
+        return ImmutableMap.copyOf(config.getOperationHandlers());
     }
 
     public Executor operationHandlerMap(final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap) {
-        this.operationHandlerMap.clear();
-        this.operationHandlerMap.putAll(operationHandlerMap);
+        this.config.getOperationHandlers().clear();
+        this.config.getOperationHandlers().putAll(operationHandlerMap);
         return this;
     }
 
@@ -138,14 +137,14 @@ public class Executor {
         final Executor executor = (Executor) o;
 
         return new EqualsBuilder()
-                .append(operationHandlerMap, executor.operationHandlerMap)
+                .append(config, executor.config)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(operationHandlerMap)
+                .append(config)
                 .toHashCode();
     }
 
@@ -154,15 +153,8 @@ public class Executor {
         return this.getClass().getCanonicalName();
     }
 
-    @JsonGetter("config")
-    public Map<String, String> getConfig() {
-        return ImmutableMap.copyOf(config);
-    }
-
-    public Executor config(final Map<String, String> config) {
-        this.config.clear();
-        this.config.putAll(config);
+    public Executor config(final Config config) {
+        this.config = config;
         return this;
     }
-
 }

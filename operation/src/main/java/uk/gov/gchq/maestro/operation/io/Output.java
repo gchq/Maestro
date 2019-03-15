@@ -19,7 +19,7 @@ package uk.gov.gchq.maestro.operation.io;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import uk.gov.gchq.gaffer.operation.Operation;
+import uk.gov.gchq.maestro.operation.Operation;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

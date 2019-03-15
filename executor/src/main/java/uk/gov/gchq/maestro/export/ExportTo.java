@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Crown Copyright
+ * Copyright 2016-2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro;
 
+package uk.gov.gchq.maestro.export;
 
-import uk.gov.gchq.maestro.operation.DoGetOperation;
+import uk.gov.gchq.gaffer.operation.io.InputOutput;
 
-public interface OperationHandler<O, Op extends DoGetOperation<O>> {
-
-    O doOperation(final Op operation, final Context context, final Executor executor);
+/**
+ * An {@code ExportTo} is an operation which exports data from a source to a specified
+ * output.
+ *
+ * @param <T> the type of object to export
+ */
+public interface ExportTo<T> extends
+        Export,
+        InputOutput<T, T> {
+    interface Builder<OP extends ExportTo<T>, T, B extends Builder<OP, T, ?>>
+            extends Export.Builder<OP, B>,
+            InputOutput.Builder<OP, T, T, B> {
+    }
 }

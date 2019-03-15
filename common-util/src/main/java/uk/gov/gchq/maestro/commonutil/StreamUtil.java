@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro;
+package uk.gov.gchq.maestro.commonutil;
 
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;

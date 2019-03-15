@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro;
+package uk.gov.gchq.maestro.operation;
 
-
-import uk.gov.gchq.maestro.operation.DoGetOperation;
-
-public interface OperationHandler<O, Op extends DoGetOperation<O>> {
-
-    O doOperation(final Op operation, final Context context, final Executor executor);
+public class DefaultOperation<O> implements DoGetOperation<O> {
+    public DoGetOperation setWrappedOp(final DoGetOperation operation) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 }

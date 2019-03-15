@@ -12,6 +12,10 @@
     <artifactId>exception</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>common-util</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Crown Copyright
+ * Copyright 2016-2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro;
 
+package uk.gov.gchq.maestro.export;
 
-import uk.gov.gchq.maestro.operation.DoGetOperation;
+/**
+ * A {@code GetExport} is an {@link uk.gov.gchq.gaffer.operation.Operation} to
+ * retrieve the details of an {@link Export} operation.
+ */
+public interface GetExport extends Export {
+    String getJobId();
 
-public interface OperationHandler<O, Op extends DoGetOperation<O>> {
+    void setJobId(final String jobId);
 
-    O doOperation(final Op operation, final Context context, final Executor executor);
+    interface Builder<OP extends GetExport, B extends Builder<OP, ?>>
+            extends Export.Builder<OP, B> {
+        default B jobId(final String jobId) {
+            _getOp().setJobId(jobId);
+            return _self();
+        }
+    }
 }
