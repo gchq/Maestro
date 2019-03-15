@@ -3,6 +3,9 @@ package uk.gov.gchq.maestro;
 import org.junit.Assert;
 import org.junit.Test;
 
+import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
+
 import java.util.HashMap;
 import java.util.Map;
 

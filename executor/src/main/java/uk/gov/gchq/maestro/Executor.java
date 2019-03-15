@@ -29,6 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +56,7 @@ public class Executor {
         try {
             LOGGER.info("Deserialising Executor from byte[]");
             return JSONSerialiser.deserialise(jsonBytes, Executor.class);
-        } catch (SerialisationException e) {
+        } catch (final SerialisationException e) {
             LOGGER.error(ERROR_DESERIALISE_EXECUTOR);
             throw new IllegalArgumentException(ERROR_DESERIALISE_EXECUTOR, e);
         }
@@ -63,7 +66,7 @@ public class Executor {
         try {
             LOGGER.info("Deserialising Executor from byte[]");
             return JSONSerialiser.deserialise(josnString, Executor.class);
-        } catch (SerialisationException e) {
+        } catch (final SerialisationException e) {
             LOGGER.error(ERROR_DESERIALISE_EXECUTOR);
             throw new IllegalArgumentException(ERROR_DESERIALISE_EXECUTOR, e);
         }

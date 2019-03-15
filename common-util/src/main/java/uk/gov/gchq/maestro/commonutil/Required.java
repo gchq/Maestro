@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package uk.gov.gchq.maestro.commonutil;
 
-package uk.gov.gchq.maestro;
 
-import com.fasterxml.jackson.databind.Module;
-
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * A {@code JSONSerialiserModuleFactory} is a simple factory that returns
- * a list of {@link Module}s to be uses in an {@link com.fasterxml.jackson.databind.ObjectMapper}
- * in {@link JSONSerialiser}.
+ * Where used, denotes that a field on an object must be set.
  */
-public interface JSONSerialiserModules {
-    List<Module> getModules();
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Required {
 }
