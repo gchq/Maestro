@@ -121,7 +121,9 @@ public class Executor {
 
     public Executor operationHandlerMap(final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap) {
         this.operationHandlerMap.clear();
-        this.operationHandlerMap.putAll(operationHandlerMap);
+        if (nonNull(operationHandlerMap)) {
+            this.operationHandlerMap.putAll(operationHandlerMap);
+        }
         return this;
     }
 
@@ -161,7 +163,9 @@ public class Executor {
 
     public Executor config(final Map<String, String> config) {
         this.config.clear();
-        this.config.putAll(config);
+        if (nonNull(config)) {
+            this.config.putAll(config);
+        }
         return this;
     }
 

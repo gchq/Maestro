@@ -88,7 +88,7 @@
         <!--<maven-war-plugin.version>3.0.0</maven-war-plugin.version>-->
         <!--<gpg.plugin.version>1.6</gpg.plugin.version>-->
         <!--<jacoco.plugin.version>0.7.7.201606060606</jacoco.plugin.version>-->
-        <!--<jar.plugin.version>2.4</jar.plugin.version>-->
+        <jar.plugin.version>2.4</jar.plugin.version>
         <!--<javadoc.plugin.version>2.10.3</javadoc.plugin.version>-->
         <!--<nexus.plugin.version>1.6.7</nexus.plugin.version>-->
         <!--<release.plugin.version>2.5.3</release.plugin.version>-->
@@ -152,27 +152,34 @@
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>exception</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>operation</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>serialisation</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>common-util</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>executor</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>executor</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+                <type>test-jar</type>
             </dependency>
             <!--<dependency>-->
             <!--<groupId>log4j</groupId>-->
@@ -756,28 +763,28 @@
             <!--</systemPropertyVariables>-->
             <!--</configuration>-->
             <!--</plugin>-->
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-jar-plugin</artifactId>-->
-            <!--<version>${jar.plugin.version}</version>-->
-            <!--<configuration>-->
-            <!--<archive>-->
-            <!--<manifest>-->
-            <!--<addDefaultImplementationEntries>true-->
-            <!--</addDefaultImplementationEntries>-->
-            <!--<addDefaultSpecificationEntries>true-->
-            <!--</addDefaultSpecificationEntries>-->
-            <!--</manifest>-->
-            <!--</archive>-->
-            <!--</configuration>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<goals>-->
-            <!--<goal>test-jar</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${jar.plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true
+                            </addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true
+                            </addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
