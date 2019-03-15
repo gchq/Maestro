@@ -26,6 +26,7 @@ import com.google.common.collect.Lists;
 
 import uk.gov.gchq.koryphe.util.CloseableUtil;
 import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 
 import java.util.Collection;
 import java.util.Iterator;

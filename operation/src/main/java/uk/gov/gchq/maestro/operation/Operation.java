@@ -54,11 +54,6 @@ import java.util.Map;
  * {@link uk.gov.gchq.maestro.operation.io.Output}
  * {@link uk.gov.gchq.maestro.operation.io.InputOutput} (Use this instead of Input and Output if your operation takes both input and output.)
  * {@link uk.gov.gchq.maestro.operation.io.MultiInput} (Use this in addition if you operation takes multiple inputs. This will help with json  serialisation)
- * {@link uk.gov.gchq.maestro.operation.SeedMatching}
- * {@link uk.gov.gchq.maestro.operation.Validatable}
- * {@link uk.gov.gchq.maestro.operation.graph.OperationView}
- * {@link uk.gov.gchq.maestro.operation.graph.GraphFilters}
- * {@link uk.gov.gchq.maestro.operation.graph.SeededGraphFilters}
  * </p>
  * <p>
  * Each Operation implementation should have a corresponding unit test class

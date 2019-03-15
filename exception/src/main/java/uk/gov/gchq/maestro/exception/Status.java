@@ -101,7 +101,7 @@ public enum Status {
                 .stream()
                 .filter(v -> v.getStatusCode() == statusCode)
                 .findFirst()
-                .orElseThrow(() -> new GafferRuntimeException("Status code not recognised: " + statusCode));
+                .orElseThrow(() -> new MaestroRuntimeException("Status code not recognised: " + statusCode));
     }
 
     public int getStatusCode() {

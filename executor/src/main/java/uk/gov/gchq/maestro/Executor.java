@@ -16,11 +16,10 @@
 
 package uk.gov.gchq.maestro;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -39,7 +38,7 @@ import java.util.Map;
 import static java.util.Objects.nonNull;
 
 
-@JsonPropertyOrder(value = {"class", "operationHandlerMap", "config"}, alphabetic = true)
+@JsonPropertyOrder(value = {"class", "config"}, alphabetic = true)
 public class Executor {
     public static final String OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S = "DoGetOperation %s is not supported by the %s.";
     public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
@@ -47,12 +46,25 @@ public class Executor {
     private Config config;
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
 
-    // This is just as a note to remind that this must be removed and added
+    /* TODO This is just as a note to remind that this must be removed and added
     // as a util
     //private JobTracker jobTracker;
+    */
 
     public Executor() {
         this.config = new Config();
+    }
+
+    public Executor(final Config config) {
+        this.config = config;
+    }
+
+    public Executor(final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap,
+                    final Map<String, String> config) {
+        this();
+        if (nonNull(operationHandlerMap) && !operationHandlerMap.isEmpty()) {
+            this.config.getOperationHandlers().putAll(operationHandlerMap);
+        }
     }
 
     public static Executor deserialise(final byte[] jsonBytes) {
@@ -75,15 +87,6 @@ public class Executor {
         }
     }
 
-
-    @JsonCreator
-    public Executor(@JsonProperty("operationHandlerMap") final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap,
-                    @JsonProperty("config") final Map<String, String> config) {
-        this();
-        if (nonNull(operationHandlerMap) && !operationHandlerMap.isEmpty()) {
-            this.config.getOperationHandlers().putAll(operationHandlerMap);
-        }
-    }
 
     public <O, Output extends DoGetOperation<O>> O execute(final Output operation, final Context context) {
         return handleOperation(operation, context);
@@ -111,17 +114,12 @@ public class Executor {
 
     @JsonIgnore
     private <O, Op extends DoGetOperation<O>> OperationHandler<O, Op> getHandler(final Op operation) {
-        return config.getOperationHandler(operation);
+        return config.getOperationHandler(operation.getClass());
     }
 
+    @JsonIgnore
     public Map<Class<? extends DoGetOperation>, OperationHandler> getOperationHandlerMap() {
         return ImmutableMap.copyOf(config.getOperationHandlers());
-    }
-
-    public Executor operationHandlerMap(final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap) {
-        this.config.getOperationHandlers().clear();
-        this.config.getOperationHandlers().putAll(operationHandlerMap);
-        return this;
     }
 
     @Override
@@ -153,8 +151,14 @@ public class Executor {
         return this.getClass().getCanonicalName();
     }
 
+    @JsonSetter(value = "config")
     public Executor config(final Config config) {
         this.config = config;
         return this;
+    }
+
+    @JsonGetter("config")
+    public Config getConfig() {
+        return config;
     }
 }

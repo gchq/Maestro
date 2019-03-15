@@ -29,7 +29,7 @@
         <module>serialisation</module>
         <module>exception</module>
         <module>common-util</module>
-        <!--<module>operation</module>-->
+        <module>operation</module>
         <module>executor</module>
         <module>proxy-executor</module>
         <module>federation-executor</module>

@@ -17,19 +17,11 @@
 package uk.gov.gchq.maestro.export;
 
 /**
- * A {@code GetExport} is an {@link uk.gov.gchq.gaffer.operation.Operation} to
+ * A {@code GetExport} is an operation to
  * retrieve the details of an {@link Export} operation.
  */
 public interface GetExport extends Export {
     String getJobId();
 
-    void setJobId(final String jobId);
-
-    interface Builder<OP extends GetExport, B extends Builder<OP, ?>>
-            extends Export.Builder<OP, B> {
-        default B jobId(final String jobId) {
-            _getOp().setJobId(jobId);
-            return _self();
-        }
-    }
+    GetExport setJobId(final String jobId);
 }

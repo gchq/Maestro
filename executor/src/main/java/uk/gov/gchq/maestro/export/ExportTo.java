@@ -16,7 +16,7 @@
 
 package uk.gov.gchq.maestro.export;
 
-import uk.gov.gchq.gaffer.operation.io.InputOutput;
+import uk.gov.gchq.maestro.operation.io.InputOutput;
 
 /**
  * An {@code ExportTo} is an operation which exports data from a source to a specified
@@ -27,8 +27,5 @@ import uk.gov.gchq.gaffer.operation.io.InputOutput;
 public interface ExportTo<T> extends
         Export,
         InputOutput<T, T> {
-    interface Builder<OP extends ExportTo<T>, T, B extends Builder<OP, T, ?>>
-            extends Export.Builder<OP, B>,
-            InputOutput.Builder<OP, T, T, B> {
-    }
+
 }

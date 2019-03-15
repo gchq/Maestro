@@ -28,6 +28,18 @@
     <artifactId>operation</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>serialisation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.koryphe</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

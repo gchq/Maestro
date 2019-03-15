@@ -19,6 +19,8 @@ package uk.gov.gchq.maestro;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import uk.gov.gchq.maestro.operation.DoGetOperation;
+
 public class TestOperation implements DoGetOperation<String> {
     private String field;
 

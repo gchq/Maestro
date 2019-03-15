@@ -15,30 +15,29 @@
  */
 package uk.gov.gchq.maestro.exception;
 
-import static uk.gov.gchq.gaffer.core.exception.Status.INTERNAL_SERVER_ERROR;
 
 /**
  * Subtype of {@link RuntimeException} with additional constructors to support the
  * inclusion of a HTTP error message along with the other exception details.
  */
-public class GafferRuntimeException extends RuntimeException {
+public class MaestroRuntimeException extends RuntimeException {
 
-    private Status status = INTERNAL_SERVER_ERROR;
+    private Status status = Status.INTERNAL_SERVER_ERROR;
 
-    public GafferRuntimeException(final String message) {
+    public MaestroRuntimeException(final String message) {
         super(message);
     }
 
-    public GafferRuntimeException(final String message, final Throwable cause) {
+    public MaestroRuntimeException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public GafferRuntimeException(final String message, final Status status) {
+    public MaestroRuntimeException(final String message, final Status status) {
         super(message);
         this.status = status;
     }
 
-    public GafferRuntimeException(final String message, final Throwable cause, final Status status) {
+    public MaestroRuntimeException(final String message, final Throwable cause, final Status status) {
         super(message, cause);
         this.status = status;
     }

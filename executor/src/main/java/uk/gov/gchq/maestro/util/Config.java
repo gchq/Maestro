@@ -15,12 +15,13 @@
  */
 package uk.gov.gchq.maestro.util;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import uk.gov.gchq.gaffer.store.library.NoLibrary;
-import uk.gov.gchq.gaffer.store.operation.handler.OutputOperationHandler;
 import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.OperationHandler;
 import uk.gov.gchq.maestro.StoreProperties;
@@ -28,8 +29,8 @@ import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.library.Library;
-import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.io.Output;
+import uk.gov.gchq.maestro.library.NoLibrary;
+import uk.gov.gchq.maestro.operation.DoGetOperation;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+@JsonPropertyOrder(value = {"class", "operationHandlers"}, alphabetic = true)
 public class Config {
     /**
      * The id of the store.
@@ -72,7 +74,8 @@ public class Config {
      * supported by this store, and an instance of all the OperationHandlers
      * that will be used to handle these operations.
      */
-    private final Map<Class<? extends Operation>, OperationHandler> operationHandlers = new LinkedHashMap<>();
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
+    private final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlers = new LinkedHashMap<>();
 
     private Library library;
 
@@ -184,7 +187,7 @@ public class Config {
         updateJsonSerialiser(properties);
     }
 
-    public void addOperationHandler(final Class<? extends Operation> opClass, final OperationHandler handler) {
+    public <OP extends DoGetOperation<O>, O> void addOperationHandler(final Class<? extends DoGetOperation<O>> opClass, final OperationHandler<O, OP> handler) {
         if (null == handler) {
             operationHandlers.remove(opClass);
         } else {
@@ -192,20 +195,11 @@ public class Config {
         }
     }
 
-    public <OP extends Output<O>, O> void addOperationHandler(final Class<?
-            extends Output<O>> opClass, final OperationHandler<O, OP> handler) {
-        if (null == handler) {
-            operationHandlers.remove(opClass);
-        } else {
-            operationHandlers.put(opClass, handler);
-        }
-    }
-
-    public OperationHandler<Operation> getOperationHandler(final Class<? extends Operation> opClass) {
+    public OperationHandler getOperationHandler(final Class<? extends DoGetOperation> opClass) {
         return operationHandlers.get(opClass);
     }
 
-    public Map<Class<? extends Operation>, OperationHandler> getOperationHandlers() {
+    public Map<Class<? extends DoGetOperation>, OperationHandler> getOperationHandlers() {
         return operationHandlers;
     }
 
@@ -506,5 +500,40 @@ public class Config {
         public B _self() {
             return (B) this;
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Config config = (Config) o;
+
+        final EqualsBuilder equalsBuilder = new EqualsBuilder()
+                .append(id, config.id)
+                .append(description, config.description)
+                .append(hooks, config.hooks)
+                .append(library, config.library)
+                .append(operationHandlers, config.operationHandlers)
+                .append(properties, config.properties);
+
+        return equalsBuilder.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(description)
+                .append(hooks)
+                .append(properties)
+                .append(operationHandlers)
+                .append(library)
+                .toHashCode();
     }
 }

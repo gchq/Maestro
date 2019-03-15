@@ -16,6 +16,7 @@
 
 package uk.gov.gchq.maestro;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.gov.gchq.maestro.exception.SerialisationException;
@@ -23,19 +24,21 @@ import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 
 import static org.junit.Assert.assertEquals;
 
-public abstract class MaestroObjectTest {
+public abstract class MaestroObjectTest<T> {
     @Test
-    public void shouldJSONSerialise() throws SerialisationException{
-        final Executor executor = getTestObject();
+    public void shouldJSONSerialise() throws SerialisationException {
+        final T testObject = getTestObject();
 
         final String executorString = getJSONString();
 
-        final byte[] serialise = JSONSerialiser.serialise(executor, true);
+        final byte[] serialise = JSONSerialiser.serialise(testObject, true);
         assertEquals(executorString, new String(serialise));
-        assertEquals(executor, JSONSerialiser.deserialise(serialise, Executor.class));
+        assertEquals(testObject, JSONSerialiser.deserialise(serialise, getTestObjectClass()));
     }
+
+    protected abstract Class<T> getTestObjectClass();
 
     protected abstract String getJSONString();
 
-    protected abstract Executor getTestObject();
+    protected abstract T getTestObject();
 }

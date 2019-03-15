@@ -21,7 +21,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import uk.gov.gchq.maestro.Context;
-import uk.gov.gchq.maestro.ToStringBuilder;
+import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 
 public class Result<O> {
     private final O result;
