@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package uk.gov.gchq.maestro;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -46,8 +47,8 @@ public class Executor {
     }
 
     @JsonCreator
-    public Executor(@JsonProperty("operationHandlerMap") Map<Class<? extends Operation>, OperationHandler> operationHandlerMap,
-                    @JsonProperty("config") Map<String, String> config) {
+    public Executor(@JsonProperty("operationHandlerMap") final Map<Class<? extends Operation>, OperationHandler> operationHandlerMap,
+                    @JsonProperty("config") final Map<String, String> config) {
         if (nonNull(operationHandlerMap) && !operationHandlerMap.isEmpty()) {
             this.operationHandlerMap.putAll(operationHandlerMap);
         }
@@ -91,7 +92,7 @@ public class Executor {
         return ImmutableMap.copyOf(operationHandlerMap);
     }
 
-    public Executor operationHandlerMap(Map<Class<? extends Operation>, OperationHandler> operationHandlerMap) {
+    public Executor operationHandlerMap(final Map<Class<? extends Operation>, OperationHandler> operationHandlerMap) {
         this.operationHandlerMap.clear();
         this.operationHandlerMap.putAll(operationHandlerMap);
         return this;
@@ -99,9 +100,13 @@ public class Executor {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         final Executor executor = (Executor) o;
 
@@ -127,7 +132,7 @@ public class Executor {
         return ImmutableMap.copyOf(config);
     }
 
-    public Executor config(Map<String, String> config) {
+    public Executor config(final Map<String, String> config) {
         this.config.clear();
         this.config.putAll(config);
         return this;
