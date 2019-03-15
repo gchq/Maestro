@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro;
+package uk.gov.gchq.maestro.jsonserialisation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;

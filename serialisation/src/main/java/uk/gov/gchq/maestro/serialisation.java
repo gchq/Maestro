@@ -13,18 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.gov.gchq.maestro;
 
-import com.fasterxml.jackson.databind.Module;
-
-import java.util.List;
-
-/**
- * A {@code JSONSerialiserModuleFactory} is a simple factory that returns
- * a list of {@link Module}s to be uses in an {@link com.fasterxml.jackson.databind.ObjectMapper}
- * in {@link JSONSerialiser}.
- */
-public interface JSONSerialiserModules {
-    List<Module> getModules();
+public class serialisation {
 }
