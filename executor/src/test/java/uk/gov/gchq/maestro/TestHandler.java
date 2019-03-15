@@ -1,21 +1,26 @@
 package uk.gov.gchq.maestro;
 
 
-public class TestHandler implements OperationHandler<TestOperation> {
+public class TestHandler implements OperationHandler<String, TestOperation> {
 
-    private String field;
+    private String handlerField;
 
     @Override
     public boolean equals(final Object o) {
         return getClass().equals(o.getClass());
     }
 
-    public String getField() {
-        return field;
+    public String getHandlerField() {
+        return handlerField;
     }
 
-    public TestHandler field(final String field) {
-        this.field = field;
+    public TestHandler fieldHandler(final String field) {
+        this.handlerField = field;
         return this;
+    }
+
+    @Override
+    public String doOperation(final TestOperation operation, final Context context, final Executor executor) {
+        return handlerField + "," + operation.getField();
     }
 }

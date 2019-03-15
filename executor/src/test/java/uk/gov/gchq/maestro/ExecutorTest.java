@@ -1,5 +1,6 @@
 package uk.gov.gchq.maestro;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class ExecutorTest extends MaestroObjectTest {
                 "  \"operationHandlerMap\" : {\n" +
                 "    \"uk.gov.gchq.maestro.TestOperation\" : {\n" +
                 "      \"class\" : \"uk.gov.gchq.maestro.TestHandler\",\n" +
-                "      \"field\" : \"fieldValue1\"\n" +
+                "      \"handlerField\" : \"handlerFieldValue1\"\n" +
                 "    }\n" +
                 "  },\n" +
                 "  \"config\" : {\n" +
@@ -26,11 +27,19 @@ public class ExecutorTest extends MaestroObjectTest {
 
     @Override
     protected Executor getTestObject() {
-        Map<Class<? extends Operation>, OperationHandler> operationHandlerMap = new HashMap<>();
-        operationHandlerMap.put(TestOperation.class, new TestHandler().field("fieldValue1"));
+        Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap = new HashMap<>();
+        operationHandlerMap.put(TestOperation.class, new TestHandler().fieldHandler("handlerFieldValue1"));
         final Map<String, String> config = new HashMap<>();
         config.put("configKey", "configValue");
         return new Executor().operationHandlerMap(operationHandlerMap).config(config);
     }
 
+    @Test
+    public void shouldRunTestHandler() throws SerialisationException {
+        final byte[] serialise = JSONSerialiser.serialise(getTestObject(), true);
+
+        final Executor executor = Executor.deserialise(serialise);
+        final String execute = executor.execute(new TestOperation().setField("opFieldValue1"), new Context());
+        Assert.assertEquals("handlerFieldValue1,opFieldValue1", execute);
+    }
 }

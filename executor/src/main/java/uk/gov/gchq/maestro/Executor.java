@@ -37,18 +37,43 @@ import static java.util.Objects.nonNull;
 
 @JsonPropertyOrder(value = {"class", "operationHandlerMap", "config"}, alphabetic = true)
 public class Executor {
-    public static final String OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S = "Operation %s is not supported by the %s.";
-    private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
+    public static final String OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S = "DoGetOperation %s is not supported by the %s.";
+    public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
-    private final Map<Class<? extends Operation>, OperationHandler> operationHandlerMap = new HashMap<>();
-    private final Map<String, String> config = new HashMap<>();
+    private final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap;
+    private final Map<String, String> config;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
 
     public Executor() {
+        this.operationHandlerMap = new HashMap<>();
+        this.config = new HashMap<>();
     }
 
+    public static Executor deserialise(final byte[] jsonBytes) {
+        try {
+            LOGGER.info("Deserialising Executor from byte[]");
+            return JSONSerialiser.deserialise(jsonBytes, Executor.class);
+        } catch (SerialisationException e) {
+            LOGGER.error(ERROR_DESERIALISE_EXECUTOR);
+            throw new IllegalArgumentException(ERROR_DESERIALISE_EXECUTOR, e);
+        }
+    }
+
+    public static Executor deserialise(final String josnString) {
+        try {
+            LOGGER.info("Deserialising Executor from byte[]");
+            return JSONSerialiser.deserialise(josnString, Executor.class);
+        } catch (SerialisationException e) {
+            LOGGER.error(ERROR_DESERIALISE_EXECUTOR);
+            throw new IllegalArgumentException(ERROR_DESERIALISE_EXECUTOR, e);
+        }
+    }
+
+
     @JsonCreator
-    public Executor(@JsonProperty("operationHandlerMap") final Map<Class<? extends Operation>, OperationHandler> operationHandlerMap,
+    public Executor(@JsonProperty("operationHandlerMap") final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap,
                     @JsonProperty("config") final Map<String, String> config) {
+        this();
         if (nonNull(operationHandlerMap) && !operationHandlerMap.isEmpty()) {
             this.operationHandlerMap.putAll(operationHandlerMap);
         }
@@ -58,41 +83,40 @@ public class Executor {
         }
     }
 
-
-    public <O> O execute(final Operation operation, final Context context) {
-        return (O) handleOperation(operation, context);
+    public <O, Output extends DoGetOperation<O>> O execute(final Output operation, final Context context) {
+        return handleOperation(operation, context);
     }
 
-    private Object handleOperation(final Operation operation, final Context context) {
-        Object result;
-        OperationHandler<Operation> handler = getHandler(operation.getClass());
+    private <O> O handleOperation(final DoGetOperation<O> operation, final Context context) {
+        O result;
+        OperationHandler<O, DoGetOperation<O>> handler = getHandler(operation);
 
         if (null != handler) {
             result = handler.doOperation(operation, context, this);
         } else if (operation instanceof DefaultOperation) {
-            result = doUnhandledOperation(operation, context);
+            result = doUnhandledOperation(operation);
         } else {
-            result = this.handleOperation(new DefaultOperation().setWrappedOp(operation), context);
+            final DoGetOperation<O> defaultOp = new DefaultOperation().setWrappedOp(operation);
+            result = this.handleOperation(defaultOp, context);
         }
 
         return result;
     }
 
-
-    private Object doUnhandledOperation(final Operation operation, final Context context) {
+    private <O, Op extends DoGetOperation<O>> O doUnhandledOperation(final Op operation) {
         throw new UnsupportedOperationException(String.format(OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S, operation.getClass(), this.getClass().getSimpleName()));
     }
 
     @JsonIgnore
-    private OperationHandler<Operation> getHandler(final Class<? extends Operation> operation) {
-        return operationHandlerMap.get(operation);
+    private <O, Op extends DoGetOperation<O>> OperationHandler<O, Op> getHandler(final Op operation) {
+        return operationHandlerMap.get(operation.getClass());
     }
 
-    public Map<Class<? extends Operation>, OperationHandler> getOperationHandlerMap() {
+    public Map<Class<? extends DoGetOperation>, OperationHandler> getOperationHandlerMap() {
         return ImmutableMap.copyOf(operationHandlerMap);
     }
 
-    public Executor operationHandlerMap(final Map<Class<? extends Operation>, OperationHandler> operationHandlerMap) {
+    public Executor operationHandlerMap(final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap) {
         this.operationHandlerMap.clear();
         this.operationHandlerMap.putAll(operationHandlerMap);
         return this;

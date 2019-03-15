@@ -13,10 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package uk.gov.gchq.maestro;
 
+public class ExecutorException extends RuntimeException {
+    public ExecutorException() {
+        super();
+    }
 
-public interface OperationHandler<O, Op extends DoGetOperation<O>> {
+    public ExecutorException(final String message) {
+        super(message);
+    }
 
-    O doOperation(final Op operation, final Context context, final Executor executor);
+    public ExecutorException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public ExecutorException(final Throwable cause) {
+        super(cause);
+    }
+
+    protected ExecutorException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

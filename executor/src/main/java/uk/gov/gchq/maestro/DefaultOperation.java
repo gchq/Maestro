@@ -15,8 +15,8 @@
  */
 package uk.gov.gchq.maestro;
 
-public class DefaultOperation implements Operation {
-    public Operation setWrappedOp(final Operation operation) {
-        throw new UnsupportedOperationException();
+public class DefaultOperation<O> implements DoGetOperation<O> {
+    public DoGetOperation setWrappedOp(final DoGetOperation operation) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }
