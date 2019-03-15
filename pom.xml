@@ -15,8 +15,8 @@
         <module>common-util</module>
         <!--<module>operation</module>-->
         <module>executor</module>
-        <!--<module>proxy</module>-->
-        <!--<module>federator</module>-->
+        <module>proxy-executor</module>
+        <module>federation-executor</module>
     </modules>
 
     <name>${project.groupId}:${project.artifactId}</name>
