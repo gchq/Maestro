@@ -33,8 +33,11 @@ public class FederationTest extends MaestroObjectTest<Executor> {
     protected String getJSONString() {
         return "{\n" +
                 "  \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
-                "  \"operationHandlerMap\" : { },\n" +
-                "  \"config\" : { }\n" +
+                "  \"config\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
+                "    \"operationHandlers\" : { },\n" +
+                "    \"hooks\" : [ ]\n" +
+                "  }\n" +
                 "}";
     }
 

@@ -37,15 +37,8 @@ public class ConfigTest extends MaestroObjectTest<Config> {
                 "  },\n" +
                 "  \"hooks\" : [ ],\n" +
                 "  \"properties\" : {\n" +
-                "    \"properties\" : {\n" +
-                "      \"configKey\" : \"configValue\",\n" +
-                "      \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.StoreProperties\"\n" +
-                "    },\n" +
-                "    \"jobTrackerEnabled\" : false,\n" +
-                "    \"storePropertiesClassName\" : \"uk.gov.gchq.maestro.StoreProperties\",\n" +
-                "    \"storePropertiesClass\" : \"uk.gov.gchq.maestro.StoreProperties\",\n" +
-                "    \"jobExecutorThreadCount\" : 50,\n" +
-                "    \"adminAuth\" : \"\"\n" +
+                "    \"configKey\" : \"configValue\",\n" +
+                "    \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.StoreProperties\"\n" +
                 "  }\n" +
                 "}";
     }

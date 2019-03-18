@@ -15,8 +15,11 @@
  */
 package uk.gov.gchq.maestro.util;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -45,7 +48,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-@JsonPropertyOrder(value = {"class", "operationHandlers"}, alphabetic = true)
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static uk.gov.gchq.koryphe.util.ReflectionUtil.addReflectionPackages;
+
+@JsonPropertyOrder(value = {"class", "id", "description", "operationHandlers", "hooks", "properties", "library"}, alphabetic = true)
 public class Config {
     /**
      * The id of the store.
@@ -147,8 +154,24 @@ public class Config {
      * @return the instance of {@link StoreProperties},
      * this may contain details such as database connection details.
      */
+    @Ignore
     public StoreProperties getProperties() {
         return properties;
+    }
+
+    @JsonGetter("properties")
+    public Properties _getProperties() {
+        return isNull(properties) ? null : properties.getProperties();
+    }
+
+    @JsonSetter
+    public void setProperties(final Properties properties) {
+        if (nonNull(properties)) {
+            if (isNull(this.properties)) {
+                this.properties = new StoreProperties();
+            }
+            this.properties.setProperties(properties);
+        }
     }
 
     public void setProperties(final StoreProperties properties) {
@@ -162,7 +185,7 @@ public class Config {
             this.properties = StoreProperties.loadStoreProperties(properties.getProperties());
         }
 
-        uk.gov.gchq.koryphe.util.ReflectionUtil.addReflectionPackages(properties.getReflectionPackages());
+        addReflectionPackages(properties.getReflectionPackages());
         updateJsonSerialiser();
     }
 
@@ -256,7 +279,7 @@ public class Config {
         public B storeProperties(final StoreProperties properties) {
             this.properties = properties;
             if (null != properties) {
-                uk.gov.gchq.koryphe.util.ReflectionUtil.addReflectionPackages(properties.getReflectionPackages());
+                addReflectionPackages(properties.getReflectionPackages());
                 JSONSerialiser.update(
                         properties.getJsonSerialiserClass(),
                         properties.getJsonSerialiserModules(),
@@ -519,7 +542,11 @@ public class Config {
                 .append(hooks, config.hooks)
                 .append(library, config.library)
                 .append(operationHandlers, config.operationHandlers)
-                .append(properties, config.properties);
+                .append(nonNull(properties), nonNull(config.properties));
+
+        if (equalsBuilder.isEquals() && nonNull(properties)) {
+            equalsBuilder.append(properties.getProperties(), config.properties.getProperties());
+        }
 
         return equalsBuilder.isEquals();
     }

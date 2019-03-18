@@ -16,7 +16,6 @@
 
 package uk.gov.gchq.maestro;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.gov.gchq.maestro.exception.SerialisationException;
