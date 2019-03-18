@@ -15,8 +15,27 @@
  */
 package uk.gov.gchq.maestro.operation;
 
-public class DefaultOperation<O> implements DoGetOperation<O> {
-    public DoGetOperation setWrappedOp(final DoGetOperation operation) {
+import org.apache.commons.lang3.exception.CloneFailedException;
+
+import java.util.Map;
+
+public class DefaultOperation implements Operation {
+    public Operation setWrappedOp(final Operation operation) {
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public Operation shallowClone() throws CloneFailedException {
+        return new DefaultOperation();
+    }
+
+    @Override
+    public Map<String, String> getOptions() {
+        return null;
+    }
+
+    @Override
+    public void setOptions(final Map<String, String> options) {
+
     }
 }

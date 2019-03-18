@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Crown Copyright
+ * Copyright 2016-2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro;
 
+package uk.gov.gchq.maestro.commonutil;
 
-import uk.gov.gchq.maestro.operation.Operation;
+/**
+ * Common constants used throughout the Gaffer project.
+ */
+public final class CommonConstants {
+    public static final String UTF_8 = "UTF-8";
+    public static final String ISO_8859_1_ENCODING = "ISO-8859-1";
 
-public interface OperationHandler<Op extends Operation> {
-
-    Object doOperation(final Op operation, final Context context,
-                   final Executor executor);
+    private CommonConstants() {
+        // Private constructor to prevent instantiation.
+    }
 }

@@ -13,13 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro;
+package uk.gov.gchq.maestro.jobtracker;
 
+/**
+ * Denotes the status of a Gaffer job.
+ */
+@Summary("The status of a job")
+public enum JobStatus {
 
-import uk.gov.gchq.maestro.operation.Operation;
+    /**
+     * The Gaffer job has been submitted and is running.
+     */
+    RUNNING,
 
-public interface OperationHandler<Op extends Operation> {
+    /**
+     * The Gaffer job has completed successfully.
+     */
+    FINISHED,
 
-    Object doOperation(final Op operation, final Context context,
-                   final Executor executor);
+    /**
+     * An error occured while executing the Gaffer job.
+     */
+    FAILED,
+
+    /**
+     * The Gaffer job is a parent job to a scheduled job(s).
+     */
+    SCHEDULED_PARENT,
+
+    /**
+     * The Gaffer job is cancelled (to be used for scheduled jobs).
+     */
+    CANCELLED
 }

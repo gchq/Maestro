@@ -16,18 +16,15 @@
 package uk.gov.gchq.maestro.util;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import com.sun.deploy.util.ReflectionUtil;
 
-import uk.gov.gchq.gaffer.store.library.NoLibrary;
-import uk.gov.gchq.gaffer.store.operation.handler.OutputOperationHandler;
-import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.OperationHandler;
 import uk.gov.gchq.maestro.StoreProperties;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.library.Library;
+import uk.gov.gchq.maestro.library.NoLibrary;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.io.Output;
 

@@ -34,6 +34,10 @@
             <version>3.5</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>exception</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

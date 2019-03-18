@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Crown Copyright
+ * Copyright 2016-2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.operation;
+package uk.gov.gchq.maestro.commonutil.iterable;
 
+import java.io.Closeable;
 
-public interface DoGetOperation<O> {
+/**
+ * A {@code CloseableIterable} is an {@link Iterable} which must provide an implementation
+ * of the {@link Closeable#close()} method.
+ *
+ * @param <T> the type of items in the iterable.
+ */
+public interface CloseableIterable<T> extends Iterable<T>, Closeable {
+    @Override
+    void close();
+
+    @Override
+    CloseableIterator<T> iterator();
 }
