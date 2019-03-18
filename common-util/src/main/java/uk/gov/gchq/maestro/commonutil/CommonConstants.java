@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro;
 
+package uk.gov.gchq.maestro.commonutil;
 
-import uk.gov.gchq.maestro.operation.Operation;
+/**
+ * Common constants used throughout the Gaffer project.
+ */
+public final class CommonConstants {
+    public static final String UTF_8 = "UTF-8";
+    public static final String ISO_8859_1_ENCODING = "ISO-8859-1";
 
-public interface OperationHandler<Op extends Operation> {
-
-    Object doOperation(final Op operation, final Context context,
-                   final Executor executor);
+    private CommonConstants() {
+        // Private constructor to prevent instantiation.
+    }
 }

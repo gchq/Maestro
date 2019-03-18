@@ -22,7 +22,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.OperationHandler;
 import uk.gov.gchq.maestro.StoreProperties;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
@@ -30,7 +29,7 @@ import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.library.Library;
 import uk.gov.gchq.maestro.library.NoLibrary;
-import uk.gov.gchq.maestro.operation.DoGetOperation;
+import uk.gov.gchq.maestro.operation.Operation;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +74,7 @@ public class Config {
      * that will be used to handle these operations.
      */
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
-    private final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlers = new LinkedHashMap<>();
+    private final Map<Class<? extends Operation>, OperationHandler> operationHandlers = new LinkedHashMap<>();
 
     private Library library;
 
@@ -163,7 +162,7 @@ public class Config {
             this.properties = StoreProperties.loadStoreProperties(properties.getProperties());
         }
 
-        ReflectionUtil.addReflectionPackages(properties.getReflectionPackages());
+        uk.gov.gchq.koryphe.util.ReflectionUtil.addReflectionPackages(properties.getReflectionPackages());
         updateJsonSerialiser();
     }
 
@@ -187,7 +186,7 @@ public class Config {
         updateJsonSerialiser(properties);
     }
 
-    public <OP extends DoGetOperation<O>, O> void addOperationHandler(final Class<? extends DoGetOperation<O>> opClass, final OperationHandler<O, OP> handler) {
+    public <OP extends Operation, O> void addOperationHandler(final Class<? extends Operation> opClass, final OperationHandler<OP> handler) {
         if (null == handler) {
             operationHandlers.remove(opClass);
         } else {
@@ -195,11 +194,11 @@ public class Config {
         }
     }
 
-    public OperationHandler getOperationHandler(final Class<? extends DoGetOperation> opClass) {
+    public OperationHandler getOperationHandler(final Class<? extends Operation> opClass) {
         return operationHandlers.get(opClass);
     }
 
-    public Map<Class<? extends DoGetOperation>, OperationHandler> getOperationHandlers() {
+    public Map<Class<? extends Operation>, OperationHandler> getOperationHandlers() {
         return operationHandlers;
     }
 
@@ -257,7 +256,7 @@ public class Config {
         public B storeProperties(final StoreProperties properties) {
             this.properties = properties;
             if (null != properties) {
-                ReflectionUtil.addReflectionPackages(properties.getReflectionPackages());
+                uk.gov.gchq.koryphe.util.ReflectionUtil.addReflectionPackages(properties.getReflectionPackages());
                 JSONSerialiser.update(
                         properties.getJsonSerialiserClass(),
                         properties.getJsonSerialiserModules(),

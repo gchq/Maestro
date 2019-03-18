@@ -69,7 +69,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
         final byte[] serialise = JSONSerialiser.serialise(getTestObject(), true);
 
         final Executor executor = Executor.deserialise(serialise);
-        final String execute = executor.execute(new TestOperation().setField("opFieldValue1"), new Context());
+        final Object execute = executor.execute(new TestOperation().setField("opFieldValue1"), new Context());
         Assert.assertEquals("handlerFieldValue1,opFieldValue1", execute);
     }
 

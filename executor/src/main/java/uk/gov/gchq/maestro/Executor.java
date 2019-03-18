@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import uk.gov.gchq.maestro.exception.SerialisationException;
 import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.operation.DefaultOperation;
-import uk.gov.gchq.maestro.operation.DoGetOperation;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.util.Config;
 
 import java.util.Map;
@@ -59,7 +59,7 @@ public class Executor {
         this.config = config;
     }
 
-    public Executor(final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap,
+    public Executor(final Map<Class<? extends Operation>, OperationHandler> operationHandlerMap,
                     final Map<String, String> config) {
         this();
         if (nonNull(operationHandlerMap) && !operationHandlerMap.isEmpty()) {
@@ -88,39 +88,129 @@ public class Executor {
     }
 
 
-    public <O, Output extends DoGetOperation<O>> O execute(final Output operation, final Context context) {
-        return handleOperation(operation, context);
+    public Object execute(final Operation op, final Context context) {
+        return handleOperation(op, context);
     }
 
-    private <O> O handleOperation(final DoGetOperation<O> operation, final Context context) {
-        O result;
-        OperationHandler<O, DoGetOperation<O>> handler = getHandler(operation);
+/*
+    public <O> O execute(final Operation operation,
+                         final Context context) throws OperationException {
+        return (O) execute(new Request(operation, context)).getResult();
+    }
+
+    public <O> O execute(final Operation operation,
+                         final User user) throws OperationException {
+        return (O) execute(new Request(operation, new Context(user))).getResult();
+    }
+
+    /*
+     * Executes a given operation and returns the result.
+     *
+     * @param request the request to execute.
+     * @param <O>     the output type of the operation
+     * @return the result of executing the operation
+     * @throws OperationException thrown by the operation handler if the
+     *                            operation fails.
+    public <O> Result<O> execute(final Request request) {
+        if (null == request) {
+            throw new IllegalArgumentException("A request is required");
+        }
+
+        if (null == request.getContext()) {
+            throw new IllegalArgumentException("A context is required");
+        }
+
+        request.setConfig(config);
+        request.getContext().setOriginalOperation(request.getOperation());
+        final Request clonedRequest = request.fullClone();
+        final Operation operation = clonedRequest.getOperation();
+        final Context context = clonedRequest.getContext();
+
+        addOrUpdateJobDetail(operation, context, null, JobStatus.RUNNING);
+        O result = null;
+        try {
+            for (final Hook graphHook : getConfig().getHooks()) {
+                graphHook.preExecute(clonedRequest);
+            }
+            result = (O) handleOperation(operation, context);
+            for (final Hook graphHook : getConfig().getHooks()) {
+                result = graphHook.postExecute(result,
+                        clonedRequest);
+            }
+            addOrUpdateJobDetail(operation, context, null, JobStatus.FINISHED);
+        } catch (final Exception e) {
+            for (final Hook graphHook : getConfig().getHooks()) {
+                try {
+                    result = graphHook.onFailure(result,
+                            clonedRequest, e);
+                } catch (final Exception graphHookE) {
+                    LOGGER.warn("Error in graphHook " + graphHook.getClass().getSimpleName() + ": " + graphHookE.getMessage(), graphHookE);
+                }
+            }
+        } catch (final Throwable t) {
+            addOrUpdateJobDetail(operation, context, t.getMessage(), JobStatus.FAILED);
+            throw t;
+        }
+        return new Result(result, clonedRequest.getContext());
+    }
+    */
+
+
+    private Object handleOperation(final Operation operation,
+                                   final Context context) {
+        Object result;
+        final OperationHandler<Operation> handler = getHandler(operation.getClass());
 
         if (null != handler) {
             result = handler.doOperation(operation, context, this);
         } else if (operation instanceof DefaultOperation) {
             result = doUnhandledOperation(operation);
         } else {
-            final DoGetOperation<O> defaultOp = new DefaultOperation().setWrappedOp(operation);
+            final Operation defaultOp = new DefaultOperation().setWrappedOp(operation);
             result = this.handleOperation(defaultOp, context);
         }
 
         return result;
     }
 
-    private <O, Op extends DoGetOperation<O>> O doUnhandledOperation(final Op operation) {
+    private <O, Op extends Operation> O doUnhandledOperation(final Op operation) {
         throw new UnsupportedOperationException(String.format(OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S, operation.getClass(), this.getClass().getSimpleName()));
     }
 
     @JsonIgnore
-    private <O, Op extends DoGetOperation<O>> OperationHandler<O, Op> getHandler(final Op operation) {
-        return config.getOperationHandler(operation.getClass());
+    private OperationHandler<Operation> getHandler(final Class<? extends Operation> opClass) {
+        return config.getOperationHandler(opClass);
     }
 
     @JsonIgnore
-    public Map<Class<? extends DoGetOperation>, OperationHandler> getOperationHandlerMap() {
+    public Map<Class<? extends Operation>, OperationHandler> getOperationHandlerMap() {
         return ImmutableMap.copyOf(config.getOperationHandlers());
     }
+
+    public Executor operationHandlerMap(final Map<Class<? extends Operation>, OperationHandler> operationHandlerMap) {
+        this.config.getOperationHandlers().clear();
+        this.config.getOperationHandlers().putAll(operationHandlerMap);
+        return this;
+    }
+
+    /* TODO this doesn't compile while the field above is faulty.
+    private JobDetail addOrUpdateJobDetail(final Operation operation,
+                                           final Context context, final String msg, final PrinterJob.JobStatus jobStatus) {
+        final JobDetail newJobDetail = new JobDetail(context.getJobId(), context
+                .getUser()
+                .getUserId(), OperationChain.wrap(operation), jobStatus, msg);
+        if (null != jobTracker) {
+            final JobDetail oldJobDetail = jobTracker.getJob(newJobDetail.getJobId(), context
+                    .getUser());
+            if (null == oldJobDetail) {
+                jobTracker.addOrUpdateJob(newJobDetail, context.getUser());
+            } else {
+                jobTracker.addOrUpdateJob(new JobDetail(oldJobDetail, newJobDetail), context
+                        .getUser());
+            }
+        }
+        return newJobDetail;
+    }*/
 
     @Override
     public boolean equals(final Object o) {

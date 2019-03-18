@@ -17,7 +17,7 @@
 package uk.gov.gchq.maestro;
 
 
-public class TestHandler implements OperationHandler<String, TestOperation> {
+public class TestHandler implements OperationHandler<TestOperation> {
 
     private String handlerField;
 
@@ -36,7 +36,7 @@ public class TestHandler implements OperationHandler<String, TestOperation> {
     }
 
     @Override
-    public String doOperation(final TestOperation operation, final Context context, final Executor executor) {
+    public Object doOperation(final TestOperation operation, final Context context, final Executor executor) {
         return handlerField + "," + operation.getField();
     }
 }

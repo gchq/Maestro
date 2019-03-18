@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import uk.gov.gchq.koryphe.util.CloseableUtil;
+import uk.gov.gchq.maestro.commonutil.CloseableUtil;
 import uk.gov.gchq.maestro.exception.SerialisationException;
 import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 
@@ -85,7 +85,7 @@ public abstract class GenericInput<I> implements Input<I> {
         } else if (input instanceof Collection) {
             isSingular = ((Collection) input).size() == 2 && ((Collection) input).iterator().next() instanceof String;
         } else if (input instanceof Iterable) {
-            // A bit messy but it is efficient. Only iterators over enough to decide if the length is 2.
+            // A bit messy but it is efficient. Only iterator over enough to decide if the length is 2.
             final Iterator itr = ((Iterable) input).iterator();
             try {
                 if (itr.hasNext()) {

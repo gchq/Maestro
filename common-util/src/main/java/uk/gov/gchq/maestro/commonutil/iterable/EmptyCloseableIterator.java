@@ -13,29 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro.operation;
 
-import org.apache.commons.lang3.exception.CloneFailedException;
+package uk.gov.gchq.maestro.commonutil.iterable;
 
-import java.util.Map;
+import java.util.NoSuchElementException;
 
-public class DefaultOperation implements Operation {
-    public Operation setWrappedOp(final Operation operation) {
-        throw new UnsupportedOperationException("Not yet implemented");
+/**
+ * An {@code EmptyCloseableIterator} is an {@link java.util.Iterator} which contains
+ * no objects. This is achieved by forcing the {@link java.util.Iterator#hasNext()} method
+ * to always return false.
+ *
+ * @param <T> the type of items in the iterator.
+ */
+public class EmptyCloseableIterator<T> implements CloseableIterator<T> {
+    @Override
+    public void close() {
     }
 
     @Override
-    public Operation shallowClone() throws CloneFailedException {
-        return new DefaultOperation();
+    public boolean hasNext() {
+        return false;
     }
 
     @Override
-    public Map<String, String> getOptions() {
-        return null;
+    public T next() {
+        throw new NoSuchElementException();
     }
 
     @Override
-    public void setOptions(final Map<String, String> options) {
-
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 }

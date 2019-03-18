@@ -18,11 +18,15 @@ package uk.gov.gchq.maestro;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.exception.CloneFailedException;
 
-import uk.gov.gchq.maestro.operation.DoGetOperation;
+import uk.gov.gchq.maestro.operation.Operation;
 
-public class TestOperation implements DoGetOperation<String> {
+import java.util.Map;
+
+public class TestOperation implements Operation {
     private String field;
+    private Map<String, String> options;
 
     public String getField() {
         return field;
@@ -55,5 +59,23 @@ public class TestOperation implements DoGetOperation<String> {
         return new HashCodeBuilder(17, 37)
                 .append(field)
                 .toHashCode();
+    }
+
+    @Override
+    public Operation shallowClone() throws CloneFailedException {
+        final TestOperation testOperation = new TestOperation();
+        testOperation.setField(field);
+        testOperation.setOptions(options);
+        return testOperation;
+    }
+
+    @Override
+    public Map<String, String> getOptions() {
+        return this.options;
+    }
+
+    @Override
+    public void setOptions(final Map<String, String> options) {
+        this.options = options;
     }
 }

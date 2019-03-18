@@ -15,7 +15,6 @@
  */
 package uk.gov.gchq.maestro.exception;
 
-
 /**
  * Subtype of {@link RuntimeException} with additional constructors to support the
  * inclusion of a HTTP error message along with the other exception details.

@@ -16,10 +16,10 @@
 
 package uk.gov.gchq.maestro;
 
-import uk.gov.gchq.maestro.operation.DoGetOperation;
+import uk.gov.gchq.maestro.operation.Operation;
 
 public class OperationDeclaration {
-    public Class<? extends DoGetOperation> getOperation() {
+    public Class<? extends Operation> getOperation() {
         throw new UnsupportedOperationException();
     }
 
