@@ -13,7 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro;
 
-public interface DoOperation extends DoGetOperation<Void> {
+package uk.gov.gchq.maestro.commonutil.iterable;
+
+import java.io.Closeable;
+import java.util.Iterator;
+
+/**
+ * A {@code CloseableIterator} is an {@link Iterator} which must provide an implementation
+ * of the {@link Closeable#close()} method.
+ *
+ * @param <T> the type of items in the iterator.
+ */
+public interface CloseableIterator<T> extends Iterator<T>, Closeable {
+    @Override
+    void close();
 }

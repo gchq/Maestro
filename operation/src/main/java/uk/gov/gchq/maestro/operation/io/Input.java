@@ -18,13 +18,13 @@ package uk.gov.gchq.maestro.operation.io;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import uk.gov.gchq.gaffer.commonutil.CloseableUtil;
-import uk.gov.gchq.gaffer.operation.Operation;
+import uk.gov.gchq.maestro.commonutil.CloseableUtil;
+import uk.gov.gchq.maestro.operation.Operation;
 
 import java.io.IOException;
 
 /**
- * {@code Input} operations are any Gaffer operations which consume a single input.
+ * {@code Input} operations are any Maestro operations which consume a single input.
  *
  * @param <I> the type of input object
  */

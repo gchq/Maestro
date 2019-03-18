@@ -14,8 +14,27 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro;
+package uk.gov.gchq.maestro.export;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public interface DoGetOperation<O> {
+/**
+ * The base interface for operation which export results.
+ */
+public interface Export {
+    String DEFAULT_KEY = "ALL";
+
+    String getKey();
+
+    @JsonIgnore
+    default String getKeyOrDefault() {
+        final String key = getKey();
+        if (null == key) {
+            return Export.DEFAULT_KEY;
+        } else {
+            return key;
+        }
+    }
+
+    Export key(String key);
 }

@@ -16,7 +16,10 @@
 package uk.gov.gchq.maestro;
 
 
-public interface OperationHandler<O, Op extends DoGetOperation<O>> {
+import uk.gov.gchq.maestro.operation.Operation;
 
-    O doOperation(final Op operation, final Context context, final Executor executor);
+public interface OperationHandler<Op extends Operation> {
+
+    Object doOperation(final Op operation, final Context context,
+                   final Executor executor);
 }

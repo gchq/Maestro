@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro;
+package uk.gov.gchq.maestro.commonutil;
 
 import org.apache.commons.lang3.builder.ToStringStyle;
 

@@ -25,7 +25,7 @@ import com.google.common.collect.Lists;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * {@code MultiInput} operations are Gaffer operations which consume more than one
+ * {@code MultiInput} operations are Maestro operations which consume more than one
  * input.
  *
  * @param <I_ITEM> the type of input objects

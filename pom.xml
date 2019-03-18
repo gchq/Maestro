@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2019 Crown Copyright
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -10,10 +26,10 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <modules>
+        <module>common-util</module>
         <module>serialisation</module>
         <module>exception</module>
-        <module>common-util</module>
-        <!--<module>operation</module>-->
+        <module>operation</module>
         <module>executor</module>
         <module>proxy-executor</module>
         <module>federation-executor</module>
@@ -37,8 +53,8 @@
         <!--<shaded.jar.phase>package</shaded.jar.phase>-->
 
         <java.version>1.8</java.version>
-        <!--<maven.compiler.source>1.8</maven.compiler.source>-->
-        <!--<maven.compiler.target>1.8</maven.compiler.target>-->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <!--<scala.version>2.11</scala.version>-->
         <!--<scala.minor.version>2.11.12</scala.minor.version>-->
 
@@ -60,7 +76,7 @@
         <!--<commons-codec.version>1.6</commons-codec.version>-->
         <!--<commons-collections.version>3.2.2</commons-collections.version>-->
         <commons-io.version>2.4</commons-io.version>
-        <!--<commons-lang3.version>3.3.2</commons-lang3.version>-->
+        <commons-lang3.version>3.3.2</commons-lang3.version>
         <!--<commons-logging.version>1.1.3</commons-logging.version>-->
         <!--<commons-math.version>2.1</commons-math.version>-->
         <!--<commons-math3.version>3.4.1</commons-math3.version>-->
@@ -202,6 +218,13 @@
                 <version>${koryphe.version}</version>
             </dependency>
             <dependency>
+                <groupId>uk.gov.gchq.koryphe</groupId>
+                <artifactId>core</artifactId>
+                <version>${koryphe.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-xml</artifactId>
                 <version>${jackson.version}</version>
@@ -256,11 +279,11 @@
             <!--<artifactId>activation</artifactId>-->
             <!--<version>${javax-activation.version}</version>-->
             <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.apache.commons</groupId>-->
-            <!--<artifactId>commons-lang3</artifactId>-->
-            <!--<version>${commons-lang3.version}</version>-->
-            <!--</dependency>-->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
             <!--<dependency>-->
             <!--<groupId>org.apache.commons</groupId>-->
             <!--<artifactId>commons-math3</artifactId>-->

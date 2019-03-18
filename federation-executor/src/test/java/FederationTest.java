@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-import org.junit.Ignore;
-import org.junit.Test;
-
-import uk.gov.gchq.maestro.DoGetOperation;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.MaestroObjectTest;
 import uk.gov.gchq.maestro.OperationHandler;
-import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.util.Config;
 
 import java.util.Map;
 
-public class FederationTest extends MaestroObjectTest {
+public class FederationTest extends MaestroObjectTest<Executor> {
+
+    @Override
+    protected Class getTestObjectClass() {
+        return Executor.class;
+    }
 
     @Override
     protected String getJSONString() {
@@ -38,12 +40,12 @@ public class FederationTest extends MaestroObjectTest {
 
     @Override
     protected Executor getTestObject() {
-        final Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap = null;
-        final Map<String, String> config = null;
+        final Map<Class<? extends Operation>, OperationHandler> operationHandlerMap = null;
+
 
         final Executor executor = new Executor()
                 .operationHandlerMap(operationHandlerMap)
-                .config(config);
+                .config(new Config());
 
         return executor;
     }

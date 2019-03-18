@@ -17,7 +17,7 @@
 package uk.gov.gchq.maestro.operation.io;
 
 /**
- * {@code InputOutput} operations are Gaffer operations which consume a single
+ * {@code InputOutput} operations are Maestro operations which consume a single
  * input and transforms that input into an output type.
  *
  * This is a marker interface composed of the {@link Input} and {@link Output} interfaces.
