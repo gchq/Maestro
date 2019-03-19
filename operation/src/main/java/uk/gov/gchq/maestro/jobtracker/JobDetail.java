@@ -143,7 +143,7 @@ public class JobDetail implements Serializable {
     }
 
     @JsonIgnore
-    public Operation getOpasOperation() {
+    public Operation getOpAsOperation() {
         return operation;
     }
 

@@ -18,7 +18,7 @@ package uk.gov.gchq.maestro.operation.serialisation;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import uk.gov.gchq.koryphe.iterable.CloseableIterable;
+import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 
 /**
  * Utility class which contains a number of inner classes for different {@link TypeReference}s
@@ -71,6 +71,12 @@ public final class TypeReferenceImpl {
 
     public static <T> TypeReference<Iterable<T>> createIterableExplicitT() {
         return (TypeReference) new IterableObj();
+    }
+
+    public static class JobDetail extends TypeReference<uk.gov.gchq.maestro.jobtracker.JobDetail> {
+    }
+
+    public static class JobDetailIterable extends TypeReference<CloseableIterable<uk.gov.gchq.maestro.jobtracker.JobDetail>> {
     }
 
     public static class Map extends TypeReference<java.util.LinkedHashMap> {

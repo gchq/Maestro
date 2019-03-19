@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.export;
+package uk.gov.gchq.maestro.operation.impl.export;
 
 /**
  * A {@code GetExport} is an {@link uk.gov.gchq.maestro.operation.Operation} to
@@ -23,5 +23,13 @@ package uk.gov.gchq.maestro.export;
 public interface GetExport extends Export {
     String getJobId();
 
-    GetExport setJobId(final String jobId);
+    void setJobId(final String jobId);
+
+    interface Builder<OP extends GetExport, B extends Builder<OP, ?>>
+            extends Export.Builder<OP, B> {
+        default B jobId(final String jobId) {
+            _getOp().setJobId(jobId);
+            return _self();
+        }
+    }
 }

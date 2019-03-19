@@ -27,6 +27,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.maestro.commonutil.ExecutorService;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.exception.SerialisationException;
 import uk.gov.gchq.maestro.jobtracker.JobDetail;
@@ -36,6 +37,7 @@ import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.operation.DefaultOperation;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
+import uk.gov.gchq.maestro.operation.impl.job.Job;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
 import uk.gov.gchq.maestro.util.Hook;
@@ -43,9 +45,9 @@ import uk.gov.gchq.maestro.util.Request;
 import uk.gov.gchq.maestro.util.Result;
 
 import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.Objects.nonNull;
-
 
 @JsonPropertyOrder(value = {"class", "config"}, alphabetic = true)
 public class Executor {
@@ -151,7 +153,24 @@ public class Executor {
     }
 
 
-    private Object handleOperation(final Operation operation, final Context context) {
+    /**
+     * DO NOT USE
+     *
+     * @param operation the operation to execute.
+     * @param context   the context executing the job.
+     * @return the job detail.
+     * @throws OperationException thrown if jobs are not configured.
+     * @deprecated This is only here so if the executejob endpoint is hit it
+     * will just wrap it in a Job Op and pass it to the executor, DO NOT USE.
+     * Executes a given operation job and returns the job detail.
+     */
+    // TODO remove this method before first release
+    public JobDetail executeJob(final Operation operation, final Context context) throws OperationException {
+        return execute(new Job.Builder().operation(operation).build(), context);
+    }
+
+    private Object handleOperation(final Operation operation,
+                                   final Context context) throws OperationException {
         Object result;
         final OperationHandler handler = getHandler(operation.getClass());
 
@@ -168,6 +187,23 @@ public class Executor {
 
     private Object doUnhandledOperation(final Operation operation) {
         throw new UnsupportedOperationException(String.format(OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S, operation.getClass(), this.getClass().getSimpleName()));
+    }
+
+    /**
+     * @param operationClass the operation class to check
+     * @return true if the provided operation is supported.
+     */
+    public boolean isSupported(final Class<? extends Operation> operationClass) {
+        return null != getConfig().getOperationHandler(operationClass);
+    }
+
+    public void runAsync(final Runnable runnable) {
+        getExecutorService().execute(runnable);
+    }
+
+    public ScheduledExecutorService getExecutorService() {
+        return (null != ExecutorService.getService() && ExecutorService.isEnabled()) ?
+                ExecutorService.getService() : null;
     }
 
     @JsonIgnore
@@ -189,8 +225,8 @@ public class Executor {
         return this;
     }
 
-    private JobDetail addOrUpdateJobDetail(final Operation operation,
-                                           final Context context, final String msg, final JobStatus jobStatus) {
+    public JobDetail addOrUpdateJobDetail(final Operation operation,
+                                          final Context context, final String msg, final JobStatus jobStatus) {
         final JobDetail newJobDetail = new JobDetail(context.getJobId(), context
                 .getUser()
                 .getUserId(), OperationChain.wrap(operation), jobStatus, msg);

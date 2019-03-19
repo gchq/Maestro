@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.export;
+package uk.gov.gchq.maestro.operation.impl.export;
 
-import uk.gov.gchq.maestro.operation.io.InputOutput;
+import uk.gov.gchq.koryphe.iterable.CloseableIterable;
+import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 
 /**
- * An {@code ExportTo} is an operation which exports data from a source to a specified
- * output.
- *
- * @param <T> the type of object to export
+ * An {@code Exporter} can store data of any kind and retrieve it.
  */
-public interface ExportTo<T> extends
-        Export,
-        InputOutput<T, T> {
+public interface Exporter {
+    void add(final String key, final Iterable<?> results) throws OperationException;
 
+    CloseableIterable<?> get(final String key) throws OperationException;
 }

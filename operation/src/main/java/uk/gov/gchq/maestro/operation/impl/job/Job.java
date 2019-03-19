@@ -14,43 +14,29 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.jobtracker;
+package uk.gov.gchq.maestro.operation.impl.job;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.lang3.exception.CloneFailedException;
 
 import uk.gov.gchq.maestro.commonutil.CommonConstants;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.jobtracker.JobDetail;
+import uk.gov.gchq.maestro.jobtracker.Repeat;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.io.Output;
+import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 
 import java.nio.charset.Charset;
+import java.util.Map;
 
-/**
- * POJO containing details of a scheduled Maestro job,
- * a {@link Repeat} and an Operation chain as a String.
- * To be used within the ExecuteJob for a ScheduledJob.
- */
-public class Job {
+public class Job implements Output<JobDetail> {
     private static final String CHARSET_NAME = CommonConstants.UTF_8;
     private Repeat repeat;
     private Operation operation;
-
-    public Job() {
-    }
-
-    public Job(final Repeat repeat) {
-        this.repeat = repeat;
-    }
-
-    public Job(final Repeat repeat, final String opChain) {
-        this.repeat = repeat;
-        setOperation(opChain);
-    }
-
-    public Job(final Repeat repeat, final Operation operation) {
-        this.repeat = repeat;
-        this.operation = operation;
-    }
 
     public Repeat getRepeat() {
         return repeat;
@@ -74,12 +60,62 @@ public class Job {
         return operation;
     }
 
+    @JsonSetter("operation")
     public void setOperation(final String operation) {
         try {
             this.operation = JSONSerialiser.deserialise(operation,
                     Operation.class);
         } catch (final SerialisationException e) {
             throw new IllegalArgumentException("Unable to deserialise Job OperationChain ", e);
+        }
+    }
+
+    public void setOperation(final Operation operation) {
+        this.operation = operation;
+    }
+
+    @Override
+    public Operation shallowClone() throws CloneFailedException {
+        return new Job.Builder()
+                .operation(operation)
+                .repeat(repeat)
+                .build();
+    }
+
+    @Override
+    public Map<String, String> getOptions() {
+        return null;
+    }
+
+    @Override
+    public void setOptions(final Map<String, String> options) {
+
+    }
+
+    @Override
+    public TypeReference<JobDetail> getOutputTypeReference() {
+        return new TypeReferenceImpl.JobDetail();
+    }
+
+    public static class Builder
+            extends Operation.BaseBuilder<Job, Job.Builder> {
+        public Builder() {
+            super(new Job());
+        }
+
+        public Job.Builder operation(final Operation operation) {
+            _getOp().setOperation(operation);
+            return _self();
+        }
+
+        public Job.Builder operation(final String operation) {
+            _getOp().setOperation(operation);
+            return _self();
+        }
+
+        public Job.Builder repeat(final Repeat repeat) {
+            _getOp().setRepeat(repeat);
+            return _self();
         }
     }
 }

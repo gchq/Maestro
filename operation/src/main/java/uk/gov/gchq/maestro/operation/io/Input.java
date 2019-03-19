@@ -29,7 +29,7 @@ import java.io.IOException;
  * @param <I> the type of input object
  */
 public interface Input<I> extends Operation {
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     I getInput();
 
     void setInput(final I input);

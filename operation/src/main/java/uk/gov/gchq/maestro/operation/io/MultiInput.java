@@ -32,7 +32,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public interface MultiInput<I_ITEM> extends Input<Iterable<? extends I_ITEM>> {
     @SuppressFBWarnings(value = "PZLA_PREFER_ZERO_LENGTH_ARRAYS", justification = "If input is null then null should be returned")
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     @JsonGetter("input")
     default Object[] createInputArray() {
         return null != getInput() ? Iterables.toArray(getInput(), Object.class) : null;
@@ -42,7 +42,7 @@ public interface MultiInput<I_ITEM> extends Input<Iterable<? extends I_ITEM>> {
     @Override
     Iterable<? extends I_ITEM> getInput();
 
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     @JsonSetter("input")
     default void setInput(final I_ITEM[] input) {
         setInput(Lists.newArrayList(input));

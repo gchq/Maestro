@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -216,12 +217,12 @@ public class Config {
     }
 
     public OperationHandler<? extends Operation> getOperationHandler(final Class<?
-    extends Operation> opClass) {
+            extends Operation> opClass) {
         return operationHandlers.get(opClass);
     }
 
     public Map<Class<? extends Operation>, OperationHandler> getOperationHandlers() {
-        return operationHandlers;
+        return ImmutableMap.copyOf(operationHandlers);
     }
 
     @Override

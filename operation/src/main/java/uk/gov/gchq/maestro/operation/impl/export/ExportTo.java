@@ -14,27 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.export;
+package uk.gov.gchq.maestro.operation.impl.export;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import uk.gov.gchq.maestro.operation.io.InputOutput;
 
 /**
- * The base interface for operation which export results.
+ * An {@code ExportTo} is an operation which exports data from a source to a specified
+ * output.
+ *
+ * @param <T> the type of object to export
  */
-public interface Export {
-    String DEFAULT_KEY = "ALL";
-
-    String getKey();
-
-    @JsonIgnore
-    default String getKeyOrDefault() {
-        final String key = getKey();
-        if (null == key) {
-            return Export.DEFAULT_KEY;
-        } else {
-            return key;
-        }
+public interface ExportTo<T> extends
+        Export,
+        InputOutput<T, T> {
+    interface Builder<OP extends ExportTo<T>, T, B extends Builder<OP, T, ?>>
+            extends Export.Builder<OP, B>,
+            InputOutput.Builder<OP, T, T, B> {
     }
-
-    Export key(String key);
 }

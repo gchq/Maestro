@@ -19,7 +19,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
-import uk.gov.gchq.maestro.export.Exporter;
+import uk.gov.gchq.maestro.operation.impl.export.Exporter;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.user.User;
