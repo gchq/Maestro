@@ -103,6 +103,7 @@
         <!--<gpg.plugin.version>1.6</gpg.plugin.version>-->
         <!--<jacoco.plugin.version>0.7.7.201606060606</jacoco.plugin.version>-->
         <jar.plugin.version>2.4</jar.plugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--<javadoc.plugin.version>2.10.3</javadoc.plugin.version>-->
         <!--<nexus.plugin.version>1.6.7</nexus.plugin.version>-->
         <!--<release.plugin.version>2.5.3</release.plugin.version>-->
