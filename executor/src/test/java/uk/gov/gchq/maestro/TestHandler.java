@@ -1,7 +1,7 @@
 package uk.gov.gchq.maestro;
 
 
-public class TestHandler implements OperationHandler<String, TestOperation> {
+public class TestHandler implements OperationHandler<TestOperation> {
 
     private String handlerField;
 

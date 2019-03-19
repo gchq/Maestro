@@ -23,17 +23,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.collect.ImmutableMap;
-import javafx.print.PrinterJob;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.maestro.exception.OperationException;
-import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.exception.OperationException;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.jobtracker.JobDetail;
 import uk.gov.gchq.maestro.jobtracker.JobStatus;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.jobtracker.JobTracker;
 import uk.gov.gchq.maestro.operation.DefaultOperation;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
@@ -196,17 +196,19 @@ public class Executor {
     }
 
     private JobDetail addOrUpdateJobDetail(final Operation operation,
-                                           final Context context, final String msg, final PrinterJob.JobStatus jobStatus) {
+                                           final Context context, final String msg, final JobStatus jobStatus) {
         final JobDetail newJobDetail = new JobDetail(context.getJobId(), context
                 .getUser()
                 .getUserId(), OperationChain.wrap(operation), jobStatus, msg);
-        if (null != jobTracker) {
-            final JobDetail oldJobDetail = jobTracker.getJob(newJobDetail.getJobId(), context
-                    .getUser());
+        if (JobTracker.isJobTrackerCacheEnabled()) {
+            final JobDetail oldJobDetail =
+                    JobTracker.getJob(newJobDetail.getJobId(),
+                            context
+                                    .getUser());
             if (null == oldJobDetail) {
-                jobTracker.addOrUpdateJob(newJobDetail, context.getUser());
+                JobTracker.addOrUpdateJob(newJobDetail, context.getUser());
             } else {
-                jobTracker.addOrUpdateJob(new JobDetail(oldJobDetail, newJobDetail), context
+                JobTracker.addOrUpdateJob(new JobDetail(oldJobDetail, newJobDetail), context
                         .getUser());
             }
         }

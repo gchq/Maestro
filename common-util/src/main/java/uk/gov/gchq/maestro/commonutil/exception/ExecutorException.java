@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro;
+package uk.gov.gchq.maestro.commonutil.exception;
 
 public class ExecutorException extends RuntimeException {
     public ExecutorException() {

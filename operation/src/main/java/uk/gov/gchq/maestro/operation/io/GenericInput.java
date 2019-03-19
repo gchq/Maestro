@@ -21,10 +21,12 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import uk.gov.gchq.maestro.commonutil.CloseableUtil;
-import uk.gov.gchq.maestro.exception.SerialisationException;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 
 import java.util.Collection;
 import java.util.Iterator;

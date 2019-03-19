@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package uk.gov.gchq.maestro.export;
 
-import uk.gov.gchq.gaffer.operation.io.InputOutput;
+import uk.gov.gchq.maestro.operation.io.InputOutput;
 
 /**
  * An {@code ExportTo} is an operation which exports data from a source to a specified

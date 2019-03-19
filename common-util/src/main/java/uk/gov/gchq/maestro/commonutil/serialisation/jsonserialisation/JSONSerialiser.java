@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.jsonserialisation;
+package uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 import uk.gov.gchq.koryphe.impl.binaryoperator.StringDeduplicateConcat;
 import uk.gov.gchq.koryphe.serialisation.json.SimpleClassNameCache;
 import uk.gov.gchq.koryphe.serialisation.json.SimpleClassNameIdResolver;
-import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 
 import java.io.IOException;
 import java.io.InputStream;

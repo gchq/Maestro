@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.exception;
+package uk.gov.gchq.maestro.commonutil.exception;
 
 /**
  * An {@code OverwritingException} should be thrown when a condition will cause

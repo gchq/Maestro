@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.serialisation.implementation;
+package uk.gov.gchq.maestro.commonutil.serialisation.implementation;
 
-import uk.gov.gchq.maestro.exception.SerialisationException;
-import uk.gov.gchq.maestro.serialisation.ToBytesSerialiser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.ToBytesSerialiser;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

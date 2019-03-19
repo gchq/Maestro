@@ -15,6 +15,8 @@
  */
 package uk.gov.gchq.maestro.jobtracker;
 
+import uk.gov.gchq.koryphe.Summary;
+
 /**
  * Denotes the status of a Gaffer job.
  */

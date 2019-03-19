@@ -40,6 +40,10 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>common-util</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

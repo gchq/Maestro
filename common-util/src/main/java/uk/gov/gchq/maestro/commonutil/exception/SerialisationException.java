@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,21 @@
  * limitations under the License.
  */
 
+package uk.gov.gchq.maestro.commonutil.exception;
+
+import java.io.IOException;
+
 /**
- * Utility classes for the store classes.
+ * An {@code SerialisationException} is thrown when serialisation/deserialisation fails.
  */
-package uk.gov.gchq.maestro.util;
+public class SerialisationException extends IOException {
+    private static final long serialVersionUID = 1624476078972832393L;
+
+    public SerialisationException(final String message) {
+        super(message);
+    }
+
+    public SerialisationException(final String message, final Throwable e) {
+        super(message, e);
+    }
+}

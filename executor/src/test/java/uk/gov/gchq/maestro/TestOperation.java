@@ -2,8 +2,13 @@ package uk.gov.gchq.maestro;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.exception.CloneFailedException;
 
-public class TestOperation implements DoGetOperation<String> {
+import uk.gov.gchq.maestro.operation.Operation;
+
+import java.util.Map;
+
+public class TestOperation implements Operation {
     private String field;
 
     public String getField() {
@@ -37,5 +42,20 @@ public class TestOperation implements DoGetOperation<String> {
         return new HashCodeBuilder(17, 37)
                 .append(field)
                 .toHashCode();
+    }
+
+    @Override
+    public Operation shallowClone() throws CloneFailedException {
+        return null;
+    }
+
+    @Override
+    public Map<String, String> getOptions() {
+        return null;
+    }
+
+    @Override
+    public void setOptions(final Map<String, String> options) {
+
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ package uk.gov.gchq.maestro.jobtracker;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import uk.gov.gchq.maestro.commonutil.CommonConstants;
-import uk.gov.gchq.maestro.exception.SerialisationException;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.operation.Operation;
 
 import java.nio.charset.Charset;
@@ -62,8 +62,8 @@ public class Job {
 
     public String getOperation() {
         try {
-                return new String(JSONSerialiser.serialise(operation),
-                        Charset.forName(CHARSET_NAME));
+            return new String(JSONSerialiser.serialise(operation),
+                    Charset.forName(CHARSET_NAME));
         } catch (final SerialisationException se) {
             throw new IllegalArgumentException(se.getMessage());
         }

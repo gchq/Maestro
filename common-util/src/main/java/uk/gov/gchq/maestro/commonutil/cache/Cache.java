@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,14 @@
 
 package uk.gov.gchq.maestro.commonutil.cache;
 
-import uk.gov.gchq.maestro.exception.CacheOperationException;
+import uk.gov.gchq.maestro.commonutil.exception.CacheOperationException;
 
 import java.util.Collections;
 import java.util.Set;
 
 /**
  * Type safe cache, adding and getting is guaranteed to be same type.
+ *
  * @param <V> The type of values to add and get.
  */
 public class Cache<V> {

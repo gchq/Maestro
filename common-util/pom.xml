@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
-            <artifactId>exception</artifactId>
+            <artifactId>serialisation</artifactId>
         </dependency>
     </dependencies>
 

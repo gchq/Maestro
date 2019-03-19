@@ -15,7 +15,7 @@
  */
 package uk.gov.gchq.maestro.library;
 
-import uk.gov.gchq.maestro.exception.OverwritingException;
+import uk.gov.gchq.maestro.commonutil.exception.OverwritingException;
 import uk.gov.gchq.maestro.util.Config;
 
 import java.util.regex.Pattern;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package uk.gov.gchq.maestro.export;
 
 /**
- * A {@code GetExport} is an {@link uk.gov.gchq.gaffer.operation.Operation} to
+ * A {@code GetExport} is an {@link uk.gov.gchq.maestro.operation.Operation} to
  * retrieve the details of an {@link Export} operation.
  */
 public interface GetExport extends Export {

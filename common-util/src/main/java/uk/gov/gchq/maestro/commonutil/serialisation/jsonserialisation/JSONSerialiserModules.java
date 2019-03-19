@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.exception;
+package uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation;
 
-import java.io.IOException;
+import com.fasterxml.jackson.databind.Module;
+
+import java.util.List;
 
 /**
- * An {@code SerialisationException} is thrown when serialisation/deserialisation fails.
+ * A {@code JSONSerialiserModuleFactory} is a simple factory that returns
+ * a list of {@link Module}s to be uses in an {@link com.fasterxml.jackson.databind.ObjectMapper}
+ * in {@link JSONSerialiser}.
  */
-public class SerialisationException extends IOException {
-    private static final long serialVersionUID = 1624476078972832393L;
-
-    public SerialisationException(final String message) {
-        super(message);
-    }
-
-    public SerialisationException(final String message, final Throwable e) {
-        super(message, e);
-    }
+public interface JSONSerialiserModules {
+    List<Module> getModules();
 }

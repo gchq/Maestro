@@ -15,7 +15,7 @@
  */
 package uk.gov.gchq.maestro.library;
 
-import uk.gov.gchq.maestro.ToStringBuilder;
+import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.util.Config;
 
 import java.util.HashMap;

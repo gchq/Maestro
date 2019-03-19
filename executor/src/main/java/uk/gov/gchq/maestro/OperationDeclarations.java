@@ -16,8 +16,9 @@
 
 package uk.gov.gchq.maestro;
 
-import uk.gov.gchq.maestro.exception.SerialisationException;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.commonutil.StreamUtil;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 
 import java.io.IOException;
 import java.io.InputStream;

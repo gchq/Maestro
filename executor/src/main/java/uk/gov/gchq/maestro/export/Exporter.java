@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package uk.gov.gchq.maestro.export;
 
 import uk.gov.gchq.koryphe.iterable.CloseableIterable;
-import uk.gov.gchq.maestro.exception.OperationException;
+import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 
 /**
  * An {@code Exporter} can store data of any kind and retrieve it.

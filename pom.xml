@@ -11,8 +11,6 @@
 
     <modules>
         <module>common-util</module>
-        <module>serialisation</module>
-        <module>exception</module>
         <module>operation</module>
         <module>executor</module>
         <module>proxy-executor</module>
@@ -127,7 +125,7 @@
 
     <developers>
         <developer>
-            <name>MeastroDevelopers</name>
+            <name>MaestroDevelopers</name>
             <organization>GCHQ</organization>
             <organizationUrl>https://github.com/gchq</organizationUrl>
         </developer>

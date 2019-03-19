@@ -1,14 +1,16 @@
+/*
 package uk.gov.gchq.maestro;
 
 import org.junit.Assert;
-import org.junit.Test;
 
-import uk.gov.gchq.maestro.exception.SerialisationException;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.commonutil.exception.OperationException;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.util.Config;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class ExecutorTest extends MaestroObjectTest {
 
@@ -30,15 +32,15 @@ public class ExecutorTest extends MaestroObjectTest {
 
     @Override
     protected Executor getTestObject() {
-        Map<Class<? extends DoGetOperation>, OperationHandler> operationHandlerMap = new HashMap<>();
+        Map<Class<? extends Operation>, OperationHandler> operationHandlerMap =
+                new HashMap<>();
         operationHandlerMap.put(TestOperation.class, new TestHandler().fieldHandler("handlerFieldValue1"));
-        final Map<String, String> config = new HashMap<>();
-        config.put("configKey", "configValue");
-        return new Executor().operationHandlerMap(operationHandlerMap).config(config);
+        return new Executor().operationHandlerMap(operationHandlerMap).config(new Config());
     }
 
     @Test
-    public void shouldRunTestHandler() throws SerialisationException {
+    public void shouldRunTestHandler() throws SerialisationException,
+            OperationException {
         final byte[] serialise = JSONSerialiser.serialise(getTestObject(), true);
 
         final Executor executor = Executor.deserialise(serialise);
@@ -46,3 +48,4 @@ public class ExecutorTest extends MaestroObjectTest {
         Assert.assertEquals("handlerFieldValue1,opFieldValue1", execute);
     }
 }
+*/

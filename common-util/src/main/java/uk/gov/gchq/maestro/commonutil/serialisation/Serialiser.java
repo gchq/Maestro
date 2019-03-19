@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro.serialisation;
+package uk.gov.gchq.maestro.commonutil.serialisation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.koryphe.serialisation.json.JsonSimpleClassName;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 
 import java.io.Serializable;
 

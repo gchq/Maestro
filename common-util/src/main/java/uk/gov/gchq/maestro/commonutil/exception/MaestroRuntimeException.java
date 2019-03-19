@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro.exception;
+package uk.gov.gchq.maestro.commonutil.exception;
 
-import static uk.gov.gchq.maestro.exception.Status.INTERNAL_SERVER_ERROR;
+import static uk.gov.gchq.maestro.commonutil.exception.Status.INTERNAL_SERVER_ERROR;
 
 /**
  * Subtype of {@link RuntimeException} with additional constructors to support the

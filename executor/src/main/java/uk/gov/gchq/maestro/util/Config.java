@@ -16,8 +16,10 @@
 package uk.gov.gchq.maestro.util;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.sun.deploy.util.ReflectionUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
+import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.OperationHandler;
 import uk.gov.gchq.maestro.StoreProperties;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
@@ -26,7 +28,6 @@ import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.library.Library;
 import uk.gov.gchq.maestro.library.NoLibrary;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.io.Output;
 
 import java.io.File;
 import java.io.IOException;
@@ -182,15 +183,6 @@ public class Config {
     }
 
     public void addOperationHandler(final Class<? extends Operation> opClass, final OperationHandler handler) {
-        if (null == handler) {
-            operationHandlers.remove(opClass);
-        } else {
-            operationHandlers.put(opClass, handler);
-        }
-    }
-
-    public <OP extends Output<O>, O> void addOperationHandler(final Class<?
-            extends Output<O>> opClass, final OperationHandler<O, OP> handler) {
         if (null == handler) {
             operationHandlers.remove(opClass);
         } else {

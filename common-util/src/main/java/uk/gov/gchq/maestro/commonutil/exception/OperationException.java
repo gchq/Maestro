@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.exception;
+package uk.gov.gchq.maestro.commonutil.exception;
 
-import static uk.gov.gchq.maestro.exception.Status.INTERNAL_SERVER_ERROR;
+import static uk.gov.gchq.maestro.commonutil.exception.Status.INTERNAL_SERVER_ERROR;
 
 /**
  * An {@code OperationException} is thrown when an operation fails.

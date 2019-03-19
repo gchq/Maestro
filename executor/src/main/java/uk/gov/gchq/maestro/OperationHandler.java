@@ -21,5 +21,5 @@ import uk.gov.gchq.maestro.operation.Operation;
 public interface OperationHandler<Op extends Operation> {
 
     Object doOperation(final Op operation, final Context context,
-                   final Executor executor);
+                       final Executor executor);
 }
