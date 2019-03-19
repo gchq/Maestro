@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.export;
-
 /**
- * A {@code GetExport} is an {@link uk.gov.gchq.maestro.operation.Operation} to
- * retrieve the details of an {@link Export} operation.
+ * Utility classes for the store classes.
  */
-public interface GetExport extends Export {
-    String getJobId();
-
-    GetExport setJobId(final String jobId);
-}
+package uk.gov.gchq.maestro.util;

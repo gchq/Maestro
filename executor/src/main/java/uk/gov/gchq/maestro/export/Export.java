@@ -18,10 +18,8 @@ package uk.gov.gchq.maestro.export;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import uk.gov.gchq.maestro.operation.Operation;
-
 /**
- * The base interface for {@link Operation}s which export results.
+ * The base interface for operation which export results.
  */
 public interface Export {
     String DEFAULT_KEY = "ALL";
@@ -38,13 +36,5 @@ public interface Export {
         }
     }
 
-    void setKey(String key);
-
-    interface Builder<OP extends Export, B extends Builder<OP, ?>>
-            extends Operation.Builder<OP, B> {
-        default B key(final String key) {
-            _getOp().setKey(key);
-            return _self();
-        }
-    }
+    Export key(String key);
 }

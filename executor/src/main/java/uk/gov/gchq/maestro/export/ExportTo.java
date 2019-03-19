@@ -27,8 +27,5 @@ import uk.gov.gchq.maestro.operation.io.InputOutput;
 public interface ExportTo<T> extends
         Export,
         InputOutput<T, T> {
-    interface Builder<OP extends ExportTo<T>, T, B extends Builder<OP, T, ?>>
-            extends Export.Builder<OP, B>,
-            InputOutput.Builder<OP, T, T, B> {
-    }
+
 }

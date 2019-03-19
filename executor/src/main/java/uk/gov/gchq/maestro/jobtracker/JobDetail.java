@@ -29,7 +29,7 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 
 /**
- * POJO containing details of a Gaffer job.
+ * POJO containing details of a Maestro job.
  */
 public class JobDetail implements Serializable {
     private static final long serialVersionUID = -1677432285205724269L;

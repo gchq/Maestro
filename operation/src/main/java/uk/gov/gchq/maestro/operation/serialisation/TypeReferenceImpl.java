@@ -22,7 +22,7 @@ import uk.gov.gchq.koryphe.iterable.CloseableIterable;
 
 /**
  * Utility class which contains a number of inner classes for different {@link TypeReference}s
- * used by the Gaffer project to denote the output type of an
+ * used by the Maestro project to denote the output type of an
  * {@link uk.gov.gchq.maestro.operation.io.Output}.
  *
  * @see uk.gov.gchq.maestro.operation.io.Output#getOutputTypeReference()

@@ -25,7 +25,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * {@code Output} operations are Gaffer operations which yield an output.
+ * {@code Output} operations are Maestro operations which yield an output.
  *
  * @param <O> the type of output object
  */

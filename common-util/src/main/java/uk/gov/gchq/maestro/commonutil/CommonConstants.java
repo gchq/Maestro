@@ -17,7 +17,7 @@
 package uk.gov.gchq.maestro.commonutil;
 
 /**
- * Common constants used throughout the Gaffer project.
+ * Common constants used throughout the Maestro project.
  */
 public final class CommonConstants {
     public static final String UTF_8 = "UTF-8";

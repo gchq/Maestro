@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A {@code JobTracker} is an entry in a Gaffer cache service which is used to store
+ * A {@code JobTracker} is an entry in a Maestro cache service which is used to store
  * details of jobs submitted to the graph.
  */
 public final class JobTracker {
@@ -61,7 +61,10 @@ public final class JobTracker {
      * @return true if the JobTracker cache is enabled
      */
     public static boolean isJobTrackerCacheEnabled() {
-        return null != CacheServiceLoader.getService().getCache(CACHE_NAME);
+        if (null != CacheServiceLoader.getService()) {
+            return null != CacheServiceLoader.getService().getCache(CACHE_NAME);
+        }
+        return false;
     }
 
     /**

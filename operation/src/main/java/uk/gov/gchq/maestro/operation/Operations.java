@@ -29,7 +29,7 @@ import java.util.List;
 public interface Operations<T extends Operation> {
     /**
      * Should return a {@link Collection} of all operations contained within the {@link Operations} implementation.
-     * The collection of operations may be modified by Gaffer.
+     * The collection of operations may be modified by Maestro.
      *
      * @return A {@link Collection} of {@link Operation}s.
      */

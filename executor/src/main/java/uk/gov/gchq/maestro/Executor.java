@@ -16,11 +16,10 @@
 
 package uk.gov.gchq.maestro;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -29,11 +28,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
-import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.exception.SerialisationException;
 import uk.gov.gchq.maestro.jobtracker.JobDetail;
 import uk.gov.gchq.maestro.jobtracker.JobStatus;
 import uk.gov.gchq.maestro.jobtracker.JobTracker;
+import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.operation.DefaultOperation;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
@@ -48,7 +47,7 @@ import java.util.Map;
 import static java.util.Objects.nonNull;
 
 
-@JsonPropertyOrder(value = {"class", "operationHandlerMap", "config"}, alphabetic = true)
+@JsonPropertyOrder(value = {"class", "config"}, alphabetic = true)
 public class Executor {
     public static final String OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S = "DoGetOperation %s is not supported by the %s.";
     public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
@@ -56,12 +55,17 @@ public class Executor {
     private Config config;
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
 
-    // This is just as a note to remind that this must be removed and added
+    /* TODO This is just as a note to remind that this must be removed and added
     // as a util
     //private JobTracker jobTracker;
+    */
 
     public Executor() {
         this.config = new Config();
+    }
+
+    public Executor(final Config config) {
+        this.config = config;
     }
 
     public static Executor deserialise(final byte[] jsonBytes) {
@@ -83,18 +87,6 @@ public class Executor {
             throw new IllegalArgumentException(ERROR_DESERIALISE_EXECUTOR, e);
         }
     }
-
-
-    @JsonCreator
-    public Executor(@JsonProperty("operationHandlerMap") final Map<Class<?
-            extends Operation>, OperationHandler> operationHandlerMap,
-                    @JsonProperty("config") final Map<String, String> config) {
-        this();
-        if (nonNull(operationHandlerMap) && !operationHandlerMap.isEmpty()) {
-            this.config.getOperationHandlers().putAll(operationHandlerMap);
-        }
-    }
-
 
     public <O> O execute(final Operation operation,
                          final Context context) throws OperationException {
@@ -159,10 +151,9 @@ public class Executor {
     }
 
 
-    private Object handleOperation(final Operation operation,
-                                   final Context context) {
+    private Object handleOperation(final Operation operation, final Context context) {
         Object result;
-        final OperationHandler<Operation> handler = getHandler(operation.getClass());
+        final OperationHandler handler = getHandler(operation.getClass());
 
         if (null != handler) {
             result = handler.doOperation(operation, context, this);
@@ -172,26 +163,29 @@ public class Executor {
             final Operation defaultOp = new DefaultOperation().setWrappedOp(operation);
             result = this.handleOperation(defaultOp, context);
         }
-
         return result;
     }
 
-    private <O, Op extends Operation> O doUnhandledOperation(final Op operation) {
+    private Object doUnhandledOperation(final Operation operation) {
         throw new UnsupportedOperationException(String.format(OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S, operation.getClass(), this.getClass().getSimpleName()));
     }
 
     @JsonIgnore
-    private OperationHandler<Operation> getHandler(final Class<? extends Operation> opClass) {
+    private OperationHandler<? extends Operation> getHandler(final Class<?
+            extends Operation> opClass) {
         return config.getOperationHandler(opClass);
     }
 
+    @JsonIgnore
     public Map<Class<? extends Operation>, OperationHandler> getOperationHandlerMap() {
         return ImmutableMap.copyOf(config.getOperationHandlers());
     }
 
     public Executor operationHandlerMap(final Map<Class<? extends Operation>, OperationHandler> operationHandlerMap) {
         this.config.getOperationHandlers().clear();
-        this.config.getOperationHandlers().putAll(operationHandlerMap);
+        if (nonNull(operationHandlerMap)) {
+            this.config.getOperationHandlers().putAll(operationHandlerMap);
+        }
         return this;
     }
 
@@ -213,10 +207,6 @@ public class Executor {
             }
         }
         return newJobDetail;
-    }
-
-    public Config getConfig() {
-        return config;
     }
 
     @Override
@@ -248,8 +238,16 @@ public class Executor {
         return this.getClass().getCanonicalName();
     }
 
+    @JsonSetter(value = "config")
     public Executor config(final Config config) {
-        this.config = config;
+        if (nonNull(config)) {
+            this.config = config;
+        }
         return this;
+    }
+
+    @JsonGetter("config")
+    public Config getConfig() {
+        return config;
     }
 }

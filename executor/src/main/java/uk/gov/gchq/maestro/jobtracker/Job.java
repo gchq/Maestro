@@ -26,7 +26,7 @@ import uk.gov.gchq.maestro.operation.Operation;
 import java.nio.charset.Charset;
 
 /**
- * POJO containing details of a scheduled Gaffer job,
+ * POJO containing details of a scheduled Maestro job,
  * a {@link Repeat} and an Operation chain as a String.
  * To be used within the ExecuteJob for a ScheduledJob.
  */

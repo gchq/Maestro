@@ -16,7 +16,7 @@
 
 package uk.gov.gchq.maestro.commonutil.exception;
 
-import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder; //TODO examine cyclic dependency on common-utils mondule
 
 import java.util.Arrays;
 
@@ -114,7 +114,7 @@ public enum Status {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //TODO examine cyclic dependency on common-utils mondule
                 .append(reason)
                 .build();
     }

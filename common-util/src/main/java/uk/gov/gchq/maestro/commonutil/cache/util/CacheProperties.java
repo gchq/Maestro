@@ -17,7 +17,7 @@
 package uk.gov.gchq.maestro.commonutil.cache.util;
 
 /**
- * System properties used by the Gaffer cache service implementations.
+ * System properties used by the Maestro cache service implementations.
  */
 public final class CacheProperties {
 
@@ -28,11 +28,11 @@ public final class CacheProperties {
     /**
      * Name of the system property to use in order to define the cache service class.
      */
-    public static final String CACHE_SERVICE_CLASS = "gaffer.cache.service.class";
+    public static final String CACHE_SERVICE_CLASS = "maestro.cache.service.class";
 
     /**
      * Name of the system property to use in order to locate the cache config file.
      */
-    public static final String CACHE_CONFIG_FILE = "gaffer.cache.config.file";
+    public static final String CACHE_CONFIG_FILE = "maestro.cache.config.file";
 
 }

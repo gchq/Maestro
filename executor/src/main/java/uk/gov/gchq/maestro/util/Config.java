@@ -15,11 +15,15 @@
  */
 package uk.gov.gchq.maestro.util;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.OperationHandler;
 import uk.gov.gchq.maestro.StoreProperties;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
@@ -43,6 +47,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static uk.gov.gchq.koryphe.util.ReflectionUtil.addReflectionPackages;
+
+@JsonPropertyOrder(value = {"class", "id", "description", "operationHandlers", "hooks", "properties", "library"}, alphabetic = true)
 public class Config {
     /**
      * The id of the store.
@@ -70,6 +79,7 @@ public class Config {
      * supported by this store, and an instance of all the OperationHandlers
      * that will be used to handle these operations.
      */
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
     private final Map<Class<? extends Operation>, OperationHandler> operationHandlers = new LinkedHashMap<>();
 
     private Library library;
@@ -147,6 +157,21 @@ public class Config {
         return properties;
     }
 
+    @JsonGetter("properties")
+    public Properties _getProperties() {
+        return isNull(properties) ? null : properties.getProperties();
+    }
+
+    @JsonSetter
+    public void setProperties(final Properties properties) {
+        if (nonNull(properties)) {
+            if (isNull(this.properties)) {
+                this.properties = new StoreProperties();
+            }
+            this.properties.setProperties(properties);
+        }
+    }
+
     public void setProperties(final StoreProperties properties) {
         final Class<? extends StoreProperties> requiredPropsClass = getPropertiesClass();
         properties.updateStorePropertiesClass(requiredPropsClass);
@@ -158,7 +183,7 @@ public class Config {
             this.properties = StoreProperties.loadStoreProperties(properties.getProperties());
         }
 
-        ReflectionUtil.addReflectionPackages(properties.getReflectionPackages());
+        addReflectionPackages(properties.getReflectionPackages());
         updateJsonSerialiser();
     }
 
@@ -182,7 +207,7 @@ public class Config {
         updateJsonSerialiser(properties);
     }
 
-    public void addOperationHandler(final Class<? extends Operation> opClass, final OperationHandler handler) {
+    public <OP extends Operation> void addOperationHandler(final Class<? extends Operation> opClass, final OperationHandler<OP> handler) {
         if (null == handler) {
             operationHandlers.remove(opClass);
         } else {
@@ -190,7 +215,8 @@ public class Config {
         }
     }
 
-    public OperationHandler<Operation> getOperationHandler(final Class<? extends Operation> opClass) {
+    public OperationHandler<? extends Operation> getOperationHandler(final Class<?
+    extends Operation> opClass) {
         return operationHandlers.get(opClass);
     }
 
@@ -252,7 +278,7 @@ public class Config {
         public B storeProperties(final StoreProperties properties) {
             this.properties = properties;
             if (null != properties) {
-                ReflectionUtil.addReflectionPackages(properties.getReflectionPackages());
+                addReflectionPackages(properties.getReflectionPackages());
                 JSONSerialiser.update(
                         properties.getJsonSerialiserClass(),
                         properties.getJsonSerialiserModules(),
@@ -495,5 +521,44 @@ public class Config {
         public B _self() {
             return (B) this;
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Config config = (Config) o;
+
+        final EqualsBuilder equalsBuilder = new EqualsBuilder()
+                .append(id, config.id)
+                .append(description, config.description)
+                .append(hooks, config.hooks)
+                .append(library, config.library)
+                .append(operationHandlers, config.operationHandlers)
+                .append(nonNull(properties), nonNull(config.properties));
+
+        if (equalsBuilder.isEquals() && nonNull(properties)) {
+            equalsBuilder.append(properties.getProperties(), config.properties.getProperties());
+        }
+
+        return equalsBuilder.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(description)
+                .append(hooks)
+                .append(properties)
+                .append(operationHandlers)
+                .append(library)
+                .toHashCode();
     }
 }

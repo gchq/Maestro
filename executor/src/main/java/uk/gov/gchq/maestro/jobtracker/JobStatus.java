@@ -18,33 +18,33 @@ package uk.gov.gchq.maestro.jobtracker;
 import uk.gov.gchq.koryphe.Summary;
 
 /**
- * Denotes the status of a Gaffer job.
+ * Denotes the status of a Maestro job.
  */
 @Summary("The status of a job")
 public enum JobStatus {
 
     /**
-     * The Gaffer job has been submitted and is running.
+     * The Maestro job has been submitted and is running.
      */
     RUNNING,
 
     /**
-     * The Gaffer job has completed successfully.
+     * The Maestro job has completed successfully.
      */
     FINISHED,
 
     /**
-     * An error occured while executing the Gaffer job.
+     * An error occured while executing the Maestro job.
      */
     FAILED,
 
     /**
-     * The Gaffer job is a parent job to a scheduled job(s).
+     * The Maestro job is a parent job to a scheduled job(s).
      */
     SCHEDULED_PARENT,
 
     /**
-     * The Gaffer job is cancelled (to be used for scheduled jobs).
+     * The Maestro job is cancelled (to be used for scheduled jobs).
      */
     CANCELLED
 }
