@@ -16,13 +16,10 @@
 
 package uk.gov.gchq.maestro.util;
 
-import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.MaestroObjectTest;
+import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
 import uk.gov.gchq.maestro.StoreProperties;
-import uk.gov.gchq.maestro.TestHandler;
-import uk.gov.gchq.maestro.TestOperation;
-
-import static org.junit.Assert.*;
+import uk.gov.gchq.maestro.helpers.TestHandler;
+import uk.gov.gchq.maestro.helpers.TestOperation;
 
 public class ConfigTest extends MaestroObjectTest<Config> {
 
@@ -30,8 +27,8 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     protected String getJSONString() {
         return "{\n" +
                 "  \"operationHandlers\" : {\n" +
-                "    \"uk.gov.gchq.maestro.TestOperation\" : {\n" +
-                "      \"class\" : \"uk.gov.gchq.maestro.TestHandler\",\n" +
+                "    \"uk.gov.gchq.maestro.helpers.TestOperation\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.helpers.TestHandler\",\n" +
                 "      \"handlerField\" : \"handlerFieldValue1\"\n" +
                 "    }\n" +
                 "  },\n" +

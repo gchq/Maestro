@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.operation.impl.export;
+package uk.gov.gchq.maestro.operation.export;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

@@ -19,7 +19,7 @@ package uk.gov.gchq.maestro.operation.handler.job;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.OutputOperationHandler;
+import uk.gov.gchq.maestro.operation.OutputOperationHandler;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.operation.OperationChain;
@@ -36,10 +36,10 @@ public class GetJobResultsHandler implements OutputOperationHandler<GetJobResult
                                             final Context context,
                                             final Executor executor) throws OperationException {
         if (!executor.isSupported(GetResultCacheExport.class)) {
-            throw new OperationException("Getting job results is not supported as the " + GetResultCacheExport.class.getSimpleName() + " operation has not been configured for this Gaffer graph.");
+            throw new OperationException("Getting job results is not supported as the " + GetResultCacheExport.class.getSimpleName() + " operation has not been configured for this Maestro instance.");
         }
 
-        // Delegates the operation to the GetGafferResultCacheExport operation handler.
+        // Delegates the operation to the GetResultCacheExport operation handler.
         return executor.execute(new OperationChain<>(new GetResultCacheExport.Builder()
                 .jobId(operation.getJobId())
                 .key(operation.getKeyOrDefault())

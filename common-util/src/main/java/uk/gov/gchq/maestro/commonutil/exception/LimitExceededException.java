@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Crown Copyright
+ * Copyright 2017-2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package uk.gov.gchq.maestro.operation.impl.export;
-
-import uk.gov.gchq.maestro.operation.io.InputOutput;
+package uk.gov.gchq.maestro.commonutil.exception;
 
 /**
- * An {@code ExportTo} is an operation which exports data from a source to a specified
- * output.
- *
- * @param <T> the type of object to export
+ * A {@code LimitExceededException} is a {@link RuntimeException} that will be
+ * thrown when an operation exceeds, or would exceed, some constraining limit.
  */
-public interface ExportTo<T> extends
-        Export,
-        InputOutput<T, T> {
-    interface Builder<OP extends ExportTo<T>, T, B extends Builder<OP, T, ?>>
-            extends Export.Builder<OP, B>,
-            InputOutput.Builder<OP, T, T, B> {
+public class LimitExceededException extends RuntimeException {
+
+    public LimitExceededException(final String message) {
+        super(message);
     }
+
 }

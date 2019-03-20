@@ -21,6 +21,9 @@ import org.junit.Test;
 
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
+import uk.gov.gchq.maestro.helpers.TestHandler;
+import uk.gov.gchq.maestro.helpers.TestOperation;
 import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.util.Config;
 
@@ -34,8 +37,8 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "  \"config\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
                 "    \"operationHandlers\" : {\n" +
-                "      \"uk.gov.gchq.maestro.TestOperation\" : {\n" +
-                "        \"class\" : \"uk.gov.gchq.maestro.TestHandler\",\n" +
+                "      \"uk.gov.gchq.maestro.helpers.TestOperation\" : {\n" +
+                "        \"class\" : \"uk.gov.gchq.maestro.helpers.TestHandler\",\n" +
                 "        \"handlerField\" : \"handlerFieldValue1\"\n" +
                 "      }\n" +
                 "    },\n" +

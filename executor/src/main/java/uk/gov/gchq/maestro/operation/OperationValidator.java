@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package uk.gov.gchq.maestro.operation;
 
-package uk.gov.gchq.maestro.operation.impl.export;
-
-import uk.gov.gchq.koryphe.iterable.CloseableIterable;
-import uk.gov.gchq.maestro.commonutil.exception.OperationException;
+import uk.gov.gchq.koryphe.ValidationResult;
+import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.user.User;
 
 /**
- * An {@code Exporter} can store data of any kind and retrieve it.
+ * Validation class for validating {@link Operation}s
  */
-public interface Exporter {
-    void add(final String key, final Iterable<?> results) throws OperationException;
+public class OperationValidator {
 
-    CloseableIterable<?> get(final String key) throws OperationException;
+    public ValidationResult validate(final Operation operation, final User user,
+                                     final Executor executor) {
+        return new ValidationResult();
+    }
 }

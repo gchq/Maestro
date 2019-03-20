@@ -30,7 +30,7 @@ import java.util.Map;
 
 /**
  * A {@code GetJobDetails} operation is used to retrieve the details of a single
- * job from a Gaffer graph.
+ * job from a Maestro instance.
  */
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
 @Since("1.0.0")

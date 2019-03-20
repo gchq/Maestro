@@ -13,14 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro;
 
+package uk.gov.gchq.maestro.operation.export;
 
-import uk.gov.gchq.maestro.commonutil.exception.OperationException;
-import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.io.InputOutput;
 
-public interface OperationHandler<Op extends Operation> {
-
-    Object doOperation(final Op operation, final Context context,
-                       final Executor executor) throws OperationException;
+/**
+ * An {@code ExportTo} is an operation which exports data from a source to a specified
+ * output.
+ *
+ * @param <T> the type of object to export
+ */
+public interface ExportTo<T> extends
+        Export,
+        InputOutput<T, T> {
+    interface Builder<OP extends ExportTo<T>, T, B extends Builder<OP, T, ?>>
+            extends Export.Builder<OP, B>,
+            InputOutput.Builder<OP, T, T, B> {
+    }
 }

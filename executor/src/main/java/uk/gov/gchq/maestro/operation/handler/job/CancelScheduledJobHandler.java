@@ -18,7 +18,7 @@ package uk.gov.gchq.maestro.operation.handler.job;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.OperationHandler;
+import uk.gov.gchq.maestro.operation.OperationHandler;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.jobtracker.JobStatus;
 import uk.gov.gchq.maestro.jobtracker.JobTracker;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Crown Copyright
+ * Copyright 2016-2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.operation.impl.export.resultcache;
+package uk.gov.gchq.maestro.operation.impl.export.set;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.collect.Sets;
 
 import uk.gov.gchq.koryphe.Since;
 import uk.gov.gchq.koryphe.Summary;
@@ -27,20 +26,20 @@ import uk.gov.gchq.maestro.operation.export.ExportTo;
 import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
- * An {@code ExportToResultCache} Export operation exports results into
- * a cache. The cache is backed by a simple Maestro instance that can be configured.
- * The results can be of any type - as long as they are json serialisable.
+ * An {@code ExportToSet} Export operation exports results to a Set.
+ * This Set export is maintained per single Job or
+ * {@link uk.gov.gchq.maestro.operation.Operation} only.
+ * It cannot be used across multiple separate operation requests.
+ * So ExportToSet and GetSetExport must be used inside a single operation chain.
  */
 @JsonPropertyOrder(value = {"class", "input", "key"}, alphabetic = true)
 @Since("1.0.0")
-@Summary("Exports to a cache backed by a Maestro instance")
-public class ExportToResultCache<T> implements
+@Summary("Exports results to a Set")
+public class ExportToSet<T> implements
         ExportTo<T> {
     private String key;
-    private Set<String> opAuths;
     private T input;
     private Map<String, String> options;
 
@@ -54,14 +53,6 @@ public class ExportToResultCache<T> implements
         this.key = key;
     }
 
-    public Set<String> getOpAuths() {
-        return opAuths;
-    }
-
-    public void setOpAuths(final Set<String> opAuths) {
-        this.opAuths = opAuths;
-    }
-
     @Override
     public T getInput() {
         return input;
@@ -73,18 +64,17 @@ public class ExportToResultCache<T> implements
     }
 
     @Override
-    public ExportToResultCache<T> shallowClone() {
-        return new ExportToResultCache.Builder<T>()
-                .key(key)
-                .opAuths(opAuths)
-                .input(input)
-                .options(options)
-                .build();
+    public TypeReference<T> getOutputTypeReference() {
+        return (TypeReference) new TypeReferenceImpl.Object();
     }
 
     @Override
-    public TypeReference<T> getOutputTypeReference() {
-        return (TypeReference) new TypeReferenceImpl.Object();
+    public ExportToSet<T> shallowClone() {
+        return new ExportToSet.Builder<T>()
+                .key(key)
+                .input(input)
+                .options(options)
+                .build();
     }
 
     @Override
@@ -97,20 +87,10 @@ public class ExportToResultCache<T> implements
         this.options = options;
     }
 
-    public static final class Builder<T> extends Operation.BaseBuilder<ExportToResultCache<T>, Builder<T>>
-            implements ExportTo.Builder<ExportToResultCache<T>, T, Builder<T>> {
+    public static final class Builder<T> extends Operation.BaseBuilder<ExportToSet<T>, Builder<T>>
+            implements ExportTo.Builder<ExportToSet<T>, T, Builder<T>> {
         public Builder() {
-            super(new ExportToResultCache<>());
-        }
-
-        public Builder<T> opAuths(final Set<String> opAuths) {
-            _getOp().setOpAuths(opAuths);
-            return _self();
-        }
-
-        public Builder<T> opAuths(final String... opAuths) {
-            _getOp().setOpAuths(Sets.newHashSet(opAuths));
-            return _self();
+            super(new ExportToSet<>());
         }
     }
 }

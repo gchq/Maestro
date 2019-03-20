@@ -22,15 +22,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import uk.gov.gchq.koryphe.Since;
 import uk.gov.gchq.koryphe.Summary;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.impl.export.Export;
-import uk.gov.gchq.maestro.operation.impl.export.GetExport;
+import uk.gov.gchq.maestro.operation.export.Export;
+import uk.gov.gchq.maestro.operation.export.GetExport;
 import uk.gov.gchq.maestro.operation.impl.export.resultcache.GetResultCacheExport;
 
 import java.util.Map;
 
 /**
  * A {@code GetJobResults} operation is used to retrieve the results of executing
- * a job on a Gaffer graph.
+ * a job on a Maestro instance.
  */
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
 @Since("1.0.0")

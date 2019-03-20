@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro;
+package uk.gov.gchq.maestro.helpers;
 
+
+import uk.gov.gchq.maestro.Context;
+import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.operation.OperationHandler;
 
 public class TestHandler implements OperationHandler<TestOperation> {
 

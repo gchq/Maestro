@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Crown Copyright
+ * Copyright 2016-2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.operation.impl.export.resultcache;
+package uk.gov.gchq.maestro.operation.impl.export.set;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import uk.gov.gchq.koryphe.Since;
 import uk.gov.gchq.koryphe.Summary;
-import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.export.Export;
 import uk.gov.gchq.maestro.operation.export.GetExport;
 import uk.gov.gchq.maestro.operation.io.Output;
 import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
@@ -31,20 +29,39 @@ import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 import java.util.Map;
 
 /**
- * A {@code GetResultCacheExport} operation is used to retrieve data which
- * has previously been exported to a results cache.
- *
- * @see ExportToResultCache
+ * An {@code GetSetExport} GetExport operation gets exported Set results.
+ * The Set export is maintained per single Job or
+ * {@link uk.gov.gchq.maestro.operation.Operation} only.
+ * It cannot be used across multiple separate operation requests.
+ * So ExportToSet and GetSetExport must be used inside a single operation chain.
  */
-@JsonPropertyOrder(value = {"class"}, alphabetic = true)
+@JsonPropertyOrder(value = {"class", "start", "end"}, alphabetic = true)
 @Since("1.0.0")
-@Summary("Fetches data from a result cache")
-public class GetResultCacheExport implements
+@Summary("Fetches data from a Set cache")
+public class GetSetExport implements
         GetExport,
-        Output<CloseableIterable<?>> {
+        Output<Iterable<?>> {
     private String jobId;
-    private String key = Export.DEFAULT_KEY;
+    private String key;
+    private int start = 0;
+    private Integer end = null;
     private Map<String, String> options;
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(final int start) {
+        this.start = start;
+    }
+
+    public Integer getEnd() {
+        return end;
+    }
+
+    public void setEnd(final Integer end) {
+        this.end = end;
+    }
 
     @Override
     public String getKey() {
@@ -67,15 +84,17 @@ public class GetResultCacheExport implements
     }
 
     @Override
-    public TypeReference<CloseableIterable<?>> getOutputTypeReference() {
-        return new TypeReferenceImpl.CloseableIterableObj();
+    public TypeReference<Iterable<?>> getOutputTypeReference() {
+        return new TypeReferenceImpl.IterableObj();
     }
 
     @Override
-    public GetResultCacheExport shallowClone() {
-        return new GetResultCacheExport.Builder()
+    public GetSetExport shallowClone() {
+        return new GetSetExport.Builder()
                 .jobId(jobId)
                 .key(key)
+                .start(start)
+                .end(end)
                 .options(options)
                 .build();
     }
@@ -91,11 +110,21 @@ public class GetResultCacheExport implements
     }
 
     public static class Builder
-            extends Operation.BaseBuilder<GetResultCacheExport, Builder>
-            implements GetExport.Builder<GetResultCacheExport, Builder>,
-            Output.Builder<GetResultCacheExport, CloseableIterable<?>, Builder> {
+            extends Operation.BaseBuilder<GetSetExport, Builder>
+            implements GetExport.Builder<GetSetExport, Builder>,
+            Output.Builder<GetSetExport, Iterable<?>, Builder> {
         public Builder() {
-            super(new GetResultCacheExport());
+            super(new GetSetExport());
+        }
+
+        public Builder start(final int start) {
+            _getOp().setStart(start);
+            return _self();
+        }
+
+        public Builder end(final Integer end) {
+            _getOp().setEnd(end);
+            return _self();
         }
     }
 }

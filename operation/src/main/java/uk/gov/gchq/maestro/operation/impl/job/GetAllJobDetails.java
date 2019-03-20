@@ -31,7 +31,7 @@ import java.util.Map;
 
 /**
  * A {@code GetAllJobDetails} operation is used to retrieve all of the {@link JobDetail}s
- * related to a Gaffer graph.
+ * related to a Maestro instance.
  */
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
 @Since("1.0.0")

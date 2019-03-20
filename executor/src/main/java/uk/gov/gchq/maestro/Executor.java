@@ -27,6 +27,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.maestro.commonutil.CloseableUtil;
 import uk.gov.gchq.maestro.commonutil.ExecutorService;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.exception.SerialisationException;
@@ -37,6 +38,8 @@ import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.operation.DefaultOperation;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
+import uk.gov.gchq.maestro.operation.OperationHandler;
+import uk.gov.gchq.maestro.operation.OperationValidation;
 import uk.gov.gchq.maestro.operation.impl.job.Job;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
@@ -51,16 +54,11 @@ import static java.util.Objects.nonNull;
 
 @JsonPropertyOrder(value = {"class", "config"}, alphabetic = true)
 public class Executor {
-    public static final String OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S = "DoGetOperation %s is not supported by the %s.";
+    public static final String OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S = "Operation %s is not supported by the %s.";
     public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     private Config config;
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
-
-    /* TODO This is just as a note to remind that this must be removed and added
-    // as a util
-    //private JobTracker jobTracker;
-    */
 
     public Executor() {
         this.config = new Config();
@@ -80,23 +78,21 @@ public class Executor {
         }
     }
 
-    public static Executor deserialise(final String josnString) {
+    public static Executor deserialise(final String jsonString) {
         try {
             LOGGER.info("Deserialising Executor from byte[]");
-            return JSONSerialiser.deserialise(josnString, Executor.class);
+            return JSONSerialiser.deserialise(jsonString, Executor.class);
         } catch (final SerialisationException e) {
             LOGGER.error(ERROR_DESERIALISE_EXECUTOR);
             throw new IllegalArgumentException(ERROR_DESERIALISE_EXECUTOR, e);
         }
     }
 
-    public <O> O execute(final Operation operation,
-                         final Context context) throws OperationException {
+    public <O> O execute(final Operation operation, final Context context) {
         return (O) execute(new Request(operation, context)).getResult();
     }
 
-    public <O> O execute(final Operation operation,
-                         final User user) throws OperationException {
+    public <O> O execute(final Operation operation, final User user) {
         return (O) execute(new Request(operation, new Context(user))).getResult();
     }
 
@@ -169,26 +165,6 @@ public class Executor {
         return execute(new Job.Builder().operation(operation).build(), context);
     }
 
-    private Object handleOperation(final Operation operation,
-                                   final Context context) throws OperationException {
-        Object result;
-        final OperationHandler handler = getHandler(operation.getClass());
-
-        if (null != handler) {
-            result = handler.doOperation(operation, context, this);
-        } else if (operation instanceof DefaultOperation) {
-            result = doUnhandledOperation(operation);
-        } else {
-            final Operation defaultOp = new DefaultOperation().setWrappedOp(operation);
-            result = this.handleOperation(defaultOp, context);
-        }
-        return result;
-    }
-
-    private Object doUnhandledOperation(final Operation operation) {
-        throw new UnsupportedOperationException(String.format(OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S, operation.getClass(), this.getClass().getSimpleName()));
-    }
-
     /**
      * @param operationClass the operation class to check
      * @return true if the provided operation is supported.
@@ -245,6 +221,53 @@ public class Executor {
         return newJobDetail;
     }
 
+    @JsonGetter("class") //TODO improvement
+    public String getClassName() {
+        return this.getClass().getCanonicalName();
+    }
+
+    @JsonSetter(value = "config")
+    public Executor config(final Config config) {
+        if (nonNull(config)) {
+            this.config = config;
+        }
+        return this;
+    }
+
+    @JsonGetter("config")
+    public Config getConfig() {
+        return config;
+    }
+
+    private Object handleOperation(final Operation operation,
+                                   final Context context) throws OperationException {
+        Object result;
+        final OperationHandler handler = getHandler(operation.getClass());
+
+        if (null != handler) {
+            if (handler instanceof OperationValidation) {
+                ((OperationValidation) handler).prepareOperation(operation,
+                        context, this);
+            }
+            result = handler.doOperation(operation, context, this);
+        } else if (operation instanceof DefaultOperation) {
+            result = doUnhandledOperation(operation);
+        } else {
+            final Operation defaultOp = new DefaultOperation().setWrappedOp(operation);
+            result = this.handleOperation(defaultOp, context);
+        }
+
+        if (null == result) {
+            CloseableUtil.close(operation);
+        }
+
+        return result;
+    }
+
+    private Object doUnhandledOperation(final Operation operation) {
+        throw new UnsupportedOperationException(String.format(OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S, operation.getClass(), this.getClass().getSimpleName()));
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -267,23 +290,5 @@ public class Executor {
         return new HashCodeBuilder(17, 37)
                 .append(config)
                 .toHashCode();
-    }
-
-    @JsonGetter("class") //TODO improvement
-    public String getClassName() {
-        return this.getClass().getCanonicalName();
-    }
-
-    @JsonSetter(value = "config")
-    public Executor config(final Config config) {
-        if (nonNull(config)) {
-            this.config = config;
-        }
-        return this;
-    }
-
-    @JsonGetter("config")
-    public Config getConfig() {
-        return config;
     }
 }

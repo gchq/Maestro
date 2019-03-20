@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package uk.gov.gchq.maestro.operation;
 
-package uk.gov.gchq.maestro;
 
-import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.Context;
+import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 
-public class OperationDeclaration {
-    public Class<? extends Operation> getOperation() {
-        throw new UnsupportedOperationException();
-    }
+public interface OperationHandler<Op extends Operation> {
 
-    public OperationHandler getHandler() {
-        throw new UnsupportedOperationException();
-    }
+    Object doOperation(final Op operation, final Context context,
+                       final Executor executor) throws OperationException;
 }
