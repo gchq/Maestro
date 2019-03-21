@@ -25,7 +25,7 @@ import uk.gov.gchq.maestro.jobtracker.JobTracker;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.operation.Operations;
-import uk.gov.gchq.maestro.operation.OutputOperationHandler;
+import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 import uk.gov.gchq.maestro.operation.impl.export.resultcache.ExportToResultCache;
 import uk.gov.gchq.maestro.operation.impl.job.Job;
 
@@ -52,7 +52,7 @@ public class JobHandler implements OutputOperationHandler<Job, JobDetail> {
 
     private JobDetail executeJob(final JobDetail jobDetail,
                                  final Context context, final Executor executor) throws OperationException {
-        if (!JobTracker.isJobTrackerCacheEnabled()) {
+        if (!JobTracker.isCacheEnabled()) {
             throw new OperationException("JobTracker has not been configured.");
         }
 

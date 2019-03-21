@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.Properties;
 
 /**
- * Simple implementation of the {@link ICacheService} interface which uses a
- * {@link HashMapCache} as the cache implementation.
+ * Simple impl of the {@link ICacheService} interface which uses a
+ * {@link HashMapCache} as the cache impl.
  */
 public class HashMapCacheService implements ICacheService {
     public static final String STATIC_CACHE = "maestro.cache.hashmap.static";

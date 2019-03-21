@@ -16,8 +16,8 @@
 
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
-import uk.gov.gchq.maestro.operation.OperationHandler;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.util.Config;
 
 import java.util.Map;

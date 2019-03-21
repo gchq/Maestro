@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
 
 import uk.gov.gchq.maestro.commonutil.cache.ICache;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
-import uk.gov.gchq.maestro.commonutil.serialisation.implementation.JavaSerialiser;
+import uk.gov.gchq.maestro.commonutil.serialisation.impl.JavaSerialiser;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * Simple implementation of the {@link ICache} interface, using a {@link HashMap}
+ * Simple impl of the {@link ICache} interface, using a {@link HashMap}
  * as the cache data store.
  *
  * @param <K> The object type that acts as the key for the HashMap

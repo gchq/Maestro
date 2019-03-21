@@ -21,14 +21,14 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.jobtracker.JobStatus;
 import uk.gov.gchq.maestro.jobtracker.JobTracker;
-import uk.gov.gchq.maestro.operation.OperationHandler;
+import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.impl.job.CancelScheduledJob;
 
 public class CancelScheduledJobHandler implements OperationHandler<CancelScheduledJob> {
     @Override
     public Void doOperation(final CancelScheduledJob operation,
                             final Context context, final Executor executor) throws OperationException {
-        if (!JobTracker.isJobTrackerCacheEnabled()) {
+        if (!JobTracker.isCacheEnabled()) {
             throw new OperationException("JobTracker not enabled");
         }
         if (null == operation.getJobId()) {

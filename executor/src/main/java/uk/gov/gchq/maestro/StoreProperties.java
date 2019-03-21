@@ -33,7 +33,7 @@ import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiserModules;
-import uk.gov.gchq.maestro.operation.OperationDeclarations;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclarations;
 
 import java.io.IOException;
 import java.io.InputStream;

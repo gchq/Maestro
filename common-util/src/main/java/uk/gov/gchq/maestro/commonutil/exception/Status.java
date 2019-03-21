@@ -16,7 +16,7 @@
 
 package uk.gov.gchq.maestro.commonutil.exception;
 
-import org.apache.commons.lang3.builder.ToStringBuilder; //TODO examine cyclic dependency on common-utils mondule
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Arrays;
 

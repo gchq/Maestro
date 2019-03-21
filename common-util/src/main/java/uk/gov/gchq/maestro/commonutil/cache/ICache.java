@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Interface that All cache objects must abide by so components may instantiate any implementation of a cache - no
+ * Interface that All cache objects must abide by so components may instantiate any impl of a cache - no
  * matter what cache it is.
  *
  * @param <K> The object type that acts as the key for the cache

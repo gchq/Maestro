@@ -24,7 +24,7 @@ import java.util.Set;
 
 /**
  * The cache service interface which enables the cache service loader to instantiate
- * any service no matter the implementation. All services should be able to provide
+ * any service no matter the impl. All services should be able to provide
  * a cache and methods to interact with it.
  */
 public interface ICacheService {

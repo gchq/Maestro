@@ -16,7 +16,7 @@
 
 package uk.gov.gchq.maestro.library;
 
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.util.Config;
 
 import java.io.FileOutputStream;
@@ -89,7 +89,7 @@ public class FileLibrary extends Library {
         if (!configPath.toFile().exists()) {
             return null;
         }
-        return new Config.BaseBuilder().json(configPath).build();
+        return new Config.Builder().json(configPath).build();
     }
 
     private Path getConfigPath(final String storeId) {

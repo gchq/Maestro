@@ -20,9 +20,9 @@ import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.OperationHandler;
 import uk.gov.gchq.maestro.operation.export.Export;
 import uk.gov.gchq.maestro.operation.export.Exporter;
+import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 
 /**
  * Abstract class describing how to handle {@link Export} operations.

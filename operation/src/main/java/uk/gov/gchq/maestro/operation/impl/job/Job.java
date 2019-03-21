@@ -17,10 +17,13 @@
 package uk.gov.gchq.maestro.operation.impl.job;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
+import uk.gov.gchq.koryphe.Since;
+import uk.gov.gchq.koryphe.Summary;
 import uk.gov.gchq.maestro.commonutil.CommonConstants;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
@@ -33,10 +36,18 @@ import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 import java.nio.charset.Charset;
 import java.util.Map;
 
+/**
+ * A {@code Job} operation is used to add a Job, possibly scheduled, on a
+ * Maestro instance.
+ */
+@JsonPropertyOrder(value = {"class"}, alphabetic = true)
+@Since("2.0.0")
+@Summary("Add a job")
 public class Job implements Output<JobDetail> {
     private static final String CHARSET_NAME = CommonConstants.UTF_8;
     private Repeat repeat;
     private Operation operation;
+    private Map<String, String> options;
 
     public Repeat getRepeat() {
         return repeat;
@@ -75,7 +86,7 @@ public class Job implements Output<JobDetail> {
     }
 
     @Override
-    public Operation shallowClone() throws CloneFailedException {
+    public Job shallowClone() throws CloneFailedException {
         return new Job.Builder()
                 .operation(operation)
                 .repeat(repeat)
@@ -83,14 +94,15 @@ public class Job implements Output<JobDetail> {
     }
 
     @Override
-    public Map<String, String> getOptions() {
-        return null;
+    public void setOptions(final Map<String, String> options) {
+        this.options = options;
     }
 
     @Override
-    public void setOptions(final Map<String, String> options) {
-
+    public Map<String, String> getOptions() {
+        return options;
     }
+
 
     @Override
     public TypeReference<JobDetail> getOutputTypeReference() {

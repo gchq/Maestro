@@ -16,8 +16,8 @@
 
 package uk.gov.gchq.maestro.util;
 
-import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
 import uk.gov.gchq.maestro.StoreProperties;
+import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
 import uk.gov.gchq.maestro.helpers.TestHandler;
 import uk.gov.gchq.maestro.helpers.TestOperation;
 

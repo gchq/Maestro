@@ -19,7 +19,7 @@ package uk.gov.gchq.maestro.helpers;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.operation.OperationHandler;
+import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 
 public class TestHandler implements OperationHandler<TestOperation> {
 

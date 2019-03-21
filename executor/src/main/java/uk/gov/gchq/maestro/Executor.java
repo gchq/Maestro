@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.maestro.commonutil.CloseableUtil;
 import uk.gov.gchq.maestro.commonutil.ExecutorService;
+import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.exception.SerialisationException;
 import uk.gov.gchq.maestro.jobtracker.JobDetail;
@@ -38,14 +39,14 @@ import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.operation.DefaultOperation;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
-import uk.gov.gchq.maestro.operation.OperationHandler;
-import uk.gov.gchq.maestro.operation.OperationValidation;
+import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.impl.job.Job;
+import uk.gov.gchq.maestro.operation.validator.OperationValidation;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
-import uk.gov.gchq.maestro.util.Hook;
 import uk.gov.gchq.maestro.util.Request;
 import uk.gov.gchq.maestro.util.Result;
+import uk.gov.gchq.maestro.util.hook.Hook;
 
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
@@ -61,11 +62,21 @@ public class Executor {
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
 
     public Executor() {
-        this.config = new Config();
+        this(new Config());
     }
 
     public Executor(final Config config) {
         this.config = config;
+        startCacheServiceLoader(config.getProperties());
+        addExecutorService(config.getProperties());
+    }
+
+    protected void startCacheServiceLoader(final StoreProperties properties) {
+        CacheServiceLoader.initialise(properties.getProperties());
+    }
+
+    private void addExecutorService(final StoreProperties properties) {
+        ExecutorService.initialise(properties.getJobExecutorThreadCount());
     }
 
     public static Executor deserialise(final byte[] jsonBytes) {
@@ -206,7 +217,7 @@ public class Executor {
         final JobDetail newJobDetail = new JobDetail(context.getJobId(), context
                 .getUser()
                 .getUserId(), OperationChain.wrap(operation), jobStatus, msg);
-        if (JobTracker.isJobTrackerCacheEnabled()) {
+        if (JobTracker.isCacheEnabled()) {
             final JobDetail oldJobDetail =
                     JobTracker.getJob(newJobDetail.getJobId(),
                             context

@@ -60,7 +60,7 @@ import java.util.Set;
  * Child classes must has a default no argument constructor. You will then need
  * to set the maestro.serialiser.json.class property in your StoreProperties or
  * as a System Property. You can also add modules to the ObjectMapper by writing
- * an implementation of {@link JSONSerialiserModules} and registering it using the
+ * an impl of {@link JSONSerialiserModules} and registering it using the
  * maestro.serialiser.json.modules property in your StoreProperties or
  * as a System Property.
  * </p>

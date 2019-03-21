@@ -22,7 +22,7 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.operation.OperationChain;
-import uk.gov.gchq.maestro.operation.OutputOperationHandler;
+import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 import uk.gov.gchq.maestro.operation.impl.export.resultcache.GetResultCacheExport;
 import uk.gov.gchq.maestro.operation.impl.job.GetJobResults;
 

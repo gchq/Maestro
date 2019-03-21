@@ -20,7 +20,7 @@ import java.io.Closeable;
 import java.util.Iterator;
 
 /**
- * A {@code CloseableIterator} is an {@link Iterator} which must provide an implementation
+ * A {@code CloseableIterator} is an {@link Iterator} which must provide an impl
  * of the {@link Closeable#close()} method.
  *
  * @param <T> the type of items in the iterator.

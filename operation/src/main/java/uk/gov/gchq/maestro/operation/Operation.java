@@ -56,7 +56,7 @@ import java.util.Map;
  * {@link uk.gov.gchq.maestro.operation.io.MultiInput} (Use this in addition if you operation takes multiple inputs. This will help with json  serialisation)
  * </p>
  * <p>
- * Each Operation implementation should have a corresponding unit test class
+ * Each Operation impl should have a corresponding unit test class
  * that extends the OperationTest class.
  * </p>
  * <p>
@@ -95,7 +95,7 @@ public interface Operation extends Closeable {
     /**
      * @return the operation options. This may contain store specific options such as authorisation strings or and
      * other properties required for the operation to be executed. Note these options will probably not be interpreted
-     * in the same way by every store implementation.
+     * in the same way by every store impl.
      */
     @JsonIgnore
     Map<String, String> getOptions();
@@ -103,7 +103,7 @@ public interface Operation extends Closeable {
     /**
      * @param options the operation options. This may contain store specific options such as authorisation strings or and
      *                other properties required for the operation to be executed. Note these options will probably not be interpreted
-     *                in the same way by every store implementation.
+     *                in the same way by every store impl.
      */
     @JsonSetter
     void setOptions(final Map<String, String> options);
@@ -111,7 +111,7 @@ public interface Operation extends Closeable {
     /**
      * Adds an operation option. This may contain store specific options such as authorisation strings or and
      * other properties required for the operation to be executed. Note these options will probably not be interpreted
-     * in the same way by every store implementation.
+     * in the same way by every store impl.
      *
      * @param name  the name of the option
      * @param value the value of the option

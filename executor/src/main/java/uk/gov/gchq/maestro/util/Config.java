@@ -16,6 +16,7 @@
 package uk.gov.gchq.maestro.util;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -31,7 +32,11 @@ import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.library.Library;
 import uk.gov.gchq.maestro.library.NoLibrary;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.OperationHandler;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclarations;
+import uk.gov.gchq.maestro.operation.handler.OperationHandler;
+import uk.gov.gchq.maestro.util.hook.Hook;
+import uk.gov.gchq.maestro.util.hook.HookPath;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +55,7 @@ import java.util.Properties;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static uk.gov.gchq.koryphe.util.ReflectionUtil.addReflectionPackages;
+import static uk.gov.gchq.maestro.operation.declaration.OperationDeclarations.fromJson;
 
 @JsonPropertyOrder(value = {"class", "id", "description", "operationHandlers", "hooks", "properties", "library"}, alphabetic = true)
 public class Config {
@@ -72,14 +78,14 @@ public class Config {
      * The store properties - contains specific configuration information for
      * the store - such as database connection strings.
      */
-    private StoreProperties properties;
+    private StoreProperties properties = new StoreProperties();
 
     /**
      * The operation handlers - A Map containing all classes of operations
      * supported by this store, and an instance of all the OperationHandlers
      * that will be used to handle these operations.
      */
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     private final Map<Class<? extends Operation>, OperationHandler> operationHandlers = new LinkedHashMap<>();
 
     private Library library;
@@ -119,7 +125,7 @@ public class Config {
         this.description = description;
     }
 
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     public Library getLibrary() {
         return library;
     }
@@ -170,6 +176,32 @@ public class Config {
             }
             this.properties.setProperties(properties);
         }
+    }
+
+    /**
+     * Returns the operation definitions from the file specified in the
+     * properties.
+     * This is an optional feature, so if the property does not exist then this
+     * function
+     * will return an empty object.
+     *
+     * @return The Operation Definitions to load dynamically
+     */
+    @JsonIgnore
+    public OperationDeclarations getOperationDeclarations() {
+        OperationDeclarations declarations = null;
+
+        final String declarationsPaths =
+                properties.get(StoreProperties.OPERATION_DECLARATIONS);
+        if (null != declarationsPaths) {
+            declarations = OperationDeclarations.fromPaths(declarationsPaths);
+        }
+
+        if (null == declarations) {
+            declarations = new OperationDeclarations.Builder().build();
+        }
+
+        return declarations;
     }
 
     public void setProperties(final StoreProperties properties) {
@@ -235,47 +267,41 @@ public class Config {
                 .toString();
     }
 
-    interface Builder<conf, B extends Builder<conf, ?>> {
-        conf _getConf();
-
-        B _self();
-    }
-
-    public static class BaseBuilder<conf extends Config,
-            B extends BaseBuilder> implements Builder {
-        private conf config;
+    public static class Builder {
+        private Config config = new Config();
         private List<Hook> hooks;
         private StoreProperties properties;
+        Map<Class<? extends Operation>, OperationHandler> operationHandlers;
 
         // Config
-        public B config(final conf config) {
+        public Builder config(final Config config) {
             this.config = config;
-            return _self();
+            return this;
         }
 
         // Id
-        public B id(final String id) {
+        public Builder id(final String id) {
             config.setId(id);
-            return _self();
+            return this;
         }
 
         // Description
-        public B description(final String description) {
+        public Builder description(final String description) {
             config.setDescription(description);
-            return _self();
+            return this;
         }
 
-        public B library(final Library library) {
+        public Builder library(final Library library) {
             this.config.setLibrary(library);
-            return _self();
+            return this;
         }
 
         // StoreProperties
-        public B storeProperties(final Properties properties) {
+        public Builder storeProperties(final Properties properties) {
             return storeProperties(null != properties ? StoreProperties.loadStoreProperties(properties) : null);
         }
 
-        public B storeProperties(final StoreProperties properties) {
+        public Builder storeProperties(final StoreProperties properties) {
             this.properties = properties;
             if (null != properties) {
                 addReflectionPackages(properties.getReflectionPackages());
@@ -285,32 +311,32 @@ public class Config {
                         properties.getStrictJson()
                 );
             }
-            return _self();
+            return this;
         }
 
-        public B storeProperties(final String propertiesPath) {
+        public Builder storeProperties(final String propertiesPath) {
             return storeProperties(null != propertiesPath ? StoreProperties.loadStoreProperties(propertiesPath) : null);
         }
 
-        public B storeProperties(final Path propertiesPath) {
+        public Builder storeProperties(final Path propertiesPath) {
             if (null == propertiesPath) {
                 properties = null;
             } else {
                 storeProperties(StoreProperties.loadStoreProperties(propertiesPath));
             }
-            return _self();
+            return this;
         }
 
-        public B storeProperties(final InputStream propertiesStream) {
+        public Builder storeProperties(final InputStream propertiesStream) {
             if (null == propertiesStream) {
                 properties = null;
             } else {
                 storeProperties(StoreProperties.loadStoreProperties(propertiesStream));
             }
-            return _self();
+            return this;
         }
 
-        public B storeProperties(final URI propertiesURI) {
+        public Builder storeProperties(final URI propertiesURI) {
             if (null != propertiesURI) {
                 try {
                     storeProperties(StreamUtil.openStream(propertiesURI));
@@ -319,17 +345,17 @@ public class Config {
                 }
             }
 
-            return _self();
+            return this;
         }
 
-        public B addStoreProperties(final Properties properties) {
+        public Builder addStoreProperties(final Properties properties) {
             if (null != properties) {
                 addStoreProperties(StoreProperties.loadStoreProperties(properties));
             }
-            return _self();
+            return this;
         }
 
-        public B addStoreProperties(final StoreProperties updateProperties) {
+        public Builder addStoreProperties(final StoreProperties updateProperties) {
             if (null != updateProperties) {
                 if (null == this.properties) {
                     storeProperties(updateProperties);
@@ -337,31 +363,31 @@ public class Config {
                     this.properties.merge(updateProperties);
                 }
             }
-            return _self();
+            return this;
         }
 
-        public B addStoreProperties(final String updatePropertiesPath) {
+        public Builder addStoreProperties(final String updatePropertiesPath) {
             if (null != updatePropertiesPath) {
                 addStoreProperties(StoreProperties.loadStoreProperties(updatePropertiesPath));
             }
-            return _self();
+            return this;
         }
 
-        public B addStoreProperties(final Path updatePropertiesPath) {
+        public Builder addStoreProperties(final Path updatePropertiesPath) {
             if (null != updatePropertiesPath) {
                 addStoreProperties(StoreProperties.loadStoreProperties(updatePropertiesPath));
             }
-            return _self();
+            return this;
         }
 
-        public B addStoreProperties(final InputStream updatePropertiesStream) {
+        public Builder addStoreProperties(final InputStream updatePropertiesStream) {
             if (null != updatePropertiesStream) {
                 addStoreProperties(StoreProperties.loadStoreProperties(updatePropertiesStream));
             }
-            return _self();
+            return this;
         }
 
-        public B addStoreProperties(final URI updatePropertiesURI) {
+        public Builder addStoreProperties(final URI updatePropertiesURI) {
             if (null != updatePropertiesURI) {
                 try {
                     addStoreProperties(StreamUtil.openStream(updatePropertiesURI));
@@ -369,11 +395,11 @@ public class Config {
                     throw new IllegalArgumentException("Unable to read storeProperties from URI: " + updatePropertiesURI, e);
                 }
             }
-            return _self();
+            return this;
         }
 
         // Json config builder
-        public B json(final Path path) {
+        public Builder json(final Path path) {
             try {
                 return json(null != path ? Files.readAllBytes(path) : null);
             } catch (final IOException e) {
@@ -381,27 +407,27 @@ public class Config {
             }
         }
 
-        public B json(final URI uri) {
+        public Builder json(final URI uri) {
             try {
                 json(null != uri ? StreamUtil.openStream(uri) : null);
             } catch (final IOException e) {
                 throw new IllegalArgumentException("Unable to read config from uri: " + uri, e);
             }
 
-            return _self();
+            return this;
         }
 
-        public B json(final InputStream stream) {
+        public Builder json(final InputStream stream) {
             try {
                 json(null != stream ? IOUtils.toByteArray(stream) : null);
             } catch (final IOException e) {
                 throw new IllegalArgumentException("Unable to read config from input stream", e);
             }
 
-            return _self();
+            return this;
         }
 
-        public B json(final byte[] bytes) {
+        public Builder json(final byte[] bytes) {
             if (null != bytes) {
                 try {
                     merge(JSONSerialiser.deserialise(bytes, Config.class));
@@ -409,11 +435,11 @@ public class Config {
                     throw new IllegalArgumentException("Unable to deserialise config", e);
                 }
             }
-            return _self();
+            return this;
         }
 
         // Merge configs
-        public B merge(final Config config) {
+        public Builder merge(final Config config) {
             if (null != config) {
                 if (null != this.config.getId()) {
                     this.config.setId(config.getId());
@@ -425,17 +451,17 @@ public class Config {
                 this.config.getProperties().merge(config.getProperties());
                 this.config.getOperationHandlers().putAll(config.getOperationHandlers());
             }
-            return _self();
+            return this;
         }
 
-        public B merge(final String uri) {
+        public Builder merge(final String uri) {
             if (null != uri) {
                 merge(Paths.get(uri));
             }
-            return _self();
+            return this;
         }
 
-        public B merge(final Path path) {
+        public Builder merge(final Path path) {
             if (null != path) {
                 try {
                     merge(JSONSerialiser.deserialise(null != path ?
@@ -446,10 +472,10 @@ public class Config {
                             "config from path: " + path, e);
                 }
             }
-            return _self();
+            return this;
         }
 
-        public B merge(final InputStream stream) {
+        public Builder merge(final InputStream stream) {
             try {
                 merge(JSONSerialiser.deserialise(null != stream ?
                                 IOUtils.toByteArray(stream) : null,
@@ -458,11 +484,11 @@ public class Config {
                     final IOException e) {
                 throw new IllegalArgumentException("Unable to read graph config from input stream", e);
             }
-            return _self();
+            return this;
         }
 
         // Hooks
-        public B addHooks(final Path hooksPath) {
+        public Builder addHooks(final Path hooksPath) {
             if (null == hooksPath || !hooksPath.toFile().exists()) {
                 throw new IllegalArgumentException("Unable to find graph hooks file: " + hooksPath);
             }
@@ -476,7 +502,7 @@ public class Config {
             return addHooks(hooks);
         }
 
-        public B addHook(final Path hookPath) {
+        public Builder addHook(final Path hookPath) {
             if (null == hookPath || !hookPath.toFile().exists()) {
                 throw new IllegalArgumentException("Unable to find graph hook file: " + hookPath);
             }
@@ -491,35 +517,65 @@ public class Config {
             return addHook(hook);
         }
 
-        public B addHook(final Hook hook) {
+        public Builder addHook(final Hook hook) {
             if (null != hook) {
                 this.hooks.add(hook);
             }
-            return _self();
+            return this;
         }
 
-        public B addHooks(final Hook... hooks) {
+        public Builder addHooks(final Hook... hooks) {
             if (null != hooks) {
                 this.hooks.addAll(Arrays.asList(hooks));
             }
-            return _self();
+            return this;
         }
 
-        public conf build() {
+        public Builder operationHandlers(final String paths) {
+            final OperationDeclarations allDefinitions = new OperationDeclarations.Builder().build();
+
+            try {
+                for (final String pathStr : paths.split(",")) {
+                    final OperationDeclarations definitions;
+                    final Path path = Paths.get(pathStr);
+                    if (path.toFile().exists()) {
+                        definitions = fromJson(Files.readAllBytes(path));
+                    } else {
+                        definitions = fromJson(StreamUtil.openStream(OperationDeclarations.class, pathStr));
+                    }
+                    if (null != definitions && null != definitions.getOperations()) {
+                        allDefinitions.getOperations().addAll(definitions.getOperations());
+                    }
+                }
+            } catch (final IOException e) {
+                throw new RuntimeException("Failed to load Operation handlers" +
+                        " from paths: " + paths + ". Due to " + e.getMessage(), e);
+            }
+
+            return operationHandlers(allDefinitions);
+        }
+
+        public Builder operationHandlers(final OperationDeclarations operationDeclarations) {
+            operationDeclarations.getOperations().forEach(opDec -> operationHandler(opDec));
+            return this;
+        }
+
+        public Builder operationHandler(final OperationDeclaration operationDeclaration) {
+            if (null == operationHandlers) {
+                operationHandlers = new LinkedHashMap<>();
+            }
+            operationHandlers.put(operationDeclaration.getOperation(),
+                    operationDeclaration.getHandler());
+            return this;
+        }
+
+        public Config build() {
             if (null == config.getLibrary()) {
                 config.setLibrary(new NoLibrary());
             }
-            return _getConf();
-        }
-
-        @Override
-        public conf _getConf() {
+            config.getProperties().getProperties().putAll(properties.getProperties());
+            config.getOperationHandlers().putAll(operationHandlers);
             return config;
-        }
-
-        @Override
-        public B _self() {
-            return (B) this;
         }
     }
 

@@ -51,6 +51,30 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "}";
     }
 
+    protected String getJSONString2() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
+                "  \"config\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
+                "    \"operationHandlers\" : \"path/to/opDeclarations\",\n" +
+                "    \"hooks\" : [ ],\n" +
+                "    \"propertiesPath\" : \"path/to/props/\",\n" +
+                "  }\n" +
+                "}";
+    }
+
+    /*@Override
+    public void shouldJSONSerialise() throws uk.gov.gchq.maestro.commonutil.exception.SerialisationException {
+        super.shouldJSONSerialise();
+        final Executor testObject = getTestObject();
+
+        final String executorString = getJSONString2();
+        requireNonNull(executorString);
+        final byte[] serialise = uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser.serialise(testObject, true);
+        assertEquals(executorString, new String(serialise));
+        assertEquals(testObject, uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser.deserialise(serialise, getTestObjectClass()));
+    }*/
+
     @Override
     protected Executor getTestObject() {
         final Config config = new Config();

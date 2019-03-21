@@ -19,7 +19,7 @@ package uk.gov.gchq.maestro.commonutil.iterable;
 import java.io.Closeable;
 
 /**
- * A {@code CloseableIterable} is an {@link Iterable} which must provide an implementation
+ * A {@code CloseableIterable} is an {@link Iterable} which must provide an impl
  * of the {@link Closeable#close()} method.
  *
  * @param <T> the type of items in the iterable.

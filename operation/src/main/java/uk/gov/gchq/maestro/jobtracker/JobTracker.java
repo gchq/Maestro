@@ -60,11 +60,8 @@ public final class JobTracker {
      *
      * @return true if the JobTracker cache is enabled
      */
-    public static boolean isJobTrackerCacheEnabled() {
-        if (null != CacheServiceLoader.getService()) {
-            return null != CacheServiceLoader.getService().getCache(CACHE_NAME);
-        }
-        return false;
+    public static boolean isCacheEnabled() {
+        return null != CacheServiceLoader.getService();
     }
 
     /**

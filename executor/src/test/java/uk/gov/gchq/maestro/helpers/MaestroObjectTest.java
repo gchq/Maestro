@@ -21,7 +21,6 @@ import org.junit.Test;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 
-
 import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
 

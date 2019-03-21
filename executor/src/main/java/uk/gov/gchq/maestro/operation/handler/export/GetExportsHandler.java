@@ -22,8 +22,8 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
-import uk.gov.gchq.maestro.operation.OutputOperationHandler;
 import uk.gov.gchq.maestro.operation.export.GetExport;
+import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 import uk.gov.gchq.maestro.operation.impl.export.GetExports;
 
 import java.util.LinkedHashMap;

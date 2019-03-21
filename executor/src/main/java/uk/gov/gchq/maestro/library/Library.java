@@ -71,7 +71,7 @@ public abstract class Library {
     }
 
     public Config resolveConfig(final Config config, final String parentStoreId) {
-        Config.BaseBuilder resultConfigBuilder = new Config.BaseBuilder<>();
+        Config.Builder resultConfigBuilder = new Config.Builder();
         if (null != parentStoreId) {
             resultConfigBuilder.config(this.getConfig(parentStoreId));
         }

@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * An abstract service which handles all the cache interaction methods. This leaves
  * only the {@code getCache()} method which will be fulfilled according to the cache
- * implementation.
+ * impl.
  */
 public abstract class AbstractCacheService implements ICacheService {
 
