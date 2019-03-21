@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * A {@code FileLibrary} stores a {@link Library} in a specified
  * location as files.  It will store a graphId file with the relationships between
  * the graphId, storePropertiesId and the schemaId.  It will also store the
- * StoreProperties and Schema in two other files.  They will be named using the ids.
+ * ExecutorProperties and Schema in two other files.  They will be named using the ids.
  */
 public class FileLibrary extends Library {
     private static final Pattern PATH_ALLOWED_CHARACTERS = Pattern.compile("[a-zA-Z0-9_/\\\\\\-]*");

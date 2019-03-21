@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package uk.gov.gchq.maestro;
 
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
 import uk.gov.gchq.maestro.operation.OperationHandler;
 import uk.gov.gchq.maestro.operation.Operation;

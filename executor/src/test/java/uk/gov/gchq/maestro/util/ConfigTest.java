@@ -17,7 +17,7 @@
 package uk.gov.gchq.maestro.util;
 
 import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
-import uk.gov.gchq.maestro.StoreProperties;
+import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.helpers.TestHandler;
 import uk.gov.gchq.maestro.helpers.TestOperation;
 
@@ -35,7 +35,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
                 "  \"hooks\" : [ ],\n" +
                 "  \"properties\" : {\n" +
                 "    \"configKey\" : \"configValue\",\n" +
-                "    \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.StoreProperties\"\n" +
+                "    \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
                 "  }\n" +
                 "}";
     }
@@ -44,7 +44,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     protected Config getTestObject() {
         final Config config = new Config();
         config.addOperationHandler(TestOperation.class, new TestHandler().fieldHandler("handlerFieldValue1"));
-        final StoreProperties properties = new StoreProperties();
+        final ExecutorProperties properties = new ExecutorProperties();
         properties.set("configKey", "configValue");
         config.setProperties(properties);
         return config;

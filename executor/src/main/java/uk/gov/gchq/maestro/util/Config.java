@@ -24,7 +24,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import uk.gov.gchq.maestro.StoreProperties;
+import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
@@ -72,7 +72,7 @@ public class Config {
      * The store properties - contains specific configuration information for
      * the store - such as database connection strings.
      */
-    private StoreProperties properties;
+    private ExecutorProperties properties;
 
     /**
      * The operation handlers - A Map containing all classes of operations
@@ -95,8 +95,9 @@ public class Config {
         return id;
     }
 
-    public void setId(final String id) {
+    public Config setId(final String id) {
         this.id = id;
+        return this;
     }
 
     public List<Hook> getHooks() {
@@ -148,55 +149,57 @@ public class Config {
     }
 
     /**
-     * Get this Store's {@link StoreProperties}.
+     * Get this Store's {@link ExecutorProperties}.
      *
-     * @return the instance of {@link StoreProperties},
+     * @return the instance of {@link ExecutorProperties},
      * this may contain details such as database connection details.
      */
-    public StoreProperties getProperties() {
+    public ExecutorProperties getProperties() {
         return properties;
     }
 
     @JsonGetter("properties")
+    @JsonPropertyOrder(alphabetic = true)
     public Properties _getProperties() {
         return isNull(properties) ? null : properties.getProperties();
     }
 
     @JsonSetter
-    public void setProperties(final Properties properties) {
+    public Config setProperties(final Properties properties) {
         if (nonNull(properties)) {
             if (isNull(this.properties)) {
-                this.properties = new StoreProperties();
+                this.properties = new ExecutorProperties();
             }
             this.properties.setProperties(properties);
         }
+        return this;
     }
 
-    public void setProperties(final StoreProperties properties) {
-        final Class<? extends StoreProperties> requiredPropsClass = getPropertiesClass();
+    public void setProperties(final ExecutorProperties properties) {
+        final Class<? extends ExecutorProperties> requiredPropsClass = getPropertiesClass();
         properties.updateStorePropertiesClass(requiredPropsClass);
 
         // If the properties instance is not already an instance of the required class then reload the properties
         if (requiredPropsClass.isAssignableFrom(properties.getClass())) {
             this.properties = properties;
         } else {
-            this.properties = StoreProperties.loadStoreProperties(properties.getProperties());
+            this.properties = ExecutorProperties.loadStoreProperties(properties.getProperties());
         }
 
         addReflectionPackages(properties.getReflectionPackages());
         updateJsonSerialiser();
     }
 
-    protected Class<? extends StoreProperties> getPropertiesClass() {
-        return StoreProperties.class;
+    protected Class<? extends ExecutorProperties> getPropertiesClass() {
+        return ExecutorProperties.class;
     }
 
-    public static void updateJsonSerialiser(final StoreProperties storeProperties) {
-        if (null != storeProperties) {
+    public static void updateJsonSerialiser(final ExecutorProperties executorProperties) {
+        if (null != executorProperties) {
             JSONSerialiser.update(
-                    storeProperties.getJsonSerialiserClass(),
-                    storeProperties.getJsonSerialiserModules(),
-                    storeProperties.getStrictJson()
+                    executorProperties.getJsonSerialiserClass(),
+                    executorProperties.getJsonSerialiserModules(),
+                    executorProperties.getStrictJson()
             );
         } else {
             JSONSerialiser.update();
@@ -245,7 +248,7 @@ public class Config {
             B extends BaseBuilder> implements Builder {
         private conf config;
         private List<Hook> hooks;
-        private StoreProperties properties;
+        private ExecutorProperties properties;
 
         // Config
         public B config(final conf config) {
@@ -270,12 +273,12 @@ public class Config {
             return _self();
         }
 
-        // StoreProperties
+        // ExecutorProperties
         public B storeProperties(final Properties properties) {
-            return storeProperties(null != properties ? StoreProperties.loadStoreProperties(properties) : null);
+            return storeProperties(null != properties ? ExecutorProperties.loadStoreProperties(properties) : null);
         }
 
-        public B storeProperties(final StoreProperties properties) {
+        public B storeProperties(final ExecutorProperties properties) {
             this.properties = properties;
             if (null != properties) {
                 addReflectionPackages(properties.getReflectionPackages());
@@ -289,14 +292,14 @@ public class Config {
         }
 
         public B storeProperties(final String propertiesPath) {
-            return storeProperties(null != propertiesPath ? StoreProperties.loadStoreProperties(propertiesPath) : null);
+            return storeProperties(null != propertiesPath ? ExecutorProperties.loadStoreProperties(propertiesPath) : null);
         }
 
         public B storeProperties(final Path propertiesPath) {
             if (null == propertiesPath) {
                 properties = null;
             } else {
-                storeProperties(StoreProperties.loadStoreProperties(propertiesPath));
+                storeProperties(ExecutorProperties.loadStoreProperties(propertiesPath));
             }
             return _self();
         }
@@ -305,7 +308,7 @@ public class Config {
             if (null == propertiesStream) {
                 properties = null;
             } else {
-                storeProperties(StoreProperties.loadStoreProperties(propertiesStream));
+                storeProperties(ExecutorProperties.loadStoreProperties(propertiesStream));
             }
             return _self();
         }
@@ -324,12 +327,12 @@ public class Config {
 
         public B addStoreProperties(final Properties properties) {
             if (null != properties) {
-                addStoreProperties(StoreProperties.loadStoreProperties(properties));
+                addStoreProperties(ExecutorProperties.loadStoreProperties(properties));
             }
             return _self();
         }
 
-        public B addStoreProperties(final StoreProperties updateProperties) {
+        public B addStoreProperties(final ExecutorProperties updateProperties) {
             if (null != updateProperties) {
                 if (null == this.properties) {
                     storeProperties(updateProperties);
@@ -342,21 +345,21 @@ public class Config {
 
         public B addStoreProperties(final String updatePropertiesPath) {
             if (null != updatePropertiesPath) {
-                addStoreProperties(StoreProperties.loadStoreProperties(updatePropertiesPath));
+                addStoreProperties(ExecutorProperties.loadStoreProperties(updatePropertiesPath));
             }
             return _self();
         }
 
         public B addStoreProperties(final Path updatePropertiesPath) {
             if (null != updatePropertiesPath) {
-                addStoreProperties(StoreProperties.loadStoreProperties(updatePropertiesPath));
+                addStoreProperties(ExecutorProperties.loadStoreProperties(updatePropertiesPath));
             }
             return _self();
         }
 
         public B addStoreProperties(final InputStream updatePropertiesStream) {
             if (null != updatePropertiesStream) {
-                addStoreProperties(StoreProperties.loadStoreProperties(updatePropertiesStream));
+                addStoreProperties(ExecutorProperties.loadStoreProperties(updatePropertiesStream));
             }
             return _self();
         }

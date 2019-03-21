@@ -46,14 +46,14 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * A {@code StoreProperties} contains specific configuration information for the store, such as database
+ * A {@code ExecutorProperties} contains specific configuration information for the store, such as database
  * connection strings. It wraps {@link Properties} and lazy loads the all properties from a file when first used.
  * <p>
- * All StoreProperties classes must be JSON serialisable.
+ * All ExecutorProperties classes must be JSON serialisable.
  * </p>
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "storePropertiesClassName")
-public class StoreProperties implements Cloneable {
+public class ExecutorProperties implements Cloneable {
     public static final String STORE_CLASS = "maestro.store.class";
     public static final String SCHEMA_CLASS = "maestro.store.schema.class";
     /**
@@ -81,28 +81,28 @@ public class StoreProperties implements Cloneable {
      */
     public static final String REFLECTION_PACKAGES = "maestro.store.reflection.packages";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StoreProperties.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorProperties.class);
 
     private Properties props = new Properties();
 
     // Required for loading by reflection.
-    public StoreProperties() {
+    public ExecutorProperties() {
         updateStorePropertiesClass();
     }
 
     /**
-     * @param id the StoreProperties id.
+     * @param id the ExecutorProperties id.
      * @deprecated the id should not be used. The properties id should be supplied to the graph library separately.
      */
     @Deprecated
-    public StoreProperties(final String id) {
+    public ExecutorProperties(final String id) {
         this();
         if (null != id) {
             setId(id);
         }
     }
 
-    public StoreProperties(final Path propFileLocation) {
+    public ExecutorProperties(final Path propFileLocation) {
         if (null != propFileLocation) {
             try (final InputStream accIs = Files.newInputStream(propFileLocation, StandardOpenOption.READ)) {
                 props.load(accIs);
@@ -113,7 +113,7 @@ public class StoreProperties implements Cloneable {
         updateStorePropertiesClass();
     }
 
-    protected StoreProperties(final Properties props, final Class<? extends Store> storeClass) {
+    protected ExecutorProperties(final Properties props, final Class<? extends Store> storeClass) {
         this(props);
         if (null == getStoreClass()) {
             setStoreClass(storeClass);
@@ -121,53 +121,53 @@ public class StoreProperties implements Cloneable {
     }
 
 
-    public StoreProperties(final Properties props) {
+    public ExecutorProperties(final Properties props) {
         setProperties(props);
         updateStorePropertiesClass();
     }
 
 
-    protected StoreProperties(final Class<? extends Store> storeClass) {
+    protected ExecutorProperties(final Class<? extends Store> storeClass) {
         this();
         if (null == getStoreClass()) {
             setStoreClass(storeClass);
         }
     }
 
-    protected StoreProperties(final Path propFileLocation, final Class<? extends Store> storeClass) {
+    protected ExecutorProperties(final Path propFileLocation, final Class<? extends Store> storeClass) {
         this(propFileLocation);
         if (null == getStoreClass()) {
             setStoreClass(storeClass);
         }
     }
 
-    public static <T extends StoreProperties> T loadStoreProperties(final String pathStr, final Class<T> requiredClass) {
-        final StoreProperties properties = loadStoreProperties(pathStr);
+    public static <T extends ExecutorProperties> T loadStoreProperties(final String pathStr, final Class<T> requiredClass) {
+        final ExecutorProperties properties = loadStoreProperties(pathStr);
         return (T) updateInstanceType(requiredClass, properties);
     }
 
-    public static StoreProperties loadStoreProperties(final String pathStr) {
-        final StoreProperties storeProperties;
+    public static ExecutorProperties loadStoreProperties(final String pathStr) {
+        final ExecutorProperties executorProperties;
         final Path path = Paths.get(pathStr);
         try {
             if (path.toFile().exists()) {
-                storeProperties = loadStoreProperties(Files.newInputStream(path));
+                executorProperties = loadStoreProperties(Files.newInputStream(path));
             } else {
-                storeProperties = loadStoreProperties(StreamUtil.openStream(StoreProperties.class, pathStr));
+                executorProperties = loadStoreProperties(StreamUtil.openStream(ExecutorProperties.class, pathStr));
             }
         } catch (final IOException e) {
             throw new RuntimeException("Failed to load store properties file : " + e.getMessage(), e);
         }
 
-        return storeProperties;
+        return executorProperties;
     }
 
-    public static <T extends StoreProperties> T loadStoreProperties(final Path storePropertiesPath, final Class<T> requiredClass) {
-        final StoreProperties properties = loadStoreProperties(storePropertiesPath);
+    public static <T extends ExecutorProperties> T loadStoreProperties(final Path storePropertiesPath, final Class<T> requiredClass) {
+        final ExecutorProperties properties = loadStoreProperties(storePropertiesPath);
         return (T) updateInstanceType(requiredClass, properties);
     }
 
-    public static StoreProperties loadStoreProperties(final Path storePropertiesPath) {
+    public static ExecutorProperties loadStoreProperties(final Path storePropertiesPath) {
         try {
             return loadStoreProperties(null != storePropertiesPath ? Files.newInputStream(storePropertiesPath) : null);
         } catch (final IOException e) {
@@ -175,14 +175,14 @@ public class StoreProperties implements Cloneable {
         }
     }
 
-    public static <T extends StoreProperties> T loadStoreProperties(final InputStream storePropertiesStream, final Class<T> requiredClass) {
-        final StoreProperties properties = loadStoreProperties(storePropertiesStream);
+    public static <T extends ExecutorProperties> T loadStoreProperties(final InputStream storePropertiesStream, final Class<T> requiredClass) {
+        final ExecutorProperties properties = loadStoreProperties(storePropertiesStream);
         return (T) updateInstanceType(requiredClass, properties);
     }
 
-    public static StoreProperties loadStoreProperties(final InputStream storePropertiesStream) {
+    public static ExecutorProperties loadStoreProperties(final InputStream storePropertiesStream) {
         if (null == storePropertiesStream) {
-            return new StoreProperties();
+            return new ExecutorProperties();
         }
         final Properties props = new Properties();
         try {
@@ -199,25 +199,25 @@ public class StoreProperties implements Cloneable {
         return loadStoreProperties(props);
     }
 
-    public static <T extends StoreProperties> T loadStoreProperties(final Properties props, final Class<T> requiredClass) {
-        final StoreProperties properties = loadStoreProperties(props);
+    public static <T extends ExecutorProperties> T loadStoreProperties(final Properties props, final Class<T> requiredClass) {
+        final ExecutorProperties properties = loadStoreProperties(props);
         return (T) updateInstanceType(requiredClass, properties);
     }
 
-    public static StoreProperties loadStoreProperties(final Properties props) {
-        final String storePropertiesClass = props.getProperty(StoreProperties.STORE_PROPERTIES_CLASS);
-        final StoreProperties storeProperties;
+    public static ExecutorProperties loadStoreProperties(final Properties props) {
+        final String storePropertiesClass = props.getProperty(ExecutorProperties.STORE_PROPERTIES_CLASS);
+        final ExecutorProperties executorProperties;
         if (null == storePropertiesClass) {
-            storeProperties = new StoreProperties();
+            executorProperties = new ExecutorProperties();
         } else {
             try {
-                storeProperties = Class.forName(storePropertiesClass).asSubclass(StoreProperties.class).newInstance();
+                executorProperties = Class.forName(storePropertiesClass).asSubclass(ExecutorProperties.class).newInstance();
             } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException("Failed to create store properties file : " + e.getMessage(), e);
             }
         }
-        storeProperties.setProperties(props);
-        return storeProperties;
+        executorProperties.setProperties(props);
+        return executorProperties;
     }
 
     /**
@@ -259,7 +259,7 @@ public class StoreProperties implements Cloneable {
         }
     }
 
-    public void merge(final StoreProperties properties) {
+    public void merge(final ExecutorProperties properties) {
         if (null != properties) {
             if (null != properties.getId()
                     && null != getId()
@@ -283,7 +283,7 @@ public class StoreProperties implements Cloneable {
     }
 
     /**
-     * Set the ID for the StoreProperties
+     * Set the ID for the ExecutorProperties
      *
      * @param id the value of the ID
      * @deprecated the ID should be supplied to the graph library separately
@@ -306,7 +306,7 @@ public class StoreProperties implements Cloneable {
     public OperationDeclarations getOperationDeclarations() {
         OperationDeclarations declarations = null;
 
-        final String declarationsPaths = get(StoreProperties.OPERATION_DECLARATIONS);
+        final String declarationsPaths = get(ExecutorProperties.OPERATION_DECLARATIONS);
         if (null != declarationsPaths) {
             declarations = OperationDeclarations.fromPaths(declarationsPaths);
         }
@@ -353,17 +353,17 @@ public class StoreProperties implements Cloneable {
     }
 
     public String getStorePropertiesClassName() {
-        return get(STORE_PROPERTIES_CLASS, StoreProperties.class.getName());
+        return get(STORE_PROPERTIES_CLASS, ExecutorProperties.class.getName());
     }
 
     public void setStorePropertiesClassName(final String storePropertiesClassName) {
         set(STORE_PROPERTIES_CLASS, storePropertiesClassName);
     }
 
-    public Class<? extends StoreProperties> getStorePropertiesClass() {
-        final Class<? extends StoreProperties> clazz;
+    public Class<? extends ExecutorProperties> getStorePropertiesClass() {
+        final Class<? extends ExecutorProperties> clazz;
         try {
-            clazz = Class.forName(getStorePropertiesClassName()).asSubclass(StoreProperties.class);
+            clazz = Class.forName(getStorePropertiesClassName()).asSubclass(ExecutorProperties.class);
         } catch (final ClassNotFoundException e) {
             throw new RuntimeException("Store properties class was not found: " + getStorePropertiesClassName(), e);
         }
@@ -371,7 +371,7 @@ public class StoreProperties implements Cloneable {
         return clazz;
     }
 
-    public void setStorePropertiesClass(final Class<? extends StoreProperties> storePropertiesClass) {
+    public void setStorePropertiesClass(final Class<? extends ExecutorProperties> storePropertiesClass) {
         set(STORE_PROPERTIES_CLASS, storePropertiesClass.getName());
     }
 
@@ -469,8 +469,8 @@ public class StoreProperties implements Cloneable {
     @SuppressWarnings("CloneDoesntCallSuperClone")
     @SuppressFBWarnings(value = "CN_IDIOM_NO_SUPER_CALL", justification = "Only inherits from Object")
     @Override
-    public StoreProperties clone() {
-        return StoreProperties.loadStoreProperties((Properties) getProperties().clone());
+    public ExecutorProperties clone() {
+        return ExecutorProperties.loadStoreProperties((Properties) getProperties().clone());
     }
 
     @Override
@@ -483,7 +483,7 @@ public class StoreProperties implements Cloneable {
             return false;
         }
 
-        final StoreProperties properties = (StoreProperties) obj;
+        final ExecutorProperties properties = (ExecutorProperties) obj;
         return new EqualsBuilder()
                 .append(props, properties.props)
                 .isEquals();
@@ -500,9 +500,9 @@ public class StoreProperties implements Cloneable {
         updateStorePropertiesClass(getClass());
     }
 
-    public void updateStorePropertiesClass(final Class<? extends StoreProperties> requiredClass) {
-        final Class<? extends StoreProperties> storePropertiesClass = getStorePropertiesClass();
-        if (null == storePropertiesClass || StoreProperties.class.equals(storePropertiesClass)) {
+    public void updateStorePropertiesClass(final Class<? extends ExecutorProperties> requiredClass) {
+        final Class<? extends ExecutorProperties> storePropertiesClass = getStorePropertiesClass();
+        if (null == storePropertiesClass || ExecutorProperties.class.equals(storePropertiesClass)) {
             setStorePropertiesClass(requiredClass);
         } else if (!requiredClass.isAssignableFrom(storePropertiesClass)) {
             throw new IllegalArgumentException("The given properties is not of type " + requiredClass.getName() + " actual: " + storePropertiesClass.getName());
@@ -521,10 +521,10 @@ public class StoreProperties implements Cloneable {
         return super.toString();
     }
 
-    private static <T extends StoreProperties> StoreProperties updateInstanceType(final Class<T> requiredClass, final StoreProperties properties) {
+    private static <T extends ExecutorProperties> ExecutorProperties updateInstanceType(final Class<T> requiredClass, final ExecutorProperties properties) {
         if (!requiredClass.isAssignableFrom(properties.getClass())) {
             properties.updateStorePropertiesClass(requiredClass);
-            return StoreProperties.loadStoreProperties(properties.getProperties());
+            return ExecutorProperties.loadStoreProperties(properties.getProperties());
         }
 
         return properties;

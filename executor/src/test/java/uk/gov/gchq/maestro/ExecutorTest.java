@@ -45,7 +45,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "    \"hooks\" : [ ],\n" +
                 "    \"properties\" : {\n" +
                 "      \"configKey\" : \"configValue\",\n" +
-                "      \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.StoreProperties\"\n" +
+                "      \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
                 "    }\n" +
                 "  }\n" +
                 "}";
@@ -54,7 +54,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     @Override
     protected Executor getTestObject() {
         final Config config = new Config();
-        final StoreProperties properties = new StoreProperties();
+        final ExecutorProperties properties = new ExecutorProperties();
         properties.set("configKey", "configValue");
         config.setProperties(properties);
         config.addOperationHandler(TestOperation.class, new TestHandler().fieldHandler("handlerFieldValue1"));
