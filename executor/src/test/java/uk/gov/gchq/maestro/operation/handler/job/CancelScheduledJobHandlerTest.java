@@ -16,22 +16,34 @@
 
 package uk.gov.gchq.maestro.operation.handler.job;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.StoreProperties;
+import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
-import uk.gov.gchq.maestro.jobtracker.JobTracker;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.impl.job.CancelScheduledJob;
 import uk.gov.gchq.maestro.user.User;
+import uk.gov.gchq.maestro.util.Config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 public class CancelScheduledJobHandlerTest {
+    private final StoreProperties properties = new StoreProperties();
+    private final User user = mock(User.class);
+    private final CancelScheduledJobHandler handler = new CancelScheduledJobHandler();
+
+    @Before
+    public void setup() {
+        properties.setJobTrackerEnabled(true);
+        properties.set("maestro.cache.service.class", "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService");
+    }
 
     @Test
     public void shouldThrowExceptionWithNoJobId() {
@@ -39,11 +51,15 @@ public class CancelScheduledJobHandlerTest {
         CancelScheduledJob operation = new CancelScheduledJob.Builder()
                 .jobId(null)
                 .build();
-        CancelScheduledJobHandler handler = new CancelScheduledJobHandler();
-        final Executor executor = mock(Executor.class);
-        final User user = mock(User.class);
+        final Config config = new Config.Builder()
+                .storeProperties(properties)
+                .operationHandler(new OperationDeclaration.Builder()
+                        .operation(CancelScheduledJob.class)
+                        .handler(new CancelScheduledJobHandler())
+                        .build())
+                .build();
 
-        given(JobTracker.isCacheEnabled()).willReturn(true);
+        final Executor executor = new Executor(config);
 
         // When / Then
         try {
@@ -61,8 +77,7 @@ public class CancelScheduledJobHandlerTest {
         final CancelScheduledJob operation = mock(CancelScheduledJob.class);
         final Executor executor = mock(Executor.class);
         final User user = mock(User.class);
-
-        given(JobTracker.isCacheEnabled()).willReturn(false);
+        CacheServiceLoader.shutdown();
 
         // When / Then
         try {

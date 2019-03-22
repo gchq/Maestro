@@ -17,18 +17,8 @@
 package uk.gov.gchq.maestro.library;
 
 
-import org.junit.Before;
-import org.junit.Test;
-
-import uk.gov.gchq.maestro.StoreProperties;
-import uk.gov.gchq.maestro.util.Config;
-
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 public abstract class AbstractLibraryTest {
-
+/*
     protected Library library;
 
     private static final String TEST_EXECUTOR_ID = "testExecutorId";
@@ -98,6 +88,6 @@ public abstract class AbstractLibraryTest {
 
         // Then
         assertEquals(config1, library.getConfig(TEST_EXECUTOR_ID));
-    }
+    }*/
 }
 

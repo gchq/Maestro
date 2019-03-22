@@ -28,7 +28,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import uk.gov.gchq.maestro.StoreProperties;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.library.Library;
 import uk.gov.gchq.maestro.library.NoLibrary;
 import uk.gov.gchq.maestro.operation.Operation;
@@ -267,11 +267,51 @@ public class Config {
                 .toString();
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Config config = (Config) o;
+
+        final EqualsBuilder equalsBuilder = new EqualsBuilder()
+                .append(id, config.id)
+                .append(description, config.description)
+                .append(hooks, config.hooks)
+                //.append(library, config.library);
+                .append(operationHandlers, config.operationHandlers)
+                .append(nonNull(properties), nonNull(config.properties));
+
+        if (equalsBuilder.isEquals() && nonNull(properties)) {
+            equalsBuilder.append(properties.getProperties(), config.properties.getProperties());
+        }
+
+        return equalsBuilder.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(description)
+                .append(hooks)
+                .append(properties)
+                .append(operationHandlers)
+                .append(library)
+                .toHashCode();
+    }
+
     public static class Builder {
         private Config config = new Config();
-        private List<Hook> hooks;
-        private StoreProperties properties;
-        Map<Class<? extends Operation>, OperationHandler> operationHandlers;
+        private List<Hook> hooks = new ArrayList<>();
+        private StoreProperties properties = new StoreProperties();
+        Map<Class<? extends Operation>, OperationHandler> operationHandlers =
+                new LinkedHashMap<>();
 
         // Config
         public Builder config(final Config config) {
@@ -573,48 +613,10 @@ public class Config {
             if (null == config.getLibrary()) {
                 config.setLibrary(new NoLibrary());
             }
+            config.setHooks(hooks);
             config.getProperties().getProperties().putAll(properties.getProperties());
             config.getOperationHandlers().putAll(operationHandlers);
             return config;
         }
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final Config config = (Config) o;
-
-        final EqualsBuilder equalsBuilder = new EqualsBuilder()
-                .append(id, config.id)
-                .append(description, config.description)
-                .append(hooks, config.hooks)
-                .append(library, config.library)
-                .append(operationHandlers, config.operationHandlers)
-                .append(nonNull(properties), nonNull(config.properties));
-
-        if (equalsBuilder.isEquals() && nonNull(properties)) {
-            equalsBuilder.append(properties.getProperties(), config.properties.getProperties());
-        }
-
-        return equalsBuilder.isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(description)
-                .append(hooks)
-                .append(properties)
-                .append(operationHandlers)
-                .append(library)
-                .toHashCode();
     }
 }

@@ -16,16 +16,6 @@
 
 package uk.gov.gchq.maestro.library;
 
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
-import uk.gov.gchq.maestro.util.Config;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.regex.Pattern;
-
 /**
  * A {@code FileLibrary} stores a {@link Library} in a specified
  * location as files.  It will store a graphId file with the relationships between
@@ -33,7 +23,7 @@ import java.util.regex.Pattern;
  * StoreProperties and Schema in two other files.  They will be named using the ids.
  */
 public class FileLibrary extends Library {
-    private static final Pattern PATH_ALLOWED_CHARACTERS = Pattern.compile("[a-zA-Z0-9_/\\\\\\-]*");
+    /*private static final Pattern PATH_ALLOWED_CHARACTERS = Pattern.compile("[a-zA-Z0-9_/\\\\\\-]*");
     private static final String DEFAULT_PATH = "library";
     private String path;
 
@@ -50,10 +40,12 @@ public class FileLibrary extends Library {
         setPath(path);
     }
 
+    @JsonIgnore
     public String getPath() {
         return path;
     }
 
+    @JsonIgnore
     public void setPath(final String path) {
         if (null == path) {
             this.path = DEFAULT_PATH;
@@ -68,15 +60,11 @@ public class FileLibrary extends Library {
     @Override
     protected void _addConfig(final String storeId, final Config config) {
         if (null != config) {
-            getConfigPath(storeId).toFile().getParentFile().mkdirs();
-            try (FileOutputStream configFileOutputStream =
-                         new FileOutputStream(getConfigPath(storeId).toFile())) {
-                ObjectOutputStream objectOut = new ObjectOutputStream(configFileOutputStream);
-                objectOut.writeObject(JSONSerialiser.serialise(config));
-                objectOut.close();
+            try {
+                getConfigPath(storeId).toFile().getParentFile().mkdirs();
+                FileUtils.writeByteArrayToFile(getConfigPath(storeId).toFile(), JSONSerialiser.serialise(config));
             } catch (final IOException e) {
-                throw new IllegalArgumentException("Could not write " +
-                        "config to path: " + getConfigPath(storeId), e);
+                throw new IllegalArgumentException("Could not write config to path: " + getConfigPath(storeId), e);
             }
         } else {
             throw new IllegalArgumentException("Config cannot be null");
@@ -94,5 +82,5 @@ public class FileLibrary extends Library {
 
     private Path getConfigPath(final String storeId) {
         return Paths.get(path + "/" + storeId + "Config.json");
-    }
+    }*/
 }

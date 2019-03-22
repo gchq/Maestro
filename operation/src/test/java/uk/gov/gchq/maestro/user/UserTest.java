@@ -15,9 +15,9 @@
  */
 package uk.gov.gchq.maestro.user;
 
-import org.hamcrest.core.IsCollectionContaining;
 import org.junit.Test;
 
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -48,11 +48,11 @@ public class UserTest {
         // Then
         assertEquals(userId, user.getUserId());
         assertEquals(2, user.getDataAuths().size());
-        assertThat(user.getDataAuths(), IsCollectionContaining.hasItems(
+        assertThat(user.getDataAuths(), hasItems(
                 dataAuth1, dataAuth2
         ));
         assertEquals(2, user.getOpAuths().size());
-        assertThat(user.getOpAuths(), IsCollectionContaining.hasItems(
+        assertThat(user.getOpAuths(), hasItems(
                 opAuth1, opAuth1
         ));
     }

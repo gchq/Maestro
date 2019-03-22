@@ -16,11 +16,7 @@
 
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
-import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.util.Config;
-
-import java.util.Map;
 
 public class FederationTest extends MaestroObjectTest<Executor> {
 
@@ -36,18 +32,17 @@ public class FederationTest extends MaestroObjectTest<Executor> {
                 "  \"config\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
                 "    \"operationHandlers\" : { },\n" +
-                "    \"hooks\" : [ ]\n" +
+                "    \"hooks\" : [ ],\n" +
+                "    \"properties\" : {\n" +
+                "      \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.StoreProperties\"\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
     }
 
     @Override
     protected Executor getTestObject() {
-        final Map<Class<? extends Operation>, OperationHandler> operationHandlerMap = null;
-
-
         final Executor executor = new Executor()
-                .operationHandlerMap(operationHandlerMap)
                 .config(new Config());
 
         return executor;

@@ -17,14 +17,8 @@
 package uk.gov.gchq.maestro.library;
 
 
-import org.junit.Test;
-
-import uk.gov.gchq.maestro.util.Config;
-
-import static org.junit.Assert.assertNull;
-
 public class HashMapLibraryTest extends AbstractLibraryTest {
-
+/*
     private static final String TEST_ID = "testId";
 
     @Override
@@ -41,5 +35,5 @@ public class HashMapLibraryTest extends AbstractLibraryTest {
 
         // Then
         assertNull(library.getConfig(TEST_ID));
-    }
+    }*/
 }

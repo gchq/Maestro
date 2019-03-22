@@ -172,7 +172,7 @@ public class Executor {
      * Executes a given operation job and returns the job detail.
      */
     // TODO remove this method before first release
-    public JobDetail executeJob(final Operation operation, final Context context) throws OperationException {
+    public JobDetail executeJob(final Operation operation, final Context context) {
         return execute(new Job.Builder().operation(operation).build(), context);
     }
 
@@ -188,6 +188,7 @@ public class Executor {
         getExecutorService().execute(runnable);
     }
 
+    @JsonIgnore
     public ScheduledExecutorService getExecutorService() {
         return (null != ExecutorService.getService() && ExecutorService.isEnabled()) ?
                 ExecutorService.getService() : null;

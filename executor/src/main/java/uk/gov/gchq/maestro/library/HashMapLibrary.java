@@ -15,18 +15,12 @@
  */
 package uk.gov.gchq.maestro.library;
 
-import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
-import uk.gov.gchq.maestro.util.Config;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * A {@code HashMapLibrary} stores a {@link Library} within a HashMap.
  */
 public class HashMapLibrary extends Library {
 
-    private static final Map<String, Config> CONFIGS = new HashMap<>();
+    /*private static final Map<String, Config> CONFIGS = new HashMap<>();
 
     public static void clear() {
         CONFIGS.clear();
@@ -52,5 +46,5 @@ public class HashMapLibrary extends Library {
         return new ToStringBuilder(this)
                 .append("configs", CONFIGS)
                 .toString();
-    }
+    }*/
 }

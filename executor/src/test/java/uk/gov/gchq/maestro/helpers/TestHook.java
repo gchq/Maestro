@@ -13,33 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.gov.gchq.maestro.helpers;
-
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-import uk.gov.gchq.maestro.Context;
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
-import uk.gov.gchq.maestro.operation.handler.OperationHandler;
+import uk.gov.gchq.maestro.util.hook.Hook;
 
-public class TestHandler implements OperationHandler<TestOperation> {
+public class TestHook implements Hook {
+    private String field1;
 
-    private String handlerField;
+    public TestHook() {
 
-    public String getHandlerField() {
-        return handlerField;
     }
 
-    public TestHandler fieldHandler(final String field) {
-        this.handlerField = field;
-        return this;
+    public TestHook(final String field1) {
+        this.field1 = field1;
     }
 
-    @Override
-    public Object doOperation(final TestOperation operation, final Context context, final Executor executor) {
-        return handlerField + "," + operation.getField();
+    public String getField1() {
+        return field1;
+    }
+
+    public void setField1(final String field1) {
+        this.field1 = field1;
     }
 
     @Override
@@ -52,13 +49,13 @@ public class TestHandler implements OperationHandler<TestOperation> {
             return false;
         }
 
-        final TestHandler testHandler = (TestHandler) obj;
+        final TestHook testHook = (TestHook) obj;
 
-        return new EqualsBuilder().append(handlerField, testHandler.handlerField).isEquals();
+        return new EqualsBuilder().append(field1, testHook.field1).isEquals();
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(handlerField).build();
+        return new ToStringBuilder(this).append(field1).build();
     }
 }

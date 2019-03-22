@@ -21,7 +21,7 @@ import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.util.Request;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 public interface Hook {
     /**
      * @param opChain the {@link OperationChain} being executed. This can be modified/optimised in any GraphHook.

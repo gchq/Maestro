@@ -16,10 +16,20 @@
 
 package uk.gov.gchq.maestro.util;
 
+import org.junit.Test;
+
 import uk.gov.gchq.maestro.StoreProperties;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
 import uk.gov.gchq.maestro.helpers.TestHandler;
+import uk.gov.gchq.maestro.helpers.TestHook;
 import uk.gov.gchq.maestro.helpers.TestOperation;
+import uk.gov.gchq.maestro.library.NoLibrary;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ConfigTest extends MaestroObjectTest<Config> {
 
@@ -48,6 +58,32 @@ public class ConfigTest extends MaestroObjectTest<Config> {
         properties.set("configKey", "configValue");
         config.setProperties(properties);
         return config;
+    }
+
+    @Test
+    public void shouldJsonSerialiseAndDeserialise() throws SerialisationException {
+        final StoreProperties properties = new StoreProperties();
+        properties.set("configKey", "configValue");
+        final Config config = new Config.Builder()
+                .id("testId")
+                .operationHandler(new OperationDeclaration.Builder()
+                        .handler(new TestHandler().fieldHandler("handlerFieldValue1"))
+                        .operation(TestOperation.class)
+                        .build())
+                .storeProperties(properties)
+                .addHook(new TestHook("testFieldVal"))
+                .library(new NoLibrary())
+                .build();
+
+        byte[] serialisedConfig = JSONSerialiser.serialise(config);
+        Config deserialisedConfig = JSONSerialiser.deserialise(serialisedConfig, Config.class);
+
+        assertEquals(deserialisedConfig.getId(), config.getId());
+        assertEquals(deserialisedConfig.getDescription(), config.getDescription());
+        assertEquals(deserialisedConfig.getHooks(), config.getHooks());
+        assertNotNull(deserialisedConfig.getLibrary());
+        assertEquals(deserialisedConfig.getOperationHandlers(), config.getOperationHandlers());
+        assertEquals(deserialisedConfig.getProperties(), config.getProperties());
     }
 
     @Override

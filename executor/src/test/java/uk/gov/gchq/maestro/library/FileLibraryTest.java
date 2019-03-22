@@ -16,19 +16,8 @@
 
 package uk.gov.gchq.maestro.library;
 
-
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
 public class FileLibraryTest extends AbstractLibraryTest {
-
+/*
     private static final String TEST_FILE_PATH = "src/test/resources/library";
     private static final String TEST_INVALID_FINAL_PATH = "inv@lidP@th";
 
@@ -54,5 +43,5 @@ public class FileLibraryTest extends AbstractLibraryTest {
         } catch (final IllegalArgumentException e) {
             assertNotNull(e.getMessage());
         }
-    }
+    }*/
 }

@@ -15,27 +15,22 @@
  */
 package uk.gov.gchq.maestro.library;
 
-import uk.gov.gchq.maestro.commonutil.exception.OverwritingException;
-import uk.gov.gchq.maestro.util.Config;
-
-import java.util.regex.Pattern;
-
 /**
  * A Library contains storeIds and their related Config.
  */
 public abstract class Library {
-    protected static final Pattern ID_ALLOWED_CHARACTERS = Pattern.compile("[a-zA-Z0-9_]*");
+    /*protected static final Pattern ID_ALLOWED_CHARACTERS = Pattern.compile("[a-zA-Z0-9_]*");
     public static final String A_LIBRARY_CAN_T_BE_ADDED_WITH_A_NULL_S_ID_S = "A Library can't be added with a null %s, Id: %s";
 
     public abstract void initialise(final String path);
 
-    /**
+    *//**
      * Add a new relationship between a storeId and Config.
      *
      * @param storeId The StoreId to relate to.
      * @param config  The Config that relate to the graphId.
      * @throws OverwritingException If the graphId already has a related Schema and/or Config.
-     */
+     *//*
     public void addConfig(final String storeId, final Config config) throws OverwritingException {
         validateId(storeId);
         checkExisting(storeId, config);
@@ -58,12 +53,12 @@ public abstract class Library {
         }
     }
 
-    /**
+    *//**
      * Gets the Config given the storeId.
      *
      * @param storeId The storeId
      * @return The {@link Config} related to the storeId.
-     */
+     *//*
     public Config getConfig(final String storeId) {
         validateId(storeId);
 
@@ -81,12 +76,12 @@ public abstract class Library {
         return resultConfigBuilder.build();
     }
 
-    /**
+    *//**
      * Adds the config to the library against the specified storeId
      *
      * @param storeId the storeId
      * @param config  the config relating to the storeId
-     */
+     *//*
     protected abstract void _addConfig(final String storeId, final Config config);
 
     protected abstract Config _getConfig(final String configId);
@@ -102,5 +97,5 @@ public abstract class Library {
         if (null == id || !ID_ALLOWED_CHARACTERS.matcher(id).matches()) {
             throw new IllegalArgumentException("Id is invalid: " + id + ", it must match regex: " + ID_ALLOWED_CHARACTERS);
         }
-    }
+    }*/
 }

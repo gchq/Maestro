@@ -15,13 +15,8 @@
  */
 package uk.gov.gchq.maestro.library;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import uk.gov.gchq.maestro.util.Config;
-
 public class NoLibrary extends Library {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NoLibrary.class);
+    /*private static final Logger LOGGER = LoggerFactory.getLogger(NoLibrary.class);
 
     @Override
     public void initialise(final String path) {
@@ -39,5 +34,5 @@ public class NoLibrary extends Library {
     @Override
     protected Config _getConfig(final String configId) {
         return null;
-    }
+    }*/
 }
