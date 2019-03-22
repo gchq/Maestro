@@ -57,7 +57,7 @@ public class ExecutorProperties implements Cloneable {
     public static final String STORE_CLASS = "maestro.store.class";
     public static final String SCHEMA_CLASS = "maestro.store.schema.class";
     /**
-     * @deprecated the ID should not be used. The properties ID should be supplied to the graph library separately.
+     * @deprecated the ID should not be used. The properties ID should be supplied to the store library separately.
      */
     @Deprecated
     public static final String ID = "maestro.store.id";
@@ -92,13 +92,13 @@ public class ExecutorProperties implements Cloneable {
 
     /**
      * @param id the ExecutorProperties id.
-     * @deprecated the id should not be used. The properties id should be supplied to the graph library separately.
+     * @deprecated the id should not be used. The properties id should be supplied to the store library separately.
      */
     @Deprecated
     public ExecutorProperties(final String id) {
         this();
         if (null != id) {
-            setId(id);
+            id(id);
         }
     }
 
@@ -265,8 +265,8 @@ public class ExecutorProperties implements Cloneable {
                     && null != getId()
                     && !properties.getId().equals(getId())) {
                 final String newId = getId() + "_" + properties.getId();
-                properties.setId(newId);
-                setId(newId);
+                properties.id(newId);
+                id(newId);
             }
 
             props.putAll(properties.getProperties());
@@ -275,7 +275,7 @@ public class ExecutorProperties implements Cloneable {
 
     /**
      * @return properties ID
-     * @deprecated the ID should be supplied to the graph library separately
+     * @deprecated the ID should be supplied to the store library separately
      */
     @Deprecated
     public String getId() {
@@ -286,10 +286,10 @@ public class ExecutorProperties implements Cloneable {
      * Set the ID for the ExecutorProperties
      *
      * @param id the value of the ID
-     * @deprecated the ID should be supplied to the graph library separately
+     * @deprecated the ID should be supplied to the store library separately
      */
     @Deprecated
-    public void setId(final String id) {
+    public void id(final String id) {
         set(ID, id);
     }
 

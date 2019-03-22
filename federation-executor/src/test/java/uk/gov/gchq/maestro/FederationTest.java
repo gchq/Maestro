@@ -20,7 +20,6 @@ import uk.gov.gchq.maestro.operation.OperationHandler;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.util.Config;
 
-import java.util.Map;
 
 public class FederationTest extends MaestroObjectTest<Executor> {
 
@@ -43,13 +42,9 @@ public class FederationTest extends MaestroObjectTest<Executor> {
 
     @Override
     protected Executor getTestObject() {
-        final Map<Class<? extends Operation>, OperationHandler> operationHandlerMap = null;
-
-
+        final Config config = new Config();
         final Executor executor = new Executor()
-                .operationHandlerMap(operationHandlerMap)
-                .config(new Config());
-
+                .config(config);
         return executor;
     }
 }

@@ -35,7 +35,7 @@ public class DefaultOperation implements Operation {
     }
 
     @Override
-    public void setOptions(final Map<String, String> options) {
-
+    public Operation options(final Map<String, String> options) {
+        return this;
     }
 }

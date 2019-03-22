@@ -95,7 +95,7 @@ public class Config {
         return id;
     }
 
-    public Config setId(final String id) {
+    public Config id(final String id) {
         this.id = id;
         return this;
     }
@@ -135,12 +135,12 @@ public class Config {
                 final String path = ((HookPath) hook).getPath();
                 final File file = new File(path);
                 if (!file.exists()) {
-                    throw new IllegalArgumentException("Unable to find graph hook file: " + path);
+                    throw new IllegalArgumentException("Unable to find store hook file: " + path);
                 }
                 try {
                     hooks.add(JSONSerialiser.deserialise(FileUtils.readFileToByteArray(file), Hook.class));
                 } catch (final IOException e) {
-                    throw new IllegalArgumentException("Unable to deserialise graph hook from file: " + path, e);
+                    throw new IllegalArgumentException("Unable to deserialise store hook from file: " + path, e);
                 }
             } else {
                 hooks.add(hook);
@@ -258,7 +258,7 @@ public class Config {
 
         // Id
         public B id(final String id) {
-            config.setId(id);
+            config.id(id);
             return _self();
         }
 
@@ -419,7 +419,7 @@ public class Config {
         public B merge(final Config config) {
             if (null != config) {
                 if (null != this.config.getId()) {
-                    this.config.setId(config.getId());
+                    this.config.id(config.getId());
                 }
                 if (null != this.config.getDescription()) {
                     this.config.setDescription(config.getDescription());
@@ -564,4 +564,6 @@ public class Config {
                 .append(library)
                 .toHashCode();
     }
+
+
 }

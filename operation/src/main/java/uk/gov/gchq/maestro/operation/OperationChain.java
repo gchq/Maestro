@@ -115,7 +115,7 @@ public class OperationChain<OUT> implements Output<OUT>,
                 opChain = ((OperationChain<?>) operation);
             } else {
                 opChain = new OperationChain<>(operation);
-                opChain.setOptions(operation.getOptions());
+                opChain.options(operation.getOptions());
             }
         }
         return opChain;
@@ -130,7 +130,7 @@ public class OperationChain<OUT> implements Output<OUT>,
                 opChain = ((OperationChain<O>) operation);
             } else {
                 opChain = new OperationChain<>(operation);
-                opChain.setOptions(operation.getOptions());
+                opChain.options(operation.getOptions());
             }
         }
         return opChain;
@@ -171,7 +171,7 @@ public class OperationChain<OUT> implements Output<OUT>,
 
     public OperationChain<OUT> shallowClone() throws CloneFailedException {
         final OperationChain<OUT> clone = new OperationChain<>();
-        clone.setOptions(options);
+        clone.options(options);
         for (final Operation operation : operations) {
             clone.getOperations().add(operation.shallowClone());
         }
@@ -184,8 +184,9 @@ public class OperationChain<OUT> implements Output<OUT>,
     }
 
     @Override
-    public void setOptions(final Map<String, String> options) {
+    public OperationChain options(final Map<String, String> options) {
         this.options = options;
+        return this;
     }
 
     @Override
@@ -312,7 +313,7 @@ public class OperationChain<OUT> implements Output<OUT>,
 
         public OperationChain<Void> build() {
             final OperationChain<Void> opChain = new OperationChain<>(ops);
-            opChain.setOptions(options);
+            opChain.options(options);
             return opChain;
         }
     }
@@ -400,7 +401,7 @@ public class OperationChain<OUT> implements Output<OUT>,
 
         public OperationChain<OUT> build() {
             final OperationChain<OUT> opChain = new OperationChain<>(ops);
-            opChain.setOptions(options);
+            opChain.options(options);
             return opChain;
         }
 
@@ -417,7 +418,7 @@ public class OperationChain<OUT> implements Output<OUT>,
          */
         public <CUSTOM_OUT> OperationChain<CUSTOM_OUT> buildTypeUnsafe() {
             final OperationChain opChain = new OperationChain<>(ops);
-            opChain.setOptions(options);
+            opChain.options(options);
             return opChain;
         }
     }

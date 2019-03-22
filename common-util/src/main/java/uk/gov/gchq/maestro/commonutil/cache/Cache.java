@@ -69,8 +69,8 @@ public class Cache<V> {
         CacheServiceLoader.getService().clearCache(cacheName);
     }
 
-    public boolean contains(final String graphId) {
-        return getAllKeys().contains(graphId);
+    public boolean contains(final String id) {
+        return getAllKeys().contains(id);
     }
 
     /**

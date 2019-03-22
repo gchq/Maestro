@@ -70,7 +70,7 @@ import java.util.Map;
  * public static class Builder extends Operation.BaseBuilder&lt;GetElements, Builder&gt;
  *         implements InputOutput.Builder&lt;GetElements, Iterable&lt;? extends ElementId&gt;, CloseableIterable&lt;? extends Element&gt;, Builder&gt;,
  *         MultiInput.Builder&lt;GetElements, ElementId, Builder&gt;,
- *         SeededGraphFilters.Builder&lt;GetElements, Builder&gt;,
+ *         SeededstoreFilters.Builder&lt;GetElements, Builder&gt;,
  *         SeedMatching.Builder&lt;GetElements, Builder&gt; {
  *     public Builder() {
  *             super(new GetElements());
@@ -104,9 +104,10 @@ public interface Operation extends Closeable {
      * @param options the operation options. This may contain store specific options such as authorisation strings or and
      *                other properties required for the operation to be executed. Note these options will probably not be interpreted
      *                in the same way by every store implementation.
+     * @return Builder style setter returns this operation.
      */
     @JsonSetter
-    void setOptions(final Map<String, String> options);
+    Operation options(final Map<String, String> options);
 
     /**
      * Adds an operation option. This may contain store specific options such as authorisation strings or and
@@ -118,7 +119,7 @@ public interface Operation extends Closeable {
      */
     default void addOption(final String name, final String value) {
         if (null == getOptions()) {
-            setOptions(new HashMap<>());
+            options(new HashMap<>());
         }
 
         getOptions().put(name, value);
@@ -262,7 +263,7 @@ public interface Operation extends Closeable {
         public B options(final Map<String, String> options) {
             if (null != options) {
                 if (null == _getOp().getOptions()) {
-                    _getOp().setOptions(new HashMap<>(options));
+                    _getOp().options(new HashMap<>(options));
                 } else {
                     _getOp().getOptions().putAll(options);
                 }

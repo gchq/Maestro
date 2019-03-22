@@ -33,8 +33,8 @@ public abstract class Library {
      * Add a new relationship between a storeId and Config.
      *
      * @param storeId The StoreId to relate to.
-     * @param config  The Config that relate to the graphId.
-     * @throws OverwritingException If the graphId already has a related Schema and/or Config.
+     * @param config  The Config that relate to the storeId.
+     * @throws OverwritingException If the storeId already has a related Schema and/or Config.
      */
     public void addConfig(final String storeId, final Config config) throws OverwritingException {
         validateId(storeId);

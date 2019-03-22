@@ -60,8 +60,9 @@ public class CancelScheduledJob implements Operation {
     }
 
     @Override
-    public void setOptions(final Map<String, String> options) {
+    public Operation options(final Map<String, String> options) {
         this.options = options;
+        return this;
     }
 
     public static class Builder extends Operation.BaseBuilder<CancelScheduledJob, CancelScheduledJob.Builder> {

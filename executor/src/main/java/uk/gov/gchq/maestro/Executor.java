@@ -123,22 +123,22 @@ public class Executor {
         addOrUpdateJobDetail(operation, context, null, JobStatus.RUNNING);
         O result = null;
         try {
-            for (final Hook graphHook : getConfig().getHooks()) {
-                graphHook.preExecute(clonedRequest);
+            for (final Hook storeHook : getConfig().getHooks()) {
+                storeHook.preExecute(clonedRequest);
             }
             result = (O) handleOperation(operation, context);
-            for (final Hook graphHook : getConfig().getHooks()) {
-                result = graphHook.postExecute(result,
+            for (final Hook storeHook : getConfig().getHooks()) {
+                result = storeHook.postExecute(result,
                         clonedRequest);
             }
             addOrUpdateJobDetail(operation, context, null, JobStatus.FINISHED);
         } catch (final Exception e) {
-            for (final Hook graphHook : getConfig().getHooks()) {
+            for (final Hook storeHook : getConfig().getHooks()) {
                 try {
-                    result = graphHook.onFailure(result,
+                    result = storeHook.onFailure(result,
                             clonedRequest, e);
-                } catch (final Exception graphHookE) {
-                    LOGGER.warn("Error in graphHook " + graphHook.getClass().getSimpleName() + ": " + graphHookE.getMessage(), graphHookE);
+                } catch (final Exception storeHookE) {
+                    LOGGER.warn("Error in storeHook " + storeHook.getClass().getSimpleName() + ": " + storeHookE.getMessage(), storeHookE);
                 }
             }
         } catch (final Throwable t) {

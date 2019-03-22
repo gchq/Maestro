@@ -65,7 +65,7 @@ public class TestOperation implements Operation {
     public Operation shallowClone() throws CloneFailedException {
         final TestOperation testOperation = new TestOperation();
         testOperation.setField(field);
-        testOperation.setOptions(options);
+        testOperation.options(options);
         return testOperation;
     }
 
@@ -75,7 +75,8 @@ public class TestOperation implements Operation {
     }
 
     @Override
-    public void setOptions(final Map<String, String> options) {
+    public Operation options(final Map<String, String> options) {
         this.options = options;
+        return this;
     }
 }

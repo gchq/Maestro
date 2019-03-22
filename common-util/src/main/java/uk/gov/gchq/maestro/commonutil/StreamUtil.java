@@ -41,7 +41,7 @@ public final class StreamUtil {
     public static final String ELEMENTS_SCHEMA = SCHEMA_FOLDER + "elements.json";
     public static final String TYPES_SCHEMA = SCHEMA_FOLDER + "types.json";
     public static final String STORE_PROPERTIES = "/store.properties";
-    public static final String GRAPH_CONFIG = "/graphConfig.json";
+    public static final String STORE_CONFIG = "/storeConfig.json";
     public static final String FAILED_TO_CREATE_INPUT_STREAM_FOR_PATH = "Failed to create input stream for path: ";
     public static final String LOG_FAILED_TO_CREATE_INPUT_STREAM_FOR_PATH = FAILED_TO_CREATE_INPUT_STREAM_FOR_PATH + "{}";
     private static final Logger LOGGER = LoggerFactory.getLogger(StreamUtil.class);
@@ -51,14 +51,14 @@ public final class StreamUtil {
     }
 
     /**
-     * Open the graph config file located at the same location as the provided
+     * Open the store config file located at the same location as the provided
      * class.
      *
-     * @param clazz the class determining the location of the graph config file
-     * @return an {@link InputStream} representing the graph config file
+     * @param clazz the class determining the location of the store config file
+     * @return an {@link InputStream} representing the store config file
      */
-    public static InputStream graphConfig(final Class clazz) {
-        return openStream(clazz, GRAPH_CONFIG);
+    public static InputStream storeConfig(final Class clazz) {
+        return openStream(clazz, STORE_CONFIG);
     }
 
     /**
