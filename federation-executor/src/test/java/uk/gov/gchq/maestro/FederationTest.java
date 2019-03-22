@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package uk.gov.gchq.maestro;
 
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
 import uk.gov.gchq.maestro.util.Config;
 
@@ -34,7 +34,7 @@ public class FederationTest extends MaestroObjectTest<Executor> {
                 "    \"operationHandlers\" : { },\n" +
                 "    \"hooks\" : [ ],\n" +
                 "    \"properties\" : {\n" +
-                "      \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.StoreProperties\"\n" +
+                "      \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
                 "    }\n" +
                 "  }\n" +
                 "}";

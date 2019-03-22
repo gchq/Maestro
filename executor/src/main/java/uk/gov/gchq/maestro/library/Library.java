@@ -47,8 +47,9 @@ public abstract class Library {
             if (!existingConfig.getProperties().equals(config.getProperties())) {
                 throw new OverwritingException("storeId " + storeId +
                         "already exists with a different store config:\n"
-                        + "existing storeProperties:\n" + existingConfig.toString()
-                        + "\nnew storeProperties:\n" + config.toString());
+                        + "existing executorProperties:\n" + existingConfig
+                        .toString()
+                        + "\nnew executorProperties:\n" + config.toString());
             }
         }
     }

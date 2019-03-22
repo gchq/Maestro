@@ -71,12 +71,16 @@ public class Executor {
         addExecutorService(config.getProperties());
     }
 
-    protected void startCacheServiceLoader(final StoreProperties properties) {
-        CacheServiceLoader.initialise(properties.getProperties());
+    protected void startCacheServiceLoader(final ExecutorProperties properties) {
+        if (null != properties) {
+            CacheServiceLoader.initialise(properties.getProperties());
+        }
     }
 
-    private void addExecutorService(final StoreProperties properties) {
-        ExecutorService.initialise(properties.getJobExecutorThreadCount());
+    private void addExecutorService(final ExecutorProperties properties) {
+        if (null != properties) {
+            ExecutorService.initialise(properties.getJobExecutorThreadCount());
+        }
     }
 
     public static Executor deserialise(final byte[] jsonBytes) {

@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.StoreProperties;
+import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
@@ -40,7 +40,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 public class GetAllJobDetailsHandlerTest {
-    private final StoreProperties properties = new StoreProperties();
+    private final ExecutorProperties properties = new ExecutorProperties();
     private final User user = mock(User.class);
     private final Operation op = mock(Operation.class);
     private final GetAllJobDetailsHandler handler = new GetAllJobDetailsHandler();
@@ -71,7 +71,7 @@ public class GetAllJobDetailsHandlerTest {
     public void shouldGetAllJobDetailsByDelegatingToJobTracker() throws OperationException {
         // Given
         final Config config = new Config.Builder()
-                .storeProperties(properties)
+                .executorProperties(properties)
                 .operationHandler(new OperationDeclaration.Builder()
                         .operation(Job.class)
                         .handler(new JobHandler())

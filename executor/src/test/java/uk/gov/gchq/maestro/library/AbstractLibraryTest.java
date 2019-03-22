@@ -27,12 +27,12 @@ public abstract class AbstractLibraryTest {
 
     private static final String EXCEPTION_EXPECTED = "Exception expected";
 
-    private StoreProperties storeProperties = new StoreProperties();
-    private StoreProperties storeProperties1 = new StoreProperties();
+    private ExecutorProperties ExecutorProperties = new ExecutorProperties();
+    private ExecutorProperties ExecutorProperties1 = new ExecutorProperties();
     private Config config =
-            new Config.Builder().storeProperties(storeProperties).build();
+            new Config.Builder().executorProperties(executorProperties).build();
     private Config config1 =
-            new Config.Builder().storeProperties(storeProperties1).build();
+            new Config.Builder().executorProperties(executorProperties1).build();
 
     public abstract Library createLibraryInstance();
 

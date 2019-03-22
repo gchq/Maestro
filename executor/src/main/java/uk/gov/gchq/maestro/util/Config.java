@@ -25,7 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import uk.gov.gchq.maestro.StoreProperties;
+import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
@@ -78,7 +78,7 @@ public class Config {
      * The store properties - contains specific configuration information for
      * the store - such as database connection strings.
      */
-    private StoreProperties properties = new StoreProperties();
+    private ExecutorProperties properties = new ExecutorProperties();
 
     /**
      * The operation handlers - A Map containing all classes of operations
@@ -101,8 +101,9 @@ public class Config {
         return id;
     }
 
-    public void setId(final String id) {
+    public Config setId(final String id) {
         this.id = id;
+        return this;
     }
 
     public List<Hook> getHooks() {
@@ -154,28 +155,30 @@ public class Config {
     }
 
     /**
-     * Get this Store's {@link StoreProperties}.
+     * Get this Store's {@link ExecutorProperties}.
      *
-     * @return the instance of {@link StoreProperties},
+     * @return the instance of {@link ExecutorProperties},
      * this may contain details such as database connection details.
      */
-    public StoreProperties getProperties() {
+    public ExecutorProperties getProperties() {
         return properties;
     }
 
     @JsonGetter("properties")
+    @JsonPropertyOrder(alphabetic = true)
     public Properties _getProperties() {
         return isNull(properties) ? null : properties.getProperties();
     }
 
     @JsonSetter
-    public void setProperties(final Properties properties) {
+    public Config setProperties(final Properties properties) {
         if (nonNull(properties)) {
             if (isNull(this.properties)) {
-                this.properties = new StoreProperties();
+                this.properties = new ExecutorProperties();
             }
             this.properties.setProperties(properties);
         }
+        return this;
     }
 
     /**
@@ -192,7 +195,7 @@ public class Config {
         OperationDeclarations declarations = null;
 
         final String declarationsPaths =
-                properties.get(StoreProperties.OPERATION_DECLARATIONS);
+                properties.get(ExecutorProperties.OPERATION_DECLARATIONS);
         if (null != declarationsPaths) {
             declarations = OperationDeclarations.fromPaths(declarationsPaths);
         }
@@ -204,31 +207,31 @@ public class Config {
         return declarations;
     }
 
-    public void setProperties(final StoreProperties properties) {
-        final Class<? extends StoreProperties> requiredPropsClass = getPropertiesClass();
-        properties.updateStorePropertiesClass(requiredPropsClass);
+    public void setProperties(final ExecutorProperties properties) {
+        final Class<? extends ExecutorProperties> requiredPropsClass = getPropertiesClass();
+        properties.updateExecutorPropertiesClass(requiredPropsClass);
 
         // If the properties instance is not already an instance of the required class then reload the properties
         if (requiredPropsClass.isAssignableFrom(properties.getClass())) {
             this.properties = properties;
         } else {
-            this.properties = StoreProperties.loadStoreProperties(properties.getProperties());
+            this.properties = ExecutorProperties.loadExecutorProperties(properties.getProperties());
         }
 
         addReflectionPackages(properties.getReflectionPackages());
         updateJsonSerialiser();
     }
 
-    protected Class<? extends StoreProperties> getPropertiesClass() {
-        return StoreProperties.class;
+    protected Class<? extends ExecutorProperties> getPropertiesClass() {
+        return ExecutorProperties.class;
     }
 
-    public static void updateJsonSerialiser(final StoreProperties storeProperties) {
-        if (null != storeProperties) {
+    public static void updateJsonSerialiser(final ExecutorProperties executorProperties) {
+        if (null != executorProperties) {
             JSONSerialiser.update(
-                    storeProperties.getJsonSerialiserClass(),
-                    storeProperties.getJsonSerialiserModules(),
-                    storeProperties.getStrictJson()
+                    executorProperties.getJsonSerialiserClass(),
+                    executorProperties.getJsonSerialiserModules(),
+                    executorProperties.getStrictJson()
             );
         } else {
             JSONSerialiser.update();
@@ -309,9 +312,8 @@ public class Config {
     public static class Builder {
         private Config config = new Config();
         private List<Hook> hooks = new ArrayList<>();
-        private StoreProperties properties = new StoreProperties();
-        Map<Class<? extends Operation>, OperationHandler> operationHandlers =
-                new LinkedHashMap<>();
+        private ExecutorProperties properties = new ExecutorProperties();
+        Map<Class<? extends Operation>, OperationHandler> operationHandlers = new LinkedHashMap<>();
 
         // Config
         public Builder config(final Config config) {
@@ -336,12 +338,13 @@ public class Config {
             return this;
         }
 
-        // StoreProperties
-        public Builder storeProperties(final Properties properties) {
-            return storeProperties(null != properties ? StoreProperties.loadStoreProperties(properties) : null);
+        // ExecutorProperties
+        public Builder executorProperties(final Properties properties) {
+            return executorProperties(null != properties ? ExecutorProperties.loadExecutorProperties(properties) :
+                    null);
         }
 
-        public Builder storeProperties(final StoreProperties properties) {
+        public Builder executorProperties(final ExecutorProperties properties) {
             this.properties = properties;
             if (null != properties) {
                 addReflectionPackages(properties.getReflectionPackages());
@@ -354,51 +357,53 @@ public class Config {
             return this;
         }
 
-        public Builder storeProperties(final String propertiesPath) {
-            return storeProperties(null != propertiesPath ? StoreProperties.loadStoreProperties(propertiesPath) : null);
+        public Builder executorProperties(final String propertiesPath) {
+            return executorProperties(null != propertiesPath ?
+                    ExecutorProperties.loadExecutorProperties(propertiesPath) : null);
         }
 
-        public Builder storeProperties(final Path propertiesPath) {
+        public Builder executorProperties(final Path propertiesPath) {
             if (null == propertiesPath) {
                 properties = null;
             } else {
-                storeProperties(StoreProperties.loadStoreProperties(propertiesPath));
+                executorProperties(ExecutorProperties.loadExecutorProperties(propertiesPath));
             }
             return this;
         }
 
-        public Builder storeProperties(final InputStream propertiesStream) {
+        public Builder executorProperties(final InputStream propertiesStream) {
             if (null == propertiesStream) {
                 properties = null;
             } else {
-                storeProperties(StoreProperties.loadStoreProperties(propertiesStream));
+                executorProperties(ExecutorProperties.loadExecutorProperties(propertiesStream));
             }
             return this;
         }
 
-        public Builder storeProperties(final URI propertiesURI) {
+        public Builder executorProperties(final URI propertiesURI) {
             if (null != propertiesURI) {
                 try {
-                    storeProperties(StreamUtil.openStream(propertiesURI));
+                    executorProperties(StreamUtil.openStream(propertiesURI));
                 } catch (final IOException e) {
-                    throw new IllegalArgumentException("Unable to read storeProperties from URI: " + propertiesURI, e);
+                    throw new IllegalArgumentException("Unable to read " +
+                            "executorProperties from URI: " + propertiesURI, e);
                 }
             }
 
             return this;
         }
 
-        public Builder addStoreProperties(final Properties properties) {
+        public Builder addExecutorProperties(final Properties properties) {
             if (null != properties) {
-                addStoreProperties(StoreProperties.loadStoreProperties(properties));
+                addExecutorProperties(ExecutorProperties.loadExecutorProperties(properties));
             }
             return this;
         }
 
-        public Builder addStoreProperties(final StoreProperties updateProperties) {
+        public Builder addExecutorProperties(final ExecutorProperties updateProperties) {
             if (null != updateProperties) {
                 if (null == this.properties) {
-                    storeProperties(updateProperties);
+                    executorProperties(updateProperties);
                 } else {
                     this.properties.merge(updateProperties);
                 }
@@ -406,33 +411,34 @@ public class Config {
             return this;
         }
 
-        public Builder addStoreProperties(final String updatePropertiesPath) {
+        public Builder addExecutorProperties(final String updatePropertiesPath) {
             if (null != updatePropertiesPath) {
-                addStoreProperties(StoreProperties.loadStoreProperties(updatePropertiesPath));
+                addExecutorProperties(ExecutorProperties.loadExecutorProperties(updatePropertiesPath));
             }
             return this;
         }
 
-        public Builder addStoreProperties(final Path updatePropertiesPath) {
+        public Builder addExecutorProperties(final Path updatePropertiesPath) {
             if (null != updatePropertiesPath) {
-                addStoreProperties(StoreProperties.loadStoreProperties(updatePropertiesPath));
+                addExecutorProperties(ExecutorProperties.loadExecutorProperties(updatePropertiesPath));
             }
             return this;
         }
 
-        public Builder addStoreProperties(final InputStream updatePropertiesStream) {
+        public Builder addExecutorProperties(final InputStream updatePropertiesStream) {
             if (null != updatePropertiesStream) {
-                addStoreProperties(StoreProperties.loadStoreProperties(updatePropertiesStream));
+                addExecutorProperties(ExecutorProperties.loadExecutorProperties(updatePropertiesStream));
             }
             return this;
         }
 
-        public Builder addStoreProperties(final URI updatePropertiesURI) {
+        public Builder addExecutorProperties(final URI updatePropertiesURI) {
             if (null != updatePropertiesURI) {
                 try {
-                    addStoreProperties(StreamUtil.openStream(updatePropertiesURI));
+                    addExecutorProperties(StreamUtil.openStream(updatePropertiesURI));
                 } catch (final IOException e) {
-                    throw new IllegalArgumentException("Unable to read storeProperties from URI: " + updatePropertiesURI, e);
+                    throw new IllegalArgumentException("Unable to read " +
+                            "executorProperties from URI: " + updatePropertiesURI, e);
                 }
             }
             return this;

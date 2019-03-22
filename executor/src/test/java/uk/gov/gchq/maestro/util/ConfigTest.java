@@ -18,7 +18,7 @@ package uk.gov.gchq.maestro.util;
 
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.StoreProperties;
+import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
@@ -45,7 +45,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
                 "  \"hooks\" : [ ],\n" +
                 "  \"properties\" : {\n" +
                 "    \"configKey\" : \"configValue\",\n" +
-                "    \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.StoreProperties\"\n" +
+                "    \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
                 "  }\n" +
                 "}";
     }
@@ -54,7 +54,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     protected Config getTestObject() {
         final Config config = new Config();
         config.addOperationHandler(TestOperation.class, new TestHandler().fieldHandler("handlerFieldValue1"));
-        final StoreProperties properties = new StoreProperties();
+        final ExecutorProperties properties = new ExecutorProperties();
         properties.set("configKey", "configValue");
         config.setProperties(properties);
         return config;
@@ -62,7 +62,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
 
     @Test
     public void shouldJsonSerialiseAndDeserialise() throws SerialisationException {
-        final StoreProperties properties = new StoreProperties();
+        final ExecutorProperties properties = new ExecutorProperties();
         properties.set("configKey", "configValue");
         final Config config = new Config.Builder()
                 .id("testId")
@@ -70,7 +70,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
                         .handler(new TestHandler().fieldHandler("handlerFieldValue1"))
                         .operation(TestOperation.class)
                         .build())
-                .storeProperties(properties)
+                .executorProperties(properties)
                 .addHook(new TestHook("testFieldVal"))
                 .library(new NoLibrary())
                 .build();

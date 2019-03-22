@@ -30,7 +30,7 @@ public class OperationChainHandlerTest {
         final Store store = mock(Store.class);
         final User user = mock(User.class);
 
-        final StoreProperties storeProperties = new StoreProperties();
+        final ExecutorProperties ExecutorProperties = new ExecutorProperties();
 
         final GetAdjacentIds op1 = mock(GetAdjacentIds.class);
         final GetElements op2 = mock(GetElements.class);
@@ -38,7 +38,7 @@ public class OperationChainHandlerTest {
         final Entity expectedResult = new Entity(TestGroups.ENTITY);
 
         given(context.getUser()).willReturn(user);
-        given(store.getProperties()).willReturn(storeProperties);
+        given(store.getProperties()).willReturn(ExecutorProperties);
         given(opChainValidator.validate(any(), any(), any())).willReturn(new ValidationResult());
 
         given(store.handleOperation(op1, context)).willReturn(new WrappedCloseableIterable<>(Collections
@@ -65,14 +65,14 @@ public class OperationChainHandlerTest {
         final Store store = mock(Store.class);
         final User user = mock(User.class);
 
-        final StoreProperties storeProperties = new StoreProperties();
+        final ExecutorProperties ExecutorProperties = new ExecutorProperties();
 
         final GetAllElements op = mock(GetAllElements.class);
         final OperationChain opChain = new OperationChain(Collections.singletonList(op));
         final Entity expectedResult = new Entity(TestGroups.ENTITY);
 
         given(context.getUser()).willReturn(user);
-        given(store.getProperties()).willReturn(storeProperties);
+        given(store.getProperties()).willReturn(ExecutorProperties);
         given(opChainValidator.validate(any(), any(), any())).willReturn(new ValidationResult());
 
         given(store.handleOperation(op, context)).willReturn(expectedResult);
@@ -97,7 +97,7 @@ public class OperationChainHandlerTest {
         final Store store = mock(Store.class);
         final User user = mock(User.class);
 
-        final StoreProperties storeProperties = new StoreProperties();
+        final ExecutorProperties ExecutorProperties = new ExecutorProperties();
 
         final GetAdjacentIds op1 = mock(GetAdjacentIds.class);
         final GetElements op2 = mock(GetElements.class);
@@ -109,7 +109,7 @@ public class OperationChainHandlerTest {
         final Entity entityB = new Entity.Builder().group(TestGroups.ENTITY).vertex("B").build();
 
         given(context.getUser()).willReturn(user);
-        given(store.getProperties()).willReturn(storeProperties);
+        given(store.getProperties()).willReturn(ExecutorProperties);
         given(opChainValidator.validate(any(), any(), any())).willReturn(new ValidationResult());
 
         given(store.handleOperation(op1, context)).willReturn(new WrappedCloseableIterable<>(Lists.newArrayList(new EntitySeed("A"), new EntitySeed("B"))));

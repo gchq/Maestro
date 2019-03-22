@@ -33,7 +33,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class StorePropertiesTest {
+public class ExecutorPropertiesTest {
 
     @Before
     @After
@@ -44,8 +44,8 @@ public class StorePropertiesTest {
     @Test
     public void shouldMergeProperties() {
         // Given
-        final StoreProperties props1 = createStoreProperties();
-        final StoreProperties props2 = StoreProperties.loadStoreProperties(StreamUtil.openStream(getClass(), "store2.properties"));
+        final ExecutorProperties props1 = createExecutorProperties();
+        final ExecutorProperties props2 = ExecutorProperties.loadExecutorProperties(StreamUtil.openStream(getClass(), "store2.properties"));
 
         // When
         props1.merge(props2);
@@ -59,7 +59,7 @@ public class StorePropertiesTest {
     @Test
     public void shouldRemovePropertyWhenPropertyValueIsNull() {
         // Given
-        final StoreProperties props = createStoreProperties();
+        final ExecutorProperties props = createExecutorProperties();
 
         // When
         props.set("testKey", null);
@@ -71,7 +71,7 @@ public class StorePropertiesTest {
     @Test
     public void shouldGetProperty() {
         // Given
-        final StoreProperties props = createStoreProperties();
+        final ExecutorProperties props = createExecutorProperties();
 
         // When
         String value = props.get("key1");
@@ -83,7 +83,7 @@ public class StorePropertiesTest {
     @Test
     public void shouldSetAndGetProperty() {
         // Given
-        final StoreProperties props = createStoreProperties();
+        final ExecutorProperties props = createExecutorProperties();
 
         // When
         props.set("key2", "value2");
@@ -96,7 +96,7 @@ public class StorePropertiesTest {
     @Test
     public void shouldGetPropertyWithDefaultValue() {
         // Given
-        final StoreProperties props = createStoreProperties();
+        final ExecutorProperties props = createExecutorProperties();
 
         // When
         String value = props.get("key1", "property not found");
@@ -108,7 +108,7 @@ public class StorePropertiesTest {
     @Test
     public void shouldGetUnknownProperty() {
         // Given
-        final StoreProperties props = createStoreProperties();
+        final ExecutorProperties props = createExecutorProperties();
 
         // When
         String value = props.get("a key that does not exist");
@@ -120,7 +120,7 @@ public class StorePropertiesTest {
     @Test
     public void shouldAddOperationDeclarationPathsWhenNullExisting() {
         // Given
-        final StoreProperties props = createStoreProperties();
+        final ExecutorProperties props = createExecutorProperties();
         assertNull(props.getOperationDeclarationPaths());
 
         // When
@@ -133,7 +133,7 @@ public class StorePropertiesTest {
     @Test
     public void shouldAddOperationDeclarationPathsWhenExisting() {
         // Given
-        final StoreProperties props = createStoreProperties();
+        final ExecutorProperties props = createExecutorProperties();
         props.setOperationDeclarationPaths("1");
 
         // When
@@ -146,7 +146,7 @@ public class StorePropertiesTest {
     @Test
     public void shouldAddReflectionPackagesToKorypheReflectionUtil() {
         // Given
-        final StoreProperties props = createStoreProperties();
+        final ExecutorProperties props = createExecutorProperties();
 
         // When
         props.setReflectionPackages("package1,package2");
@@ -162,7 +162,7 @@ public class StorePropertiesTest {
     @Test
     public void shouldGetUnknownPropertyWithDefaultValue() {
         // Given
-        final StoreProperties props = createStoreProperties();
+        final ExecutorProperties props = createExecutorProperties();
 
         // When
         String value = props.get("a key that does not exist", "property not found");
@@ -171,14 +171,14 @@ public class StorePropertiesTest {
         assertEquals("property not found", value);
     }
 
-    private StoreProperties createStoreProperties() {
-        return StoreProperties.loadStoreProperties(StreamUtil.storeProps(getClass()));
+    private ExecutorProperties createExecutorProperties() {
+        return ExecutorProperties.loadExecutorProperties(StreamUtil.storeProps(getClass()));
     }
 
     @Test
     public void shouldSetJsonSerialiserModules() {
         // Given
-        final StoreProperties props = createStoreProperties();
+        final ExecutorProperties props = createExecutorProperties();
         final Set<Class<? extends JSONSerialiserModules>> modules = Sets.newHashSet(
                 TestCustomJsonModules1.class,
                 TestCustomJsonModules2.class
@@ -196,7 +196,7 @@ public class StorePropertiesTest {
     public void shouldGetAndSetAdminAuth() {
         // Given
         final String adminAuth = "admin auth";
-        final StoreProperties props = createStoreProperties();
+        final ExecutorProperties props = createExecutorProperties();
 
         // When
         props.setAdminAuth(adminAuth);
