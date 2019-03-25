@@ -17,7 +17,6 @@
 package uk.gov.gchq.maestro;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
@@ -52,17 +51,9 @@ import java.util.Set;
  * All ExecutorProperties classes must be JSON serialisable.
  * </p>
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include =
-        JsonTypeInfo.As.EXISTING_PROPERTY, property =
-        "executorPropertiesClassName")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "executorPropertiesClassName")
 public class ExecutorProperties implements Cloneable {
     public static final String STORE_CLASS = "maestro.store.class";
-    public static final String SCHEMA_CLASS = "maestro.store.schema.class";
-    /**
-     * @deprecated the ID should not be used. The properties ID should be supplied to the graph library separately.
-     */
-    @Deprecated
-    public static final String ID = "maestro.store.id";
 
     public static final String STORE_PROPERTIES_CLASS = "maestro.store.properties.class";
     public static final String OPERATION_DECLARATIONS = "maestro.store.operation.declarations";
@@ -90,18 +81,6 @@ public class ExecutorProperties implements Cloneable {
     // Required for loading by reflection.
     public ExecutorProperties() {
         updateExecutorPropertiesClass();
-    }
-
-    /**
-     * @param id the ExecutorProperties id.
-     * @deprecated the id should not be used. The properties id should be supplied to the graph library separately.
-     */
-    @Deprecated
-    public ExecutorProperties(final String id) {
-        this();
-        if (null != id) {
-            setId(id);
-        }
     }
 
     public ExecutorProperties(final Path propFileLocation) {
@@ -263,37 +242,7 @@ public class ExecutorProperties implements Cloneable {
     }
 
     public void merge(final ExecutorProperties properties) {
-        if (null != properties) {
-            if (null != properties.getId()
-                    && null != getId()
-                    && !properties.getId().equals(getId())) {
-                final String newId = getId() + "_" + properties.getId();
-                properties.setId(newId);
-                setId(newId);
-            }
-
-            props.putAll(properties.getProperties());
-        }
-    }
-
-    /**
-     * @return properties ID
-     * @deprecated the ID should be supplied to the graph library separately
-     */
-    @Deprecated
-    public String getId() {
-        return get(ID);
-    }
-
-    /**
-     * Set the ID for the ExecutorProperties
-     *
-     * @param id the value of the ID
-     * @deprecated the ID should be supplied to the graph library separately
-     */
-    @Deprecated
-    public void setId(final String id) {
-        set(ID, id);
+        props.putAll(properties.getProperties());
     }
 
     /**
@@ -340,19 +289,6 @@ public class ExecutorProperties implements Cloneable {
 
     public void setJobTrackerEnabled(final Boolean jobTrackerEnabled) {
         set(JOB_TRACKER_ENABLED, jobTrackerEnabled.toString());
-    }
-
-    public String getSchemaClass() {
-        return get(SCHEMA_CLASS);
-    }
-
-    @JsonSetter
-    public void setSchemaClass(final String schemaClass) {
-        set(SCHEMA_CLASS, schemaClass);
-    }
-
-    public void setSchemaClass(final Class schemaClass) {
-        set(SCHEMA_CLASS, schemaClass.getName());
     }
 
     public String getExecutorPropertiesClassName() {
