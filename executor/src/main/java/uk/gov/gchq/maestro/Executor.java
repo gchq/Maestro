@@ -138,22 +138,22 @@ public class Executor {
         addOrUpdateJobDetail(operation, context, null, JobStatus.RUNNING);
         O result = null;
         try {
-            for (final Hook graphHook : getConfig().getRequestHooks()) {
-                graphHook.preExecute(clonedRequest);
+            for (final Hook requestHook : getConfig().getRequestHooks()) {
+                requestHook.preExecute(clonedRequest);
             }
             result = (O) handleOperation(operation, context);
-            for (final Hook graphHook : getConfig().getRequestHooks()) {
-                result = graphHook.postExecute(result,
+            for (final Hook requestHook : getConfig().getRequestHooks()) {
+                result = requestHook.postExecute(result,
                         clonedRequest);
             }
             addOrUpdateJobDetail(operation, context, null, JobStatus.FINISHED);
         } catch (final Exception e) {
-            for (final Hook graphHook : getConfig().getRequestHooks()) {
+            for (final Hook requestHook : getConfig().getRequestHooks()) {
                 try {
-                    result = graphHook.onFailure(result,
+                    result = requestHook.onFailure(result,
                             clonedRequest, e);
-                } catch (final Exception graphHookE) {
-                    LOGGER.warn("Error in graphHook " + graphHook.getClass().getSimpleName() + ": " + graphHookE.getMessage(), graphHookE);
+                } catch (final Exception requestHookE) {
+                    LOGGER.warn("Error in requestHook " + requestHook.getClass().getSimpleName() + ": " + requestHookE.getMessage(), requestHookE);
                 }
             }
         } catch (final Throwable t) {
@@ -267,19 +267,19 @@ public class Executor {
                         context, this);
             }
             try {
-                for (final Hook graphHook : getConfig().getOperationHooks()) {
-                    graphHook.preExecute(opAsRequest);
+                for (final Hook operationHook : getConfig().getOperationHooks()) {
+                    operationHook.preExecute(opAsRequest);
                 }
                 result = handler.doOperation(operation, context, this);
-                for (final Hook graphHook : getConfig().getRequestHooks()) {
-                    result = graphHook.postExecute(result, opAsRequest);
+                for (final Hook operationHook : getConfig().getRequestHooks()) {
+                    result = operationHook.postExecute(result, opAsRequest);
                 }
             } catch (final Exception e) {
-                for (final Hook graphHook : getConfig().getRequestHooks()) {
+                for (final Hook operationHook : getConfig().getRequestHooks()) {
                     try {
-                        result = graphHook.onFailure(result, opAsRequest, e);
-                    } catch (final Exception graphHookE) {
-                        LOGGER.warn("Error in graphHook " + graphHook.getClass().getSimpleName() + ": " + graphHookE.getMessage(), graphHookE);
+                        result = operationHook.onFailure(result, opAsRequest, e);
+                    } catch (final Exception operationHookE) {
+                        LOGGER.warn("Error in operationHook " + operationHook.getClass().getSimpleName() + ": " + operationHookE.getMessage(), operationHookE);
                     }
                 }
             } catch (final Throwable t) {

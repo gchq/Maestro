@@ -132,7 +132,7 @@ public abstract class Library {
     /**
      * Checks if the executorId with a relationship already exists.
      *
-     * @param executorId The GraphId.
+     * @param executorId The executorId.
      * @return True if a relationship exists.
      */
     public boolean checkPropertiesExist(final String executorId) {
@@ -204,7 +204,9 @@ public abstract class Library {
 
         if (null != existingStoreProps) {
             if (existingStoreProps.getProperties().equals(properties.getProperties())) {
-                throw new OverwritingException("GraphId " + executorId + " already exists with a different store properties:\n"
+                throw new OverwritingException("ExecutorId " + executorId +
+                        " already " +
+                        "exists with a different store properties:\n"
                         + "existing storeProperties:\n" + existingStoreProps.toString()
                         + "\nnew storeProperties:\n" + properties.toString());
             }

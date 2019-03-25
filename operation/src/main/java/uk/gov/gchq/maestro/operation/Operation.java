@@ -63,22 +63,8 @@ import java.util.Map;
  * Implementations should override the close method and ensure all closeable fields are closed.
  * </p>
  * <p>
- * All implementations should also have a static inner Builder class that implements
- * the required builders. For example:
- * </p>
- * <pre>
- * public static class Builder extends Operation.BaseBuilder&lt;GetElements, Builder&gt;
- *         implements InputOutput.Builder&lt;GetElements, Iterable&lt;? extends ElementId&gt;, CloseableIterable&lt;? extends Element&gt;, Builder&gt;,
- *         MultiInput.Builder&lt;GetElements, ElementId, Builder&gt;,
- *         SeededGraphFilters.Builder&lt;GetElements, Builder&gt;,
- *         SeedMatching.Builder&lt;GetElements, Builder&gt; {
- *     public Builder() {
- *             super(new GetElements());
- *     }
- * }
- * </pre>
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class", defaultImpl = OperationChain.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class", defaultImpl = OperationChain.class)
 @JsonSimpleClassName(includeSubtypes = true)
 public interface Operation extends Closeable {
     /**

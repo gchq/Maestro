@@ -61,7 +61,7 @@ public class FileLibrary extends Library {
                 List<String> lines = Files.readAllLines(getExecutorsPath(executorId));
                 propertiesId = lines.get(0);
             } catch (final IOException e) {
-                throw new IllegalArgumentException("Could not read graphs " +
+                throw new IllegalArgumentException("Could not read executor " +
                         "file: " + getExecutorsPath(executorId), e);
             }
         } else {
@@ -76,7 +76,7 @@ public class FileLibrary extends Library {
             FileUtils.writeStringToFile(getExecutorsPath(executorId).toFile(),
                     propsId);
         } catch (final IOException e) {
-            throw new IllegalArgumentException("Could not write Graphs to " +
+            throw new IllegalArgumentException("Could not write Executor to " +
                     "path: " + getExecutorsPath(executorId), e);
         }
     }

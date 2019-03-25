@@ -160,12 +160,14 @@ public class Config {
                 final String path = ((HookPath) surroundingHook).getPath();
                 final File file = new File(path);
                 if (!file.exists()) {
-                    throw new IllegalArgumentException("Unable to find graph hook file: " + path);
+                    throw new IllegalArgumentException("Unable to find " +
+                            "request hook file: " + path);
                 }
                 try {
                     requestHooks.add(JSONSerialiser.deserialise(FileUtils.readFileToByteArray(file), Hook.class));
                 } catch (final IOException e) {
-                    throw new IllegalArgumentException("Unable to deserialise graph hook from file: " + path, e);
+                    throw new IllegalArgumentException("Unable to deserialise" +
+                            " request hook from file: " + path, e);
                 }
             } else {
                 requestHooks.add(surroundingHook);
@@ -556,8 +558,8 @@ public class Config {
                                     Files.readAllBytes(path) : null,
                             config.getClass()));
                 } catch (final IOException e) {
-                    throw new IllegalArgumentException("Unable to read graph " +
-                            "config from path: " + path, e);
+                    throw new IllegalArgumentException("Unable to read " +
+                            "Executor config from path: " + path, e);
                 }
             }
             return this;
@@ -570,7 +572,8 @@ public class Config {
                         config.getClass()));
             } catch (
                     final IOException e) {
-                throw new IllegalArgumentException("Unable to read graph config from input stream", e);
+                throw new IllegalArgumentException("Unable to read Executor " +
+                        "config from input stream", e);
             }
             return this;
         }
@@ -578,35 +581,38 @@ public class Config {
         // Hooks
         public Builder addRequestHooks(final Path requestHooksPath) {
             if (null == requestHooksPath || !requestHooksPath.toFile().exists()) {
-                throw new IllegalArgumentException("Unable to find graph hooks file: " + requestHooksPath);
+                throw new IllegalArgumentException("Unable to find request hooks file: " + requestHooksPath);
             }
             final Hook[] requestHooks;
             try {
                 requestHooks =
                         JSONSerialiser.deserialise(FileUtils.readFileToByteArray(requestHooksPath.toFile()), Hook[].class);
             } catch (final IOException e) {
-                throw new IllegalArgumentException("Unable to load graph hooks file: " + requestHooksPath, e);
+                throw new IllegalArgumentException("Unable to load request hooks file: " + requestHooksPath, e);
             }
             return addRequestHooks(requestHooks);
         }
 
         public Builder addOperationHooks(final Path operationHooksPath) {
             if (null == operationHooksPath || !operationHooksPath.toFile().exists()) {
-                throw new IllegalArgumentException("Unable to find graph hooks file: " + operationHooksPath);
+                throw new IllegalArgumentException("Unable to find operation " +
+                        "hooks file: " + operationHooksPath);
             }
             final Hook[] operationHooks;
             try {
                 operationHooks =
                         JSONSerialiser.deserialise(FileUtils.readFileToByteArray(operationHooksPath.toFile()), Hook[].class);
             } catch (final IOException e) {
-                throw new IllegalArgumentException("Unable to load graph hooks file: " + operationHooksPath, e);
+                throw new IllegalArgumentException("Unable to load operation " +
+                        "hooks file: " + operationHooksPath, e);
             }
             return addOperationHooks(operationHooks);
         }
 
         public Builder addRequestHook(final Path requestHookPath) {
             if (null == requestHookPath || !requestHookPath.toFile().exists()) {
-                throw new IllegalArgumentException("Unable to find graph hook file: " + requestHookPath);
+                throw new IllegalArgumentException("Unable to find request " +
+                        "hook file: " + requestHookPath);
             }
 
             final Hook requestHook;
@@ -614,15 +620,16 @@ public class Config {
                 requestHook =
                         JSONSerialiser.deserialise(FileUtils.readFileToByteArray(requestHookPath.toFile()), Hook.class);
             } catch (final IOException e) {
-                throw new IllegalArgumentException("Unable to load graph hook" +
-                        " file: " + requestHookPath, e);
+                throw new IllegalArgumentException("Unable to load request " +
+                        "hook file: " + requestHookPath, e);
             }
             return addRequestHook(requestHook);
         }
 
         public Builder addOperationHook(final Path operationHookPath) {
             if (null == operationHookPath || !operationHookPath.toFile().exists()) {
-                throw new IllegalArgumentException("Unable to find graph hook file: " + operationHookPath);
+                throw new IllegalArgumentException("Unable to find operation " +
+                        "hook file: " + operationHookPath);
             }
 
             final Hook operationHook;
@@ -630,8 +637,8 @@ public class Config {
                 operationHook =
                         JSONSerialiser.deserialise(FileUtils.readFileToByteArray(operationHookPath.toFile()), Hook.class);
             } catch (final IOException e) {
-                throw new IllegalArgumentException("Unable to load graph hook" +
-                        " file: " + operationHookPath, e);
+                throw new IllegalArgumentException("Unable to load operation " +
+                        "hook file: " + operationHookPath, e);
             }
             return addOperationHook(operationHook);
         }

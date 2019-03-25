@@ -24,7 +24,7 @@ import uk.gov.gchq.maestro.util.Request;
 
 /**
  * A {@code Log4jLogger} is a simple {@link Hook} that sends logs of the
- * original operation chains executed by users on a graph to a {@link Logger}.
+ * original operation chains executed by users to a {@link Logger}.
  */
 @JsonPropertyOrder(alphabetic = true)
 public class Log4jLogger implements Hook {
@@ -33,7 +33,7 @@ public class Log4jLogger implements Hook {
     /**
      * Logs the operation chain and the user id.
      *
-     * @param request GraphRequest containing the Operation and Context
+     * @param request Request containing the Operation and Context
      */
     @Override
     public void preExecute(final Request request) {

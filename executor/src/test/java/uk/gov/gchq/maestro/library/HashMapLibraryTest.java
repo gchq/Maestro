@@ -33,7 +33,7 @@ public class HashMapLibraryTest extends AbstractLibraryTest {
     }
 
     @Test
-    public void shouldClearGraphLibrary() {
+    public void shouldClearLibrary() {
         // When
         final HashMapLibrary library = new HashMapLibrary();
         library.addProperties(TEST_ID, new ExecutorProperties());
