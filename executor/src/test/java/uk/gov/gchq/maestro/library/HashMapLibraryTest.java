@@ -17,8 +17,14 @@
 package uk.gov.gchq.maestro.library;
 
 
+import org.junit.Test;
+
+import uk.gov.gchq.maestro.ExecutorProperties;
+
+import static org.junit.Assert.assertNull;
+
 public class HashMapLibraryTest extends AbstractLibraryTest {
-/*
+
     private static final String TEST_ID = "testId";
 
     @Override
@@ -30,10 +36,10 @@ public class HashMapLibraryTest extends AbstractLibraryTest {
     public void shouldClearGraphLibrary() {
         // When
         final HashMapLibrary library = new HashMapLibrary();
-        library.addConfig(TEST_ID, new Config());
+        library.addProperties(TEST_ID, new ExecutorProperties());
         library.clear();
 
         // Then
-        assertNull(library.getConfig(TEST_ID));
-    }*/
+        assertNull(library.getPropertiesUsingPropertiesId(TEST_ID));
+    }
 }

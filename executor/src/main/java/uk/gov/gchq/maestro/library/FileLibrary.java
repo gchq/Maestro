@@ -16,14 +16,27 @@
 
 package uk.gov.gchq.maestro.library;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.io.FileUtils;
+
+import uk.gov.gchq.maestro.ExecutorProperties;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.regex.Pattern;
+
 /**
  * A {@code FileLibrary} stores a {@link Library} in a specified
- * location as files.  It will store a graphId file with the relationships between
- * the graphId, ExecutorPropertiesId and the schemaId.  It will also store the
- * ExecutorProperties and Schema in two other files.  They will be named using the ids.
+ * location as files.  It will store a executorId file with the relationships
+ * between the executorId and ExecutorPropertiesId.  It will also store the
+ * ExecutorProperties in another file.  This will be named using the id.
  */
 public class FileLibrary extends Library {
-    /*private static final Pattern PATH_ALLOWED_CHARACTERS = Pattern.compile("[a-zA-Z0-9_/\\\\\\-]*");
+    private static final Pattern PATH_ALLOWED_CHARACTERS = Pattern.compile("[a-zA-Z0-9_/\\\\\\-]*");
     private static final String DEFAULT_PATH = "library";
     private String path;
 
@@ -38,6 +51,34 @@ public class FileLibrary extends Library {
     @Override
     public void initialise(final String path) {
         setPath(path);
+    }
+
+    @Override
+    public String getPropertiesId(final String executorId) {
+        final String propertiesId;
+        if (getExecutorsPath(executorId).toFile().exists()) {
+            try {
+                List<String> lines = Files.readAllLines(getExecutorsPath(executorId));
+                propertiesId = lines.get(0);
+            } catch (final IOException e) {
+                throw new IllegalArgumentException("Could not read graphs " +
+                        "file: " + getExecutorsPath(executorId), e);
+            }
+        } else {
+            return null;
+        }
+        return propertiesId;
+    }
+
+    @Override
+    protected void _addId(final String executorId, final String propsId) {
+        try {
+            FileUtils.writeStringToFile(getExecutorsPath(executorId).toFile(),
+                    propsId);
+        } catch (final IOException e) {
+            throw new IllegalArgumentException("Could not write Graphs to " +
+                    "path: " + getExecutorsPath(executorId), e);
+        }
     }
 
     @JsonIgnore
@@ -58,29 +99,34 @@ public class FileLibrary extends Library {
     }
 
     @Override
-    protected void _addConfig(final String storeId, final Config config) {
-        if (null != config) {
-            try {
-                getConfigPath(storeId).toFile().getParentFile().mkdirs();
-                FileUtils.writeByteArrayToFile(getConfigPath(storeId).toFile(), JSONSerialiser.serialise(config));
+    protected void _addProperties(final String propertiesId, final ExecutorProperties properties) {
+        if (null != properties) {
+            getPropertiesPath(propertiesId).toFile().getParentFile().mkdirs();
+            try (FileOutputStream propertiesFileOutputStream = new FileOutputStream(getPropertiesPath(propertiesId).toFile())) {
+                properties.getProperties().store(propertiesFileOutputStream, null);
             } catch (final IOException e) {
-                throw new IllegalArgumentException("Could not write config to path: " + getConfigPath(storeId), e);
+                throw new IllegalArgumentException("Could not write " +
+                        "properties to path: " + getPropertiesPath(propertiesId), e);
             }
         } else {
-            throw new IllegalArgumentException("Config cannot be null");
+            throw new IllegalArgumentException("StoreProperties cannot be null");
         }
     }
 
     @Override
-    protected Config _getConfig(final String configId) {
-        final Path configPath = getConfigPath(configId);
-        if (!configPath.toFile().exists()) {
+    protected ExecutorProperties _getProperties(final String propertiesId) {
+        final Path propertiesPath = getPropertiesPath(propertiesId);
+        if (!propertiesPath.toFile().exists()) {
             return null;
         }
-        return new Config.Builder().json(configPath).build();
+        return ExecutorProperties.loadExecutorProperties(propertiesPath);
     }
 
-    private Path getConfigPath(final String storeId) {
-        return Paths.get(path + "/" + storeId + "Config.json");
-    }*/
+    private Path getPropertiesPath(final String propertiesId) {
+        return Paths.get(path + "/" + propertiesId + "Props.properties");
+    }
+
+    private Path getExecutorsPath(final String executorId) {
+        return Paths.get(path + "/" + executorId + "Executors.json");
+    }
 }

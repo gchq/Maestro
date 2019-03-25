@@ -15,15 +15,22 @@
  */
 package uk.gov.gchq.maestro.library;
 
+import uk.gov.gchq.maestro.ExecutorProperties;
+import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A {@code HashMapLibrary} stores a {@link Library} within a HashMap.
  */
 public class HashMapLibrary extends Library {
-
-    /*private static final Map<String, Config> CONFIGS = new HashMap<>();
+    private static final Map<String, String> EXECUTORS = new HashMap<>();
+    private static final Map<String, ExecutorProperties> PROPERTIES = new HashMap<>();
 
     public static void clear() {
-        CONFIGS.clear();
+        EXECUTORS.clear();
+        PROPERTIES.clear();
     }
 
     @Override
@@ -32,19 +39,30 @@ public class HashMapLibrary extends Library {
     }
 
     @Override
-    public Config _getConfig(final String storeId) {
-        return CONFIGS.get(storeId);
+    public String getPropertiesId(final String executorId) {
+        return EXECUTORS.get(executorId);
     }
 
     @Override
-    protected void _addConfig(final String storeId, final Config config) {
-        CONFIGS.put(storeId, config);
+    protected void _addId(final String executorId, final String propsId) {
+        EXECUTORS.put(executorId, propsId);
+    }
+
+    @Override
+    protected void _addProperties(final String propertiesId, final ExecutorProperties properties) {
+        PROPERTIES.put(propertiesId, properties);
+    }
+
+    @Override
+    protected ExecutorProperties _getProperties(final String propertiesId) {
+        final ExecutorProperties executorProperties = PROPERTIES.get(propertiesId);
+        return (null == executorProperties) ? null : executorProperties.clone();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("configs", CONFIGS)
+                .append("executors", EXECUTORS)
                 .toString();
-    }*/
+    }
 }

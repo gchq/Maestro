@@ -17,18 +17,27 @@
 package uk.gov.gchq.maestro.library;
 
 
+import org.junit.Before;
+import org.junit.Test;
+
+import uk.gov.gchq.maestro.ExecutorProperties;
+import uk.gov.gchq.maestro.util.Config;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 public abstract class AbstractLibraryTest {
-/*
+
     protected Library library;
 
     private static final String TEST_EXECUTOR_ID = "testExecutorId";
     private static final String TEST_EXECUTOR_ID_1 = "testExecutorId1";
-    private static final String TEST_UNKNOWN_ID = "unknownId";
 
     private static final String EXCEPTION_EXPECTED = "Exception expected";
 
-    private ExecutorProperties ExecutorProperties = new ExecutorProperties();
-    private ExecutorProperties ExecutorProperties1 = new ExecutorProperties();
+    private ExecutorProperties executorProperties = new ExecutorProperties();
+    private ExecutorProperties executorProperties1 = new ExecutorProperties();
     private Config config =
             new Config.Builder().executorProperties(executorProperties).build();
     private Config config1 =
@@ -45,30 +54,20 @@ public abstract class AbstractLibraryTest {
     }
 
     @Test
-    public void shouldAddAndGetMultipleIdsInGraphLibrary() {
+    public void shouldAddAndGetMultipleIdsInExecutorLibrary() {
         // When
-        library.addConfig(TEST_EXECUTOR_ID, config);
-        library.addConfig(TEST_EXECUTOR_ID_1,
-                config1);
+        library.addProperties(TEST_EXECUTOR_ID, executorProperties);
+        library.addProperties(TEST_EXECUTOR_ID_1, executorProperties1);
 
-        assertEquals(config, library.getConfig(TEST_EXECUTOR_ID));
-        assertEquals(config1, library.getConfig(TEST_EXECUTOR_ID_1));
+        assertEquals(executorProperties, library.getPropertiesUsingPropertiesId(TEST_EXECUTOR_ID));
+        assertEquals(executorProperties1, library.getPropertiesUsingPropertiesId(TEST_EXECUTOR_ID_1));
     }
 
     @Test
-    public void shouldAddAndGetIdsInGraphLibrary() {
-        // When
-        library.addConfig(TEST_EXECUTOR_ID, config);
-
-        // Then
-        assertEquals(config, library.getConfig(TEST_EXECUTOR_ID));
-    }
-
-    @Test
-    public void shouldThrowExceptionWithInvalidGraphId() {
+    public void shouldThrowExceptionWithInvalidExecutorId() {
         // When / Then
         try {
-            library.addConfig(TEST_EXECUTOR_ID + "@#", config);
+            library.add(TEST_EXECUTOR_ID + "@#", executorProperties);
             fail(EXCEPTION_EXPECTED);
         } catch (final IllegalArgumentException e) {
             assertNotNull(e.getMessage());
@@ -76,18 +75,18 @@ public abstract class AbstractLibraryTest {
     }
 
     @Test
-    public void shouldUpdateWhenGraphIdExists() {
+    public void shouldUpdateWhenExecutorIdExists() {
         // When
-        library.addConfig(TEST_EXECUTOR_ID, config);
+        library.addProperties(TEST_EXECUTOR_ID, executorProperties);
 
         // Then
-        assertEquals(config, library.getConfig(TEST_EXECUTOR_ID));
+        assertEquals(executorProperties, library.getPropertiesUsingPropertiesId(TEST_EXECUTOR_ID));
 
         // When
-        library.addConfig(TEST_EXECUTOR_ID, config1);
+        library.addProperties(TEST_EXECUTOR_ID, executorProperties1);
 
         // Then
-        assertEquals(config1, library.getConfig(TEST_EXECUTOR_ID));
-    }*/
+        assertEquals(executorProperties1, library.getPropertiesUsingPropertiesId(TEST_EXECUTOR_ID));
+    }
 }
 

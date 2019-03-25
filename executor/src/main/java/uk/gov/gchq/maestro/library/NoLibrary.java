@@ -15,24 +15,41 @@
  */
 package uk.gov.gchq.maestro.library;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.gov.gchq.maestro.ExecutorProperties;
+
 public class NoLibrary extends Library {
-    /*private static final Logger LOGGER = LoggerFactory.getLogger(NoLibrary.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NoLibrary.class);
 
-    @Override
-    public void initialise(final String path) {
-        LOGGER.debug("Your Config will not be stored in a library. So " +
-                "you will need to provide it each time you create an instance" +
-                " of Store.");
-
+    public NoLibrary() {
+        LOGGER.debug("Nothing will be stored in your library. You will need " +
+                "to provide it each time you create an instance of an Executor.");
     }
 
     @Override
-    protected void _addConfig(final String storeId, final Config config) {
+    public void initialise(final String path) {
         // Do nothing
     }
 
     @Override
-    protected Config _getConfig(final String configId) {
+    public String getPropertiesId(final String executorId) {
         return null;
-    }*/
+    }
+
+    @Override
+    protected void _addId(final String executorId, final String propsId) {
+        // do nothing
+    }
+
+    @Override
+    protected void _addProperties(final String propertiesId, final ExecutorProperties properties) {
+        // do nothing
+    }
+
+    @Override
+    protected ExecutorProperties _getProperties(final String propertiesId) {
+        return null;
+    }
 }
