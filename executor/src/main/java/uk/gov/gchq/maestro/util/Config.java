@@ -179,12 +179,12 @@ public class Config {
                 final String path = ((HookPath) operationHook).getPath();
                 final File file = new File(path);
                 if (!file.exists()) {
-                    throw new IllegalArgumentException("Unable to find graph hook file: " + path);
+                    throw new IllegalArgumentException("Unable to find hook file: " + path);
                 }
                 try {
                     operationHooks.add(JSONSerialiser.deserialise(FileUtils.readFileToByteArray(file), Hook.class));
                 } catch (final IOException e) {
-                    throw new IllegalArgumentException("Unable to deserialise graph hook from file: " + path, e);
+                    throw new IllegalArgumentException("Unable to deserialise hook from file: " + path, e);
                 }
             } else {
                 operationHooks.add(operationHook);

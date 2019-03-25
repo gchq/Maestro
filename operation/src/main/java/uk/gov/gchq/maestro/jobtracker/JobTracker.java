@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 /**
  * A {@code JobTracker} is an entry in a Maestro cache service which is used to store
- * details of jobs submitted to the graph.
+ * details of jobs submitted to the store.
  */
 public final class JobTracker {
 

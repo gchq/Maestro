@@ -93,8 +93,9 @@ public class ExportToResultCache<T> implements
     }
 
     @Override
-    public void setOptions(final Map<String, String> options) {
+    public Operation options(final Map<String, String> options) {
         this.options = options;
+        return this;
     }
 
     public static final class Builder<T> extends Operation.BaseBuilder<ExportToResultCache<T>, Builder<T>>

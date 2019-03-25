@@ -731,7 +731,7 @@
         <plugins>
             <!--<plugin>-->
             <!--<groupId>com.github.ferstl</groupId>-->
-            <!--<artifactId>depgraph-maven-plugin</artifactId>-->
+            <!--<artifactId>depstore-maven-plugin</artifactId>-->
             <!--<version>2.2.1</version>-->
             <!--</plugin>-->
             <!--<plugin>-->

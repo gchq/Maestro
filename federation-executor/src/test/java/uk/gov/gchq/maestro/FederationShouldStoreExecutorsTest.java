@@ -22,13 +22,13 @@ import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
 import uk.gov.gchq.maestro.util.Config;
-import uk.gov.gchq.maestro.util.FedUtil;
+import uk.gov.gchq.maestro.util.FederatedUtil;
 
 import java.util.HashMap;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.gchq.maestro.util.FedUtil.EXECUTOR_STORE;
+import static uk.gov.gchq.maestro.util.FederatedUtil.EXECUTOR_STORE;
 
 public class FederationShouldStoreExecutorsTest extends MaestroObjectTest<Executor> {
 
@@ -57,11 +57,11 @@ public class FederationShouldStoreExecutorsTest extends MaestroObjectTest<Execut
     @Test
     public void shouldGetStoredExecutor() throws MaestroCheckedException {
         final Executor testObject = getTestObject();
-        HashMap<String, Executor> actual = FedUtil.getFederatedExecutors(testObject);
+        HashMap<String, Executor> actual = FederatedUtil.getFederatedExecutors(testObject);
 
         final HashMap<String, Executor> expected = new HashMap<>();
-        expected.put(EXECUTOR_STORE + "_1", new Executor().config(new Config().setId("ExecutorId1")));
-        expected.put(EXECUTOR_STORE + "_2", new Executor().config(new Config().setId("ExecutorId2")));
+        expected.put("Executor1", new Executor().config(new Config().id("ExecutorId1")));
+        expected.put("Executor2", new Executor().config(new Config().id("ExecutorId2")));
 
         assertEquals(expected, actual);
     }
@@ -71,8 +71,8 @@ public class FederationShouldStoreExecutorsTest extends MaestroObjectTest<Execut
     protected Executor getTestObject() {
         final Properties properties = new Properties();
         try {
-            properties.put(EXECUTOR_STORE + "_1", new String(JSONSerialiser.serialise(new Executor().config(new Config().setId("ExecutorId1")), false)));
-            properties.put(EXECUTOR_STORE + "_2", new String(JSONSerialiser.serialise(new Executor().config(new Config().setId("ExecutorId2")), false)));
+            properties.put("ExecutorStore_Executor1", new String(JSONSerialiser.serialise(new Executor().config(new Config().id("ExecutorId1")), false)));
+            properties.put("ExecutorStore_Executor2", new String(JSONSerialiser.serialise(new Executor().config(new Config().id("ExecutorId2")), false)));
         } catch (SerialisationException e) {
             e.printStackTrace();
         }

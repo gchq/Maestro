@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro.operation.handler;
 
+package uk.gov.gchq.maestro.federatedexecutor.operation;
 
-import uk.gov.gchq.maestro.Context;
-import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.OperationChain;
 
-public interface OperationHandler<Op extends Operation> {
+public interface FederatedOperation extends Operation {
+    static boolean hasFederatedOperations(final OperationChain<?> operationChain) {
+        for (final Operation operation : operationChain.getOperations()) {
+            if (operation instanceof FederatedOperation) {
+                return true;
+            }
+        }
 
-    Object doOperation(final Op operation, final Context context, final Executor executor) throws OperationException;
+        return false;
+    }
 }

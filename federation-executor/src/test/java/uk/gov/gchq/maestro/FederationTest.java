@@ -44,7 +44,6 @@ public class FederationTest extends MaestroObjectTest<Executor> {
     protected Executor getTestObject() {
         final Executor executor = new Executor()
                 .config(new Config());
-
         return executor;
     }
 }

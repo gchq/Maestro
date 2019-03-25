@@ -103,7 +103,6 @@ public class Job implements Output<JobDetail> {
         return options;
     }
 
-
     @Override
     public TypeReference<JobDetail> getOutputTypeReference() {
         return new TypeReferenceImpl.JobDetail();

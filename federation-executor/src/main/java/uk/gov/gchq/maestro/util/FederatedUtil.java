@@ -24,20 +24,22 @@ import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
-public final class FedUtil {
-    public static final String EXECUTOR_STORE = "ExecutorStore";
+public final class FederatedUtil {
+    public static final String EXECUTOR_STORE = "ExecutorStore_";
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
     public static final String ERROR_DESERIALISING_EXECUTOR_FROM_PROPERTY_VALUE_STRING = "Error deserialising Executor from property value string. Key: \"%s\" Value: \"%s\"";
     public static final String VALUE_FOR_PROPERTY_S_EXPECTED_STRING_FOUND_S = "value for property: %s class expected: String found: %s";
 
-    private FedUtil() {
+    private FederatedUtil() {
         //No instance
     }
 
@@ -71,7 +73,7 @@ public final class FedUtil {
                     } else {
                         try {
                             final Executor executor = JSONSerialiser.deserialise((String) value, Executor.class);
-                            rtn.put(keyString, executor);
+                            rtn.put(keyString.substring(EXECUTOR_STORE.length()), executor);
                         } catch (final SerialisationException e) {
                             final String format = String.format(ERROR_DESERIALISING_EXECUTOR_FROM_PROPERTY_VALUE_STRING, keyString, value);
                             LOGGER.error(format);
@@ -82,5 +84,30 @@ public final class FedUtil {
             }
         }
         return rtn;
+    }
+
+    public static Executor addExecutorTo(final Executor parent, final AddExecutor op) {
+        addExecutorTo(parent.getConfig(), op);
+        return parent;
+    }
+
+    public static Config addExecutorTo(final Config config, final AddExecutor op) {
+        addExecutorTo(config.getProperties(), op);
+        return config;
+    }
+
+    public static ExecutorProperties addExecutorTo(final ExecutorProperties properties, final AddExecutor op) {
+        addExecutorTo(properties.getProperties(), op);
+        return properties;
+    }
+
+    public static Properties addExecutorTo(final Properties properties, final AddExecutor op) {
+        // TODO op.getAuths();
+        // TODO op.isPublic();
+
+        final String id = op.getId();
+        requireNonNull(id);
+        properties.put(FederatedUtil.EXECUTOR_STORE + id, new Executor(op.getConfig()));
+        return properties;
     }
 }
