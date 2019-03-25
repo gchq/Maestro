@@ -172,7 +172,7 @@ public abstract class Library {
     }
 
     public ExecutorProperties resolveExecutorProperties(final ExecutorProperties properties,
-                                                     final String parentStorePropertiesId) {
+                                                        final String parentStorePropertiesId) {
         ExecutorProperties resultProps = null;
         if (null != parentStorePropertiesId) {
             resultProps = this.getPropertiesUsingPropertiesId(parentStorePropertiesId);

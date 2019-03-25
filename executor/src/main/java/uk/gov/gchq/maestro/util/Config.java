@@ -70,9 +70,16 @@ public class Config {
     private String description;
 
     /**
-     * A list of {@link Hook}s
+     * A list of {@link Hook}s that are run around the full Request that is
+     * received.
      */
-    private List<Hook> hooks = new ArrayList<>();
+    private List<Hook> requestHooks = new ArrayList<>();
+
+    /**
+     * A list of {@link Hook}s that are run for each Operation within the
+     * Request that is received.
+     */
+    private List<Hook> operationHooks = new ArrayList<>();
 
     /**
      * The store properties - contains specific configuration information for
@@ -106,15 +113,27 @@ public class Config {
         return this;
     }
 
-    public List<Hook> getHooks() {
-        return hooks;
+    public List<Hook> getRequestHooks() {
+        return requestHooks;
     }
 
-    public void setHooks(final List<Hook> hooks) {
-        if (null == hooks) {
-            this.hooks.clear();
+    public void setRequestHooks(final List<Hook> requestHooks) {
+        if (null == requestHooks) {
+            this.requestHooks.clear();
         } else {
-            hooks.forEach(this::addHook);
+            requestHooks.forEach(this::addRequestHook);
+        }
+    }
+
+    public List<Hook> getOperationHooks() {
+        return operationHooks;
+    }
+
+    public void setOperationHooks(final List<Hook> operationHooks) {
+        if (null == operationHooks) {
+            this.operationHooks.clear();
+        } else {
+            operationHooks.forEach(this::addOperationHook);
         }
     }
 
@@ -135,21 +154,40 @@ public class Config {
         this.library = library;
     }
 
-    public void addHook(final Hook hook) {
-        if (null != hook) {
-            if (hook instanceof HookPath) {
-                final String path = ((HookPath) hook).getPath();
+    public void addRequestHook(final Hook surroundingHook) {
+        if (null != surroundingHook) {
+            if (surroundingHook instanceof HookPath) {
+                final String path = ((HookPath) surroundingHook).getPath();
                 final File file = new File(path);
                 if (!file.exists()) {
                     throw new IllegalArgumentException("Unable to find graph hook file: " + path);
                 }
                 try {
-                    hooks.add(JSONSerialiser.deserialise(FileUtils.readFileToByteArray(file), Hook.class));
+                    requestHooks.add(JSONSerialiser.deserialise(FileUtils.readFileToByteArray(file), Hook.class));
                 } catch (final IOException e) {
                     throw new IllegalArgumentException("Unable to deserialise graph hook from file: " + path, e);
                 }
             } else {
-                hooks.add(hook);
+                requestHooks.add(surroundingHook);
+            }
+        }
+    }
+
+    public void addOperationHook(final Hook operationHook) {
+        if (null != operationHook) {
+            if (operationHook instanceof HookPath) {
+                final String path = ((HookPath) operationHook).getPath();
+                final File file = new File(path);
+                if (!file.exists()) {
+                    throw new IllegalArgumentException("Unable to find graph hook file: " + path);
+                }
+                try {
+                    operationHooks.add(JSONSerialiser.deserialise(FileUtils.readFileToByteArray(file), Hook.class));
+                } catch (final IOException e) {
+                    throw new IllegalArgumentException("Unable to deserialise graph hook from file: " + path, e);
+                }
+            } else {
+                operationHooks.add(operationHook);
             }
         }
     }
@@ -264,7 +302,8 @@ public class Config {
         return new ToStringBuilder(this)
                 .append("id", id)
                 .append("description", description)
-                .append("hooks", hooks)
+                .append("requestHooks", requestHooks)
+                .append("operationHooks", operationHooks)
                 .append("properties", properties)
                 .append("operationHandlers", operationHandlers)
                 .toString();
@@ -285,8 +324,8 @@ public class Config {
         final EqualsBuilder equalsBuilder = new EqualsBuilder()
                 .append(id, config.id)
                 .append(description, config.description)
-                .append(hooks, config.hooks)
-                //.append(library, config.library);
+                .append(requestHooks, config.requestHooks)
+                .append(operationHooks, config.operationHooks)
                 .append(operationHandlers, config.operationHandlers)
                 .append(nonNull(properties), nonNull(config.properties));
 
@@ -302,7 +341,8 @@ public class Config {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(description)
-                .append(hooks)
+                .append(requestHooks)
+                .append(operationHooks)
                 .append(properties)
                 .append(operationHandlers)
                 .append(library)
@@ -311,7 +351,8 @@ public class Config {
 
     public static class Builder {
         private Config config = new Config();
-        private List<Hook> hooks = new ArrayList<>();
+        private List<Hook> requestHooks = new ArrayList<>();
+        private List<Hook> operationHooks = new ArrayList<>();
         private ExecutorProperties properties = new ExecutorProperties();
         Map<Class<? extends Operation>, OperationHandler> operationHandlers = new LinkedHashMap<>();
 
@@ -493,7 +534,8 @@ public class Config {
                 if (null != this.config.getDescription()) {
                     this.config.setDescription(config.getDescription());
                 }
-                config.getHooks().forEach(hook -> this.config.addHook(hook));
+                config.getRequestHooks().forEach(hook -> this.config.addRequestHook(hook));
+                config.getOperationHooks().forEach(hook -> this.config.addOperationHook(hook));
                 this.config.getProperties().merge(config.getProperties());
                 this.config.getOperationHandlers().putAll(config.getOperationHandlers());
             }
@@ -534,45 +576,90 @@ public class Config {
         }
 
         // Hooks
-        public Builder addHooks(final Path hooksPath) {
-            if (null == hooksPath || !hooksPath.toFile().exists()) {
-                throw new IllegalArgumentException("Unable to find graph hooks file: " + hooksPath);
+        public Builder addRequestHooks(final Path requestHooksPath) {
+            if (null == requestHooksPath || !requestHooksPath.toFile().exists()) {
+                throw new IllegalArgumentException("Unable to find graph hooks file: " + requestHooksPath);
             }
-            final Hook[] hooks;
+            final Hook[] requestHooks;
             try {
-                hooks =
-                        JSONSerialiser.deserialise(FileUtils.readFileToByteArray(hooksPath.toFile()), Hook[].class);
+                requestHooks =
+                        JSONSerialiser.deserialise(FileUtils.readFileToByteArray(requestHooksPath.toFile()), Hook[].class);
             } catch (final IOException e) {
-                throw new IllegalArgumentException("Unable to load graph hooks file: " + hooksPath, e);
+                throw new IllegalArgumentException("Unable to load graph hooks file: " + requestHooksPath, e);
             }
-            return addHooks(hooks);
+            return addRequestHooks(requestHooks);
         }
 
-        public Builder addHook(final Path hookPath) {
-            if (null == hookPath || !hookPath.toFile().exists()) {
-                throw new IllegalArgumentException("Unable to find graph hook file: " + hookPath);
+        public Builder addOperationHooks(final Path operationHooksPath) {
+            if (null == operationHooksPath || !operationHooksPath.toFile().exists()) {
+                throw new IllegalArgumentException("Unable to find graph hooks file: " + operationHooksPath);
             }
-
-            final Hook hook;
+            final Hook[] operationHooks;
             try {
-                hook =
-                        JSONSerialiser.deserialise(FileUtils.readFileToByteArray(hookPath.toFile()), Hook.class);
+                operationHooks =
+                        JSONSerialiser.deserialise(FileUtils.readFileToByteArray(operationHooksPath.toFile()), Hook[].class);
             } catch (final IOException e) {
-                throw new IllegalArgumentException("Unable to load graph hook file: " + hookPath, e);
+                throw new IllegalArgumentException("Unable to load graph hooks file: " + operationHooksPath, e);
             }
-            return addHook(hook);
+            return addOperationHooks(operationHooks);
         }
 
-        public Builder addHook(final Hook hook) {
-            if (null != hook) {
-                this.hooks.add(hook);
+        public Builder addRequestHook(final Path requestHookPath) {
+            if (null == requestHookPath || !requestHookPath.toFile().exists()) {
+                throw new IllegalArgumentException("Unable to find graph hook file: " + requestHookPath);
+            }
+
+            final Hook requestHook;
+            try {
+                requestHook =
+                        JSONSerialiser.deserialise(FileUtils.readFileToByteArray(requestHookPath.toFile()), Hook.class);
+            } catch (final IOException e) {
+                throw new IllegalArgumentException("Unable to load graph hook" +
+                        " file: " + requestHookPath, e);
+            }
+            return addRequestHook(requestHook);
+        }
+
+        public Builder addOperationHook(final Path operationHookPath) {
+            if (null == operationHookPath || !operationHookPath.toFile().exists()) {
+                throw new IllegalArgumentException("Unable to find graph hook file: " + operationHookPath);
+            }
+
+            final Hook operationHook;
+            try {
+                operationHook =
+                        JSONSerialiser.deserialise(FileUtils.readFileToByteArray(operationHookPath.toFile()), Hook.class);
+            } catch (final IOException e) {
+                throw new IllegalArgumentException("Unable to load graph hook" +
+                        " file: " + operationHookPath, e);
+            }
+            return addOperationHook(operationHook);
+        }
+
+        public Builder addRequestHook(final Hook requestHook) {
+            if (null != requestHook) {
+                this.requestHooks.add(requestHook);
             }
             return this;
         }
 
-        public Builder addHooks(final Hook... hooks) {
-            if (null != hooks) {
-                this.hooks.addAll(Arrays.asList(hooks));
+        public Builder addOperationHook(final Hook operationHook) {
+            if (null != operationHook) {
+                this.operationHooks.add(operationHook);
+            }
+            return this;
+        }
+
+        public Builder addRequestHooks(final Hook... requestHooks) {
+            if (null != requestHooks) {
+                this.requestHooks.addAll(Arrays.asList(requestHooks));
+            }
+            return this;
+        }
+
+        public Builder addOperationHooks(final Hook... operationHooks) {
+            if (null != operationHooks) {
+                this.operationHooks.addAll(Arrays.asList(operationHooks));
             }
             return this;
         }
@@ -619,7 +706,8 @@ public class Config {
             if (null == config.getLibrary()) {
                 config.setLibrary(new NoLibrary());
             }
-            config.setHooks(hooks);
+            config.setRequestHooks(requestHooks);
+            config.setOperationHooks(operationHooks);
             config.getProperties().getProperties().putAll(properties.getProperties());
             config.getOperationHandlers().putAll(operationHandlers);
             return config;
