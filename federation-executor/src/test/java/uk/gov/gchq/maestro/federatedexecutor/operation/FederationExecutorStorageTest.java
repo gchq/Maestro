@@ -22,12 +22,8 @@ import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
 import uk.gov.gchq.maestro.util.Config;
-import uk.gov.gchq.maestro.util.FederatedUtil;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Properties;
-import java.util.Set;
 
 import static uk.gov.gchq.maestro.util.FederatedUtil.EXECUTOR_STORE;
 
@@ -46,12 +42,13 @@ public class FederationExecutorStorageTest extends MaestroObjectTest<Executor> {
                 "  \"config\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
                 "    \"operationHandlers\" : { },\n" +
-                "    \"hooks\" : [ ],\n" +
                 "    \"properties\" : {\n" +
-                "      \"ExecutorStore_executor1\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"operationHandlers\\\":{},\\\"hooks\\\":[],\\\"properties\\\":{\\\"innerK1\\\":\\\"innerV1\\\"}}}\",\n" +
-                "      \"ExecutorStore_executor2\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"operationHandlers\\\":{},\\\"hooks\\\":[],\\\"properties\\\":{\\\"innerK2\\\":\\\"innerV2\\\"}}}\",\n" +
+                "      \"ExecutorStore_executor1\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{\\\"innerK1\\\":\\\"innerV1\\\"},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}}\",\n" +
+                "      \"ExecutorStore_executor2\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{\\\"innerK2\\\":\\\"innerV2\\\"},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}}\",\n" +
                 "      \"values\" : \"[\\\"val2\\\",\\\"val1\\\"]\"\n" +
-                "    }\n" +
+                "    },\n" +
+                "    \"operationHooks\" : [ ],\n" +
+                "    \"requestHooks\" : [ ]\n" +
                 "  }\n" +
                 "}";
     }

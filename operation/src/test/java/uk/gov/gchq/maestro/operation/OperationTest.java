@@ -73,7 +73,7 @@ public abstract class OperationTest<T extends Operation> extends JSONSerialisati
         final Operation testObject = getTestObject();
         final HashMap<String, String> expected = Maps.newHashMap();
         expected.put("one", "two");
-        testObject.setOptions(expected);
+        testObject.options(expected);
         final Map<String, String> actual = testObject.getOptions();
         Assert.assertEquals(expected, actual);
         assertEquals("two", testObject.getOption("one"));

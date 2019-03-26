@@ -94,8 +94,9 @@ public class Job implements Output<JobDetail> {
     }
 
     @Override
-    public void setOptions(final Map<String, String> options) {
+    public Job options(final Map<String, String> options) {
         this.options = options;
+        return this;
     }
 
     @Override

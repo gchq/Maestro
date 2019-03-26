@@ -42,11 +42,12 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "        \"handlerField\" : \"handlerFieldValue1\"\n" +
                 "      }\n" +
                 "    },\n" +
-                "    \"hooks\" : [ ],\n" +
                 "    \"properties\" : {\n" +
                 "      \"configKey\" : \"configValue\",\n" +
                 "      \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
-                "    }\n" +
+                "    },\n" +
+                "    \"operationHooks\" : [ ],\n" +
+                "    \"requestHooks\" : [ ]\n" +
                 "  }\n" +
                 "}";
     }

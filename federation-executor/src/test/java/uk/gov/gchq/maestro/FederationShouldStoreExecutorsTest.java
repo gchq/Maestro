@@ -28,10 +28,8 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.gchq.maestro.util.FederatedUtil.EXECUTOR_STORE;
 
 public class FederationShouldStoreExecutorsTest extends MaestroObjectTest<Executor> {
-
 
     @Override
     protected Class getTestObjectClass() {
@@ -45,11 +43,12 @@ public class FederationShouldStoreExecutorsTest extends MaestroObjectTest<Execut
                 "  \"config\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
                 "    \"operationHandlers\" : { },\n" +
-                "    \"hooks\" : [ ],\n" +
                 "    \"properties\" : {\n" +
-                "      \"ExecutorStore_1\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"id\\\":\\\"ExecutorId1\\\",\\\"operationHandlers\\\":{},\\\"hooks\\\":[],\\\"properties\\\":{\\\"maestro.store.properties.class\\\":\\\"uk.gov.gchq.maestro.ExecutorProperties\\\"}}}\",\n" +
-                "      \"ExecutorStore_2\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"id\\\":\\\"ExecutorId2\\\",\\\"operationHandlers\\\":{},\\\"hooks\\\":[],\\\"properties\\\":{\\\"maestro.store.properties.class\\\":\\\"uk.gov.gchq.maestro.ExecutorProperties\\\"}}}\"\n" +
-                "    }\n" +
+                "      \"ExecutorStore_Executor1\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"id\\\":\\\"ExecutorId1\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{\\\"maestro.store.properties.class\\\":\\\"uk.gov.gchq.maestro.ExecutorProperties\\\"},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}}\",\n" +
+                "      \"ExecutorStore_Executor2\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"id\\\":\\\"ExecutorId2\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{\\\"maestro.store.properties.class\\\":\\\"uk.gov.gchq.maestro.ExecutorProperties\\\"},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}}\"\n" +
+                "    },\n" +
+                "    \"operationHooks\" : [ ],\n" +
+                "    \"requestHooks\" : [ ]\n" +
                 "  }\n" +
                 "}";
     }

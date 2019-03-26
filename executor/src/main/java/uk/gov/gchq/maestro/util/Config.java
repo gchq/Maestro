@@ -108,7 +108,7 @@ public class Config {
         return id;
     }
 
-    public Config setId(final String id) {
+    public Config id(final String id) {
         this.id = id;
         return this;
     }
@@ -366,7 +366,7 @@ public class Config {
 
         // Id
         public Builder id(final String id) {
-            config.setId(id);
+            config.id(id);
             return this;
         }
 
@@ -531,7 +531,7 @@ public class Config {
         public Builder merge(final Config config) {
             if (null != config) {
                 if (null != this.config.getId()) {
-                    this.config.setId(config.getId());
+                    this.config.id(config.getId());
                 }
                 if (null != this.config.getDescription()) {
                     this.config.setDescription(config.getDescription());

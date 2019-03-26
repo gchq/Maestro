@@ -42,11 +42,12 @@ public class ConfigTest extends MaestroObjectTest<Config> {
                 "      \"handlerField\" : \"handlerFieldValue1\"\n" +
                 "    }\n" +
                 "  },\n" +
-                "  \"hooks\" : [ ],\n" +
                 "  \"properties\" : {\n" +
                 "    \"configKey\" : \"configValue\",\n" +
                 "    \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
-                "  }\n" +
+                "  },\n" +
+                "  \"operationHooks\" : [ ],\n" +
+                "  \"requestHooks\" : [ ]\n" +
                 "}";
     }
 
@@ -71,7 +72,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
                         .operation(TestOperation.class)
                         .build())
                 .executorProperties(properties)
-                .addHook(new TestHook("testFieldVal"))
+                .addRequestHook(new TestHook("testFieldVal"))
                 .library(new NoLibrary())
                 .build();
 
@@ -80,7 +81,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
 
         assertEquals(deserialisedConfig.getId(), config.getId());
         assertEquals(deserialisedConfig.getDescription(), config.getDescription());
-        assertEquals(deserialisedConfig.getHooks(), config.getHooks());
+        assertEquals(deserialisedConfig.getRequestHooks(), config.getRequestHooks());
         assertNotNull(deserialisedConfig.getLibrary());
         assertEquals(deserialisedConfig.getOperationHandlers(), config.getOperationHandlers());
         assertEquals(deserialisedConfig.getProperties(), config.getProperties());
