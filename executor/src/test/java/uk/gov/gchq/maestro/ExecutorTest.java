@@ -19,11 +19,10 @@ package uk.gov.gchq.maestro;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.exception.SerialisationException;
-import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
-import uk.gov.gchq.maestro.helpers.TestHandler;
-import uk.gov.gchq.maestro.helpers.TestOperation;
+import uk.gov.gchq.maestro.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.helper.TestHandler;
+import uk.gov.gchq.maestro.helper.TestOperation;
 import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.util.Config;
 
@@ -37,29 +36,17 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "  \"config\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
                 "    \"operationHandlers\" : {\n" +
-                "      \"uk.gov.gchq.maestro.helpers.TestOperation\" : {\n" +
-                "        \"class\" : \"uk.gov.gchq.maestro.helpers.TestHandler\",\n" +
+                "      \"uk.gov.gchq.maestro.helper.TestOperation\" : {\n" +
+                "        \"class\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
                 "        \"handlerField\" : \"handlerFieldValue1\"\n" +
                 "      }\n" +
                 "    },\n" +
                 "    \"properties\" : {\n" +
                 "      \"configKey\" : \"configValue\",\n" +
-                "      \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
+                "      \"maestro.executor.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
                 "    },\n" +
                 "    \"operationHooks\" : [ ],\n" +
                 "    \"requestHooks\" : [ ]\n" +
-                "  }\n" +
-                "}";
-    }
-
-    protected String getJSONString2() {
-        return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
-                "  \"config\" : {\n" +
-                "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
-                "    \"operationHandlers\" : \"path/to/opDeclarations\",\n" +
-                "    \"hooks\" : [ ],\n" +
-                "    \"propertiesPath\" : \"path/to/props/\",\n" +
                 "  }\n" +
                 "}";
     }
@@ -87,7 +74,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     }
 
     @Test
-    public void shouldRunTestHandler() throws SerialisationException, OperationException {
+    public void shouldRunTestHandler() throws SerialisationException {
         final byte[] serialise = JSONSerialiser.serialise(getTestObject(), true);
 
         final Executor executor = Executor.deserialise(serialise);

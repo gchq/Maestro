@@ -68,7 +68,7 @@ import java.util.Set;
  * Once the singleton instance has been instantiated it will not be updated,
  * unless update() or update(jsonSerialiserClass, jsonSerialiserModules) is called.
  * An update will be done automatically in the REST API when it is first initialised and
- * also when a Store is initialised.
+ * also when an Executor is initialised.
  * </p>
  */
 public class JSONSerialiser {

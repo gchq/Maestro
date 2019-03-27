@@ -28,7 +28,7 @@ import uk.gov.gchq.maestro.operation.io.Output;
 import uk.gov.gchq.maestro.user.User;
 
 /**
- * A {@code storeRequest} is a request that will be executed on a Maestro
+ * A {@code Request} is a request that will be executed on a Maestro
  * {@link uk.gov.gchq.maestro.Executor}.
  * A new {@link Context} with new jobId will be created based on your {@link Context}/{@link User}.
  *

@@ -22,7 +22,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.reflections.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +44,8 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * A {@code ExecutorProperties} contains specific configuration information for the store, such as database
+ * A {@code ExecutorProperties} contains specific configuration information
+ * for the executor, such as database
  * connection strings. It wraps {@link Properties} and lazy loads the all properties from a file when first used.
  * <p>
  * All ExecutorProperties classes must be JSON serialisable.
@@ -53,26 +53,24 @@ import java.util.Set;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "executorPropertiesClassName")
 public class ExecutorProperties implements Cloneable {
-    public static final String STORE_CLASS = "maestro.store.class";
+    public static final String EXECUTOR_PROPERTIES_CLASS = "maestro.executor.properties.class";
+    public static final String OPERATION_DECLARATIONS = "maestro.executor.operation.declarations";
 
-    public static final String STORE_PROPERTIES_CLASS = "maestro.store.properties.class";
-    public static final String OPERATION_DECLARATIONS = "maestro.store.operation.declarations";
+    public static final String JOB_TRACKER_ENABLED = "maestro.executor.job.tracker.enabled";
 
-    public static final String JOB_TRACKER_ENABLED = "maestro.store.job.tracker.enabled";
-
-    public static final String EXECUTOR_SERVICE_THREAD_COUNT = "maestro.store.job.executor.threads";
+    public static final String EXECUTOR_SERVICE_THREAD_COUNT = "maestro.executor.job.executor.threads";
     public static final String EXECUTOR_SERVICE_THREAD_COUNT_DEFAULT = "50";
 
     public static final String JSON_SERIALISER_CLASS = JSONSerialiser.JSON_SERIALISER_CLASS_KEY;
     public static final String JSON_SERIALISER_MODULES = JSONSerialiser.JSON_SERIALISER_MODULES;
     public static final String STRICT_JSON = JSONSerialiser.STRICT_JSON;
 
-    public static final String ADMIN_AUTH = "maestro.store.admin.auth";
+    public static final String ADMIN_AUTH = "maestro.executor.admin.auth";
 
     /**
      * CSV of extra packages to be included in the reflection scanning.
      */
-    public static final String REFLECTION_PACKAGES = "maestro.store.reflection.packages";
+    public static final String REFLECTION_PACKAGES = "maestro.executor.reflection.packages";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorProperties.class);
 
@@ -94,32 +92,9 @@ public class ExecutorProperties implements Cloneable {
         updateExecutorPropertiesClass();
     }
 
-    protected ExecutorProperties(final Properties props, final Class<? extends Store> storeClass) {
-        this(props);
-        if (null == getStoreClass()) {
-            setStoreClass(storeClass);
-        }
-    }
-
-
     public ExecutorProperties(final Properties props) {
         setProperties(props);
         updateExecutorPropertiesClass();
-    }
-
-
-    protected ExecutorProperties(final Class<? extends Store> storeClass) {
-        this();
-        if (null == getStoreClass()) {
-            setStoreClass(storeClass);
-        }
-    }
-
-    protected ExecutorProperties(final Path propFileLocation, final Class<? extends Store> storeClass) {
-        this(propFileLocation);
-        if (null == getStoreClass()) {
-            setStoreClass(storeClass);
-        }
     }
 
     public static <T extends ExecutorProperties> T loadExecutorProperties(final String pathStr, final Class<T> requiredClass) {
@@ -137,7 +112,8 @@ public class ExecutorProperties implements Cloneable {
                 executorProperties = loadExecutorProperties(StreamUtil.openStream(ExecutorProperties.class, pathStr));
             }
         } catch (final IOException e) {
-            throw new RuntimeException("Failed to load store properties file : " + e.getMessage(), e);
+            throw new RuntimeException("Failed to load executor properties " +
+                    "file : " + e.getMessage(), e);
         }
 
         return executorProperties;
@@ -152,7 +128,7 @@ public class ExecutorProperties implements Cloneable {
         try {
             return loadExecutorProperties(null != executorPropertiesPath ? Files.newInputStream(executorPropertiesPath) : null);
         } catch (final IOException e) {
-            throw new RuntimeException("Failed to load store properties file : " + e.getMessage(), e);
+            throw new RuntimeException("Failed to load executor properties file : " + e.getMessage(), e);
         }
     }
 
@@ -169,12 +145,12 @@ public class ExecutorProperties implements Cloneable {
         try {
             props.load(executorPropertiesStream);
         } catch (final IOException e) {
-            throw new RuntimeException("Failed to load store properties file : " + e.getMessage(), e);
+            throw new RuntimeException("Failed to load executor properties file : " + e.getMessage(), e);
         } finally {
             try {
                 executorPropertiesStream.close();
             } catch (final IOException e) {
-                LOGGER.error("Failed to close store properties stream: {}", e.getMessage(), e);
+                LOGGER.error("Failed to close executor properties stream: {}", e.getMessage(), e);
             }
         }
         return loadExecutorProperties(props);
@@ -187,7 +163,7 @@ public class ExecutorProperties implements Cloneable {
 
     public static ExecutorProperties loadExecutorProperties(final Properties props) {
         final String executorPropertiesClass =
-                props.getProperty(ExecutorProperties.STORE_PROPERTIES_CLASS);
+                props.getProperty(ExecutorProperties.EXECUTOR_PROPERTIES_CLASS);
         final ExecutorProperties executorProperties;
         if (null == executorPropertiesClass) {
             executorProperties = new ExecutorProperties();
@@ -195,7 +171,7 @@ public class ExecutorProperties implements Cloneable {
             try {
                 executorProperties = Class.forName(executorPropertiesClass).asSubclass(ExecutorProperties.class).newInstance();
             } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException("Failed to create store properties file : " + e.getMessage(), e);
+                throw new RuntimeException("Failed to create executor properties file : " + e.getMessage(), e);
             }
         }
         executorProperties.setProperties(props);
@@ -270,19 +246,6 @@ public class ExecutorProperties implements Cloneable {
         return declarations;
     }
 
-    public String getStoreClass() {
-        return get(STORE_CLASS);
-    }
-
-    @JsonIgnore
-    public void setStoreClass(final Class<? extends Store> storeClass) {
-        setStoreClass(storeClass.getName());
-    }
-
-    public void setStoreClass(final String storeClass) {
-        set(STORE_CLASS, storeClass);
-    }
-
     public Boolean getJobTrackerEnabled() {
         return Boolean.valueOf(get(JOB_TRACKER_ENABLED, "false"));
     }
@@ -292,11 +255,11 @@ public class ExecutorProperties implements Cloneable {
     }
 
     public String getExecutorPropertiesClassName() {
-        return get(STORE_PROPERTIES_CLASS, ExecutorProperties.class.getName());
+        return get(EXECUTOR_PROPERTIES_CLASS, ExecutorProperties.class.getName());
     }
 
     public void setExecutorPropertiesClassName(final String executorPropertiesClassName) {
-        set(STORE_PROPERTIES_CLASS, executorPropertiesClassName);
+        set(EXECUTOR_PROPERTIES_CLASS, executorPropertiesClassName);
     }
 
     public Class<? extends ExecutorProperties> getExecutorPropertiesClass() {
@@ -304,7 +267,8 @@ public class ExecutorProperties implements Cloneable {
         try {
             clazz = Class.forName(getExecutorPropertiesClassName()).asSubclass(ExecutorProperties.class);
         } catch (final ClassNotFoundException e) {
-            throw new RuntimeException("Store properties class was not found: " + getExecutorPropertiesClassName(), e);
+            throw new RuntimeException("Executor properties class was not " +
+                    "found: " + getExecutorPropertiesClassName(), e);
         }
 
         return clazz;
@@ -312,7 +276,7 @@ public class ExecutorProperties implements Cloneable {
 
     public void setExecutorPropertiesClass(final Class<?
             extends ExecutorProperties> executorPropertiesClass) {
-        set(STORE_PROPERTIES_CLASS, executorPropertiesClass.getName());
+        set(EXECUTOR_PROPERTIES_CLASS, executorPropertiesClass.getName());
     }
 
     public String getOperationDeclarationPaths() {
@@ -413,29 +377,6 @@ public class ExecutorProperties implements Cloneable {
         return ExecutorProperties.loadExecutorProperties((Properties) getProperties().clone());
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (null == obj || getClass() != obj.getClass()) {
-            return false;
-        }
-
-        final ExecutorProperties properties = (ExecutorProperties) obj;
-        return new EqualsBuilder()
-                .append(props, properties.props)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(5, 7)
-                .append(props)
-                .toHashCode();
-    }
-
     public void updateExecutorPropertiesClass() {
         updateExecutorPropertiesClass(getClass());
     }
@@ -449,6 +390,30 @@ public class ExecutorProperties implements Cloneable {
             throw new IllegalArgumentException("The given properties is not " +
                     "of type " + requiredClass.getName() + " actual: " + executorPropertiesClass.getName());
         }
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (null == obj || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final ExecutorProperties properties = (ExecutorProperties) obj;
+
+        return new EqualsBuilder()
+                .append(props, properties.props)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(5, 7)
+                .append(props)
+                .toHashCode();
     }
 
     @Override

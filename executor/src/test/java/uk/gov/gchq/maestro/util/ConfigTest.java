@@ -16,17 +16,22 @@
 
 package uk.gov.gchq.maestro.util;
 
+import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 import uk.gov.gchq.maestro.ExecutorProperties;
+import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
-import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
-import uk.gov.gchq.maestro.helpers.TestHandler;
-import uk.gov.gchq.maestro.helpers.TestHook;
-import uk.gov.gchq.maestro.helpers.TestOperation;
+import uk.gov.gchq.maestro.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.helper.TestHandler;
+import uk.gov.gchq.maestro.helper.TestHook;
+import uk.gov.gchq.maestro.helper.TestOperation;
 import uk.gov.gchq.maestro.library.NoLibrary;
 import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
+import uk.gov.gchq.maestro.util.hook.Hook;
+
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -37,14 +42,14 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     protected String getJSONString() {
         return "{\n" +
                 "  \"operationHandlers\" : {\n" +
-                "    \"uk.gov.gchq.maestro.helpers.TestOperation\" : {\n" +
-                "      \"class\" : \"uk.gov.gchq.maestro.helpers.TestHandler\",\n" +
+                "    \"uk.gov.gchq.maestro.helper.TestOperation\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
                 "      \"handlerField\" : \"handlerFieldValue1\"\n" +
                 "    }\n" +
                 "  },\n" +
                 "  \"properties\" : {\n" +
                 "    \"configKey\" : \"configValue\",\n" +
-                "    \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
+                "    \"maestro.executor.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
                 "  },\n" +
                 "  \"operationHooks\" : [ ],\n" +
                 "  \"requestHooks\" : [ ]\n" +
@@ -85,6 +90,39 @@ public class ConfigTest extends MaestroObjectTest<Config> {
         assertNotNull(deserialisedConfig.getLibrary());
         assertEquals(deserialisedConfig.getOperationHandlers(), config.getOperationHandlers());
         assertEquals(deserialisedConfig.getProperties(), config.getProperties());
+    }
+
+    @Test
+    public void shouldBuildConfigCorrectly() {
+        // Given
+        final ExecutorProperties mergedProperties = new ExecutorProperties();
+        mergedProperties.getProperties().put("key2", "value2");
+        mergedProperties.getProperties().put("key1", "value1");
+        mergedProperties.getProperties().put("testKey", "value1");
+        final ExecutorProperties testProperties = new ExecutorProperties();
+        testProperties.getProperties().put("key2", "value2");
+        final Hook testOpHook = new TestHook("field1Val1");
+        final Hook testReqHook = new TestHook("field1Val2");
+        final OperationDeclaration testOpDeclaration =
+                new OperationDeclaration.Builder()
+                        .operation(TestOperation.class)
+                        .handler(new TestHandler())
+                        .build();
+
+        // When
+        final Config config = new Config.Builder()
+                .operationHandler(testOpDeclaration)
+                .executorProperties(StreamUtil.executorProps(getClass()))
+                .executorProperties(testProperties)
+                .addOperationHook(testOpHook)
+                .addRequestHook(testReqHook)
+                .build();
+
+        // Then
+        assertEquals(ImmutableMap.of(testOpDeclaration.getOperation(), testOpDeclaration.getHandler()), config.getOperationHandlers());
+        assertEquals(mergedProperties, config.getProperties());
+        assertEquals(Arrays.asList(testOpHook), config.getOperationHooks());
+        assertEquals(Arrays.asList(testReqHook), config.getRequestHooks());
     }
 
     @Override

@@ -35,13 +35,8 @@ import java.util.regex.Pattern;
  * Utility methods for opening {@link InputStream}s.
  */
 public final class StreamUtil {
-    public static final String VIEW = "/view.json";
-    public static final String SCHEMA_FOLDER = "/schema/";
-    public static final String SCHEMA = SCHEMA_FOLDER + "schema.json";
-    public static final String ELEMENTS_SCHEMA = SCHEMA_FOLDER + "elements.json";
-    public static final String TYPES_SCHEMA = SCHEMA_FOLDER + "types.json";
-    public static final String STORE_PROPERTIES = "/store.properties";
-    public static final String STORE_CONFIG = "/storeConfig.json";
+    public static final String EXECUTOR_PROPERTIES = "/executor.properties";
+    public static final String EXECUTOR_CONFIG = "/executorConfig.json";
     public static final String FAILED_TO_CREATE_INPUT_STREAM_FOR_PATH = "Failed to create input stream for path: ";
     public static final String LOG_FAILED_TO_CREATE_INPUT_STREAM_FOR_PATH = FAILED_TO_CREATE_INPUT_STREAM_FOR_PATH + "{}";
     private static final Logger LOGGER = LoggerFactory.getLogger(StreamUtil.class);
@@ -51,79 +46,27 @@ public final class StreamUtil {
     }
 
     /**
-     * Open the store config file located at the same location as the provided
-     * class.
+     * Open the executor config file located at the same location as the
+     * provided class.
      *
-     * @param clazz the class determining the location of the store config file
-     * @return an {@link InputStream} representing the store config file
+     * @param clazz the class determining the location of the executor config
+     *              file
+     * @return an {@link InputStream} representing the executor config file
      */
-    public static InputStream storeConfig(final Class clazz) {
-        return openStream(clazz, STORE_CONFIG);
+    public static InputStream executorConfig(final Class clazz) {
+        return openStream(clazz, EXECUTOR_CONFIG);
     }
 
     /**
-     * Open the view file located at the same location as the provided class.
+     * Open the executor properties file located at the same location as the
+     * provided class.
      *
-     * @param clazz the class determining the location of the view file
-     * @return an {@link InputStream} representing the view file
+     * @param clazz the class determining the location of the executor
+     *              properties file
+     * @return an {@link InputStream} representing the executor properties file
      */
-    public static InputStream view(final Class clazz) {
-        return openStream(clazz, VIEW);
-    }
-
-    /**
-     * Open the schema files located at the same location as the provided
-     * class.
-     *
-     * @param clazz the class determining the location of the schema files
-     * @return an array of {@link InputStream}s representing the schema files
-     */
-    public static InputStream[] schemas(final Class clazz) {
-        return openStreams(clazz, SCHEMA_FOLDER);
-    }
-
-    /**
-     * Open the schema file located at the same location as the provided
-     * class.
-     *
-     * @param clazz the class determining the location of the schema file
-     * @return an {@link InputStream} representing the schema file
-     */
-    public static InputStream schema(final Class clazz) {
-        return openStream(clazz, SCHEMA);
-    }
-
-    /**
-     * Open the elements schema file located at the same location as the provided
-     * class.
-     *
-     * @param clazz the class determining the location of the elements schema file
-     * @return an {@link InputStream} representing the elements schema file
-     */
-    public static InputStream elementsSchema(final Class clazz) {
-        return openStream(clazz, ELEMENTS_SCHEMA);
-    }
-
-    /**
-     * Open the types schema file located at the same location as the provided
-     * class.
-     *
-     * @param clazz the class determining the location of the types schema file
-     * @return an {@link InputStream} representing the types schema file
-     */
-    public static InputStream typesSchema(final Class clazz) {
-        return openStream(clazz, TYPES_SCHEMA);
-    }
-
-    /**
-     * Open the store properties file located at the same location as the provided
-     * class.
-     *
-     * @param clazz the class determining the location of the store properties file
-     * @return an {@link InputStream} representing the store properties file
-     */
-    public static InputStream storeProps(final Class clazz) {
-        return openStream(clazz, STORE_PROPERTIES);
+    public static InputStream executorProps(final Class clazz) {
+        return openStream(clazz, EXECUTOR_PROPERTIES);
     }
 
     /**

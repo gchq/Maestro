@@ -15,7 +15,7 @@
  */
 package uk.gov.gchq.maestro;
 
-import uk.gov.gchq.maestro.helpers.MaestroObjectTest;
+import uk.gov.gchq.maestro.helper.MaestroObjectTest;
 import uk.gov.gchq.maestro.util.Config;
 
 public class FederationTest extends MaestroObjectTest<Executor> {
@@ -33,7 +33,7 @@ public class FederationTest extends MaestroObjectTest<Executor> {
                 "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
                 "    \"operationHandlers\" : { },\n" +
                 "    \"properties\" : {\n" +
-                "      \"maestro.store.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
+                "      \"maestro.executor.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
                 "    },\n" +
                 "    \"operationHooks\" : [ ],\n" +
                 "    \"requestHooks\" : [ ]\n" +

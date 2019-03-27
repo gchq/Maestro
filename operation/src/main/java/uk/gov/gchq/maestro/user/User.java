@@ -28,7 +28,7 @@ import java.util.Set;
 
 /**
  * Simple representation of a user in Maestro. Users execute operations on the
- * store, which passes this User object to the underlying store. The store then
+ * Executor, which passes this User object to the underlying Executor. The Executor then
  * uses the values of the dataAuths and opAuths objects associated with the user
  * to determine if they are allowed to perform the operation or not.
  */

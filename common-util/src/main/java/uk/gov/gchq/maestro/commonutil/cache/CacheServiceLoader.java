@@ -24,7 +24,8 @@ import uk.gov.gchq.maestro.commonutil.cache.util.CacheProperties;
 import java.util.Properties;
 
 /**
- * Initialised when the store is initialised. Looks at a system property to determine the cache service to load.
+ * Initialised when the executor is initialised. Looks at a system property to
+ * determine the cache service to load.
  * Then initialises it, after which any component may use {@code CacheServiceLoader.getService()} to get the service
  * that can retrieve the appropriate cache.
  */

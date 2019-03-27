@@ -109,7 +109,8 @@ public class FileLibrary extends Library {
                         "properties to path: " + getPropertiesPath(propertiesId), e);
             }
         } else {
-            throw new IllegalArgumentException("StoreProperties cannot be null");
+            throw new IllegalArgumentException("ExecutorProperties cannot be " +
+                    "null");
         }
     }
 

@@ -24,7 +24,7 @@ import uk.gov.gchq.maestro.util.Request;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 public interface Hook {
     /**
-     * @param opChain the {@link OperationChain} being executed. This can be modified/optimised in any storeHook.
+     * @param opChain the {@link OperationChain} being executed. This can be modified/optimised in any Hook.
      * @param context the {@link Context} in which the operation chain was executed. The context also holds a reference to the original operation chain.
      * @deprecated use Operation method not OperationChain
      * Called from {@link uk.gov.gchq.maestro.Executor} before an {@link OperationChain}
@@ -39,7 +39,7 @@ public interface Hook {
 
     /**
      * @param result  the result from the operation chain
-     * @param opChain the {@link OperationChain} that was executed. This can be modified/optimised in any storeHook.
+     * @param opChain the {@link OperationChain} that was executed. This can be modified/optimised in any Hook.
      * @param context the {@link Context} in which the operation chain was executed. The context also holds a reference to the original operation chain.
      * @param <T>     the result type
      * @return result object
@@ -61,7 +61,7 @@ public interface Hook {
     /**
      * @param <T>     the result type
      * @param result  the result from the operation chain - likely to be null.
-     * @param opChain the {@link OperationChain} that was executed. This can be modified/optimised in any storeHook.
+     * @param opChain the {@link OperationChain} that was executed. This can be modified/optimised in any Hook.
      * @param context the {@link Context} in which the operation chain was executed. The context also holds a reference to the original operation chain.
      * @param e       the exception
      * @return result object

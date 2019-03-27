@@ -60,12 +60,12 @@ import static uk.gov.gchq.maestro.operation.declaration.OperationDeclarations.fr
 @JsonPropertyOrder(value = {"class", "id", "description", "operationHandlers", "hooks", "properties", "library"}, alphabetic = true)
 public class Config {
     /**
-     * The id of the store.
+     * The id of the Executor.
      */
     private String id;
 
     /**
-     * A short description of the store
+     * A short description of the Executor
      */
     private String description;
 
@@ -82,14 +82,14 @@ public class Config {
     private List<Hook> operationHooks = new ArrayList<>();
 
     /**
-     * The store properties - contains specific configuration information for
-     * the store - such as database connection strings.
+     * The Executor properties - contains specific configuration information for
+     * the Executor - such as database connection strings.
      */
     private ExecutorProperties properties = new ExecutorProperties();
 
     /**
      * The operation handlers - A Map containing all classes of operations
-     * supported by this store, and an instance of all the OperationHandlers
+     * supported by this Executor, and an instance of all the OperationHandlers
      * that will be used to handle these operations.
      */
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
@@ -195,7 +195,7 @@ public class Config {
     }
 
     /**
-     * Get this Store's {@link ExecutorProperties}.
+     * Get this Executor's {@link ExecutorProperties}.
      *
      * @return the instance of {@link ExecutorProperties},
      * this may contain details such as database connection details.
@@ -388,7 +388,11 @@ public class Config {
         }
 
         public Builder executorProperties(final ExecutorProperties properties) {
-            this.properties = properties;
+            if (null != this.properties) {
+                this.properties.getProperties().putAll(properties.getProperties());
+            } else {
+                this.properties = properties;
+            }
             if (null != properties) {
                 addReflectionPackages(properties.getReflectionPackages());
                 JSONSerialiser.update(

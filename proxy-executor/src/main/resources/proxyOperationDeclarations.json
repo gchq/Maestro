@@ -1,40 +1,40 @@
 {
   "operations": [
     {
-      "operation": "uk.gov.gchq.maestro.store.operation.DefaultOperation",
+      "operation": "uk.gov.gchq.maestro.executor.operation.DefaultOperation",
       "handler": {
-        "class": "uk.gov.gchq.maestro.proxystore.operation.handler.OperationHandler"
+        "class": "uk.gov.gchq.maestro.proxyExecutor.operation.handler.OperationHandler"
       }
     },
     {
-      "operation": "uk.gov.gchq.maestro.store.operation.GetSupportedOperations",
+      "operation": "uk.gov.gchq.maestro.executor.operation.GetSupportedOperations",
       "handler": {
-        "class": "uk.gov.gchq.maestro.proxystore.operation.handler.GetSupportedOperationsHandler"
+        "class": "uk.gov.gchq.maestro.proxyExecutor.operation.handler.GetSupportedOperationsHandler"
       }
     },
     {
-      "operation": "uk.gov.gchq.maestro.store.operation.GetSchema",
+      "operation": "uk.gov.gchq.maestro.executor.operation.GetSchema",
       "handler": {
-        "class": "uk.gov.gchq.maestro.proxystore.operation.handler.GetSchemaDoGetHandler"
+        "class": "uk.gov.gchq.maestro.proxyExecutor.operation.handler.GetSchemaDoGetHandler"
       }
     },
     {
-      "operation": "uk.gov.gchq.maestro.store.operation.GetTraits",
+      "operation": "uk.gov.gchq.maestro.executor.operation.GetTraits",
       "handler": {
-        "class": "uk.gov.gchq.maestro.proxystore.operation.handler.GetTraitsDoGetHandler"
+        "class": "uk.gov.gchq.maestro.proxyExecutor.operation.handler.GetTraitsDoGetHandler"
       }
     },
     {
-      "operation": "uk.gov.gchq.maestro.store.operation.GetPropertiesClass",
+      "operation": "uk.gov.gchq.maestro.executor.operation.GetPropertiesClass",
       "handler": {
-        "class": "uk.gov.gchq.maestro.proxystore.operation.handler.GetPropertiesClassHandler",
-        "propertiesClass": "uk.gov.gchq.maestro.proxystore.ProxyProperties"
+        "class": "uk.gov.gchq.maestro.proxyExecutor.operation.handler.GetPropertiesClassHandler",
+        "propertiesClass": "uk.gov.gchq.maestro.proxyExecutor.ProxyProperties"
       }
     },
     {
-      "operation": "uk.gov.gchq.maestro.store.operation.JobDetails",
+      "operation": "uk.gov.gchq.maestro.executor.operation.JobDetails",
       "handler": {
-        "class": "uk.gov.gchq.maestro.proxystore.operation.handler.ExecuteRemoteJobHandler"
+        "class": "uk.gov.gchq.maestro.proxyExecutor.operation.handler.ExecuteRemoteJobHandler"
       }
     }
   ]

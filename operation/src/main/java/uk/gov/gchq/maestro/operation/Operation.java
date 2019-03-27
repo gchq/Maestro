@@ -37,11 +37,13 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * An {@code Operation} defines an operation to be processed on a Store.
+ * An {@code Operation} defines an operation to be processed on an Executor.
  * All operations must to implement this interface.
- * Operations should be written to be as generic as possible to allow them to be applied to different stores.
+ * Operations should be written to be as generic as possible to allow them to
+ * be applied to different Executors.
  * NOTE - operations should not contain the operation logic. The logic should be separated out into a operation handler.
- * This will allow you to execute the same operation on different stores with different handlers.
+ * This will allow you to execute the same operation on different Executors
+ * with different handlers.
  * <p>
  * Operations must be JSON serialisable in order to make REST API calls.
  * </p>
@@ -81,24 +83,24 @@ public interface Operation extends Closeable {
     /**
      * @return the operation options. This may contain store specific options such as authorisation strings or and
      * other properties required for the operation to be executed. Note these options will probably not be interpreted
-     * in the same way by every store impl.
+     * in the same way by every Executor impl.
      */
     @JsonIgnore
     Map<String, String> getOptions();
 
     /**
-     * @param options the operation options. This may contain store specific options such as authorisation strings or and
+     * @param options the operation options. This may contain Executor specific options such as authorisation strings or and
      *                other properties required for the operation to be executed. Note these options will probably not be interpreted
-     *                in the same way by every store impl.
+     *                in the same way by every Executor impl.
      * @return the Operation
      */
     @JsonSetter
     Operation options(final Map<String, String> options);
 
     /**
-     * Adds an operation option. This may contain store specific options such as authorisation strings or and
+     * Adds an operation option. This may contain Executor specific options such as authorisation strings or and
      * other properties required for the operation to be executed. Note these options will probably not be interpreted
-     * in the same way by every store impl.
+     * in the same way by every Executor impl.
      *
      * @param name  the name of the option
      * @param value the value of the option

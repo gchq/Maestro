@@ -45,7 +45,7 @@ public class ExecutorPropertiesTest {
     public void shouldMergeProperties() {
         // Given
         final ExecutorProperties props1 = createExecutorProperties();
-        final ExecutorProperties props2 = ExecutorProperties.loadExecutorProperties(StreamUtil.openStream(getClass(), "store2.properties"));
+        final ExecutorProperties props2 = ExecutorProperties.loadExecutorProperties(StreamUtil.openStream(getClass(), "executor2.properties"));
 
         // When
         props1.merge(props2);
@@ -172,7 +172,7 @@ public class ExecutorPropertiesTest {
     }
 
     private ExecutorProperties createExecutorProperties() {
-        return ExecutorProperties.loadExecutorProperties(StreamUtil.storeProps(getClass()));
+        return ExecutorProperties.loadExecutorProperties(StreamUtil.executorProps(getClass()));
     }
 
     @Test
