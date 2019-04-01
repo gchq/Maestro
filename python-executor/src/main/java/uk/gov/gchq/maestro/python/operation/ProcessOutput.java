@@ -13,11 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro.python;
+package uk.gov.gchq.maestro.python.operation;
 
-import java.io.File;
+/**
+ * Simple POJO designed to capture the output and error of a process
+ */
+public class ProcessOutput {
 
-public interface IScriptStorage {
+    private String output;
+    private String error;
 
-    public File getScript();
+    public String getOutput() {
+        return output;
+    }
+
+    public ProcessOutput setOutput(final String output) {
+        this.output = output;
+        return this;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public ProcessOutput setError(final String error) {
+        this.error = error;
+        return this;
+    }
 }

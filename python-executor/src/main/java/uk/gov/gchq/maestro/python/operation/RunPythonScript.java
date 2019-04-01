@@ -16,5 +16,72 @@
 
 package uk.gov.gchq.maestro.python.operation;
 
-public class RunPythonScript {
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.lang3.exception.CloneFailedException;
+import uk.gov.gchq.maestro.commonutil.Required;
+import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.io.InputOutput;
+import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
+
+import java.util.Map;
+
+public class RunPythonScript<I> implements InputOutput<I, ProcessOutput> {
+
+    @Required
+    private String scriptName;
+    private Map<String, String> options;
+
+    /**
+     * TODO handle input
+     */
+    private I input;
+
+
+    @Override
+    public Operation shallowClone() throws CloneFailedException {
+        return new RunPythonScript()
+                .options(this.options)
+                .scriptName(this.scriptName);
+    }
+
+    @Override
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+
+    @Override
+    public RunPythonScript options(final Map<String, String> options) {
+        this.options = options;
+        return this;
+    }
+
+    public String getScriptName() {
+        return scriptName;
+    }
+
+    public RunPythonScript scriptName(final String scriptName) {
+        this.scriptName = scriptName;
+        return this;
+    }
+
+    @Override
+    public ProcessOutput castToOutputType(final Object result) {
+        return (ProcessOutput) result;
+    }
+
+    @Override
+    public TypeReference<ProcessOutput> getOutputTypeReference() {
+        return TypeReferenceImpl.createExplicitT();
+    }
+
+    @Override
+    public I getInput() {
+        return input;
+    }
+
+    @Override
+    public void setInput(final I input) {
+        this.input = input;
+    }
 }

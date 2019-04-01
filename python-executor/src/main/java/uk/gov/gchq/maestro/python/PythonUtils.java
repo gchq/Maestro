@@ -15,9 +15,12 @@
  */
 package uk.gov.gchq.maestro.python;
 
-import java.io.File;
+public class PythonUtils {
 
-public interface IScriptStorage {
+    public final static String PYTHON_CACHE_NAME = "pythonCache";
 
-    public File getScript();
+    private PythonUtils() {
+        // prevents instantiation as all values/methods are static
+    }
+
 }
