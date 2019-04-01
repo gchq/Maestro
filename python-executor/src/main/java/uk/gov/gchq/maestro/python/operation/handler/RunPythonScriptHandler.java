@@ -52,28 +52,28 @@ public class RunPythonScriptHandler implements OperationHandler<RunPythonScript>
                     Runtime.getRuntime().exec("python " + script.getAbsolutePath());
 
 
-        final BufferedReader processOutputReader = new BufferedReader(new InputStreamReader(pythonProcess.getInputStream()));
-        final BufferedReader processErrorReader =
-                new BufferedReader(new InputStreamReader(pythonProcess.getErrorStream()));
+            final BufferedReader processOutputReader = new BufferedReader(new InputStreamReader(pythonProcess.getInputStream()));
+            final BufferedReader processErrorReader =
+                    new BufferedReader(new InputStreamReader(pythonProcess.getErrorStream()));
 
-        String line = null;
+            String line;
 
-        StringBuilder outputBuilder = new StringBuilder();
+            StringBuilder outputBuilder = new StringBuilder();
 
-        while ((line = processOutputReader.readLine()) != null){
-            outputBuilder.append(line);
-            outputBuilder.append('\n');
-        }
+            while ((line = processOutputReader.readLine()) != null) {
+                outputBuilder.append(line);
+                outputBuilder.append('\n');
+            }
 
-        StringBuilder errorBuilder = new StringBuilder();
-        while ((line = processErrorReader.readLine()) != null) {
-            errorBuilder.append(line);
-            errorBuilder.append('\n');
-        }
+            StringBuilder errorBuilder = new StringBuilder();
+            while ((line = processErrorReader.readLine()) != null) {
+                errorBuilder.append(line);
+                errorBuilder.append('\n');
+            }
 
-        return new ProcessOutput()
-                .setError(errorBuilder.toString())
-                .setOutput(outputBuilder.toString());
+            return new ProcessOutput()
+                    .setError(errorBuilder.toString())
+                    .setOutput(outputBuilder.toString());
 
         } catch (final IOException e) {
             throw new OperationException("Failed to run python", e);
