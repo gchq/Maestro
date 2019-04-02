@@ -30,11 +30,11 @@ public abstract class Library {
     public abstract void initialise(final String path);
 
     /**
-     * Add a new relationship between a executorId and StoreProperties.
+     * Add a new relationship between a executorId and ExecutorProperties.
      *
      * @param executorId The executorId to relate to.
-     * @param properties The StoreProperties that relate to the executorId.
-     * @throws OverwritingException If the executorId already has related StoreProperties.
+     * @param properties The ExecutorProperties that relate to the executorId.
+     * @throws OverwritingException If the executorId already has related ExecutorProperties.
      */
     public void add(final String executorId, final ExecutorProperties properties) throws OverwritingException {
         add(executorId, executorId, properties);
@@ -93,7 +93,7 @@ public abstract class Library {
     }
 
     /**
-     * Gets the StoreProperties related to the executorId.
+     * Gets the ExecutorProperties related to the executorId.
      *
      * @param executorId The executorId.
      * @return ExecutorProperties.
@@ -110,7 +110,7 @@ public abstract class Library {
     }
 
     /**
-     * Gets the Schema Id and StoreProperties Id related to the executorId.
+     * Gets the Schema Id and ExecutorProperties Id related to the executorId.
      *
      * @param executorId The executorId.
      * @return ExecutorPropertiesId
@@ -118,10 +118,11 @@ public abstract class Library {
     public abstract String getPropertiesId(final String executorId);
 
     /**
-     * Gets the StoreProperties given the storePropertiesId.
+     * Gets the ExecutorProperties given the ExecutorProperties Id.
      *
-     * @param propertiesId The storePropertiesId
-     * @return The {@link ExecutorProperties} related to the storePropertiesId.
+     * @param propertiesId The ExecutorProperties Id
+     * @return The {@link ExecutorProperties} related to the
+     * ExecutorProperties id.
      */
     public ExecutorProperties getPropertiesUsingPropertiesId(final String propertiesId) {
         validateId(propertiesId);
