@@ -166,21 +166,6 @@
         <dependencies>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
-                <artifactId>exception</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>uk.gov.gchq.maestro</groupId>
-                <artifactId>operation</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>uk.gov.gchq.maestro</groupId>
-                <artifactId>serialisation</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>common-util</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -191,16 +176,19 @@
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
-                <artifactId>executor</artifactId>
+                <artifactId>federation-executor</artifactId>
                 <version>${project.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
             </dependency>
-            <!--<dependency>-->
-            <!--<groupId>log4j</groupId>-->
-            <!--<artifactId>log4j</artifactId>-->
-            <!--<version>${log4j.version}</version>-->
-            <!--</dependency>-->
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>operation</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>proxy-executor</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -228,11 +216,11 @@
                 <artifactId>jackson-dataformat-xml</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
-            <!--<dependency>-->
-            <!--<groupId>com.fasterxml.jackson.dataformat</groupId>-->
-            <!--<artifactId>jackson-dataformat-ygaml</artifactId>-->
-            <!--<version>${jackson.version}</version>-->
-            <!--</dependency>-->
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-ygaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
