@@ -19,11 +19,11 @@ package uk.gov.gchq.maestro;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
 import uk.gov.gchq.maestro.helper.TestHandler;
 import uk.gov.gchq.maestro.helper.TestOperation;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.util.Config;
 
 

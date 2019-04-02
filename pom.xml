@@ -65,8 +65,8 @@
         <!--<avro.version>1.7.7</avro.version>-->
         <!--<hadoop.version>2.6.5</hadoop.version>-->
         <jackson.compile.version>2.6.5</jackson.compile.version>
-        <!--<jackson.max.version>2.9.6</jackson.max.version>-->
-        <!--<jackson.min.version>2.3.1</jackson.min.version>-->
+        <jackson.max.version>2.9.6</jackson.max.version>
+        <jackson.min.version>2.3.1</jackson.min.version>
         <jackson.version>${jackson.compile.version}</jackson.version>
 
         <!--<clearspring.version>2.7.0</clearspring.version>-->
@@ -167,27 +167,27 @@
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>common-util</artifactId>
-                <version>${project.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>executor</artifactId>
-                <version>${project.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>federation-executor</artifactId>
-                <version>${project.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>operation</artifactId>
-                <version>${project.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>proxy-executor</artifactId>
-                <version>${project.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>

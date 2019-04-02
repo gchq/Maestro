@@ -29,8 +29,8 @@ import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.commonutil.DebugUtil;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiserModules;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiserModules;
 import uk.gov.gchq.maestro.operation.declaration.OperationDeclarations;
 
 import java.io.IOException;
