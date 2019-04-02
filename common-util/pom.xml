@@ -42,10 +42,6 @@
             <version>3.5</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>uk.gov.gchq.maestro</groupId>
-            <artifactId>serialisation</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
