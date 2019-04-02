@@ -44,9 +44,9 @@
         <guava.version>13.0.1</guava.version>
         <!--<disable.forking>false</disable.forking>-->
         <!--<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
-        <!--<skip.surefire.tests>false</skip.surefire.tests>-->
-        <!--<skip.failsafe.tests>false</skip.failsafe.tests>-->
-        <!--<exclude.tests />-->
+        <skip.surefire.tests>false</skip.surefire.tests>
+        <skip.failsafe.tests>false</skip.failsafe.tests>
+        <exclude.tests/>
         <!--<skip.jar-with-dependencies>false</skip.jar-with-dependencies>-->
         <!--<shaded.jar.phase>package</shaded.jar.phase>-->
 
@@ -57,7 +57,7 @@
         <!--<scala.minor.version>2.11.12</scala.minor.version>-->
 
         <!--&lt;!&ndash; Dependency version properties &ndash;&gt;-->
-        <!--<failsafe.version>2.18.1</failsafe.version>-->
+        <failsafe.version>2.18.1</failsafe.version>
 
         <koryphe.version>1.6.0</koryphe.version>
         <!--<accumulo.version>1.8.1</accumulo.version>-->
@@ -98,10 +98,10 @@
         <checkstyle.plugin.version>2.17</checkstyle.plugin.version>
         <compiler.plugin.verson>2.3.2</compiler.plugin.verson>
         <!--<dependency.plugin.version>2.10</dependency.plugin.version>-->
-        <!--<findbugs.plugin.version>3.0.5</findbugs.plugin.version>-->
+        <findbugs.plugin.version>3.0.5</findbugs.plugin.version>
         <!--<maven-war-plugin.version>3.0.0</maven-war-plugin.version>-->
         <!--<gpg.plugin.version>1.6</gpg.plugin.version>-->
-        <!--<jacoco.plugin.version>0.7.7.201606060606</jacoco.plugin.version>-->
+        <jacoco.plugin.version>0.7.7.201606060606</jacoco.plugin.version>
         <jar.plugin.version>2.4</jar.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--<javadoc.plugin.version>2.10.3</javadoc.plugin.version>-->
@@ -111,7 +111,7 @@
         <!--<scm.plugin.version>1.1</scm.plugin.version>-->
         <!--<shade.plugin.version>2.4.1</shade.plugin.version>-->
         <!--<source.plugin.version>2.4</source.plugin.version>-->
-        <!--<surefire.plugin.version>2.19.1</surefire.plugin.version>-->
+        <surefire.plugin.version>2.19.1</surefire.plugin.version>
         <!--<tomcat-maven-plugin.version>2.2</tomcat-maven-plugin.version>-->
 
         <!--&lt;!&ndash; Define SCM properties for use with Release Plugin &ndash;&gt;-->
@@ -734,57 +734,57 @@
             <!--<artifactId>depstore-maven-plugin</artifactId>-->
             <!--<version>2.2.1</version>-->
             <!--</plugin>-->
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-surefire-plugin</artifactId>-->
-            <!--<version>${surefire.plugin.version}</version>-->
-            <!--<configuration>-->
-            <!--<argLine>${surefireArgLine}</argLine>-->
-            <!--<skipTests>${skip.surefire.tests}</skipTests>-->
-            <!--<excludes>-->
-            <!--<exclude>${exclude.tests}</exclude>-->
-            <!--</excludes>-->
-            <!--<systemPropertyVariables>-->
-            <!--<log4j.configuration>-->
-            <!--file:${project.build.testOutputDirectory}/log4j.xml-->
-            <!--</log4j.configuration>-->
-            <!--</systemPropertyVariables>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-failsafe-plugin</artifactId>-->
-            <!--<version>${failsafe.version}</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>integration-test</id>-->
-            <!--<goals>-->
-            <!--<goal>integration-test</goal>-->
-            <!--<goal>verify</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--<skipITs>${skip.failsafe.tests}</skipITs>-->
-            <!--<argLine>${failsafeArgLine}</argLine>-->
-            <!--<excludes>-->
-            <!--<exclude>**/*$*</exclude>-->
-            <!--<exclude>**/performance/**</exclude>-->
-            <!--<exclude>${exclude.tests}</exclude>-->
-            <!--</excludes>-->
-            <!--<includes>-->
-            <!--<include>**/*IntegrationTest.java</include>-->
-            <!--<include>**/*IT.java</include>-->
-            <!--<include>**/*ITs.java</include>-->
-            <!--<include>**/*IntegrationTests.java</include>-->
-            <!--</includes>-->
-            <!--<systemPropertyVariables>-->
-            <!--<log4j.configuration>-->
-            <!--file:${project.build.testOutputDirectory}/log4j.xml-->
-            <!--</log4j.configuration>-->
-            <!--</systemPropertyVariables>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.plugin.version}</version>
+                <configuration>
+                    <argLine>${surefireArgLine}</argLine>
+                    <skipTests>${skip.surefire.tests}</skipTests>
+                    <excludes>
+                        <exclude>${exclude.tests}</exclude>
+                    </excludes>
+                    <systemPropertyVariables>
+                        <log4j.configuration>
+                            file:${project.build.testOutputDirectory}/log4j.xml
+                        </log4j.configuration>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${failsafe.version}</version>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skipITs>${skip.failsafe.tests}</skipITs>
+                    <argLine>${failsafeArgLine}</argLine>
+                    <excludes>
+                        <exclude>**/*$*</exclude>
+                        <exclude>**/performance/**</exclude>
+                        <exclude>${exclude.tests}</exclude>
+                    </excludes>
+                    <includes>
+                        <include>**/*IntegrationTest.java</include>
+                        <include>**/*IT.java</include>
+                        <include>**/*ITs.java</include>
+                        <include>**/*IntegrationTests.java</include>
+                    </includes>
+                    <systemPropertyVariables>
+                        <log4j.configuration>
+                            file:${project.build.testOutputDirectory}/log4j.xml
+                        </log4j.configuration>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -838,40 +838,40 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>findbugs-maven-plugin</artifactId>-->
-            <!--<version>${findbugs.plugin.version}</version>-->
-            <!--<configuration>-->
-            <!--<effort>Low</effort>-->
-            <!--<threshold>Low</threshold>-->
-            <!--<xmlOutput>true</xmlOutput>-->
-            <!--<findbugsXmlOutputDirectory>-->
-            <!--${project.build.directory}/findbugs-->
-            <!--</findbugsXmlOutputDirectory>-->
-            <!--<excludeFilterFile>-->
-            <!--findbugs-exclude.xml-->
-            <!--</excludeFilterFile>-->
-            <!--<onlyAnalyze>uk.gov.gchq.Meastro.*</onlyAnalyze>-->
-            <!--</configuration>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>analyze-compile</id>-->
-            <!--<phase>test</phase>-->
-            <!--<goals>-->
-            <!--<goal>check</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-            <!--<effort>Low</effort>-->
-            <!--<threshold>Low</threshold>-->
-            <!--<xmlOutput>true</xmlOutput>-->
-            <!--<findbugsXmlOutputDirectory>-->
-            <!--${project.build.directory}/findbugs-->
-            <!--</findbugsXmlOutputDirectory>-->
-            <!--</configuration>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs.plugin.version}</version>
+                <configuration>
+                    <effort>Low</effort>
+                    <threshold>Low</threshold>
+                    <xmlOutput>true</xmlOutput>
+                    <findbugsXmlOutputDirectory>
+                        ${project.build.directory}/findbugs
+                    </findbugsXmlOutputDirectory>
+                    <excludeFilterFile>
+                        findbugs-exclude.xml
+                    </excludeFilterFile>
+                    <onlyAnalyze>uk.gov.gchq.Meastro.*</onlyAnalyze>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>analyze-compile</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <effort>Low</effort>
+                            <threshold>Low</threshold>
+                            <xmlOutput>true</xmlOutput>
+                            <findbugsXmlOutputDirectory>
+                                ${project.build.directory}/findbugs
+                            </findbugsXmlOutputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!--<plugin>-->
             <!--<groupId>org.apache.maven.plugins</groupId>-->
             <!--<artifactId>maven-javadoc-plugin</artifactId>-->
@@ -1251,108 +1251,108 @@
         <!--</plugins>-->
         <!--</build>-->
         <!--</profile>-->
-        <!--<profile>-->
-        <!--<id>travis</id>-->
-        <!--<properties>-->
-        <!--&lt;!&ndash; The sparkaccumulo integration and parquetstore Spark tests don't run on Travis CI &ndash;&gt;-->
-        <!--<exclude.tests>**/sparkaccumulo/integration/**/*IT.java-->
-        <!--</exclude.tests>-->
-        <!--</properties>-->
-        <!--<build>-->
-        <!--<plugins>-->
-        <!--<plugin>-->
-        <!--<groupId>org.apache.maven.plugins</groupId>-->
-        <!--<artifactId>maven-surefire-plugin</artifactId>-->
-        <!--<version>${surefire.plugin.version}</version>-->
-        <!--<configuration>-->
-        <!--<forkCount>1</forkCount>-->
-        <!--<reuseForks>false</reuseForks>-->
-        <!--<argLine>${surefireArgLine}</argLine>-->
-        <!--</configuration>-->
-        <!--</plugin>-->
-        <!--<plugin>-->
-        <!--<groupId>org.apache.maven.plugins</groupId>-->
-        <!--<artifactId>maven-failsafe-plugin</artifactId>-->
-        <!--<version>${failsafe.version}</version>-->
-        <!--<configuration>-->
-        <!--<forkCount>1</forkCount>-->
-        <!--<reuseForks>false</reuseForks>-->
-        <!--<argLine>${failsafeArgLine}</argLine>-->
-        <!--</configuration>-->
-        <!--</plugin>-->
-        <!--<plugin>-->
-        <!--<groupId>org.codehaus.mojo</groupId>-->
-        <!--<artifactId>findbugs-maven-plugin</artifactId>-->
-        <!--<version>${findbugs.plugin.version}</version>-->
-        <!--<configuration>-->
-        <!--<fork>false</fork>-->
-        <!--</configuration>-->
-        <!--</plugin>-->
-        <!--<plugin>-->
-        <!--<groupId>org.jacoco</groupId>-->
-        <!--<artifactId>jacoco-maven-plugin</artifactId>-->
-        <!--<version>${jacoco.plugin.version}</version>-->
-        <!--<executions>-->
-        <!--<execution>-->
-        <!--<id>pre-unit-test</id>-->
-        <!--<goals>-->
-        <!--<goal>prepare-agent</goal>-->
-        <!--</goals>-->
-        <!--<configuration>-->
-        <!--<destFile>-->
-        <!--${project.build.directory}/coverage-reports/jacoco-ut.exec-->
-        <!--</destFile>-->
-        <!--<propertyName>surefireArgLine</propertyName>-->
-        <!--</configuration>-->
-        <!--</execution>-->
-        <!--<execution>-->
-        <!--<id>post-unit-test</id>-->
-        <!--<phase>test</phase>-->
-        <!--<goals>-->
-        <!--<goal>report</goal>-->
-        <!--</goals>-->
-        <!--<configuration>-->
-        <!--<dataFile>-->
-        <!--${project.build.directory}/coverage-reports/jacoco-ut.exec-->
-        <!--</dataFile>-->
-        <!--<outputDirectory>-->
-        <!--${project.reporting.outputDirectory}/jacoco-ut-->
-        <!--</outputDirectory>-->
-        <!--</configuration>-->
-        <!--</execution>-->
-        <!--<execution>-->
-        <!--<id>pre-integration-test</id>-->
-        <!--<phase>pre-integration-test</phase>-->
-        <!--<goals>-->
-        <!--<goal>prepare-agent</goal>-->
-        <!--</goals>-->
-        <!--<configuration>-->
-        <!--<destFile>-->
-        <!--${project.build.directory}/coverage-reports/jacoco-it.exec-->
-        <!--</destFile>-->
-        <!--<propertyName>failsafeArgLine</propertyName>-->
-        <!--</configuration>-->
-        <!--</execution>-->
-        <!--<execution>-->
-        <!--<id>post-integration-test</id>-->
-        <!--<phase>post-integration-test</phase>-->
-        <!--<goals>-->
-        <!--<goal>report</goal>-->
-        <!--</goals>-->
-        <!--<configuration>-->
-        <!--<dataFile>-->
-        <!--${project.build.directory}/coverage-reports/jacoco-it.exec-->
-        <!--</dataFile>-->
-        <!--<outputDirectory>-->
-        <!--${project.reporting.outputDirectory}/jacoco-it-->
-        <!--</outputDirectory>-->
-        <!--</configuration>-->
-        <!--</execution>-->
-        <!--</executions>-->
-        <!--</plugin>-->
-        <!--</plugins>-->
-        <!--</build>-->
-        <!--</profile>-->
+        <profile>
+            <id>travis</id>
+            <properties>
+                <!-- The sparkaccumulo integration and parquetstore Spark tests don't run on Travis CI -->
+                <exclude.tests>**/sparkaccumulo/integration/**/*IT.java
+                </exclude.tests>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${surefire.plugin.version}</version>
+                        <configuration>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
+                            <argLine>${surefireArgLine}</argLine>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${failsafe.version}</version>
+                        <configuration>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
+                            <argLine>${failsafeArgLine}</argLine>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>${findbugs.plugin.version}</version>
+                        <configuration>
+                            <fork>false</fork>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>pre-unit-test</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                                <configuration>
+                                    <destFile>
+                                        ${project.build.directory}/coverage-reports/jacoco-ut.exec
+                                    </destFile>
+                                    <propertyName>surefireArgLine</propertyName>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>post-unit-test</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <dataFile>
+                                        ${project.build.directory}/coverage-reports/jacoco-ut.exec
+                                    </dataFile>
+                                    <outputDirectory>
+                                        ${project.reporting.outputDirectory}/jacoco-ut
+                                    </outputDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>pre-integration-test</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                                <configuration>
+                                    <destFile>
+                                        ${project.build.directory}/coverage-reports/jacoco-it.exec
+                                    </destFile>
+                                    <propertyName>failsafeArgLine</propertyName>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>post-integration-test</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <dataFile>
+                                        ${project.build.directory}/coverage-reports/jacoco-it.exec
+                                    </dataFile>
+                                    <outputDirectory>
+                                        ${project.reporting.outputDirectory}/jacoco-it
+                                    </outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <!--<profile>-->
         <!--<id>serialisation-compatibility</id>-->
         <!--<properties>-->
