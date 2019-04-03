@@ -33,9 +33,7 @@ public class JobHandler implements OutputOperationHandler<Job, JobDetail> {
     @Override
     public JobDetail doOperation(final Job operation, final Context context,
                                  final Executor executor) throws OperationException {
-        JobDetail jobDetail = executor.addOrUpdateJobDetail(operation.getOpAsOperation(),
-                context, null, JobStatus.RUNNING);
-
+        JobDetail jobDetail = addOrUpdateJobDetail(operation.getOpAsOperation(), context, null, JobStatus.RUNNING);
         jobDetail.setRepeat(operation.getRepeat());
 
         return executeJob(jobDetail, context, executor);
@@ -45,7 +43,7 @@ public class JobHandler implements OutputOperationHandler<Job, JobDetail> {
                                  final Context context,
                                  final String parentJobId,
                                  final Executor executor) throws OperationException {
-        JobDetail childJobDetail = executor.addOrUpdateJobDetail(operation, context, null, JobStatus.RUNNING);
+        JobDetail childJobDetail = addOrUpdateJobDetail(operation, context, null, JobStatus.RUNNING);
         childJobDetail.setParentJobId(parentJobId);
         return executeJob(childJobDetail, context, executor);
     }
@@ -86,7 +84,7 @@ public class JobHandler implements OutputOperationHandler<Job, JobDetail> {
             }
         }, parentJobDetail.getRepeat().getInitialDelay(), parentJobDetail.getRepeat().getRepeatPeriod(), parentJobDetail.getRepeat().getTimeUnit());
 
-        return executor.addOrUpdateJobDetail(parentJobDetail.getOpAsOperation(), context, null, JobStatus.SCHEDULED_PARENT);
+        return addOrUpdateJobDetail(parentJobDetail.getOpAsOperation(), context, null, JobStatus.SCHEDULED_PARENT);
     }
 
     private JobDetail runJob(final JobDetail jobDetail, final Context context, final Executor executor) {
@@ -117,17 +115,37 @@ public class JobHandler implements OutputOperationHandler<Job, JobDetail> {
         executor.runAsync(() -> {
             try {
                 executor.execute(opChain, context);
-                executor.addOrUpdateJobDetail(opChain, context, null,
+                addOrUpdateJobDetail(opChain, context, null,
                         JobStatus.FINISHED);
             } catch (final Error e) {
-                executor.addOrUpdateJobDetail(opChain, context, e.getMessage(),
+                addOrUpdateJobDetail(opChain, context, e.getMessage(),
                         JobStatus.FAILED);
                 throw e;
             } catch (final Exception e) {
-                executor.addOrUpdateJobDetail(opChain, context, e.getMessage(),
+                addOrUpdateJobDetail(opChain, context, e.getMessage(),
                         JobStatus.FAILED);
             }
         });
         return jobDetail;
+    }
+
+    private JobDetail addOrUpdateJobDetail(final Operation operation,
+                                           final Context context, final String msg, final JobStatus jobStatus) {
+        final JobDetail newJobDetail = new JobDetail(context.getJobId(), context
+                .getUser()
+                .getUserId(), OperationChain.wrap(operation), jobStatus, msg);
+        if (JobTracker.isCacheEnabled()) {
+            final JobDetail oldJobDetail =
+                    JobTracker.getJob(newJobDetail.getJobId(),
+                            context
+                                    .getUser());
+            if (null == oldJobDetail) {
+                JobTracker.addOrUpdateJob(newJobDetail, context.getUser());
+            } else {
+                JobTracker.addOrUpdateJob(new JobDetail(oldJobDetail, newJobDetail), context
+                        .getUser());
+            }
+        }
+        return newJobDetail;
     }
 }
