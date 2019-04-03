@@ -69,7 +69,7 @@ public class GetAllJobDetailsHandlerTest {
     }
 
     @Test
-    public void shouldGetAllJobDetailsByDelegatingToJobTracker() throws OperationException {
+    public void shouldGetAllJobDetailsByDelegatingToJobTracker() throws OperationException, InterruptedException {
         // Given
         final Config config = new Config.Builder()
                 .executorProperties(properties)
@@ -94,6 +94,8 @@ public class GetAllJobDetailsHandlerTest {
         JobDetail addedJobDetail2 = executor.execute(new Job.Builder()
                 .operation(op2)
                 .build(), user);
+
+        Thread.sleep(1000);
 
         // When
         final CloseableIterable<JobDetail> result = handler.doOperation(operation, context, executor);

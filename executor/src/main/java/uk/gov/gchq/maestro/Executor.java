@@ -34,11 +34,8 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.jobtracker.JobDetail;
-import uk.gov.gchq.maestro.jobtracker.JobStatus;
-import uk.gov.gchq.maestro.jobtracker.JobTracker;
 import uk.gov.gchq.maestro.operation.DefaultOperation;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.impl.job.Job;
 import uk.gov.gchq.maestro.operation.validator.OperationValidation;
@@ -135,7 +132,6 @@ public class Executor {
         final Operation operation = clonedRequest.getOperation();
         final Context context = clonedRequest.getContext();
 
-        addOrUpdateJobDetail(operation, context, null, JobStatus.RUNNING);
         O result = null;
         try {
             for (final Hook requestHook : getConfig().getRequestHooks()) {
@@ -143,21 +139,17 @@ public class Executor {
             }
             result = (O) handleOperation(operation, context);
             for (final Hook requestHook : getConfig().getRequestHooks()) {
-                result = requestHook.postExecute(result,
-                        clonedRequest);
+                result = requestHook.postExecute(result, clonedRequest);
             }
-            addOrUpdateJobDetail(operation, context, null, JobStatus.FINISHED);
         } catch (final Exception e) {
             for (final Hook requestHook : getConfig().getRequestHooks()) {
                 try {
-                    result = requestHook.onFailure(result,
-                            clonedRequest, e);
+                    result = requestHook.onFailure(result, clonedRequest, e);
                 } catch (final Exception requestHookE) {
                     LOGGER.warn("Error in requestHook " + requestHook.getClass().getSimpleName() + ": " + requestHookE.getMessage(), requestHookE);
                 }
             }
         } catch (final Throwable t) {
-            addOrUpdateJobDetail(operation, context, t.getMessage(), JobStatus.FAILED);
             throw t;
         }
         return new Result(result, clonedRequest.getContext());
@@ -215,26 +207,6 @@ public class Executor {
             this.config.getOperationHandlers().putAll(operationHandlerMap);
         }
         return this;
-    }
-
-    public JobDetail addOrUpdateJobDetail(final Operation operation,
-                                          final Context context, final String msg, final JobStatus jobStatus) {
-        final JobDetail newJobDetail = new JobDetail(context.getJobId(), context
-                .getUser()
-                .getUserId(), OperationChain.wrap(operation), jobStatus, msg);
-        if (JobTracker.isCacheEnabled()) {
-            final JobDetail oldJobDetail =
-                    JobTracker.getJob(newJobDetail.getJobId(),
-                            context
-                                    .getUser());
-            if (null == oldJobDetail) {
-                JobTracker.addOrUpdateJob(newJobDetail, context.getUser());
-            } else {
-                JobTracker.addOrUpdateJob(new JobDetail(oldJobDetail, newJobDetail), context
-                        .getUser());
-            }
-        }
-        return newJobDetail;
     }
 
     @JsonGetter("class") //TODO improvement
