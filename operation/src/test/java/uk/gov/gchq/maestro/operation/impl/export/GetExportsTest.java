@@ -18,8 +18,8 @@ package uk.gov.gchq.maestro.operation.impl.export;
 
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.exception.SerialisationException;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.operation.OperationTest;
 import uk.gov.gchq.maestro.operation.impl.export.set.GetSetExport;
 

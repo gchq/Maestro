@@ -248,22 +248,10 @@ public class Config {
     }
 
     public void setProperties(final ExecutorProperties properties) {
-        final Class<? extends ExecutorProperties> requiredPropsClass = getPropertiesClass();
-        properties.updateExecutorPropertiesClass(requiredPropsClass);
-
-        // If the properties instance is not already an instance of the required class then reload the properties
-        if (requiredPropsClass.isAssignableFrom(properties.getClass())) {
-            this.properties = properties;
-        } else {
-            this.properties = ExecutorProperties.loadExecutorProperties(properties.getProperties());
-        }
+        this.properties = ExecutorProperties.loadExecutorProperties(properties.getProperties());
 
         addReflectionPackages(properties.getReflectionPackages());
         updateJsonSerialiser();
-    }
-
-    protected Class<? extends ExecutorProperties> getPropertiesClass() {
-        return ExecutorProperties.class;
     }
 
     public static void updateJsonSerialiser(final ExecutorProperties executorProperties) {

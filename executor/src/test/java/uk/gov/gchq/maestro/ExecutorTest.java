@@ -19,11 +19,11 @@ package uk.gov.gchq.maestro;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
 import uk.gov.gchq.maestro.helper.TestHandler;
 import uk.gov.gchq.maestro.helper.TestOperation;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.util.Config;
 
 
@@ -42,8 +42,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "      }\n" +
                 "    },\n" +
                 "    \"properties\" : {\n" +
-                "      \"configKey\" : \"configValue\",\n" +
-                "      \"maestro.executor.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
+                "      \"configKey\" : \"configValue\"\n" +
                 "    },\n" +
                 "    \"operationHooks\" : [ ],\n" +
                 "    \"requestHooks\" : [ ]\n" +

@@ -125,17 +125,17 @@ public final class StreamUtil {
      * @throws IOException if there was an error opening the streams
      */
     public static InputStream[] openStreams(final URI... uris) throws IOException {
-        final InputStream[] schemas = new InputStream[uris.length];
+        final InputStream[] streams = new InputStream[uris.length];
         for (int pos = 0; pos < uris.length; pos++) {
             try {
-                schemas[pos] = openStream(uris[pos]);
+                streams[pos] = openStream(uris[pos]);
             } catch (final Exception e) {
-                int closedStreamsCount = closeStreams(schemas);
+                int closedStreamsCount = closeStreams(streams);
                 LOGGER.info("Closed {} input streams", closedStreamsCount);
                 throw e;
             }
         }
-        return schemas;
+        return streams;
     }
 
     /**

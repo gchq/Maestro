@@ -32,9 +32,7 @@ public class FederationTest extends MaestroObjectTest<Executor> {
                 "  \"config\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
                 "    \"operationHandlers\" : { },\n" +
-                "    \"properties\" : {\n" +
-                "      \"maestro.executor.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
-                "    },\n" +
+                "    \"properties\" : { },\n" +
                 "    \"operationHooks\" : [ ],\n" +
                 "    \"requestHooks\" : [ ]\n" +
                 "  }\n" +
