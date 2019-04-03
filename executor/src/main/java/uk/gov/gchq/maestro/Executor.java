@@ -51,6 +51,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import static java.util.Objects.nonNull;
 
 @JsonPropertyOrder(value = {"class", "config"}, alphabetic = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 public class Executor {
     public static final String OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S = "Operation %s is not supported by the %s.";
     public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
@@ -207,11 +208,6 @@ public class Executor {
             this.config.getOperationHandlers().putAll(operationHandlerMap);
         }
         return this;
-    }
-
-    @JsonGetter("class") //TODO improvement
-    public String getClassName() {
-        return this.getClass().getCanonicalName();
     }
 
     @JsonSetter(value = "config")
