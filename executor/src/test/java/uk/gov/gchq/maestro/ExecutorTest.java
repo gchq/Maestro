@@ -42,8 +42,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "      }\n" +
                 "    },\n" +
                 "    \"properties\" : {\n" +
-                "      \"configKey\" : \"configValue\",\n" +
-                "      \"maestro.executor.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
+                "      \"configKey\" : \"configValue\"\n" +
                 "    },\n" +
                 "    \"operationHooks\" : [ ],\n" +
                 "    \"requestHooks\" : [ ]\n" +

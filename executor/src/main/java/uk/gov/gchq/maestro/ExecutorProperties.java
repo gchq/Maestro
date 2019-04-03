@@ -53,7 +53,6 @@ import java.util.Set;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "executorPropertiesClassName")
 public class ExecutorProperties implements Cloneable {
-    public static final String EXECUTOR_PROPERTIES_CLASS = "maestro.executor.properties.class";
     public static final String OPERATION_DECLARATIONS = "maestro.executor.operation.declarations";
 
     public static final String JOB_TRACKER_ENABLED = "maestro.executor.job.tracker.enabled";
@@ -78,7 +77,6 @@ public class ExecutorProperties implements Cloneable {
 
     // Required for loading by reflection.
     public ExecutorProperties() {
-        updateExecutorPropertiesClass();
     }
 
     public ExecutorProperties(final Path propFileLocation) {
@@ -89,17 +87,10 @@ public class ExecutorProperties implements Cloneable {
                 throw new RuntimeException(e);
             }
         }
-        updateExecutorPropertiesClass();
     }
 
     public ExecutorProperties(final Properties props) {
         setProperties(props);
-        updateExecutorPropertiesClass();
-    }
-
-    public static <T extends ExecutorProperties> T loadExecutorProperties(final String pathStr, final Class<T> requiredClass) {
-        final ExecutorProperties properties = loadExecutorProperties(pathStr);
-        return (T) updateInstanceType(requiredClass, properties);
     }
 
     public static ExecutorProperties loadExecutorProperties(final String pathStr) {
@@ -119,22 +110,12 @@ public class ExecutorProperties implements Cloneable {
         return executorProperties;
     }
 
-    public static <T extends ExecutorProperties> T loadExecutorProperties(final Path executorPropertiesPath, final Class<T> requiredClass) {
-        final ExecutorProperties properties = loadExecutorProperties(executorPropertiesPath);
-        return (T) updateInstanceType(requiredClass, properties);
-    }
-
     public static ExecutorProperties loadExecutorProperties(final Path executorPropertiesPath) {
         try {
             return loadExecutorProperties(null != executorPropertiesPath ? Files.newInputStream(executorPropertiesPath) : null);
         } catch (final IOException e) {
             throw new RuntimeException("Failed to load executor properties file : " + e.getMessage(), e);
         }
-    }
-
-    public static <T extends ExecutorProperties> T loadExecutorProperties(final InputStream executorPropertiesStream, final Class<T> requiredClass) {
-        final ExecutorProperties properties = loadExecutorProperties(executorPropertiesStream);
-        return (T) updateInstanceType(requiredClass, properties);
     }
 
     public static ExecutorProperties loadExecutorProperties(final InputStream executorPropertiesStream) {
@@ -156,24 +137,15 @@ public class ExecutorProperties implements Cloneable {
         return loadExecutorProperties(props);
     }
 
-    public static <T extends ExecutorProperties> T loadExecutorProperties(final Properties props, final Class<T> requiredClass) {
-        final ExecutorProperties properties = loadExecutorProperties(props);
-        return (T) updateInstanceType(requiredClass, properties);
-    }
-
     public static ExecutorProperties loadExecutorProperties(final Properties props) {
-        final String executorPropertiesClass =
-                props.getProperty(ExecutorProperties.EXECUTOR_PROPERTIES_CLASS);
         final ExecutorProperties executorProperties;
-        if (null == executorPropertiesClass) {
-            executorProperties = new ExecutorProperties();
-        } else {
-            try {
-                executorProperties = Class.forName(executorPropertiesClass).asSubclass(ExecutorProperties.class).newInstance();
-            } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException("Failed to create executor properties file : " + e.getMessage(), e);
-            }
+        try {
+            executorProperties =
+                    Class.forName(ExecutorProperties.class.getName()).asSubclass(ExecutorProperties.class).newInstance();
+        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Failed to create executor properties file : " + e.getMessage(), e);
         }
+
         executorProperties.setProperties(props);
         return executorProperties;
     }
@@ -252,31 +224,6 @@ public class ExecutorProperties implements Cloneable {
 
     public void setJobTrackerEnabled(final Boolean jobTrackerEnabled) {
         set(JOB_TRACKER_ENABLED, jobTrackerEnabled.toString());
-    }
-
-    public String getExecutorPropertiesClassName() {
-        return get(EXECUTOR_PROPERTIES_CLASS, ExecutorProperties.class.getName());
-    }
-
-    public void setExecutorPropertiesClassName(final String executorPropertiesClassName) {
-        set(EXECUTOR_PROPERTIES_CLASS, executorPropertiesClassName);
-    }
-
-    public Class<? extends ExecutorProperties> getExecutorPropertiesClass() {
-        final Class<? extends ExecutorProperties> clazz;
-        try {
-            clazz = Class.forName(getExecutorPropertiesClassName()).asSubclass(ExecutorProperties.class);
-        } catch (final ClassNotFoundException e) {
-            throw new RuntimeException("Executor properties class was not " +
-                    "found: " + getExecutorPropertiesClassName(), e);
-        }
-
-        return clazz;
-    }
-
-    public void setExecutorPropertiesClass(final Class<?
-            extends ExecutorProperties> executorPropertiesClass) {
-        set(EXECUTOR_PROPERTIES_CLASS, executorPropertiesClass.getName());
     }
 
     public String getOperationDeclarationPaths() {
@@ -377,21 +324,6 @@ public class ExecutorProperties implements Cloneable {
         return ExecutorProperties.loadExecutorProperties((Properties) getProperties().clone());
     }
 
-    public void updateExecutorPropertiesClass() {
-        updateExecutorPropertiesClass(getClass());
-    }
-
-    public void updateExecutorPropertiesClass(final Class<? extends ExecutorProperties> requiredClass) {
-        final Class<? extends ExecutorProperties> executorPropertiesClass =
-                getExecutorPropertiesClass();
-        if (null == executorPropertiesClass || ExecutorProperties.class.equals(executorPropertiesClass)) {
-            setExecutorPropertiesClass(requiredClass);
-        } else if (!requiredClass.isAssignableFrom(executorPropertiesClass)) {
-            throw new IllegalArgumentException("The given properties is not " +
-                    "of type " + requiredClass.getName() + " actual: " + executorPropertiesClass.getName());
-        }
-    }
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -426,14 +358,5 @@ public class ExecutorProperties implements Cloneable {
 
         // If we are not in debug mode then don't return the property values in case we leak sensitive properties.
         return super.toString();
-    }
-
-    private static <T extends ExecutorProperties> ExecutorProperties updateInstanceType(final Class<T> requiredClass, final ExecutorProperties properties) {
-        if (!requiredClass.isAssignableFrom(properties.getClass())) {
-            properties.updateExecutorPropertiesClass(requiredClass);
-            return ExecutorProperties.loadExecutorProperties(properties.getProperties());
-        }
-
-        return properties;
     }
 }
