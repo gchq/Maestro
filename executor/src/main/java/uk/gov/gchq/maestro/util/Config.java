@@ -25,6 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
@@ -54,7 +55,6 @@ import java.util.Properties;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static uk.gov.gchq.koryphe.util.ReflectionUtil.addReflectionPackages;
 import static uk.gov.gchq.maestro.operation.declaration.OperationDeclarations.fromJson;
 
 @JsonPropertyOrder(value = {"class", "id", "description", "operationHandlers", "hooks", "properties", "library"}, alphabetic = true)
@@ -207,7 +207,7 @@ public class Config {
     @JsonGetter("properties")
     @JsonPropertyOrder(alphabetic = true)
     public Properties _getProperties() {
-        return isNull(properties) ? null : properties.getProperties();
+        return isNull(properties) ? null : properties;
     }
 
     @JsonSetter
@@ -216,7 +216,7 @@ public class Config {
             if (isNull(this.properties)) {
                 this.properties = new ExecutorProperties();
             }
-            this.properties.setProperties(properties);
+            this.properties = new ExecutorProperties(properties);
         }
         return this;
     }
@@ -235,7 +235,7 @@ public class Config {
         OperationDeclarations declarations = null;
 
         final String declarationsPaths =
-                properties.get(ExecutorProperties.OPERATION_DECLARATIONS);
+                ExecutorPropertiesUtil.getOperationDeclarationPaths(properties);
         if (null != declarationsPaths) {
             declarations = OperationDeclarations.fromPaths(declarationsPaths);
         }
@@ -247,19 +247,21 @@ public class Config {
         return declarations;
     }
 
-    public void setProperties(final ExecutorProperties properties) {
-        this.properties = ExecutorProperties.loadExecutorProperties(properties.getProperties());
+    public Config setProperties(final ExecutorProperties properties) {
+        this.properties = new ExecutorProperties(properties);
 
-        addReflectionPackages(properties.getReflectionPackages());
+        ReflectionUtil.addReflectionPackages(ExecutorPropertiesUtil.getReflectionPackages(properties));
         updateJsonSerialiser();
+
+        return this;
     }
 
     public static void updateJsonSerialiser(final ExecutorProperties executorProperties) {
         if (null != executorProperties) {
             JSONSerialiser.update(
-                    executorProperties.getJsonSerialiserClass(),
-                    executorProperties.getJsonSerialiserModules(),
-                    executorProperties.getStrictJson()
+                    ExecutorPropertiesUtil.getJsonSerialiserClass(executorProperties),
+                    ExecutorPropertiesUtil.getJsonSerialiserModules(executorProperties),
+                    ExecutorPropertiesUtil.getStrictJson(executorProperties)
             );
         } else {
             JSONSerialiser.update();
@@ -320,7 +322,7 @@ public class Config {
                 .append(nonNull(properties), nonNull(config.properties));
 
         if (equalsBuilder.isEquals() && nonNull(properties)) {
-            equalsBuilder.append(properties.getProperties(), config.properties.getProperties());
+            equalsBuilder.append(properties, config.properties);
         }
 
         return equalsBuilder.isEquals();
@@ -371,22 +373,22 @@ public class Config {
 
         // ExecutorProperties
         public Builder executorProperties(final Properties properties) {
-            return executorProperties(null != properties ? ExecutorProperties.loadExecutorProperties(properties) :
-                    null);
+            return executorProperties(null != properties ?
+                    new ExecutorProperties(properties) : null);
         }
 
         public Builder executorProperties(final ExecutorProperties properties) {
             if (null != this.properties) {
-                this.properties.getProperties().putAll(properties.getProperties());
+                this.properties.putAll(properties);
             } else {
                 this.properties = properties;
             }
             if (null != properties) {
-                addReflectionPackages(properties.getReflectionPackages());
+                ReflectionUtil.addReflectionPackages(ExecutorPropertiesUtil.getReflectionPackages(properties));
                 JSONSerialiser.update(
-                        properties.getJsonSerialiserClass(),
-                        properties.getJsonSerialiserModules(),
-                        properties.getStrictJson()
+                        ExecutorPropertiesUtil.getJsonSerialiserClass(properties),
+                        ExecutorPropertiesUtil.getJsonSerialiserModules(properties),
+                        ExecutorPropertiesUtil.getStrictJson(properties)
                 );
             }
             return this;
@@ -394,14 +396,14 @@ public class Config {
 
         public Builder executorProperties(final String propertiesPath) {
             return executorProperties(null != propertiesPath ?
-                    ExecutorProperties.loadExecutorProperties(propertiesPath) : null);
+                    new ExecutorProperties(propertiesPath) : null);
         }
 
         public Builder executorProperties(final Path propertiesPath) {
             if (null == propertiesPath) {
                 properties = null;
             } else {
-                executorProperties(ExecutorProperties.loadExecutorProperties(propertiesPath));
+                executorProperties(new ExecutorProperties(propertiesPath));
             }
             return this;
         }
@@ -410,7 +412,7 @@ public class Config {
             if (null == propertiesStream) {
                 properties = null;
             } else {
-                executorProperties(ExecutorProperties.loadExecutorProperties(propertiesStream));
+                executorProperties(new ExecutorProperties().loadExecutorProperties(propertiesStream));
             }
             return this;
         }
@@ -430,7 +432,7 @@ public class Config {
 
         public Builder addExecutorProperties(final Properties properties) {
             if (null != properties) {
-                addExecutorProperties(ExecutorProperties.loadExecutorProperties(properties));
+                addExecutorProperties(new ExecutorProperties(properties));
             }
             return this;
         }
@@ -448,21 +450,21 @@ public class Config {
 
         public Builder addExecutorProperties(final String updatePropertiesPath) {
             if (null != updatePropertiesPath) {
-                addExecutorProperties(ExecutorProperties.loadExecutorProperties(updatePropertiesPath));
+                addExecutorProperties(new ExecutorProperties(updatePropertiesPath));
             }
             return this;
         }
 
         public Builder addExecutorProperties(final Path updatePropertiesPath) {
             if (null != updatePropertiesPath) {
-                addExecutorProperties(ExecutorProperties.loadExecutorProperties(updatePropertiesPath));
+                addExecutorProperties(new ExecutorProperties(updatePropertiesPath));
             }
             return this;
         }
 
         public Builder addExecutorProperties(final InputStream updatePropertiesStream) {
             if (null != updatePropertiesStream) {
-                addExecutorProperties(ExecutorProperties.loadExecutorProperties(updatePropertiesStream));
+                addExecutorProperties(new ExecutorProperties().loadExecutorProperties(updatePropertiesStream));
             }
             return this;
         }
@@ -707,7 +709,7 @@ public class Config {
             }
             config.setRequestHooks(requestHooks);
             config.setOperationHooks(operationHooks);
-            config.getProperties().getProperties().putAll(properties.getProperties());
+            config.getProperties().putAll(properties);
             config.getOperationHandlers().putAll(operationHandlers);
             return config;
         }

@@ -33,6 +33,7 @@ import uk.gov.gchq.maestro.operation.impl.job.GetAllJobDetails;
 import uk.gov.gchq.maestro.operation.impl.job.Job;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
+import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -48,8 +49,8 @@ public class GetAllJobDetailsHandlerTest {
 
     @Before
     public void setup() {
-        properties.setJobTrackerEnabled(true);
-        properties.set("maestro.cache.service.class", "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService");
+        ExecutorPropertiesUtil.setJobTrackerEnabled(properties, true);
+        ExecutorPropertiesUtil.setCacheClass(properties, "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService");
     }
 
     @Test

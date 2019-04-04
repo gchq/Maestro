@@ -103,7 +103,7 @@ public class FileLibrary extends Library {
         if (null != properties) {
             getPropertiesPath(propertiesId).toFile().getParentFile().mkdirs();
             try (FileOutputStream propertiesFileOutputStream = new FileOutputStream(getPropertiesPath(propertiesId).toFile())) {
-                properties.getProperties().store(propertiesFileOutputStream, null);
+                properties.store(propertiesFileOutputStream, null);
             } catch (final IOException e) {
                 throw new IllegalArgumentException("Could not write " +
                         "properties to path: " + getPropertiesPath(propertiesId), e);
@@ -120,7 +120,7 @@ public class FileLibrary extends Library {
         if (!propertiesPath.toFile().exists()) {
             return null;
         }
-        return ExecutorProperties.loadExecutorProperties(propertiesPath);
+        return new ExecutorProperties(propertiesPath);
     }
 
     private Path getPropertiesPath(final String propertiesId) {

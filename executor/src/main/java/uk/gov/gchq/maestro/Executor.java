@@ -41,6 +41,7 @@ import uk.gov.gchq.maestro.operation.impl.job.Job;
 import uk.gov.gchq.maestro.operation.validator.OperationValidation;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
+import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 import uk.gov.gchq.maestro.util.Request;
 import uk.gov.gchq.maestro.util.Result;
 import uk.gov.gchq.maestro.util.hook.Hook;
@@ -71,13 +72,13 @@ public class Executor {
 
     protected void startCacheServiceLoader(final ExecutorProperties properties) {
         if (null != properties) {
-            CacheServiceLoader.initialise(properties.getProperties());
+            CacheServiceLoader.initialise(properties);
         }
     }
 
     private void addExecutorService(final ExecutorProperties properties) {
         if (null != properties) {
-            ExecutorService.initialise(properties.getJobExecutorThreadCount());
+            ExecutorService.initialise(ExecutorPropertiesUtil.getJobExecutorThreadCount(properties));
         }
     }
 

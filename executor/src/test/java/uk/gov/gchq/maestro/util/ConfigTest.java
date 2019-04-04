@@ -60,7 +60,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
         final Config config = new Config();
         config.addOperationHandler(TestOperation.class, new TestHandler().fieldHandler("handlerFieldValue1"));
         final ExecutorProperties properties = new ExecutorProperties();
-        properties.set("configKey", "configValue");
+        properties.put("configKey", "configValue");
         config.setProperties(properties);
         return config;
     }
@@ -68,7 +68,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     @Test
     public void shouldJsonSerialiseAndDeserialise() throws SerialisationException {
         final ExecutorProperties properties = new ExecutorProperties();
-        properties.set("configKey", "configValue");
+        properties.put("configKey", "configValue");
         final Config config = new Config.Builder()
                 .id("testId")
                 .operationHandler(new OperationDeclaration.Builder()
@@ -95,11 +95,11 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     public void shouldBuildConfigCorrectly() {
         // Given
         final ExecutorProperties mergedProperties = new ExecutorProperties();
-        mergedProperties.getProperties().put("key2", "value2");
-        mergedProperties.getProperties().put("key1", "value1");
-        mergedProperties.getProperties().put("testKey", "value1");
+        mergedProperties.put("key2", "value2");
+        mergedProperties.put("key1", "value1");
+        mergedProperties.put("testKey", "value1");
         final ExecutorProperties testProperties = new ExecutorProperties();
-        testProperties.getProperties().put("key2", "value2");
+        testProperties.put("key2", "value2");
         final Hook testOpHook = new TestHook("field1Val1");
         final Hook testReqHook = new TestHook("field1Val2");
         final OperationDeclaration testOpDeclaration =

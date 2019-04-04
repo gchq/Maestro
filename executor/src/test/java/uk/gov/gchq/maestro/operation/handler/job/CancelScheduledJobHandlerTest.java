@@ -28,6 +28,7 @@ import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.impl.job.CancelScheduledJob;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
+import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -41,8 +42,8 @@ public class CancelScheduledJobHandlerTest {
 
     @Before
     public void setup() {
-        properties.setJobTrackerEnabled(true);
-        properties.set("maestro.cache.service.class", "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService");
+        ExecutorPropertiesUtil.setJobTrackerEnabled(properties, true);
+        ExecutorPropertiesUtil.setCacheClass(properties, "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService");
     }
 
     @Test

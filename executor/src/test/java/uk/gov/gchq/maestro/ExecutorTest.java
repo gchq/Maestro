@@ -68,7 +68,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     protected Executor getTestObject() {
         final Config config = new Config();
         final ExecutorProperties properties = new ExecutorProperties();
-        properties.set("configKey", "configValue");
+        properties.put("configKey", "configValue");
         config.setProperties(properties);
         config.addOperationHandler(TestOperation.class, new TestHandler().fieldHandler("handlerFieldValue1"));
         return new Executor().config(config);

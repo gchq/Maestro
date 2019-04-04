@@ -25,13 +25,14 @@ import org.junit.Test;
 import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiserModules;
+import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
 import java.util.List;
 import java.util.Set;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class ExecutorPropertiesTest {
 
@@ -45,7 +46,8 @@ public class ExecutorPropertiesTest {
     public void shouldMergeProperties() {
         // Given
         final ExecutorProperties props1 = createExecutorProperties();
-        final ExecutorProperties props2 = ExecutorProperties.loadExecutorProperties(StreamUtil.openStream(getClass(), "executor2.properties"));
+        final ExecutorProperties props2 = new ExecutorProperties().loadExecutorProperties(StreamUtil.openStream(getClass(),
+                "executor2.properties"));
 
         // When
         props1.merge(props2);
@@ -62,7 +64,7 @@ public class ExecutorPropertiesTest {
         final ExecutorProperties props = createExecutorProperties();
 
         // When
-        props.set("testKey", null);
+        props.setProperty("testKey", null);
 
         // Then
         assertNull(props.get("testKey"));
@@ -74,7 +76,7 @@ public class ExecutorPropertiesTest {
         final ExecutorProperties props = createExecutorProperties();
 
         // When
-        String value = props.get("key1");
+        String value = (String) props.get("key1");
 
         // Then
         assertEquals("value1", value);
@@ -86,8 +88,8 @@ public class ExecutorPropertiesTest {
         final ExecutorProperties props = createExecutorProperties();
 
         // When
-        props.set("key2", "value2");
-        String value = props.get("key2");
+        props.setProperty("key2", "value2");
+        String value = (String) props.get("key2");
 
         // Then
         assertEquals("value2", value);
@@ -99,7 +101,7 @@ public class ExecutorPropertiesTest {
         final ExecutorProperties props = createExecutorProperties();
 
         // When
-        String value = props.get("key1", "property not found");
+        String value = props.getProperty("key1", "property not found");
 
         // Then
         assertEquals("value1", value);
@@ -111,7 +113,7 @@ public class ExecutorPropertiesTest {
         final ExecutorProperties props = createExecutorProperties();
 
         // When
-        String value = props.get("a key that does not exist");
+        String value = (String) props.get("a key that does not exist");
 
         // Then
         assertNull(value);
@@ -121,26 +123,26 @@ public class ExecutorPropertiesTest {
     public void shouldAddOperationDeclarationPathsWhenNullExisting() {
         // Given
         final ExecutorProperties props = createExecutorProperties();
-        assertNull(props.getOperationDeclarationPaths());
+        assertNull(ExecutorPropertiesUtil.getOperationDeclarationPaths(props));
 
         // When
-        props.addOperationDeclarationPaths("1", "2");
+        ExecutorPropertiesUtil.addOperationDeclarationPaths(props, "1", "2");
 
         // Then
-        assertEquals("1,2", props.getOperationDeclarationPaths());
+        assertEquals("1,2", ExecutorPropertiesUtil.getOperationDeclarationPaths(props));
     }
 
     @Test
     public void shouldAddOperationDeclarationPathsWhenExisting() {
         // Given
         final ExecutorProperties props = createExecutorProperties();
-        props.setOperationDeclarationPaths("1");
+        ExecutorPropertiesUtil.setOperationDeclarationPaths(props, "1");
 
         // When
-        props.addOperationDeclarationPaths("2", "3");
+        ExecutorPropertiesUtil.addOperationDeclarationPaths(props, "2", "3");
 
         // Then
-        assertEquals("1,2,3", props.getOperationDeclarationPaths());
+        assertEquals("1,2,3", ExecutorPropertiesUtil.getOperationDeclarationPaths(props));
     }
 
     @Test
@@ -149,30 +151,18 @@ public class ExecutorPropertiesTest {
         final ExecutorProperties props = createExecutorProperties();
 
         // When
-        props.setReflectionPackages("package1,package2");
+        ExecutorPropertiesUtil.setReflectionPackages(props, "package1,package2");
 
         // Then
-        assertEquals("package1,package2", props.getReflectionPackages());
+        assertEquals("package1,package2", ExecutorPropertiesUtil.getReflectionPackages(props));
         final Set<String> expectedPackages = Sets.newHashSet(ReflectionUtil.DEFAULT_PACKAGES);
         expectedPackages.add("package1");
         expectedPackages.add("package2");
         assertEquals(expectedPackages, ReflectionUtil.getReflectionPackages());
     }
 
-    @Test
-    public void shouldGetUnknownPropertyWithDefaultValue() {
-        // Given
-        final ExecutorProperties props = createExecutorProperties();
-
-        // When
-        String value = props.get("a key that does not exist", "property not found");
-
-        // Then
-        assertEquals("property not found", value);
-    }
-
     private ExecutorProperties createExecutorProperties() {
-        return ExecutorProperties.loadExecutorProperties(StreamUtil.executorProps(getClass()));
+        return new ExecutorProperties().loadExecutorProperties(StreamUtil.executorProps(getClass()));
     }
 
     @Test
@@ -185,11 +175,11 @@ public class ExecutorPropertiesTest {
         );
 
         // When
-        props.setJsonSerialiserModules(modules);
+        ExecutorPropertiesUtil.setJsonSerialiserModules(props, modules);
 
         // Then
-        assertTrue(props.getJsonSerialiserModules().contains(TestCustomJsonModules1.class.getName()));
-        assertTrue(props.getJsonSerialiserModules().contains(TestCustomJsonModules2.class.getName()));
+        assertTrue(ExecutorPropertiesUtil.getJsonSerialiserModules(props).contains(TestCustomJsonModules1.class.getName()));
+        assertTrue(ExecutorPropertiesUtil.getJsonSerialiserModules(props).contains(TestCustomJsonModules2.class.getName()));
     }
 
     @Test
@@ -199,10 +189,10 @@ public class ExecutorPropertiesTest {
         final ExecutorProperties props = createExecutorProperties();
 
         // When
-        props.setAdminAuth(adminAuth);
+        ExecutorPropertiesUtil.setAdminAuth(props, adminAuth);
 
         // Then
-        assertEquals(adminAuth, props.getAdminAuth());
+        assertEquals(adminAuth, ExecutorPropertiesUtil.getAdminAuth(props));
     }
 
     public static final class TestCustomJsonModules1 implements JSONSerialiserModules {

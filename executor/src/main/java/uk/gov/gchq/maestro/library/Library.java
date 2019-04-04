@@ -205,7 +205,7 @@ public abstract class Library {
                 getPropertiesUsingExecutorId(executorId);
 
         if (null != existingExecutorProps) {
-            if (existingExecutorProps.getProperties().equals(properties.getProperties())) {
+            if (existingExecutorProps.equals(properties)) {
                 throw new OverwritingException("ExecutorId " + executorId +
                         " already " +
                         "exists with a different executor properties:\n"
@@ -219,11 +219,11 @@ public abstract class Library {
         final ExecutorProperties existingProperties = _getProperties(id);
         final boolean exists = null != existingProperties;
         if (exists) {
-            if (!existingProperties.getProperties().equals(properties.getProperties())) {
+            if (!existingProperties.equals(properties)) {
                 throw new OverwritingException("propertiesId " + id + " " +
                         "already exists with a different executor properties:\n"
-                        + "existing executorProperties:\n" + existingProperties.getProperties().toString()
-                        + "\nnew executorProperties:\n" + properties.getProperties().toString());
+                        + "existing executorProperties:\n" + existingProperties.toString()
+                        + "\nnew executorProperties:\n" + properties.toString());
             }
         }
         return exists;

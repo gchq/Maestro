@@ -54,10 +54,6 @@ public final class FederatedUtil {
     }
 
     public static HashMap<String, Executor> getFederatedExecutors(final ExecutorProperties properties) throws MaestroCheckedException {
-        return getFederatedExecutors(properties.getProperties());
-    }
-
-    public static HashMap<String, Executor> getFederatedExecutors(final Properties properties) throws MaestroCheckedException {
         HashMap<String, Executor> rtn = new HashMap<>();
         for (final Map.Entry<Object, Object> entry : properties.entrySet()) {
             final Object key = entry.getKey();
@@ -97,7 +93,7 @@ public final class FederatedUtil {
     }
 
     public static ExecutorProperties addExecutorTo(final ExecutorProperties properties, final AddExecutor op) {
-        addExecutorTo(properties.getProperties(), op);
+        addExecutorTo(properties, op);
         return properties;
     }
 
