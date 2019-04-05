@@ -45,6 +45,7 @@ public class ExecutorProperties extends Properties {
     }
 
     public ExecutorProperties(final Path propFileLocation) {
+        super();
         if (null != propFileLocation) {
             try {
                 loadExecutorProperties(null != propFileLocation ? Files.newInputStream(propFileLocation) : null);
@@ -60,6 +61,7 @@ public class ExecutorProperties extends Properties {
     }
 
     public ExecutorProperties(final String pathStr) {
+        super();
         final Path path = Paths.get(pathStr);
         try {
             if (path.toFile().exists()) {
