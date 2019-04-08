@@ -23,7 +23,11 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class IterableUtil {
+public final class IterableUtil {
+    private IterableUtil() {
+        // Private constructor to prevent instantiation
+    }
+
     public static void assertIterableEquals(final Iterable<?> expected, final Iterable<?> result) {
         assertIterableEquals(expected, result, false);
     }
