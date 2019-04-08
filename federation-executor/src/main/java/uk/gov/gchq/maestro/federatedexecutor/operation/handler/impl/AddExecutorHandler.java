@@ -18,21 +18,20 @@ package uk.gov.gchq.maestro.federatedexecutor.operation.handler.impl;
 
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor;
-import uk.gov.gchq.maestro.federatedexecutor.operation.handler.FederatedAddExecutorHandlerParent;
+import uk.gov.gchq.maestro.federatedexecutor.operation.handler.AddExecutorHandlerParent;
 import uk.gov.gchq.maestro.util.Config;
 
 /**
  * A handler for {@link AddExecutor} operation for the FederatedStore.
  *
- * @see FederatedAddExecutorHandlerParent
+ * @see AddExecutorHandlerParent
  */
-public class FederatedAddExecutorHandler extends FederatedAddExecutorHandlerParent<AddExecutor> {
+public class AddExecutorHandler extends AddExecutorHandlerParent<AddExecutor> {
 
     @Override
     protected Executor _makeExecutor(final AddExecutor operation, final Executor executor) {
         return new Executor()
-                .config(new Config().id(operation.getId())
-                                .id(operation.getId())
+                .config(new Config()
                                 .setProperties(operation.getConfig().getProperties().getProperties())
                         //.parentSchemaIds(operation.getParentSchemaIds()) TODO
                         //.parentStorePropertiesId(operation.getParentConfigId()) TODO

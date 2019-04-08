@@ -30,7 +30,7 @@ import uk.gov.gchq.maestro.util.FederatedUtil;
 import java.util.Collections;
 
 
-public abstract class FederatedAddExecutorHandlerParent<OP extends AddExecutor> implements OperationHandler<OP> {
+public abstract class AddExecutorHandlerParent<OP extends AddExecutor> implements OperationHandler<OP> {
 
     public static final String ERROR_BUILDING_GRAPH_GRAPH_ID_S = "Error building executor %s";
     public static final String ERROR_ADDING_GRAPH_GRAPH_ID_S = "Error adding executor %s";

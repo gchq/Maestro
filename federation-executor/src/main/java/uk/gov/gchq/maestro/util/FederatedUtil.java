@@ -105,9 +105,11 @@ public final class FederatedUtil {
         // TODO op.getAuths();
         // TODO op.isPublic();
 
-        final String id = op.getId();
-        requireNonNull(id);
-        properties.put(FederatedUtil.EXECUTOR_STORE + id, new Executor(op.getConfig()));
+        final Config config = op.getConfig();
+        requireNonNull(config, "Config from AddExecutor op is null.");
+        final String id = config.getId();
+        requireNonNull(id, "Id from Config is null");
+        properties.put(FederatedUtil.EXECUTOR_STORE + id, new Executor(config));
         return properties;
     }
 }

@@ -41,6 +41,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     @Override
     protected String getJSONString() {
         return "{\n" +
+                "  \"id\" : \"configIdValue\",\n" +
                 "  \"operationHandlers\" : {\n" +
                 "    \"uk.gov.gchq.maestro.helper.TestOperation\" : {\n" +
                 "      \"class\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
@@ -62,6 +63,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
         final ExecutorProperties properties = new ExecutorProperties();
         properties.set("configKey", "configValue");
         config.setProperties(properties);
+        config.id("configIdValue");
         return config;
     }
 

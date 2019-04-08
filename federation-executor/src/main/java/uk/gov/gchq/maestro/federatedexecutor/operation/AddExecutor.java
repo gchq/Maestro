@@ -17,15 +17,15 @@
 package uk.gov.gchq.maestro.federatedexecutor.operation;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
-import uk.gov.gchq.maestro.commonutil.Required;
 import uk.gov.gchq.maestro.util.Config;
 
 import java.util.Map;
@@ -34,8 +34,6 @@ import java.util.Set;
 @JsonPropertyOrder(value = {"class", "id"}, alphabetic = true)
 @JsonInclude(Include.NON_DEFAULT)
 public class AddExecutor implements FederatedOperation {
-    @Required
-    private String id;
     private Config config;
     private String parentConfigId;
     private Set<String> executorAuths;
@@ -44,25 +42,15 @@ public class AddExecutor implements FederatedOperation {
     private boolean disabledByDefault = FederatedExecutorStorage.DEFAULT_DISABLED_BY_DEFAULT;
 
     public AddExecutor() {
-        addOption(FederatedStoreConstants.KEY_OPERATION_OPTIONS_GRAPH_IDS, "");
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public AddExecutor id(final String id) {
-        this.id = id;
-        return this;
+        addOption(FederatedStoreConstants.KEY_OPERATION_OPTIONS_GRAPH_IDS, ""); //TODO ?
     }
 
     @Override
     public AddExecutor shallowClone() throws CloneFailedException {
         final AddExecutor addExecutor = new AddExecutor()
-                .id(id)
-                .config(config)
-                .parentConfigId(parentConfigId)
-                .disabledByDefault(disabledByDefault)
+                .config(this.config)
+                .parentConfigId(this.parentConfigId)
+                .disabledByDefault(this.disabledByDefault)
                 .options(this.options)
                 .publicFlag(this.isPublic);
 
@@ -73,12 +61,10 @@ public class AddExecutor implements FederatedOperation {
         return addExecutor;
     }
 
-    @JsonIgnore
     public Config getConfig() {
         return config;
     }
 
-    @JsonIgnore
     public AddExecutor config(final Config config) {
         this.config = config;
         return this;
@@ -107,6 +93,7 @@ public class AddExecutor implements FederatedOperation {
         return options;
     }
 
+    @Override
     public AddExecutor options(final Map<String, String> options) {
         this.options = options;
         return this;
@@ -123,20 +110,6 @@ public class AddExecutor implements FederatedOperation {
         return this;
     }
 
-//    @JsonGetter("executorProperties")
-//    public Properties getProperties() {
-//        return null != executorProperties ? executorProperties.getProperties() : null;
-//    }
-
-//    @JsonSetter("executorProperties")
-//    public void setProperties(final Properties properties) {
-//        if (null == properties) {
-//            executorProperties(null);
-//        } else {
-//            executorProperties(ExecutorProperties.loadStoreProperties(properties));
-//        }
-//    }
-
     @JsonSetter("isPublic")
     public AddExecutor publicFlag(final boolean isPublic) {
         this.isPublic = isPublic;
@@ -146,5 +119,35 @@ public class AddExecutor implements FederatedOperation {
     @JsonGetter("isPublic")
     public boolean isPublic() {
         return isPublic;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final AddExecutor that = (AddExecutor) o;
+
+        return new EqualsBuilder()
+                .append(isPublic, that.isPublic)
+                .append(disabledByDefault, that.disabledByDefault)
+                .append(config, that.config)
+                .append(parentConfigId, that.parentConfigId)
+                .append(executorAuths, that.executorAuths)
+                .append(options, that.options)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(config)
+                .append(parentConfigId)
+                .append(executorAuths)
+                .append(options)
+                .append(isPublic)
+                .append(disabledByDefault)
+                .toHashCode();
     }
 }

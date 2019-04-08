@@ -138,6 +138,7 @@ public class ExecutorProperties implements Cloneable {
     }
 
     public static ExecutorProperties loadExecutorProperties(final Properties props) {
+        //TODO EXAMINE WHAT STORE_PROPERTIES_CLASS is getting and why within Props?
         final ExecutorProperties executorProperties;
         try {
             executorProperties =
