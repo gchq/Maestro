@@ -119,6 +119,13 @@
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>common-util</artifactId>
+                <version>${project.parent.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>federation-executor</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>

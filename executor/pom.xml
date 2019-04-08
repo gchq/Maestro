@@ -54,6 +54,12 @@
         </dependency>
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>common-util</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>operation</artifactId>
         </dependency>
 
