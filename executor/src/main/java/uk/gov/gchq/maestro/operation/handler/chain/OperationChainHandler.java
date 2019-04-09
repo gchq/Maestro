@@ -18,6 +18,7 @@ package uk.gov.gchq.maestro.operation.handler.chain;
 import uk.gov.gchq.koryphe.ValidationResult;
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
@@ -44,7 +45,7 @@ public class OperationChainHandler<OUT> implements OutputOperationHandler<Operat
 
     @Override
     public OUT doOperation(final OperationChain<OUT> operationChain,
-                           final Context context, final Executor executor) {
+                           final Context context, final Executor executor) throws OperationException {
         Object result = null;
         for (final Operation op : operationChain.getOperations()) {
             updateOperationInput(op, result);
