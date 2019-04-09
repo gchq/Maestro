@@ -101,11 +101,11 @@ public class Executor {
         }
     }
 
-    public <O> O execute(final Operation operation, final Context context) {
+    public <O> O execute(final Operation operation, final Context context) throws OperationException {
         return (O) execute(new Request(operation, context)).getResult();
     }
 
-    public <O> O execute(final Operation operation, final User user) {
+    public <O> O execute(final Operation operation, final User user) throws OperationException {
         return (O) execute(new Request(operation, new Context(user))).getResult();
     }
 
@@ -118,7 +118,7 @@ public class Executor {
      * @throws OperationException thrown by the operation handler if the
      *                            operation fails.
      */
-    public <O> Result<O> execute(final Request request) {
+    public <O> Result<O> execute(final Request request) throws OperationException {
         if (null == request) {
             throw new IllegalArgumentException("A request is required");
         }
@@ -150,8 +150,9 @@ public class Executor {
                     LOGGER.warn("Error in requestHook " + requestHook.getClass().getSimpleName() + ": " + requestHookE.getMessage(), requestHookE);
                 }
             }
-        } catch (final Throwable t) {
-            throw t;
+            CloseableUtil.close(operation);
+            CloseableUtil.close(result);
+            throw e;
         }
         return new Result(result, clonedRequest.getContext());
     }
@@ -169,7 +170,8 @@ public class Executor {
      * Executes a given operation job and returns the job detail.
      */
     // TODO remove this method before first release
-    public JobDetail executeJob(final Operation operation, final Context context) {
+    public JobDetail executeJob(final Operation operation,
+                                final Context context) throws OperationException {
         return execute(new Job.Builder().operation(operation).build(), context);
     }
 
