@@ -204,7 +204,7 @@ public class DefaultScoreResolverTest {
         final Object result = scoreResolver.getScore(opChain);
 
         // Then
-        assertEquals(17, result);
+        assertEquals(18, result);
     }
 
     @Test
