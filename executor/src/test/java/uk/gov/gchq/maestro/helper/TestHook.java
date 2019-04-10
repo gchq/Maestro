@@ -18,7 +18,7 @@ package uk.gov.gchq.maestro.helper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
-import uk.gov.gchq.maestro.util.hook.Hook;
+import uk.gov.gchq.maestro.hook.Hook;
 
 public class TestHook implements Hook {
     private String field1;

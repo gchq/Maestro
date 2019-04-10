@@ -37,7 +37,7 @@ public class HashMapLibraryTest extends AbstractLibraryTest {
         // When
         final HashMapLibrary library = new HashMapLibrary();
         library.addProperties(TEST_ID, new ExecutorProperties());
-        library.clear();
+        HashMapLibrary.clear();
 
         // Then
         assertNull(library.getPropertiesUsingPropertiesId(TEST_ID));

@@ -33,6 +33,7 @@ import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.hook.Hook;
 import uk.gov.gchq.maestro.jobtracker.JobDetail;
 import uk.gov.gchq.maestro.operation.DefaultOperation;
 import uk.gov.gchq.maestro.operation.Operation;
@@ -43,7 +44,6 @@ import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
 import uk.gov.gchq.maestro.util.Request;
 import uk.gov.gchq.maestro.util.Result;
-import uk.gov.gchq.maestro.util.hook.Hook;
 
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
