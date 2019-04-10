@@ -35,7 +35,6 @@ public interface ScoreResolver<T extends Operation> {
      */
     Integer getScore(final T operation);
 
-
     /**
      * Should return a (nullable) score for a given operation.
      *

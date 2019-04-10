@@ -188,17 +188,13 @@ public class AddNamedOperationHandlerTest {
         String opChainJSON = "{" +
                 "  \"operations\": [" +
                 "      {" +
-                "          \"class\": \"uk.gov.gchq.Maestro.named.operation.AddNamedOperation\"," +
+                "          \"class\": \"uk.gov.gchq.maestro.named.operation.AddNamedOperation\"," +
                 "          \"operationName\": \"testInputParam\"," +
                 "          \"overwriteFlag\": true," +
                 "          \"operationChain\": {" +
                 "              \"operations\": [" +
                 "                  {" +
-                "                      \"class\": \"uk.gov.gchq.Maestro.operation.impl.get.GetAllElements\"" +
-                "                  }," +
-                "                  {" +
-                "                     \"class\": \"uk.gov.gchq.maestro.operation.impl.Limit\"," +
-                "                     \"resultLimit\": \"${param1}\"" +
+                "                      \"class\": \"uk.gov.gchq.maestro.operation.impl.output.ToSingletonList\", \"input\": \"${param1}\"" +
                 "                  }" +
                 "              ]" +
                 "           }," +

@@ -60,7 +60,7 @@ public class GetAllNamedOperationsHandlerTest {
             .operationName("exampleOp")
             .inputType(null)
             .creatorId(User.UNKNOWN_USER_ID)
-            .operationChain("{\"operations\":[{\"class\":\"uk.gov.gchq.maestro.operation.impl.output.ToSingletonList\"}]}")
+            .operationChain("{\"operations\":[{\"class\":\"uk.gov.gchq.maestro.operation.impl.job.GetAllJobDetails\"}]}")
             .readers(new ArrayList<>())
             .writers(new ArrayList<>())
             .build();

@@ -158,7 +158,6 @@ public class ScoreOperationChainHandlerTest {
         final Executor executor = mock(Executor.class);
         final User user = mock(User.class);
         final ScoreOperationChain scoreOperationChain = mock(ScoreOperationChain.class);
-        final ExecutorProperties executorProperties = new ExecutorProperties();
 
         final ToSet op1 = mock(ToSet.class);
         final ToCsv op2 = mock(ToCsv.class);
@@ -185,7 +184,6 @@ public class ScoreOperationChainHandlerTest {
         opAuths.add("TEST_USER");
         given(user.getOpAuths()).willReturn(opAuths);
         given(scoreOperationChain.getOperationChain()).willReturn(opChain);
-        given(executor.getConfig()).willReturn(new Config.Builder().addExecutorProperties(executorProperties).build());
 
         // When
         final Object result = handler.doOperation(new ScoreOperationChain.Builder()
