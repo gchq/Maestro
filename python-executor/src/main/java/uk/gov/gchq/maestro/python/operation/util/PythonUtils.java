@@ -13,7 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro.python.operation.handler;
+package uk.gov.gchq.maestro.python.operation.util;
 
-public class DeletePythonScriptHandler {
+public class PythonUtils {
+
+    public static final String DEFAULT_REPOSITORY_ROOT_DIRECTORY = "/tmp";
+
+    private PythonUtils() {
+        // required to prevent instantiation of class with static methods and values
+    }
+
+
 }
