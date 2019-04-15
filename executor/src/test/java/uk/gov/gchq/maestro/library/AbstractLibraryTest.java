@@ -20,8 +20,9 @@ package uk.gov.gchq.maestro.library;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.util.Config;
+
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -36,8 +37,8 @@ public abstract class AbstractLibraryTest {
 
     private static final String EXCEPTION_EXPECTED = "Exception expected";
 
-    private ExecutorProperties executorProperties = new ExecutorProperties();
-    private ExecutorProperties executorProperties1 = new ExecutorProperties();
+    private Properties executorProperties = new Properties();
+    private Properties executorProperties1 = new Properties();
     private Config config =
             new Config.Builder().executorProperties(executorProperties).build();
     private Config config1 =

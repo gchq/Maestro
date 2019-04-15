@@ -21,13 +21,15 @@ import org.junit.Test;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.impl.job.CancelScheduledJob;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
+import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
+
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -35,14 +37,14 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 public class CancelScheduledJobHandlerTest {
-    private final ExecutorProperties properties = new ExecutorProperties();
+    private final Properties properties = new Properties();
     private final User user = mock(User.class);
     private final CancelScheduledJobHandler handler = new CancelScheduledJobHandler();
 
     @Before
     public void setup() {
-        properties.setJobTrackerEnabled(true);
-        properties.set("maestro.cache.service.class", "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService");
+        ExecutorPropertiesUtil.setJobTrackerEnabled(properties, true);
+        ExecutorPropertiesUtil.setCacheClass(properties, "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService");
     }
 
     @Test

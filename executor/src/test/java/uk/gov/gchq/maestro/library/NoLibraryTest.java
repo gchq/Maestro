@@ -18,7 +18,7 @@ package uk.gov.gchq.maestro.library;
 
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.ExecutorProperties;
+import java.util.Properties;
 
 import static org.junit.Assert.assertNull;
 
@@ -28,7 +28,7 @@ public class NoLibraryTest {
         NoLibrary noLibrary = new NoLibrary();
         final String testId = "testId";
         // When / Then
-        noLibrary.addProperties(testId, new ExecutorProperties());
+        noLibrary.addProperties(testId, new Properties());
         assertNull(noLibrary.getPropertiesUsingPropertiesId(testId));
     }
 }
