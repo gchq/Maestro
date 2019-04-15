@@ -338,11 +338,23 @@
                 <version>${checkstyle.plugin.version}</version>
                 <configuration>
                     <configLocation>code-style/checkstyle.xml</configLocation>
+                    <suppressionsLocation>
+                        code-style/checkstyle-suppressions.xml
+                    </suppressionsLocation>
+                    <suppressionsFileExpression>checkstyle.suppressions.file
+                    </suppressionsFileExpression>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <headerLocation>code-style/licenseHeader.txt
                     </headerLocation>
+                    <excludes>**/generated/**/*</excludes>
+                    <sourceDirectories>
+                        <sourceDirectory>${project.build.sourceDirectory}
+                        </sourceDirectory>
+                        <sourceDirectory>${project.build.testSourceDirectory}
+                        </sourceDirectory>
+                    </sourceDirectories>
                 </configuration>
                 <executions>
                     <execution>

@@ -18,6 +18,7 @@ package uk.gov.gchq.maestro;
 
 import org.junit.Test;
 
+import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
@@ -75,7 +76,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     }
 
     @Test
-    public void shouldRunTestHandler() throws SerialisationException {
+    public void shouldRunTestHandler() throws SerialisationException, OperationException {
         final byte[] serialise = JSONSerialiser.serialise(getTestObject(), true);
 
         final Executor executor = Executor.deserialise(serialise);
