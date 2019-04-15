@@ -495,18 +495,18 @@ public class Config {
         }
 
         // Merge configs
-        public Builder merge(final Config config) {
-            if (null != config) {
+        public Builder merge(final Config thatConfig) {
+            if (null != thatConfig) {
                 if (null != this.config.getId()) {
-                    this.config.id(config.getId());
+                    this.config.id(thatConfig.getId());
                 }
                 if (null != this.config.getDescription()) {
-                    this.config.setDescription(config.getDescription());
+                    this.config.setDescription(thatConfig.getDescription());
                 }
-                config.getRequestHooks().forEach(hook -> this.config.addRequestHook(hook));
-                config.getOperationHooks().forEach(hook -> this.config.addOperationHook(hook));
-                ExecutorPropertiesUtil.merge(this.config.getProperties(), config.getProperties());
-                this.config.getOperationHandlers().putAll(config.getOperationHandlers());
+                thatConfig.getRequestHooks().forEach(hook -> this.config.addRequestHook(hook));
+                thatConfig.getOperationHooks().forEach(hook -> this.config.addOperationHook(hook));
+                ExecutorPropertiesUtil.merge(this.config.getProperties(), thatConfig.getProperties());
+                this.config.getOperationHandlers().putAll(thatConfig.getOperationHandlers());
             }
             return this;
         }
