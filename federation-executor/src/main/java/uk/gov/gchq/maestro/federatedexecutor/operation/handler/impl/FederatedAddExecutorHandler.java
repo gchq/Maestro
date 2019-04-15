@@ -31,9 +31,9 @@ public class FederatedAddExecutorHandler extends FederatedAddExecutorHandlerPare
     @Override
     protected Executor _makeExecutor(final AddExecutor operation, final Executor executor) {
         return new Executor()
-                .config(new Config().id(operation.getId())
+                .config(new Config()
                                 .id(operation.getId())
-                                .setProperties(operation.getConfig().getProperties().getProperties())
+                                .setProperties(operation.getConfig().getProperties())
                         //.parentSchemaIds(operation.getParentSchemaIds()) TODO
                         //.parentStorePropertiesId(operation.getParentConfigId()) TODO
                 );

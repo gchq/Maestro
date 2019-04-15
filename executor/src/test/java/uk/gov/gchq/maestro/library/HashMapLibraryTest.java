@@ -19,7 +19,7 @@ package uk.gov.gchq.maestro.library;
 
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.ExecutorProperties;
+import java.util.Properties;
 
 import static org.junit.Assert.assertNull;
 
@@ -36,7 +36,7 @@ public class HashMapLibraryTest extends AbstractLibraryTest {
     public void shouldClearLibrary() {
         // When
         final HashMapLibrary library = new HashMapLibrary();
-        library.addProperties(TEST_ID, new ExecutorProperties());
+        library.addProperties(TEST_ID, new Properties());
         library.clear();
 
         // Then
