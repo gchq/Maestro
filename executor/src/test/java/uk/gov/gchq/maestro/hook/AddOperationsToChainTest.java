@@ -16,13 +16,10 @@
 
 package uk.gov.gchq.maestro.hook;
 
-/*
 import com.google.common.collect.Lists;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.Validate;
 import org.junit.Test;
 
-import uk.gov.gchq.koryphe.impl.predicate.Exists;
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.commonutil.JsonAssert;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
@@ -32,7 +29,11 @@ import uk.gov.gchq.maestro.helper.TestOperationsImpl;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.operation.impl.DiscardOutput;
+import uk.gov.gchq.maestro.operation.impl.job.GetAllJobDetails;
+import uk.gov.gchq.maestro.operation.impl.output.ToArray;
 import uk.gov.gchq.maestro.operation.impl.output.ToCsv;
+import uk.gov.gchq.maestro.operation.impl.output.ToList;
+import uk.gov.gchq.maestro.operation.impl.output.ToSet;
 import uk.gov.gchq.maestro.operation.impl.output.ToSingletonList;
 import uk.gov.gchq.maestro.operation.impl.output.ToStream;
 import uk.gov.gchq.maestro.user.User;
@@ -42,17 +43,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class AddOperationsToChainTest extends HookTest<AddOperationsToChain> {
     private static final String ADD_OPERATIONS_TO_CHAIN_RESOURCE_PATH = "addOperationsToChain.json";
+    Operation discardOutput = new DiscardOutput();
+    Operation toCsv = new ToCsv();
+    Operation toArray = new ToArray();
+    Operation toStream = new ToStream();
+    Operation getAllJobDetails = new GetAllJobDetails();
+    Operation toSingletonList = new ToSingletonList();
+    Operation toSet = new ToSet();
+    Operation toList = new ToList();
 
     public AddOperationsToChainTest() {
         super(AddOperationsToChain.class);
@@ -101,72 +107,56 @@ public class AddOperationsToChainTest extends HookTest<AddOperationsToChain> {
         // Given
         AddOperationsToChain hook = fromJson(ADD_OPERATIONS_TO_CHAIN_RESOURCE_PATH);
 
-        Operation discardOutput = new DiscardOutput();
-        Operation splitStore = new SplitStoreFromFile();
-        Operation validate = new Validate();
-        Operation getAdjacentIds = new GetAdjacentIds();
-        Operation count = new Count<>();
-        Operation countGroups = new CountGroups();
-        Operation getElements = new GetElements();
-        Operation getAllElements = new GetAllElements();
-        Operation limit = new Limit<>();
-
         final OperationChain opChain = new OperationChain.Builder()
-                .first(getAdjacentIds)
-                .then(getElements)
-                .then(getAllElements)
+                .first(toCsv)
+                .then(toSingletonList)
+                .then(toStream)
                 .build();
 
         // When
-        hook.preExecute(opChain, new Context(new User()));
+        hook.preExecute(new Request(opChain, new Context(new User())));
 
         // Then
         final OperationChain expectedOpChain = new OperationChain.Builder()
                 .first(discardOutput)
-                .then(splitStore)
-                .then(validate)
-                .then(getAdjacentIds)
-                .then(count)
+                .then(toCsv)
+                .then(toList)
+                .then(toCsv)
+                .then(getAllJobDetails)
+                .then(toSingletonList)
+                .then(toArray)
                 .then(discardOutput)
-                .then(countGroups)
-                .then(getElements)
-                .then(getAllElements)
-                .then(limit)
-                .then(validate)
-                .then(count)
+                .then(toStream)
+                .then(toSet)
+                .then(toList)
+                .then(discardOutput)
                 .build();
         JsonAssert.assertEquals(JSONSerialiser.serialise(expectedOpChain), JSONSerialiser.serialise(opChain));
     }
 
     @Test
-    public void shouldAddAllOperationsWithFirstAuthsGivenPath() throws IOException {
+    public void shouldAddAllOperationsWithBothAuthsGivenPath() throws IOException {
         // Given
         AddOperationsToChain hook = fromJson(ADD_OPERATIONS_TO_CHAIN_RESOURCE_PATH);
 
         User user = new User.Builder().opAuths("auth1", "auth2").build();
 
-        Operation discardOutput = new DiscardOutput();
-        Operation splitStore = new SplitStoreFromFile();
-        Operation getAdjacentIds = new GetAdjacentIds();
-        Operation getElements = new GetElements();
-        Operation getAllElements = new GetAllElements();
-
         final OperationChain opChain = new OperationChain.Builder()
-                .first(getAdjacentIds)
-                .then(getElements)
-                .then(getAllElements)
+                .first(toSet)
+                .then(toArray)
+                .then(discardOutput)
                 .build();
 
         // When
-        hook.preExecute(opChain, new Context(user));
+        hook.preExecute(new Request(opChain, new Context(user)));
 
         // Then
         final OperationChain expectedOpChain = new OperationChain.Builder()
                 .first(discardOutput)
-                .then(getAdjacentIds)
-                .then(getElements)
-                .then(getAllElements)
-                .then(splitStore)
+                .then(toSet)
+                .then(toArray)
+                .then(discardOutput)
+                .then(toArray)
                 .build();
         JsonAssert.assertEquals(JSONSerialiser.serialise(expectedOpChain), JSONSerialiser.serialise(opChain));
     }
@@ -178,30 +168,22 @@ public class AddOperationsToChainTest extends HookTest<AddOperationsToChain> {
 
         User user = new User.Builder().opAuths("auth2").build();
 
-        Operation splitStore = new SplitStoreFromFile();
-        Operation validate = new Validate();
-        Operation getAdjacentIds = new GetAdjacentIds();
-        Operation countGroups = new CountGroups();
-        Operation getElements = new GetElements();
-        Operation getAllElements = new GetAllElements();
-
         final OperationChain opChain = new OperationChain.Builder()
-                .first(getAdjacentIds)
-                .then(getElements)
-                .then(getAllElements)
+                .first(toList)
+                .then(toArray)
+                .then(discardOutput)
                 .build();
 
         // When
-        hook.preExecute(opChain, new Context(user));
+        hook.preExecute(new Request(opChain, new Context(user)));
 
         // Then
         final OperationChain expectedOpChain = new OperationChain.Builder()
-                .first(validate)
-                .then(getAdjacentIds)
-                .then(countGroups)
-                .then(getElements)
-                .then(getAllElements)
-                .then(splitStore)
+                .first(toList)
+                .then(toList)
+                .then(toArray)
+                .then(discardOutput)
+                .then(toSet)
                 .build();
         JsonAssert.assertEquals(JSONSerialiser.serialise(expectedOpChain), JSONSerialiser.serialise(opChain));
     }
@@ -215,47 +197,33 @@ public class AddOperationsToChainTest extends HookTest<AddOperationsToChain> {
         }
         final AddOperationsToChain hook = fromJson(bytes);
 
-        Operation discardOutput = new DiscardOutput();
-        Operation splitStore = new SplitStoreFromFile();
-        Operation validate = new Validate();
-        Operation getAdjacentIds = new GetAdjacentIds();
-        Operation count = new Count<>();
-        Operation countGroups = new CountGroups();
-        Operation getElements = new GetElements();
-        Operation getAllElements = new GetAllElements();
-        Operation limit = new Limit<>();
-
         final OperationChain opChain = new OperationChain.Builder()
-                .first(getAdjacentIds)
-                .then(getElements)
-                .then(getAllElements)
+                .first(toArray)
+                .then(toSet)
+                .then(toStream)
                 .build();
 
         // When
-        hook.preExecute(opChain, new Context(new User()));
+        hook.preExecute(new Request(opChain, new Context(new User())));
 
         // Then
         final OperationChain expectedOpChain = new OperationChain.Builder()
                 .first(discardOutput)
-                .then(splitStore)
-                .then(validate)
-                .then(getAdjacentIds)
-                .then(count)
+                .then(toCsv)
+                .then(toArray)
+                .then(toSet)
+                .then(toStream)
+                .then(toSet)
+                .then(toList)
                 .then(discardOutput)
-                .then(countGroups)
-                .then(getElements)
-                .then(getAllElements)
-                .then(limit)
-                .then(validate)
-                .then(count)
                 .build();
         JsonAssert.assertEquals(JSONSerialiser.serialise(expectedOpChain), JSONSerialiser.serialise(opChain));
     }
 
     @Test
-    public void shouldThrowExceptionWhenAddingNullExtraOperation() throws IOException {
+    public void shouldThrowExceptionWhenAddingNullExtraOperation() {
         // Given
-        final String nullTestJson = "{\"class\": \"uk.gov.gchq.maestro.graph.hook.AddOperationsToChain\", \"start\":[{\"class\": null}]}";
+        final String nullTestJson = "{\"class\": \"uk.gov.gchq.maestro.hook.AddOperationsToChain\", \"start\":[{\"class\": null}]}";
 
         //When / Then
         try {
@@ -267,9 +235,9 @@ public class AddOperationsToChainTest extends HookTest<AddOperationsToChain> {
     }
 
     @Test
-    public void shouldThrowExceptionWhenAddingEmptyExtraOperation() throws IOException {
+    public void shouldThrowExceptionWhenAddingEmptyExtraOperation() {
         // Given
-        final String emptyTestJson = "{\"class\": \"uk.gov.gchq.maestro.graph.hook.AddOperationsToChain\", \"start\":[{\"class\": \"\"}]}";
+        final String emptyTestJson = "{\"class\": \"uk.gov.gchq.maestro.hook.AddOperationsToChain\", \"start\":[{\"class\": \"\"}]}";
 
         //When / Then
         try {
@@ -281,9 +249,9 @@ public class AddOperationsToChainTest extends HookTest<AddOperationsToChain> {
     }
 
     @Test
-    public void shouldThrowExceptionWhenAddingFalseExtraOperation() throws IOException {
+    public void shouldThrowExceptionWhenAddingFalseExtraOperation() {
         // Given
-        final String falseOperationTestJson = "{\"class\": \"uk.gov.gchq.maestro.graph.hook.AddOperationsToChain\", \"start\":[{\"class\": \"this.Operation.Doesnt.Exist\"}]}";
+        final String falseOperationTestJson = "{\"class\": \"uk.gov.gchq.maestro.hook.AddOperationsToChain\", \"start\":[{\"class\": \"this.Operation.Doesnt.Exist\"}]}";
 
         //When / Then
         try {
@@ -294,7 +262,7 @@ public class AddOperationsToChainTest extends HookTest<AddOperationsToChain> {
         }
     }
 
-    @Test
+    /*@Test
     public void shouldClearListWhenAddingOperations() throws IOException {
         //Given
         final AddOperationsToChain hook = fromJson(ADD_OPERATIONS_TO_CHAIN_RESOURCE_PATH);
@@ -526,11 +494,10 @@ public class AddOperationsToChainTest extends HookTest<AddOperationsToChain> {
             assertEquals(ops1.get(i).getClass(), ops2.get(i).getClass());
             assertNotSame(ops1.get(i), ops2.get(i));
         }
-    }
+    }*/
 
     @Override
     protected AddOperationsToChain getTestObject() {
         return fromJson(ADD_OPERATIONS_TO_CHAIN_RESOURCE_PATH);
     }
 }
-*/
