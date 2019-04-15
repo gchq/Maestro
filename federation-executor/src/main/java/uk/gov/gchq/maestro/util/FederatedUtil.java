@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
@@ -49,11 +48,11 @@ public final class FederatedUtil {
     }
 
     public static HashMap<String, Executor> getFederatedExecutors(final Config config) throws MaestroCheckedException {
-        final ExecutorProperties properties = config.getProperties();
+        final Properties properties = config.getProperties();
         return getFederatedExecutors(properties);
     }
 
-    public static HashMap<String, Executor> getFederatedExecutors(final ExecutorProperties properties) throws MaestroCheckedException {
+    public static HashMap<String, Executor> getFederatedExecutors(final Properties properties) throws MaestroCheckedException {
         HashMap<String, Executor> rtn = new HashMap<>();
         for (final Map.Entry<Object, Object> entry : properties.entrySet()) {
             final Object key = entry.getKey();
@@ -90,11 +89,6 @@ public final class FederatedUtil {
     public static Config addExecutorTo(final Config config, final AddExecutor op) {
         addExecutorTo(config.getProperties(), op);
         return config;
-    }
-
-    public static ExecutorProperties addExecutorTo(final ExecutorProperties properties, final AddExecutor op) {
-        addExecutorTo(properties, op);
-        return properties;
     }
 
     public static Properties addExecutorTo(final Properties properties, final AddExecutor op) {

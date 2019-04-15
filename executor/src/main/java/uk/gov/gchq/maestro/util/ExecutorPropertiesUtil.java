@@ -17,14 +17,22 @@ package uk.gov.gchq.maestro.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.koryphe.util.ReflectionUtil;
-import uk.gov.gchq.maestro.ExecutorProperties;
+import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiserModules;
 import uk.gov.gchq.maestro.operation.declaration.OperationDeclarations;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 public final class ExecutorPropertiesUtil {
@@ -48,9 +56,74 @@ public final class ExecutorPropertiesUtil {
      */
     public static final String REFLECTION_PACKAGES = "maestro.executor.reflection.packages";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorPropertiesUtil.class);
+
     private ExecutorPropertiesUtil() {
         // private to prevent this class being instantiated.
         // All methods are static and should be called directly.
+    }
+
+    public static Properties loadProperties(final Path propFileLocation) {
+        Properties properties = new Properties();
+        if (null != propFileLocation) {
+            try {
+                properties = loadProperties(null != propFileLocation ?
+                        Files.newInputStream(propFileLocation) : null);
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return properties;
+    }
+
+    public static Properties loadProperties(final String pathStr) {
+        Properties properties;
+        final Path path = Paths.get(pathStr);
+        try {
+            if (path.toFile().exists()) {
+                properties = loadProperties(Files.newInputStream(path));
+            } else {
+                properties =
+                        loadProperties(StreamUtil.openStream(Properties.class,
+                                pathStr));
+            }
+        } catch (final IOException e) {
+            throw new RuntimeException("Failed to load properties " +
+                    "file : " + e.getMessage(), e);
+        }
+        return properties;
+    }
+
+    public static Properties loadProperties(final InputStream propertiesStream) {
+        if (null == propertiesStream) {
+            return new Properties();
+        }
+        final Properties props = new Properties();
+        try {
+            props.load(propertiesStream);
+        } catch (final IOException e) {
+            throw new RuntimeException("Failed to load properties file : " + e.getMessage(), e);
+        } finally {
+            try {
+                propertiesStream.close();
+            } catch (final IOException e) {
+                LOGGER.error("Failed to close properties stream: {}", e.getMessage(), e);
+            }
+        }
+        return loadProperties(props);
+    }
+
+    public static Properties loadProperties(final Properties props) {
+        Properties properties = new Properties();
+        properties.putAll(props);
+        return properties;
+    }
+
+    public static void merge(final Properties firstProperties,
+                             final Properties secondProperties) {
+        if (null != firstProperties) {
+            firstProperties.putAll(secondProperties);
+        }
     }
 
     /**
@@ -64,7 +137,7 @@ public final class ExecutorPropertiesUtil {
      * @return The Operation Definitions to load dynamically
      */
     @JsonIgnore
-    public static OperationDeclarations getOperationDeclarations(final ExecutorProperties properties) {
+    public static OperationDeclarations getOperationDeclarations(final Properties properties) {
         OperationDeclarations declarations = null;
 
         final String declarationsPaths = properties.getProperty(OPERATION_DECLARATIONS);
@@ -79,36 +152,36 @@ public final class ExecutorPropertiesUtil {
         return declarations;
     }
 
-    public static Boolean getJobTrackerEnabled(final ExecutorProperties properties) {
+    public static Boolean getJobTrackerEnabled(final Properties properties) {
         return Boolean.valueOf(properties.getProperty(JOB_TRACKER_ENABLED, "false"));
     }
 
-    public static void setJobTrackerEnabled(final ExecutorProperties properties, final Boolean jobTrackerEnabled) {
+    public static void setJobTrackerEnabled(final Properties properties, final Boolean jobTrackerEnabled) {
         properties.setProperty(JOB_TRACKER_ENABLED, jobTrackerEnabled.toString());
     }
 
-    public static String getOperationDeclarationPaths(final ExecutorProperties properties) {
+    public static String getOperationDeclarationPaths(final Properties properties) {
         return properties.getProperty(OPERATION_DECLARATIONS);
     }
 
-    public static void setOperationDeclarationPaths(final ExecutorProperties properties, final String paths) {
+    public static void setOperationDeclarationPaths(final Properties properties, final String paths) {
         properties.setProperty(OPERATION_DECLARATIONS, paths);
     }
 
-    public static String getReflectionPackages(final ExecutorProperties properties) {
+    public static String getReflectionPackages(final Properties properties) {
         return properties.getProperty(REFLECTION_PACKAGES);
     }
 
-    public static void setReflectionPackages(final ExecutorProperties properties, final String packages) {
+    public static void setReflectionPackages(final Properties properties, final String packages) {
         properties.setProperty(REFLECTION_PACKAGES, packages);
         ReflectionUtil.addReflectionPackages(packages);
     }
 
-    public static Integer getJobExecutorThreadCount(final ExecutorProperties properties) {
+    public static Integer getJobExecutorThreadCount(final Properties properties) {
         return Integer.parseInt(properties.getProperty(EXECUTOR_SERVICE_THREAD_COUNT, EXECUTOR_SERVICE_THREAD_COUNT_DEFAULT));
     }
 
-    public static void addOperationDeclarationPaths(final ExecutorProperties properties, final String... newPaths) {
+    public static void addOperationDeclarationPaths(final Properties properties, final String... newPaths) {
         final String newPathsCsv = StringUtils.join(newPaths, ",");
         String combinedPaths = getOperationDeclarationPaths(properties);
         if (null == combinedPaths) {
@@ -119,25 +192,25 @@ public final class ExecutorPropertiesUtil {
         setOperationDeclarationPaths(properties, combinedPaths);
     }
 
-    public static String getJsonSerialiserClass(final ExecutorProperties properties) {
+    public static String getJsonSerialiserClass(final Properties properties) {
         return properties.getProperty(JSON_SERIALISER_CLASS);
     }
 
     @JsonIgnore
-    public static void setJsonSerialiserClass(final ExecutorProperties properties, final Class<? extends JSONSerialiser> jsonSerialiserClass) {
+    public static void setJsonSerialiserClass(final Properties properties, final Class<? extends JSONSerialiser> jsonSerialiserClass) {
         setJsonSerialiserClass(properties, jsonSerialiserClass.getName());
     }
 
-    public static void setJsonSerialiserClass(final ExecutorProperties properties, final String jsonSerialiserClass) {
+    public static void setJsonSerialiserClass(final Properties properties, final String jsonSerialiserClass) {
         properties.setProperty(JSON_SERIALISER_CLASS, jsonSerialiserClass);
     }
 
-    public static String getJsonSerialiserModules(final ExecutorProperties properties) {
+    public static String getJsonSerialiserModules(final Properties properties) {
         return properties.getProperty(JSON_SERIALISER_MODULES, "");
     }
 
     @JsonIgnore
-    public static void setJsonSerialiserModules(final ExecutorProperties properties, final Set<Class<? extends JSONSerialiserModules>> modules) {
+    public static void setJsonSerialiserModules(final Properties properties, final Set<Class<? extends JSONSerialiserModules>> modules) {
         final Set<String> moduleNames = new HashSet<>(modules.size());
         for (final Class module : modules) {
             moduleNames.add(module.getName());
@@ -145,32 +218,32 @@ public final class ExecutorPropertiesUtil {
         setJsonSerialiserModules(properties, StringUtils.join(moduleNames, ","));
     }
 
-    public static void setJsonSerialiserModules(final ExecutorProperties properties, final String modules) {
+    public static void setJsonSerialiserModules(final Properties properties, final String modules) {
         properties.setProperty(JSON_SERIALISER_MODULES, modules);
     }
 
-    public static Boolean getStrictJson(final ExecutorProperties properties) {
+    public static Boolean getStrictJson(final Properties properties) {
         final String strictJson = properties.getProperty(STRICT_JSON);
         return null == strictJson ? null : Boolean.parseBoolean(strictJson);
     }
 
-    public static void setStrictJson(final ExecutorProperties properties, final Boolean strictJson) {
+    public static void setStrictJson(final Properties properties, final Boolean strictJson) {
         properties.setProperty(STRICT_JSON, null == strictJson ? null : Boolean.toString(strictJson));
     }
 
-    public static String getAdminAuth(final ExecutorProperties properties) {
+    public static String getAdminAuth(final Properties properties) {
         return properties.getProperty(ADMIN_AUTH, "");
     }
 
-    public static void setAdminAuth(final ExecutorProperties properties, final String adminAuth) {
+    public static void setAdminAuth(final Properties properties, final String adminAuth) {
         properties.setProperty(ADMIN_AUTH, adminAuth);
     }
 
-    public static void setCacheClass(final ExecutorProperties properties, final String cacheClass) {
+    public static void setCacheClass(final Properties properties, final String cacheClass) {
         properties.setProperty(CACHE_CLASS, cacheClass);
     }
 
-    public static void getCacheClass(final ExecutorProperties properties) {
+    public static void getCacheClass(final Properties properties) {
         properties.getProperty(CACHE_CLASS);
     }
 }

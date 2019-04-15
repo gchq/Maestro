@@ -47,6 +47,7 @@ import uk.gov.gchq.maestro.util.Result;
 import uk.gov.gchq.maestro.util.hook.Hook;
 
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.Objects.nonNull;
@@ -70,13 +71,13 @@ public class Executor {
         addExecutorService(config.getProperties());
     }
 
-    protected void startCacheServiceLoader(final ExecutorProperties properties) {
+    protected void startCacheServiceLoader(final Properties properties) {
         if (null != properties) {
             CacheServiceLoader.initialise(properties);
         }
     }
 
-    private void addExecutorService(final ExecutorProperties properties) {
+    private void addExecutorService(final Properties properties) {
         if (null != properties) {
             ExecutorService.initialise(ExecutorPropertiesUtil.getJobExecutorThreadCount(properties));
         }

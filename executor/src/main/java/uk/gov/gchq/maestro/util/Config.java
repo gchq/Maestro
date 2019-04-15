@@ -15,10 +15,8 @@
  */
 package uk.gov.gchq.maestro.util;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -26,7 +24,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import uk.gov.gchq.koryphe.util.ReflectionUtil;
-import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
@@ -85,7 +82,7 @@ public class Config {
      * The Executor properties - contains specific configuration information for
      * the Executor - such as database connection strings.
      */
-    private ExecutorProperties properties = new ExecutorProperties();
+    private Properties properties = new Properties();
 
     /**
      * The operation handlers - A Map containing all classes of operations
@@ -195,28 +192,24 @@ public class Config {
     }
 
     /**
-     * Get this Executor's {@link ExecutorProperties}.
+     * Get this Executor's {@link Properties}.
      *
-     * @return the instance of {@link ExecutorProperties},
+     * @return the instance of {@link Properties},
      * this may contain details such as database connection details.
      */
-    public ExecutorProperties getProperties() {
-        return properties;
-    }
-
-    @JsonGetter("properties")
-    @JsonPropertyOrder(alphabetic = true)
-    public Properties _getProperties() {
+    public Properties getProperties() {
         return isNull(properties) ? null : properties;
     }
 
-    @JsonSetter
     public Config setProperties(final Properties properties) {
         if (nonNull(properties)) {
             if (isNull(this.properties)) {
-                this.properties = new ExecutorProperties();
+                this.properties = new Properties();
             }
-            this.properties = new ExecutorProperties(properties);
+            this.properties = ExecutorPropertiesUtil.loadProperties(properties);
+
+            ReflectionUtil.addReflectionPackages(ExecutorPropertiesUtil.getReflectionPackages(properties));
+            updateJsonSerialiser();
         }
         return this;
     }
@@ -247,21 +240,12 @@ public class Config {
         return declarations;
     }
 
-    public Config setProperties(final ExecutorProperties properties) {
-        this.properties = new ExecutorProperties(properties);
-
-        ReflectionUtil.addReflectionPackages(ExecutorPropertiesUtil.getReflectionPackages(properties));
-        updateJsonSerialiser();
-
-        return this;
-    }
-
-    public static void updateJsonSerialiser(final ExecutorProperties executorProperties) {
-        if (null != executorProperties) {
+    public static void updateJsonSerialiser(final Properties properties) {
+        if (null != properties) {
             JSONSerialiser.update(
-                    ExecutorPropertiesUtil.getJsonSerialiserClass(executorProperties),
-                    ExecutorPropertiesUtil.getJsonSerialiserModules(executorProperties),
-                    ExecutorPropertiesUtil.getStrictJson(executorProperties)
+                    ExecutorPropertiesUtil.getJsonSerialiserClass(properties),
+                    ExecutorPropertiesUtil.getJsonSerialiserModules(properties),
+                    ExecutorPropertiesUtil.getStrictJson(properties)
             );
         } else {
             JSONSerialiser.update();
@@ -345,7 +329,7 @@ public class Config {
         private Config config = new Config();
         private List<Hook> requestHooks = new ArrayList<>();
         private List<Hook> operationHooks = new ArrayList<>();
-        private ExecutorProperties properties = new ExecutorProperties();
+        private Properties properties = new Properties();
         Map<Class<? extends Operation>, OperationHandler> operationHandlers = new LinkedHashMap<>();
 
         // Config
@@ -371,13 +355,9 @@ public class Config {
             return this;
         }
 
-        // ExecutorProperties
-        public Builder executorProperties(final Properties properties) {
-            return executorProperties(null != properties ?
-                    new ExecutorProperties(properties) : null);
-        }
+        // Properties
 
-        public Builder executorProperties(final ExecutorProperties properties) {
+        public Builder executorProperties(final Properties properties) {
             if (null != this.properties) {
                 this.properties.putAll(properties);
             } else {
@@ -396,14 +376,14 @@ public class Config {
 
         public Builder executorProperties(final String propertiesPath) {
             return executorProperties(null != propertiesPath ?
-                    new ExecutorProperties(propertiesPath) : null);
+                    ExecutorPropertiesUtil.loadProperties(propertiesPath) : null);
         }
 
         public Builder executorProperties(final Path propertiesPath) {
             if (null == propertiesPath) {
                 properties = null;
             } else {
-                executorProperties(new ExecutorProperties(propertiesPath));
+                executorProperties(ExecutorPropertiesUtil.loadProperties(propertiesPath));
             }
             return this;
         }
@@ -412,7 +392,7 @@ public class Config {
             if (null == propertiesStream) {
                 properties = null;
             } else {
-                executorProperties(new ExecutorProperties().loadExecutorProperties(propertiesStream));
+                executorProperties(ExecutorPropertiesUtil.loadProperties(propertiesStream));
             }
             return this;
         }
@@ -430,49 +410,42 @@ public class Config {
             return this;
         }
 
-        public Builder addExecutorProperties(final Properties properties) {
-            if (null != properties) {
-                addExecutorProperties(new ExecutorProperties(properties));
-            }
-            return this;
-        }
-
-        public Builder addExecutorProperties(final ExecutorProperties updateProperties) {
+        public Builder addProperties(final Properties updateProperties) {
             if (null != updateProperties) {
                 if (null == this.properties) {
                     executorProperties(updateProperties);
                 } else {
-                    this.properties.merge(updateProperties);
+                    ExecutorPropertiesUtil.merge(this.properties, updateProperties);
                 }
             }
             return this;
         }
 
-        public Builder addExecutorProperties(final String updatePropertiesPath) {
+        public Builder addProperties(final String updatePropertiesPath) {
             if (null != updatePropertiesPath) {
-                addExecutorProperties(new ExecutorProperties(updatePropertiesPath));
+                addProperties(ExecutorPropertiesUtil.loadProperties(updatePropertiesPath));
             }
             return this;
         }
 
-        public Builder addExecutorProperties(final Path updatePropertiesPath) {
+        public Builder addProperties(final Path updatePropertiesPath) {
             if (null != updatePropertiesPath) {
-                addExecutorProperties(new ExecutorProperties(updatePropertiesPath));
+                addProperties(ExecutorPropertiesUtil.loadProperties(updatePropertiesPath));
             }
             return this;
         }
 
-        public Builder addExecutorProperties(final InputStream updatePropertiesStream) {
+        public Builder addProperties(final InputStream updatePropertiesStream) {
             if (null != updatePropertiesStream) {
-                addExecutorProperties(new ExecutorProperties().loadExecutorProperties(updatePropertiesStream));
+                addProperties(ExecutorPropertiesUtil.loadProperties(updatePropertiesStream));
             }
             return this;
         }
 
-        public Builder addExecutorProperties(final URI updatePropertiesURI) {
+        public Builder addProperties(final URI updatePropertiesURI) {
             if (null != updatePropertiesURI) {
                 try {
-                    addExecutorProperties(StreamUtil.openStream(updatePropertiesURI));
+                    addProperties(StreamUtil.openStream(updatePropertiesURI));
                 } catch (final IOException e) {
                     throw new IllegalArgumentException("Unable to read " +
                             "executorProperties from URI: " + updatePropertiesURI, e);
@@ -532,7 +505,7 @@ public class Config {
                 }
                 config.getRequestHooks().forEach(hook -> this.config.addRequestHook(hook));
                 config.getOperationHooks().forEach(hook -> this.config.addOperationHook(hook));
-                this.config.getProperties().merge(config.getProperties());
+                ExecutorPropertiesUtil.merge(this.config.getProperties(), config.getProperties());
                 this.config.getOperationHandlers().putAll(config.getOperationHandlers());
             }
             return this;

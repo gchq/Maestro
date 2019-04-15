@@ -19,7 +19,6 @@ package uk.gov.gchq.maestro.util;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
@@ -32,6 +31,7 @@ import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.util.hook.Hook;
 
 import java.util.Arrays;
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -59,7 +59,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     protected Config getTestObject() {
         final Config config = new Config();
         config.addOperationHandler(TestOperation.class, new TestHandler().fieldHandler("handlerFieldValue1"));
-        final ExecutorProperties properties = new ExecutorProperties();
+        final Properties properties = new Properties();
         properties.put("configKey", "configValue");
         config.setProperties(properties);
         return config;
@@ -67,7 +67,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
 
     @Test
     public void shouldJsonSerialiseAndDeserialise() throws SerialisationException {
-        final ExecutorProperties properties = new ExecutorProperties();
+        final Properties properties = new Properties();
         properties.put("configKey", "configValue");
         final Config config = new Config.Builder()
                 .id("testId")
@@ -83,22 +83,22 @@ public class ConfigTest extends MaestroObjectTest<Config> {
         byte[] serialisedConfig = JSONSerialiser.serialise(config);
         Config deserialisedConfig = JSONSerialiser.deserialise(serialisedConfig, Config.class);
 
-        assertEquals(deserialisedConfig.getId(), config.getId());
-        assertEquals(deserialisedConfig.getDescription(), config.getDescription());
-        assertEquals(deserialisedConfig.getRequestHooks(), config.getRequestHooks());
-        assertNotNull(deserialisedConfig.getLibrary());
-        assertEquals(deserialisedConfig.getOperationHandlers(), config.getOperationHandlers());
-        assertEquals(deserialisedConfig.getProperties(), config.getProperties());
+        assertEquals(config.getId(), deserialisedConfig.getId());
+        assertEquals(config.getDescription(), deserialisedConfig.getDescription());
+        assertEquals(config.getRequestHooks(), deserialisedConfig.getRequestHooks());
+        assertNotNull(config.getLibrary());
+        assertEquals(config.getOperationHandlers(), deserialisedConfig.getOperationHandlers());
+        assertEquals(config.getProperties(), deserialisedConfig.getProperties());
     }
 
     @Test
     public void shouldBuildConfigCorrectly() {
         // Given
-        final ExecutorProperties mergedProperties = new ExecutorProperties();
+        final Properties mergedProperties = new Properties();
         mergedProperties.put("key2", "value2");
         mergedProperties.put("key1", "value1");
         mergedProperties.put("testKey", "value1");
-        final ExecutorProperties testProperties = new ExecutorProperties();
+        final Properties testProperties = new Properties();
         testProperties.put("key2", "value2");
         final Hook testOpHook = new TestHook("field1Val1");
         final Hook testReqHook = new TestHook("field1Val2");

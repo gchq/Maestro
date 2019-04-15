@@ -19,10 +19,10 @@ package uk.gov.gchq.maestro.util;
 import org.junit.Test;
 
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
 
 import java.util.HashMap;
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -32,7 +32,7 @@ public class FederatedUtilTest {
     public void shouldGetExecutor() throws MaestroCheckedException {
         //given
         final Executor expected = new Executor().config(new Config().id("ExecutorId1"));
-        final ExecutorProperties properties = new ExecutorProperties();
+        final Properties properties = new Properties();
         properties.put("ExecutorStore_Executor1", "{\"class\":\"uk.gov.gchq.maestro.Executor\",\"config\":{\"class\":\"uk.gov.gchq.maestro.util.Config\",\"id\":\"ExecutorId1\",\"operationHandlers\":{},\"hooks\":[]}}\"");
 
         //when
@@ -48,7 +48,7 @@ public class FederatedUtilTest {
         //given
         final String key = "ExecutorStore_Executor1";
         final String value = "";
-        final ExecutorProperties properties = new ExecutorProperties();
+        final Properties properties = new Properties();
         properties.put(key, value);
 
         try {
@@ -66,7 +66,7 @@ public class FederatedUtilTest {
         //given
         final String key = "ExecutorStore_Executor1";
         final Integer value = 1;
-        final ExecutorProperties properties = new ExecutorProperties();
+        final Properties properties = new Properties();
         properties.put(key, value);
 
         try {
