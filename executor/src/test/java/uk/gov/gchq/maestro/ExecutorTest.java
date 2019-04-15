@@ -26,6 +26,8 @@ import uk.gov.gchq.maestro.helper.TestHandler;
 import uk.gov.gchq.maestro.helper.TestOperation;
 import uk.gov.gchq.maestro.util.Config;
 
+import java.util.Properties;
+
 import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
 
@@ -68,8 +70,8 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     @Override
     protected Executor getTestObject() {
         final Config config = new Config();
-        final ExecutorProperties properties = new ExecutorProperties();
-        properties.set("configKey", "configValue");
+        final Properties properties = new Properties();
+        properties.put("configKey", "configValue");
         config.setProperties(properties);
         config.addOperationHandler(TestOperation.class, new TestHandler().fieldHandler("handlerFieldValue1"));
         return new Executor().config(config);

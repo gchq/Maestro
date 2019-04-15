@@ -15,17 +15,15 @@
  */
 package uk.gov.gchq.maestro.util;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import uk.gov.gchq.maestro.ExecutorProperties;
+import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
@@ -54,7 +52,6 @@ import java.util.Properties;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static uk.gov.gchq.koryphe.util.ReflectionUtil.addReflectionPackages;
 import static uk.gov.gchq.maestro.operation.declaration.OperationDeclarations.fromJson;
 
 @JsonPropertyOrder(value = {"class", "id", "description", "operationHandlers", "hooks", "properties", "library"}, alphabetic = true)
@@ -85,7 +82,7 @@ public class Config {
      * The Executor properties - contains specific configuration information for
      * the Executor - such as database connection strings.
      */
-    private ExecutorProperties properties = new ExecutorProperties();
+    private Properties properties = new Properties();
 
     /**
      * The operation handlers - A Map containing all classes of operations
@@ -195,28 +192,24 @@ public class Config {
     }
 
     /**
-     * Get this Executor's {@link ExecutorProperties}.
+     * Get this Executor's {@link Properties}.
      *
-     * @return the instance of {@link ExecutorProperties},
+     * @return the instance of {@link Properties},
      * this may contain details such as database connection details.
      */
-    public ExecutorProperties getProperties() {
-        return properties;
+    public Properties getProperties() {
+        return isNull(properties) ? null : properties;
     }
 
-    @JsonGetter("properties")
-    @JsonPropertyOrder(alphabetic = true)
-    public Properties _getProperties() {
-        return isNull(properties) ? null : properties.getProperties();
-    }
-
-    @JsonSetter
     public Config setProperties(final Properties properties) {
         if (nonNull(properties)) {
             if (isNull(this.properties)) {
-                this.properties = new ExecutorProperties();
+                this.properties = new Properties();
             }
-            this.properties.setProperties(properties);
+            this.properties = ExecutorPropertiesUtil.loadProperties(properties);
+
+            ReflectionUtil.addReflectionPackages(ExecutorPropertiesUtil.getReflectionPackages(properties));
+            updateJsonSerialiser();
         }
         return this;
     }
@@ -235,7 +228,7 @@ public class Config {
         OperationDeclarations declarations = null;
 
         final String declarationsPaths =
-                properties.get(ExecutorProperties.OPERATION_DECLARATIONS);
+                ExecutorPropertiesUtil.getOperationDeclarationPaths(properties);
         if (null != declarationsPaths) {
             declarations = OperationDeclarations.fromPaths(declarationsPaths);
         }
@@ -247,19 +240,12 @@ public class Config {
         return declarations;
     }
 
-    public void setProperties(final ExecutorProperties properties) {
-        this.properties = ExecutorProperties.loadExecutorProperties(properties.getProperties());
-
-        addReflectionPackages(properties.getReflectionPackages());
-        updateJsonSerialiser();
-    }
-
-    public static void updateJsonSerialiser(final ExecutorProperties executorProperties) {
-        if (null != executorProperties) {
+    public static void updateJsonSerialiser(final Properties properties) {
+        if (null != properties) {
             JSONSerialiser.update(
-                    executorProperties.getJsonSerialiserClass(),
-                    executorProperties.getJsonSerialiserModules(),
-                    executorProperties.getStrictJson()
+                    ExecutorPropertiesUtil.getJsonSerialiserClass(properties),
+                    ExecutorPropertiesUtil.getJsonSerialiserModules(properties),
+                    ExecutorPropertiesUtil.getStrictJson(properties)
             );
         } else {
             JSONSerialiser.update();
@@ -320,7 +306,7 @@ public class Config {
                 .append(nonNull(properties), nonNull(config.properties));
 
         if (equalsBuilder.isEquals() && nonNull(properties)) {
-            equalsBuilder.append(properties.getProperties(), config.properties.getProperties());
+            equalsBuilder.append(properties, config.properties);
         }
 
         return equalsBuilder.isEquals();
@@ -343,7 +329,7 @@ public class Config {
         private Config config = new Config();
         private List<Hook> requestHooks = new ArrayList<>();
         private List<Hook> operationHooks = new ArrayList<>();
-        private ExecutorProperties properties = new ExecutorProperties();
+        private Properties properties = new Properties();
         Map<Class<? extends Operation>, OperationHandler> operationHandlers = new LinkedHashMap<>();
 
         // Config
@@ -369,24 +355,20 @@ public class Config {
             return this;
         }
 
-        // ExecutorProperties
-        public Builder executorProperties(final Properties properties) {
-            return executorProperties(null != properties ? ExecutorProperties.loadExecutorProperties(properties) :
-                    null);
-        }
+        // Properties
 
-        public Builder executorProperties(final ExecutorProperties properties) {
+        public Builder executorProperties(final Properties properties) {
             if (null != this.properties) {
-                this.properties.getProperties().putAll(properties.getProperties());
+                this.properties.putAll(properties);
             } else {
                 this.properties = properties;
             }
             if (null != properties) {
-                addReflectionPackages(properties.getReflectionPackages());
+                ReflectionUtil.addReflectionPackages(ExecutorPropertiesUtil.getReflectionPackages(properties));
                 JSONSerialiser.update(
-                        properties.getJsonSerialiserClass(),
-                        properties.getJsonSerialiserModules(),
-                        properties.getStrictJson()
+                        ExecutorPropertiesUtil.getJsonSerialiserClass(properties),
+                        ExecutorPropertiesUtil.getJsonSerialiserModules(properties),
+                        ExecutorPropertiesUtil.getStrictJson(properties)
                 );
             }
             return this;
@@ -394,14 +376,14 @@ public class Config {
 
         public Builder executorProperties(final String propertiesPath) {
             return executorProperties(null != propertiesPath ?
-                    ExecutorProperties.loadExecutorProperties(propertiesPath) : null);
+                    ExecutorPropertiesUtil.loadProperties(propertiesPath) : null);
         }
 
         public Builder executorProperties(final Path propertiesPath) {
             if (null == propertiesPath) {
                 properties = null;
             } else {
-                executorProperties(ExecutorProperties.loadExecutorProperties(propertiesPath));
+                executorProperties(ExecutorPropertiesUtil.loadProperties(propertiesPath));
             }
             return this;
         }
@@ -410,7 +392,7 @@ public class Config {
             if (null == propertiesStream) {
                 properties = null;
             } else {
-                executorProperties(ExecutorProperties.loadExecutorProperties(propertiesStream));
+                executorProperties(ExecutorPropertiesUtil.loadProperties(propertiesStream));
             }
             return this;
         }
@@ -428,49 +410,42 @@ public class Config {
             return this;
         }
 
-        public Builder addExecutorProperties(final Properties properties) {
-            if (null != properties) {
-                addExecutorProperties(ExecutorProperties.loadExecutorProperties(properties));
-            }
-            return this;
-        }
-
-        public Builder addExecutorProperties(final ExecutorProperties updateProperties) {
+        public Builder addProperties(final Properties updateProperties) {
             if (null != updateProperties) {
                 if (null == this.properties) {
                     executorProperties(updateProperties);
                 } else {
-                    this.properties.merge(updateProperties);
+                    ExecutorPropertiesUtil.merge(this.properties, updateProperties);
                 }
             }
             return this;
         }
 
-        public Builder addExecutorProperties(final String updatePropertiesPath) {
+        public Builder addProperties(final String updatePropertiesPath) {
             if (null != updatePropertiesPath) {
-                addExecutorProperties(ExecutorProperties.loadExecutorProperties(updatePropertiesPath));
+                addProperties(ExecutorPropertiesUtil.loadProperties(updatePropertiesPath));
             }
             return this;
         }
 
-        public Builder addExecutorProperties(final Path updatePropertiesPath) {
+        public Builder addProperties(final Path updatePropertiesPath) {
             if (null != updatePropertiesPath) {
-                addExecutorProperties(ExecutorProperties.loadExecutorProperties(updatePropertiesPath));
+                addProperties(ExecutorPropertiesUtil.loadProperties(updatePropertiesPath));
             }
             return this;
         }
 
-        public Builder addExecutorProperties(final InputStream updatePropertiesStream) {
+        public Builder addProperties(final InputStream updatePropertiesStream) {
             if (null != updatePropertiesStream) {
-                addExecutorProperties(ExecutorProperties.loadExecutorProperties(updatePropertiesStream));
+                addProperties(ExecutorPropertiesUtil.loadProperties(updatePropertiesStream));
             }
             return this;
         }
 
-        public Builder addExecutorProperties(final URI updatePropertiesURI) {
+        public Builder addProperties(final URI updatePropertiesURI) {
             if (null != updatePropertiesURI) {
                 try {
-                    addExecutorProperties(StreamUtil.openStream(updatePropertiesURI));
+                    addProperties(StreamUtil.openStream(updatePropertiesURI));
                 } catch (final IOException e) {
                     throw new IllegalArgumentException("Unable to read " +
                             "executorProperties from URI: " + updatePropertiesURI, e);
@@ -520,18 +495,18 @@ public class Config {
         }
 
         // Merge configs
-        public Builder merge(final Config config) {
-            if (null != config) {
+        public Builder merge(final Config thatConfig) {
+            if (null != thatConfig) {
                 if (null != this.config.getId()) {
-                    this.config.id(config.getId());
+                    this.config.id(thatConfig.getId());
                 }
                 if (null != this.config.getDescription()) {
-                    this.config.setDescription(config.getDescription());
+                    this.config.setDescription(thatConfig.getDescription());
                 }
-                config.getRequestHooks().forEach(hook -> this.config.addRequestHook(hook));
-                config.getOperationHooks().forEach(hook -> this.config.addOperationHook(hook));
-                this.config.getProperties().merge(config.getProperties());
-                this.config.getOperationHandlers().putAll(config.getOperationHandlers());
+                thatConfig.getRequestHooks().forEach(hook -> this.config.addRequestHook(hook));
+                thatConfig.getOperationHooks().forEach(hook -> this.config.addOperationHook(hook));
+                ExecutorPropertiesUtil.merge(this.config.getProperties(), thatConfig.getProperties());
+                this.config.getOperationHandlers().putAll(thatConfig.getOperationHandlers());
             }
             return this;
         }
@@ -707,7 +682,7 @@ public class Config {
             }
             config.setRequestHooks(requestHooks);
             config.setOperationHooks(operationHooks);
-            config.getProperties().getProperties().putAll(properties.getProperties());
+            config.getProperties().putAll(properties);
             config.getOperationHandlers().putAll(operationHandlers);
             return config;
         }

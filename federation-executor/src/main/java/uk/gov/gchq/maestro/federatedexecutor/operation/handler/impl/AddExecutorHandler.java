@@ -32,7 +32,8 @@ public class AddExecutorHandler extends AddExecutorHandlerParent<AddExecutor> {
     protected Executor _makeExecutor(final AddExecutor operation, final Executor executor) {
         return new Executor()
                 .config(new Config()
-                                .setProperties(operation.getConfig().getProperties().getProperties())
+                                .id(operation.getId())
+                                .setProperties(operation.getConfig().getProperties())
                         //.parentSchemaIds(operation.getParentSchemaIds()) TODO
                         //.parentStorePropertiesId(operation.getParentConfigId()) TODO
                 );

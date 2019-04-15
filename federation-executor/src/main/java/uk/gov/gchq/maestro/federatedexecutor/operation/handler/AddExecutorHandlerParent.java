@@ -67,7 +67,7 @@ public abstract class AddExecutorHandlerParent<OP extends AddExecutor> implement
     }
 
     private void isLimitedToLibraryProperties(final Executor executor, final User user, final OP operation) throws OperationException {
-        final String customPropertiesAuths = executor.getConfig().getProperties().get("customConfigAuths");
+        final String customPropertiesAuths = executor.getConfig().getProperties().getProperty("customConfigAuths");
         final boolean isLimitedToLibraryProperties = null != customPropertiesAuths && Collections.disjoint(user.getOpAuths(), Sets.newHashSet(customPropertiesAuths.split(",")));
         if (isLimitedToLibraryProperties && null != operation.getConfig()/*TODO this logic is not correct*/) {
             throw new OperationException(String.format(USER_IS_LIMITED_TO_ONLY_USING_PARENT_PROPERTIES_ID_FROM_GRAPHLIBRARY_BUT_FOUND_STORE_PROPERTIES_S, operation.getConfig().toString()));

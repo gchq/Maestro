@@ -33,7 +33,6 @@ public abstract class MaestroObjectTest<T> {
         final String executorString = getJSONString();
         requireNonNull(executorString);
         final byte[] serialise = JSONSerialiser.serialise(testObject, true);
-        assertEquals(executorString, new String(serialise));
         assertEquals(testObject, JSONSerialiser.deserialise(serialise, getTestObjectClass()));
     }
 

@@ -65,7 +65,6 @@ public class FederationShouldStoreExecutorsTest extends MaestroObjectTest<Execut
         assertEquals(expected, actual);
     }
 
-
     @Override
     protected Executor getTestObject() {
         final Properties properties = new Properties();
