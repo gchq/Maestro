@@ -31,6 +31,7 @@ import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 import uk.gov.gchq.maestro.operation.handler.named.cache.NamedOperationCache;
 import uk.gov.gchq.maestro.operation.io.Input;
+import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
 import java.util.List;
 import java.util.function.Function;
@@ -65,7 +66,7 @@ public class GetAllNamedOperationsHandler implements OutputOperationHandler<GetA
     public CloseableIterable<NamedOperationDetail> doOperation(final GetAllNamedOperations operation, final Context context, final Executor executor) throws OperationException {
         final CloseableIterable<NamedOperationDetail> ops =
                 cache.getAllNamedOperations(context.getUser(),
-                        executor.getConfig().getProperties().getAdminAuth());
+                        ExecutorPropertiesUtil.getAdminAuth(executor.getConfig().getProperties()));
         return new WrappedCloseableIterable<>(IterableUtil.map(ops, new AddInputType()));
     }
 

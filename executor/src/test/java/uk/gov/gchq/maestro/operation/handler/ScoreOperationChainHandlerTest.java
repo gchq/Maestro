@@ -22,7 +22,6 @@ import org.junit.rules.ExpectedException;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
@@ -49,6 +48,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -84,7 +84,7 @@ public class ScoreOperationChainHandlerTest {
         final User user = mock(User.class);
         final ScoreOperationChain scoreOperationChain = mock(ScoreOperationChain.class);
 
-        ExecutorProperties executorProperties = new ExecutorProperties();
+        Properties executorProperties = new Properties();
 
         final ToSet op1 = mock(ToSet.class);
         final ToCsv op2 = mock(ToCsv.class);
@@ -96,7 +96,7 @@ public class ScoreOperationChainHandlerTest {
         opAuths.add("TEST_USER");
         given(user.getOpAuths()).willReturn(opAuths);
         given(scoreOperationChain.getOperationChain()).willReturn(opChain);
-        given(executor.getConfig()).willReturn(new Config.Builder().addExecutorProperties(executorProperties).build());
+        given(executor.getConfig()).willReturn(new Config.Builder().addProperties(executorProperties).build());
 
         // When
         final Object result = operationHandler.doOperation(
@@ -119,7 +119,7 @@ public class ScoreOperationChainHandlerTest {
         final User user = mock(User.class);
         final ScoreOperationChain scoreOperationChain = mock(ScoreOperationChain.class);
 
-        ExecutorProperties executorProperties = new ExecutorProperties();
+        Properties executorProperties = new Properties();
 
         final ToSet op1 = mock(ToSet.class);
         final ToCsv op2 = mock(ToCsv.class);
@@ -133,7 +133,7 @@ public class ScoreOperationChainHandlerTest {
         opAuths.add("TEST_USER");
         given(user.getOpAuths()).willReturn(opAuths);
         given(scoreOperationChain.getOperationChain()).willReturn(opChain);
-        given(executor.getConfig()).willReturn(new Config.Builder().addExecutorProperties(executorProperties).build());
+        given(executor.getConfig()).willReturn(new Config.Builder().addProperties(executorProperties).build());
 
         // When
         final Object result = operationHandler.doOperation(
@@ -206,7 +206,7 @@ public class ScoreOperationChainHandlerTest {
         final Executor executor = mock(Executor.class);
         final User user = mock(User.class);
         final ScoreOperationChain scoreOperationChain = mock(ScoreOperationChain.class);
-        final ExecutorProperties executorProperties = new ExecutorProperties();
+        final Properties executorProperties = new Properties();
 
         final ToSet op1 = mock(ToSet.class);
         final ToCsv op2 = mock(ToCsv.class);
@@ -232,7 +232,7 @@ public class ScoreOperationChainHandlerTest {
         opAuths.add("TEST_USER");
         given(user.getOpAuths()).willReturn(opAuths);
         given(scoreOperationChain.getOperationChain()).willReturn(opChain);
-        given(executor.getConfig()).willReturn(new Config.Builder().addExecutorProperties(executorProperties).build());
+        given(executor.getConfig()).willReturn(new Config.Builder().addProperties(executorProperties).build());
 
         // When
         final Object result = handler.doOperation(new ScoreOperationChain.Builder()

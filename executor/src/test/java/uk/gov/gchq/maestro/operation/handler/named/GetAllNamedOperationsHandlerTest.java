@@ -23,7 +23,6 @@ import org.junit.Test;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.named.operation.AddNamedOperation;
@@ -34,6 +33,7 @@ import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
 
 import java.util.ArrayList;
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -75,8 +75,8 @@ public class GetAllNamedOperationsHandlerTest {
 
     @Before
     public void before() {
-        ExecutorProperties properties = new ExecutorProperties();
-        properties.set(CACHE_SERVICE_CLASS, "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService");
+        Properties properties = new Properties();
+        properties.put(CACHE_SERVICE_CLASS, "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService");
         config = new Config.Builder().executorProperties(properties).build();
         executor = new Executor(config);
     }

@@ -22,6 +22,7 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.named.operation.DeleteNamedOperation;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.handler.named.cache.NamedOperationCache;
+import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
 /**
  * Operation Handler for DeleteNamedOperation.
@@ -55,7 +56,7 @@ public class DeleteNamedOperationHandler implements OperationHandler<DeleteNamed
         try {
             cache.deleteNamedOperation(operation.getOperationName(),
                     context.getUser(),
-                    executor.getConfig().getProperties().getAdminAuth());
+                    ExecutorPropertiesUtil.getAdminAuth(executor.getConfig().getProperties()));
         } catch (final CacheOperationException e) {
             throw new OperationException(e.getMessage(), e);
         }

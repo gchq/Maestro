@@ -28,6 +28,7 @@ import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.handler.named.cache.NamedOperationCache;
+import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
 import java.util.Map;
 
@@ -76,7 +77,7 @@ public class AddNamedOperationHandler implements OperationHandler<AddNamedOperat
 
             cache.addNamedOperation(namedOperationDetail, operation.isOverwriteFlag(), context
                             .getUser(),
-                    executor.getConfig().getProperties().getAdminAuth());
+                    ExecutorPropertiesUtil.getAdminAuth(executor.getConfig().getProperties()));
         } catch (final CacheOperationException e) {
             throw new OperationException(e.getMessage(), e);
         }
