@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 	http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,6 @@ import org.junit.Test;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.ExecutorProperties;
 import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
@@ -33,6 +32,9 @@ import uk.gov.gchq.maestro.operation.impl.job.GetAllJobDetails;
 import uk.gov.gchq.maestro.operation.impl.job.Job;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
+import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
+
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -40,7 +42,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 public class GetAllJobDetailsHandlerTest {
-    private final ExecutorProperties properties = new ExecutorProperties();
+    private final Properties properties = new Properties();
     private final User user = mock(User.class);
     private final Operation op1 = mock(Operation.class);
     private final Operation op2 = mock(Operation.class);
@@ -48,8 +50,8 @@ public class GetAllJobDetailsHandlerTest {
 
     @Before
     public void setup() {
-        properties.setJobTrackerEnabled(true);
-        properties.set("maestro.cache.service.class", "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService");
+        ExecutorPropertiesUtil.setJobTrackerEnabled(properties, true);
+        ExecutorPropertiesUtil.setCacheClass(properties, "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService");
     }
 
     @Test

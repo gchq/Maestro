@@ -19,7 +19,7 @@ package uk.gov.gchq.maestro.library;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.io.FileUtils;
 
-import uk.gov.gchq.maestro.ExecutorProperties;
+import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 /**
@@ -99,11 +100,12 @@ public class FileLibrary extends Library {
     }
 
     @Override
-    protected void _addProperties(final String propertiesId, final ExecutorProperties properties) {
+    protected void _addProperties(final String propertiesId,
+                                  final Properties properties) {
         if (null != properties) {
             getPropertiesPath(propertiesId).toFile().getParentFile().mkdirs();
             try (FileOutputStream propertiesFileOutputStream = new FileOutputStream(getPropertiesPath(propertiesId).toFile())) {
-                properties.getProperties().store(propertiesFileOutputStream, null);
+                properties.store(propertiesFileOutputStream, null);
             } catch (final IOException e) {
                 throw new IllegalArgumentException("Could not write " +
                         "properties to path: " + getPropertiesPath(propertiesId), e);
@@ -115,12 +117,12 @@ public class FileLibrary extends Library {
     }
 
     @Override
-    protected ExecutorProperties _getProperties(final String propertiesId) {
+    protected Properties _getProperties(final String propertiesId) {
         final Path propertiesPath = getPropertiesPath(propertiesId);
         if (!propertiesPath.toFile().exists()) {
             return null;
         }
-        return ExecutorProperties.loadExecutorProperties(propertiesPath);
+        return ExecutorPropertiesUtil.loadProperties(propertiesPath);
     }
 
     private Path getPropertiesPath(final String propertiesId) {
