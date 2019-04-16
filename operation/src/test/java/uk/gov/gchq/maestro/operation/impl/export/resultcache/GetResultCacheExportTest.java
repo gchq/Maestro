@@ -62,16 +62,16 @@ public class GetResultCacheExportTest extends OperationTest<GetResultCacheExport
         // Given
         final String key = "key";
         final String jobId = "jobId";
-        final GetResultCacheExport getGafferResultCacheExport = new GetResultCacheExport.Builder()
+        final GetResultCacheExport getMaestroResultCacheExport = new GetResultCacheExport.Builder()
                 .key(key)
                 .jobId(jobId)
                 .build();
 
         // When
-        GetResultCacheExport clone = getGafferResultCacheExport.shallowClone();
+        GetResultCacheExport clone = getMaestroResultCacheExport.shallowClone();
 
         // Then
-        assertNotSame(getGafferResultCacheExport, clone);
+        assertNotSame(getMaestroResultCacheExport, clone);
         assertEquals(key, clone.getKey());
         assertEquals(jobId, clone.getJobId());
     }

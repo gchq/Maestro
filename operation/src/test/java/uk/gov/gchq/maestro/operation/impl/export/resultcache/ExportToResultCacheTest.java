@@ -71,17 +71,17 @@ public class ExportToResultCacheTest extends OperationTest<ExportToResultCache> 
         final String key = "key";
         final HashSet<String> opAuths = Sets.newHashSet("1", "2");
         final String input = "input";
-        final ExportToResultCache exportToGafferResultCache = new ExportToResultCache.Builder<>()
+        final ExportToResultCache exportToMaestroResultCache = new ExportToResultCache.Builder<>()
                 .key(key)
                 .opAuths(opAuths)
                 .input(input)
                 .build();
 
         // When
-        ExportToResultCache clone = exportToGafferResultCache.shallowClone();
+        ExportToResultCache clone = exportToMaestroResultCache.shallowClone();
 
         // Then
-        assertNotSame(exportToGafferResultCache, clone);
+        assertNotSame(exportToMaestroResultCache, clone);
         assertEquals(key, clone.getKey());
         assertEquals(input, clone.getInput());
         assertEquals(opAuths, clone.getOpAuths());

@@ -17,7 +17,7 @@
 package uk.gov.gchq.maestro.commonutil.exception;
 
 /**
- * An {@code UnauthorisedException} is a {@link RuntimeException} that
+ * An {@code UnauthorisedException} is a {@link java.lang.RuntimeException} that
  * will be when an unauthorised action is attempted.
  */
 public class UnauthorisedException extends RuntimeException {

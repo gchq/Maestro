@@ -1,19 +1,19 @@
 {
-  "class": "uk.gov.gchq.gaffer.graph.hook.OperationAuthoriser",
+  "class": "uk.gov.gchq.maestro.hook.OperationAuthoriser",
   "auths": {
-    "uk.gov.gchq.gaffer.operation.Operation": [
+    "uk.gov.gchq.maestro.operation.Operation": [
       "User"
     ],
-    "uk.gov.gchq.gaffer.operation.io.Output": [
+    "uk.gov.gchq.maestro.operation.io.Input": [
       "ReadUser"
     ],
-    "uk.gov.gchq.gaffer.operation.impl.add.AddElements": [
+    "uk.gov.gchq.maestro.operation.impl.output.ToList": [
       "WriteUser"
     ],
-    "uk.gov.gchq.gaffer.operation.impl.get.GetAdjacentIds": [
+    "uk.gov.gchq.maestro.operation.impl.output.ToArray": [
       "SuperUser"
     ],
-    "uk.gov.gchq.gaffer.operation.impl.get.GetAllElements": [
+    "uk.gov.gchq.maestro.operation.impl.output.ToSet": [
       "AdminUser",
       "SuperUser"
     ]

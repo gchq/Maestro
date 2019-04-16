@@ -1,0 +1,13 @@
+{
+  "class": "uk.gov.gchq.maestro.hook.OperationChainLimiter",
+  "opScores": {
+    "uk.gov.gchq.maestro.operation.Operation": 1,
+    "uk.gov.gchq.maestro.operation.impl.output.ToCsv": 2,
+    "uk.gov.gchq.maestro.operation.impl.output.ToSet": 5,
+    "uk.gov.gchq.maestro.operation.impl.output.ToList": 0
+  },
+  "authScores": {
+    "User": 2,
+    "SuperUser": 5
+  }
+}
