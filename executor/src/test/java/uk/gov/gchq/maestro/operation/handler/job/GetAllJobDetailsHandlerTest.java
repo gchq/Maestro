@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 	http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -42,7 +42,8 @@ import static org.mockito.Mockito.mock;
 public class GetAllJobDetailsHandlerTest {
     private final ExecutorProperties properties = new ExecutorProperties();
     private final User user = mock(User.class);
-    private final Operation op = mock(Operation.class);
+    private final Operation op1 = mock(Operation.class);
+    private final Operation op2 = mock(Operation.class);
     private final GetAllJobDetailsHandler handler = new GetAllJobDetailsHandler();
 
     @Before
@@ -68,7 +69,7 @@ public class GetAllJobDetailsHandlerTest {
     }
 
     @Test
-    public void shouldGetAllJobDetailsByDelegatingToJobTracker() throws OperationException {
+    public void shouldGetAllJobDetailsByDelegatingToJobTracker() throws OperationException, InterruptedException {
         // Given
         final Config config = new Config.Builder()
                 .executorProperties(properties)
@@ -87,12 +88,14 @@ public class GetAllJobDetailsHandlerTest {
                 .build();
 
         JobDetail addedJobDetail1 = executor.execute(new Job.Builder()
-                .operation(op)
+                .operation(op1)
                 .build(), user);
 
         JobDetail addedJobDetail2 = executor.execute(new Job.Builder()
-                .operation(op)
+                .operation(op2)
                 .build(), user);
+
+        Thread.sleep(1000);
 
         // When
         final CloseableIterable<JobDetail> result = handler.doOperation(operation, context, executor);

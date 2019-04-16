@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiserModules;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiserModules;
 
 import java.util.List;
 import java.util.Set;

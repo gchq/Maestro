@@ -16,15 +16,18 @@
 
 package uk.gov.gchq.maestro;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.exception.OperationException;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
 import uk.gov.gchq.maestro.helper.TestHandler;
 import uk.gov.gchq.maestro.helper.TestOperation;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.util.Config;
+
+import static java.util.Objects.requireNonNull;
+import static org.junit.Assert.assertEquals;
 
 
 public class ExecutorTest extends MaestroObjectTest<Executor> {
@@ -42,8 +45,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "      }\n" +
                 "    },\n" +
                 "    \"properties\" : {\n" +
-                "      \"configKey\" : \"configValue\",\n" +
-                "      \"maestro.executor.properties.class\" : \"uk.gov.gchq.maestro.ExecutorProperties\"\n" +
+                "      \"configKey\" : \"configValue\"\n" +
                 "    },\n" +
                 "    \"operationHooks\" : [ ],\n" +
                 "    \"requestHooks\" : [ ]\n" +
@@ -51,17 +53,17 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "}";
     }
 
-    /*@Override
+    @Override
     public void shouldJSONSerialise() throws uk.gov.gchq.maestro.commonutil.exception.SerialisationException {
         super.shouldJSONSerialise();
         final Executor testObject = getTestObject();
 
-        final String executorString = getJSONString2();
+        final String executorString = getJSONString();
         requireNonNull(executorString);
         final byte[] serialise = uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser.serialise(testObject, true);
         assertEquals(executorString, new String(serialise));
         assertEquals(testObject, uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser.deserialise(serialise, getTestObjectClass()));
-    }*/
+    }
 
     @Override
     protected Executor getTestObject() {
@@ -74,12 +76,12 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     }
 
     @Test
-    public void shouldRunTestHandler() throws SerialisationException {
+    public void shouldRunTestHandler() throws SerialisationException, OperationException {
         final byte[] serialise = JSONSerialiser.serialise(getTestObject(), true);
 
         final Executor executor = Executor.deserialise(serialise);
         final Object execute = executor.execute(new TestOperation().setField("opFieldValue1"), new Context());
-        Assert.assertEquals("handlerFieldValue1,opFieldValue1", execute);
+        assertEquals("handlerFieldValue1,opFieldValue1", execute);
     }
 
     @Override

@@ -31,14 +31,11 @@ import uk.gov.gchq.maestro.commonutil.CloseableUtil;
 import uk.gov.gchq.maestro.commonutil.ExecutorService;
 import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
-import uk.gov.gchq.maestro.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.jobtracker.JobDetail;
-import uk.gov.gchq.maestro.jobtracker.JobStatus;
-import uk.gov.gchq.maestro.jobtracker.JobTracker;
-import uk.gov.gchq.maestro.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.operation.DefaultOperation;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.impl.job.Job;
 import uk.gov.gchq.maestro.operation.validator.OperationValidation;
@@ -54,6 +51,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import static java.util.Objects.nonNull;
 
 @JsonPropertyOrder(value = {"class", "config"}, alphabetic = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 public class Executor {
     public static final String OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S = "Operation %s is not supported by the %s.";
     public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
@@ -103,11 +101,11 @@ public class Executor {
         }
     }
 
-    public <O> O execute(final Operation operation, final Context context) {
+    public <O> O execute(final Operation operation, final Context context) throws OperationException {
         return (O) execute(new Request(operation, context)).getResult();
     }
 
-    public <O> O execute(final Operation operation, final User user) {
+    public <O> O execute(final Operation operation, final User user) throws OperationException {
         return (O) execute(new Request(operation, new Context(user))).getResult();
     }
 
@@ -120,7 +118,7 @@ public class Executor {
      * @throws OperationException thrown by the operation handler if the
      *                            operation fails.
      */
-    public <O> Result<O> execute(final Request request) {
+    public <O> Result<O> execute(final Request request) throws OperationException {
         if (null == request) {
             throw new IllegalArgumentException("A request is required");
         }
@@ -135,7 +133,6 @@ public class Executor {
         final Operation operation = clonedRequest.getOperation();
         final Context context = clonedRequest.getContext();
 
-        addOrUpdateJobDetail(operation, context, null, JobStatus.RUNNING);
         O result = null;
         try {
             for (final Hook requestHook : getConfig().getRequestHooks()) {
@@ -143,22 +140,19 @@ public class Executor {
             }
             result = (O) handleOperation(operation, context);
             for (final Hook requestHook : getConfig().getRequestHooks()) {
-                result = requestHook.postExecute(result,
-                        clonedRequest);
+                result = requestHook.postExecute(result, clonedRequest);
             }
-            addOrUpdateJobDetail(operation, context, null, JobStatus.FINISHED);
         } catch (final Exception e) {
             for (final Hook requestHook : getConfig().getRequestHooks()) {
                 try {
-                    result = requestHook.onFailure(result,
-                            clonedRequest, e);
+                    result = requestHook.onFailure(result, clonedRequest, e);
                 } catch (final Exception requestHookE) {
                     LOGGER.warn("Error in requestHook " + requestHook.getClass().getSimpleName() + ": " + requestHookE.getMessage(), requestHookE);
                 }
             }
-        } catch (final Throwable t) {
-            addOrUpdateJobDetail(operation, context, t.getMessage(), JobStatus.FAILED);
-            throw t;
+            CloseableUtil.close(operation);
+            CloseableUtil.close(result);
+            throw e;
         }
         return new Result(result, clonedRequest.getContext());
     }
@@ -176,7 +170,8 @@ public class Executor {
      * Executes a given operation job and returns the job detail.
      */
     // TODO remove this method before first release
-    public JobDetail executeJob(final Operation operation, final Context context) {
+    public JobDetail executeJob(final Operation operation,
+                                final Context context) throws OperationException {
         return execute(new Job.Builder().operation(operation).build(), context);
     }
 
@@ -215,31 +210,6 @@ public class Executor {
             this.config.getOperationHandlers().putAll(operationHandlerMap);
         }
         return this;
-    }
-
-    public JobDetail addOrUpdateJobDetail(final Operation operation,
-                                          final Context context, final String msg, final JobStatus jobStatus) {
-        final JobDetail newJobDetail = new JobDetail(context.getJobId(), context
-                .getUser()
-                .getUserId(), OperationChain.wrap(operation), jobStatus, msg);
-        if (JobTracker.isCacheEnabled()) {
-            final JobDetail oldJobDetail =
-                    JobTracker.getJob(newJobDetail.getJobId(),
-                            context
-                                    .getUser());
-            if (null == oldJobDetail) {
-                JobTracker.addOrUpdateJob(newJobDetail, context.getUser());
-            } else {
-                JobTracker.addOrUpdateJob(new JobDetail(oldJobDetail, newJobDetail), context
-                        .getUser());
-            }
-        }
-        return newJobDetail;
-    }
-
-    @JsonGetter("class") //TODO improvement
-    public String getClassName() {
-        return this.getClass().getCanonicalName();
     }
 
     @JsonSetter(value = "config")

@@ -1,0 +1,28 @@
+language: java
+cache:
+  timeout: 1000
+  directories:
+    - $HOME/.m2
+dist: trusty
+jdk:
+  - oraclejdk8
+sudo: false
+matrix:
+  fast_finish: true
+
+
+if: (branch == master && type == push) || (branch == develop && type == push) || (branch != master && type == pull_request)
+
+env:
+  matrix:
+    - RELEASE=true
+    - MODULES=:maestro,:common-util,:executor,:federation-executor,:operation,:proxy-executor
+
+before_install: ./cd/before_install.sh
+install: travis_wait 45 ./cd/install.sh
+script:
+  - travis_wait 45 ./cd/verify.sh
+  - ./cd/deploy.sh
+after_success: travis_wait 45 ./cd/after_success.sh
+
+before_cache: rm -rf $HOME/.m2/repository/uk/gov/gchq/maestro

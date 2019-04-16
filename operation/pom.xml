@@ -33,10 +33,6 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <dependency>
-            <groupId>uk.gov.gchq.maestro</groupId>
-            <artifactId>serialisation</artifactId>
-        </dependency>
-        <dependency>
             <groupId>uk.gov.gchq.koryphe</groupId>
             <artifactId>core</artifactId>
         </dependency>
@@ -54,8 +50,8 @@
             <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>common-util</artifactId>
             <version>${project.parent.version}</version>
-            <scope>test</scope>
             <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

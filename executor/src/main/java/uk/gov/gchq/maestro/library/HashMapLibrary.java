@@ -33,6 +33,7 @@ public class HashMapLibrary extends Library {
         PROPERTIES.clear();
     }
 
+
     @Override
     public void initialise(final String path) {
         // Do nothing

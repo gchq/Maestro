@@ -44,8 +44,8 @@ public class FederationShouldStoreExecutorsTest extends MaestroObjectTest<Execut
                 "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
                 "    \"operationHandlers\" : { },\n" +
                 "    \"properties\" : {\n" +
-                "      \"ExecutorStore_Executor1\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"id\\\":\\\"ExecutorId1\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{\\\"maestro.executor.properties.class\\\":\\\"uk.gov.gchq.maestro.ExecutorProperties\\\"},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}}\",\n" +
-                "      \"ExecutorStore_Executor2\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"id\\\":\\\"ExecutorId2\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{\\\"maestro.executor.properties.class\\\":\\\"uk.gov.gchq.maestro.ExecutorProperties\\\"},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}}\"\n" +
+                "      \"ExecutorStore_Executor1\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"id\\\":\\\"ExecutorId1\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}}\",\n" +
+                "      \"ExecutorStore_Executor2\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"id\\\":\\\"ExecutorId2\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}}\"\n" +
                 "    },\n" +
                 "    \"operationHooks\" : [ ],\n" +
                 "    \"requestHooks\" : [ ]\n" +
