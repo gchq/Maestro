@@ -64,13 +64,15 @@ public class OperationAuthoriser implements Hook {
      *
      * @param opClass the operation class
      * @param auths   the authorisations
+     * @return the current OperationAuthoriser instance
      */
-    public void addAuths(final Class<? extends Operation> opClass,
-                         final String... auths) {
+    public OperationAuthoriser addAuths(final Class<? extends Operation> opClass,
+                                        final String... auths) {
         this.auths.add(new OperationAuth()
                 .opClass(opClass)
                 .auths(new HashSet<>(Lists.newArrayList(auths))));
         Collections.addAll(allAuths, auths);
+        return this;
     }
 
     /**
@@ -81,27 +83,30 @@ public class OperationAuthoriser implements Hook {
      * @param opClass               the operation class
      * @param operationAuthOperator the operator for the authorisations
      * @param auths                 the authorisations
+     * @return the current OperationAuthoriser instance
      */
-    public void addAuths(final Class<? extends Operation> opClass,
-                         final OperationAuth.OperationAuthOperator operationAuthOperator,
-                         final String... auths) {
+    public OperationAuthoriser addAuths(final Class<? extends Operation> opClass,
+                                        final OperationAuth.OperationAuthOperator operationAuthOperator,
+                                        final String... auths) {
         this.auths.add(new OperationAuth().opClass(opClass)
                 .auths(new HashSet<>(Lists.newArrayList(auths)))
                 .operator(operationAuthOperator));
         Collections.addAll(allAuths, auths);
+        return this;
     }
 
     public Set<OperationAuth> getAuths() {
         return Collections.unmodifiableSet(auths);
     }
 
-    public void setAuths(final Set<OperationAuth> auths) {
+    public OperationAuthoriser setAuths(final Set<OperationAuth> auths) {
         this.auths.clear();
         this.allAuths.clear();
         if (null != auths) {
             this.auths.addAll(auths);
             auths.forEach(operationAuth -> allAuths.addAll(operationAuth.getAuths()));
         }
+        return this;
     }
 
     @JsonIgnore
