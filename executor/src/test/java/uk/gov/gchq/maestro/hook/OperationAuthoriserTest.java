@@ -27,6 +27,7 @@ import uk.gov.gchq.maestro.named.operation.AddNamedOperation;
 import uk.gov.gchq.maestro.named.operation.ParameterDetail;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
+import uk.gov.gchq.maestro.operation.auth.OperationAuth;
 import uk.gov.gchq.maestro.operation.impl.DiscardOutput;
 import uk.gov.gchq.maestro.operation.impl.output.ToArray;
 import uk.gov.gchq.maestro.operation.impl.output.ToList;
@@ -36,8 +37,7 @@ import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Request;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -59,7 +59,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     @Test
     public void shouldAcceptOperationChainWhenUserHasAllOpAuths() {
         // Given
-        final OperationAuthoriser hook = fromJson(OP_AUTHS_PATH);
+        final OperationAuthoriser hook = getTestObject();
         final OperationChain opChain = new OperationChain.Builder()
                 .first(new ToList())
                 .then(new ToSingletonList())
@@ -81,7 +81,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     @Test
     public void shouldRejectOperationChainWhenUserDoesntHaveAllOpAuthsForNestedOperations() {
         // Given
-        final OperationAuthoriser hook = fromJson(OP_AUTHS_PATH);
+        final OperationAuthoriser hook = getTestObject();
         final OperationChain opChain = new OperationChain.Builder()
                 .first(new ToList())
                 .then(new ToSingletonList())
@@ -105,7 +105,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     @Test
     public void shouldAcceptOperationChainWhenUserHasAllOpAuthsForAddNamedOperation() {
         // Given
-        final OperationAuthoriser hook = fromJson(OP_AUTHS_PATH);
+        final OperationAuthoriser hook = getTestObject();
         final AddNamedOperation addNamedOperation = new AddNamedOperation.Builder()
                 .operationChain("{\"operations\":[{\"class\": \"uk.gov.gchq.maestro.operation.impl.output.ToArray\", " +
                         "\"options\": {\"optionKey\": \"${testParameter}\"}}]}")
@@ -136,7 +136,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     @Test
     public void shouldRejectOperationChainWhenUserDoesntHaveAllOpAuthsForAddNamedOperation() {
         // Given
-        final OperationAuthoriser hook = fromJson(OP_AUTHS_PATH);
+        final OperationAuthoriser hook = getTestObject();
         final AddNamedOperation addNamedOperation = new AddNamedOperation.Builder()
                 .operationChain("{\"operations\":[{\"class\": \"uk.gov.gchq.maestro.operation.impl.output.ToSet\", " +
                         "\"options\": {\"optionKey\": \"${testParameter}\"}}]}")
@@ -170,7 +170,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     @Test
     public void shouldRejectOperationChainWhenUserDoesntHaveSuperAuthForAddNamedOperation() {
         // Given
-        final OperationAuthoriser hook = fromJson(OP_AUTHS_PATH);
+        final OperationAuthoriser hook = getTestObject();
         final AddNamedOperation addNamedOperation = new AddNamedOperation.Builder()
                 .operationChain("{\"operations\":[{\"class\": \"uk.gov.gchq.maestro.operation.impl.output.ToSet\", " +
                         "\"options\": {\"optionKey\": \"${testParameter}\"}}]}")
@@ -204,7 +204,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     @Test
     public void shouldRejectOperationChainWhenUserDoesntHaveWriteAuthForAddNamedOperation() {
         // Given
-        final OperationAuthoriser hook = fromJson(OP_AUTHS_PATH);
+        final OperationAuthoriser hook = getTestObject();
         final AddNamedOperation addNamedOperation = new AddNamedOperation.Builder()
                 .operationChain("{\"operations\":[{\"class\": \"uk.gov.gchq.maestro.operation.impl.output.ToSet\", \"options\": {\"optionKey\": \"${testParameter}\"}}]}")
                 .description("Test Named Operation")
@@ -237,7 +237,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     @Test
     public void shouldRejectOperationChainWhenUserDoesntHaveAllOpAuthsForAllOperations() {
         // Given
-        final OperationAuthoriser hook = fromJson(OP_AUTHS_PATH);
+        final OperationAuthoriser hook = getTestObject();
         final OperationChain opChain = new OperationChain.Builder()
                 .first(new ToSet<>())  // Requires SuperUser
                 .build();
@@ -258,7 +258,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     @Test
     public void shouldRejectOperationChainWhenUserDoesntHaveAnyOpAuths() {
         // Given
-        final OperationAuthoriser hook = fromJson(OP_AUTHS_PATH);
+        final OperationAuthoriser hook = getTestObject();
         final OperationChain opChain = new OperationChain.Builder()
                 .first(new ToArray())
                 .then(new ToSet())
@@ -278,7 +278,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     @Test
     public void shouldRejectOperationChainWhenUserDoesntHaveAllowedAuth() {
         // Given
-        final OperationAuthoriser hook = fromJson(OP_AUTHS_PATH);
+        final OperationAuthoriser hook = getTestObject();
         final OperationChain opChain = new OperationChain.Builder()
                 .first(new ToList<>())
                 .then(new ToSet<>())
@@ -300,7 +300,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     @Test
     public void shouldReturnAllOpAuths() {
         // Given
-        final OperationAuthoriser hook = fromJson(OP_AUTHS_PATH);
+        final OperationAuthoriser hook = getTestObject();
 
         // When
         final Set<String> allOpAuths = hook.getAllAuths();
@@ -313,7 +313,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     @Test
     public void shouldReturnResultWithoutModification() {
         // Given
-        final OperationAuthoriser hook = fromJson(OP_AUTHS_PATH);
+        final OperationAuthoriser hook = getTestObject();
         final Object result = mock(Object.class);
         final OperationChain opChain = new OperationChain.Builder()
                 .first(new ToList<>())
@@ -334,35 +334,14 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
     public void shouldSetAndGetAuths() {
         // Given
         final OperationAuthoriser hook = new OperationAuthoriser();
-        final Map<Class<?>, Set<String>> auths = new HashMap<>();
-        auths.put(Operation.class, Sets.newHashSet("auth1"));
-        auths.put(ToArray.class, Sets.newHashSet("auth2"));
-        auths.put(ToSet.class, Sets.newHashSet("auth3", "auth4"));
+        final Set<OperationAuth> auths = new HashSet<>();
+        auths.add(new OperationAuth().opClass(Operation.class).auths(Sets.newHashSet("auth1")));
+        auths.add(new OperationAuth().opClass(ToArray.class).auths(Sets.newHashSet("auth2")));
+        auths.add(new OperationAuth().opClass(ToSet.class).auths(Sets.newHashSet("auth3", "auth4")));
 
         // When
         hook.setAuths(auths);
-        final Map<Class<?>, Set<String>> result = hook.getAuths();
-
-        // Then
-        assertEquals(auths, result);
-        assertEquals(
-                Sets.newHashSet("auth1", "auth2", "auth3", "auth4"),
-                hook.getAllAuths()
-        );
-    }
-
-    @Test
-    public void shouldSetAndGetAuthsAsStrings() throws ClassNotFoundException {
-        // Given
-        final OperationAuthoriser hook = new OperationAuthoriser();
-        final Map<String, Set<String>> auths = new HashMap<>();
-        auths.put(Operation.class.getName(), Sets.newHashSet("auth1"));
-        auths.put(ToSet.class.getName(), Sets.newHashSet("auth2"));
-        auths.put(ToArray.class.getName(), Sets.newHashSet("auth3", "auth4"));
-
-        // When
-        hook.setAuthsFromStrings(auths);
-        final Map<String, Set<String>> result = hook.getAuthsAsStrings();
+        final Set<OperationAuth> result = hook.getAuths();
 
         // Then
         assertEquals(auths, result);

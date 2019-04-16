@@ -15,6 +15,11 @@
  */
 package uk.gov.gchq.maestro.operation.auth;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -60,6 +65,39 @@ public class OperationAuth {
 
     @Override
     public String toString() {
-        return super.toString();
+        return new ToStringBuilder(this)
+                .append("opClass", opClass)
+                .append("auths", auths)
+                .append("operator", operator)
+                .toString();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final OperationAuth operationAuth = (OperationAuth) o;
+
+        final EqualsBuilder equalsBuilder = new EqualsBuilder()
+                .append(opClass, operationAuth.opClass)
+                .append(auths, operationAuth.auths)
+                .append(operator, operationAuth.operator);
+
+        return equalsBuilder.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(opClass)
+                .append(auths)
+                .append(operator)
+                .toHashCode();
     }
 }
