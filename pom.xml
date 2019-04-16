@@ -27,6 +27,7 @@
 
     <modules>
         <module>common-util</module>
+        <module>data</module>
         <module>operation</module>
         <module>executor</module>
         <module>proxy-executor</module>
@@ -60,6 +61,7 @@
 
         <commons-io.version>2.4</commons-io.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
         <reflections.version>0.9.10</reflections.version>
 
         <!-- Maven plugins -->
@@ -110,6 +112,17 @@
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>common-util</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>common-util</artifactId>
+                <version>${project.parent.version}</version>
+                <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>data</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
             <dependency>
@@ -197,6 +210,11 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

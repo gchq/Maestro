@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro.util.hook;
+package uk.gov.gchq.maestro.hook;
 
 import uk.gov.gchq.maestro.util.Request;
 

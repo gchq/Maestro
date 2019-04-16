@@ -44,12 +44,15 @@
         </dependency>
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>data</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>common-util</artifactId>
         </dependency>
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>common-util</artifactId>
-            <version>${project.parent.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

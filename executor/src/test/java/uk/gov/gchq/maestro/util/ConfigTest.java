@@ -26,9 +26,9 @@ import uk.gov.gchq.maestro.helper.MaestroObjectTest;
 import uk.gov.gchq.maestro.helper.TestHandler;
 import uk.gov.gchq.maestro.helper.TestHook;
 import uk.gov.gchq.maestro.helper.TestOperation;
+import uk.gov.gchq.maestro.hook.Hook;
 import uk.gov.gchq.maestro.library.NoLibrary;
 import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
-import uk.gov.gchq.maestro.util.hook.Hook;
 
 import java.util.Arrays;
 import java.util.Properties;

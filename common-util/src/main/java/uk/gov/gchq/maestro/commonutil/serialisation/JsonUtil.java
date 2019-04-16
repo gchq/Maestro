@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Utility methods for various JSON representations in Gaffer.
+ * Utility methods for various JSON representations in Maestro.
  */
 public final class JsonUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);

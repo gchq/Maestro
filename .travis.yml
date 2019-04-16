@@ -16,7 +16,7 @@ if: (branch == master && type == push) || (branch == develop && type == push) ||
 env:
   matrix:
     - RELEASE=true
-    - MODULES=:maestro,:common-util,:executor,:federation-executor,:operation,:proxy-executor
+    - MODULES=:maestro,:common-util,:data,:executor,:federation-executor,:operation,:proxy-executor
 
 before_install: ./cd/before_install.sh
 install: travis_wait 45 ./cd/install.sh

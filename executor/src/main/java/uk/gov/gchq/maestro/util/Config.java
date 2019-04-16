@@ -27,14 +27,14 @@ import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.hook.Hook;
+import uk.gov.gchq.maestro.hook.HookPath;
 import uk.gov.gchq.maestro.library.Library;
 import uk.gov.gchq.maestro.library.NoLibrary;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.declaration.OperationDeclarations;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
-import uk.gov.gchq.maestro.util.hook.Hook;
-import uk.gov.gchq.maestro.util.hook.HookPath;
 
 import java.io.File;
 import java.io.IOException;
