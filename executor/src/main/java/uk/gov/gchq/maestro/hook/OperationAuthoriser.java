@@ -19,6 +19,7 @@ package uk.gov.gchq.maestro.hook;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections.CollectionUtils;
 
 import uk.gov.gchq.maestro.commonutil.exception.UnauthorisedException;
 import uk.gov.gchq.maestro.operation.Operation;
@@ -121,7 +122,7 @@ public class OperationAuthoriser implements Hook {
             for (final OperationAuth entry : auths) {
                 if ((entry.getOpClass().isAssignableFrom(opClass))) {
                     if (entry.getOperator().equals(OperationAuth.OperationAuthOperator.OR)) {
-                        if (!userOpAuths.contains(entry.getAuths())) {
+                        if (!CollectionUtils.containsAny(userOpAuths, entry.getAuths())) {
                             authorised = false;
                             break;
                         }

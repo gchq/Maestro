@@ -33,6 +33,7 @@ import uk.gov.gchq.maestro.operation.impl.output.ToArray;
 import uk.gov.gchq.maestro.operation.impl.output.ToList;
 import uk.gov.gchq.maestro.operation.impl.output.ToSet;
 import uk.gov.gchq.maestro.operation.impl.output.ToSingletonList;
+import uk.gov.gchq.maestro.operation.impl.output.ToStream;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Request;
 
@@ -62,7 +63,7 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
         final OperationAuthoriser hook = getTestObject();
         final OperationChain opChain = new OperationChain.Builder()
                 .first(new ToList())
-                .then(new ToSingletonList())
+                .then(new ToStream())
                 .then(new ToArray())
                 .then(new DiscardOutput())
                 .then(new TestOperationsImpl(Collections.singletonList(new ToSet())))
@@ -295,6 +296,63 @@ public class OperationAuthoriserTest extends HookTest<OperationAuthoriser> {
         } catch (final UnauthorisedException e) {
             assertNotNull(e.getMessage());
         }
+    }
+
+    @Test
+    public void shouldRejectOperationChainWhenUserDoesntHaveAllowedAuthUsingOrOperator() {
+        // Given
+        final OperationAuthoriser hook = getTestObject();
+        final OperationChain opChain = new OperationChain.Builder()
+                .first(new ToSingletonList<>())
+                .build();
+
+        final User user = new User.Builder()
+                .opAuths("unknownAuth")
+                .build();
+
+        // When/Then
+        try {
+            hook.preExecute(new Request(opChain, new Context(user)));
+            fail("Exception expected");
+        } catch (final UnauthorisedException e) {
+            assertNotNull(e.getMessage());
+        }
+    }
+
+    @Test
+    public void shouldAllowOperationChainWhenUserHasOneOfAllowedAuthUsingOrOperator() {
+        // Given
+        final OperationAuthoriser hook = getTestObject();
+        final OperationChain opChain = new OperationChain.Builder()
+                .first(new ToSingletonList<>())
+                .build();
+
+        final User user = new User.Builder()
+                .opAuths("TestUser", "ReadUser", "User")
+                .build();
+
+        // When
+        hook.preExecute(new Request(opChain, new Context(user)));
+
+        // Then - no exceptions
+    }
+
+    @Test
+    public void shouldAllowOperationChainWhenUserHasAllAllowedAuthsUsingOrOperator() {
+        // Given
+        final OperationAuthoriser hook = getTestObject();
+        final OperationChain opChain = new OperationChain.Builder()
+                .first(new ToSingletonList<>())
+                .build();
+
+        final User user = new User.Builder()
+                .opAuths("TestUser", "OpsUser", "ReadUser", "User")
+                .build();
+
+        // When
+        hook.preExecute(new Request(opChain, new Context(user)));
+
+        // Then - no exceptions
     }
 
     @Test

@@ -36,6 +36,14 @@
         "AdminUser"
       ],
       "operator": "AND"
+    },
+    {
+      "opClass": "uk.gov.gchq.maestro.operation.impl.output.ToSingletonList",
+      "auths": [
+        "TestUser",
+        "OpsUser"
+      ],
+      "operator": "OR"
     }
   ]
 }
