@@ -254,8 +254,7 @@ public class Executor {
                         LOGGER.warn("Error in operationHook " + operationHook.getClass().getSimpleName() + ": " + operationHookE.getMessage(), operationHookE);
                     }
                 }
-            } catch (final Throwable t) {
-                throw t;
+                throw e;
             }
         } else if (operation instanceof DefaultOperation) {
             result = doUnhandledOperation(operation);
