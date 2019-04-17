@@ -21,8 +21,8 @@ import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
-import uk.gov.gchq.maestro.python.operation.util.PythonUtils;
 import uk.gov.gchq.maestro.python.operation.UpdatePythonAnalytic;
+import uk.gov.gchq.maestro.python.operation.util.PythonUtils;
 
 import java.io.File;
 import java.io.IOException;

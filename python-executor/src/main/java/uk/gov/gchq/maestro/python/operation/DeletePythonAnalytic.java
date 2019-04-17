@@ -30,7 +30,7 @@ public class DeletePythonAnalytic implements Operation {
 
     @Override
     public Operation shallowClone() throws CloneFailedException {
-        return new AddPythonAnalytic()
+        return new DeletePythonAnalytic()
                 .options(this.options)
                 .name(this.name);
     }

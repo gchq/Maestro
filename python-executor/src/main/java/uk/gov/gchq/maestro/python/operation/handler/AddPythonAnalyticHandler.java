@@ -17,6 +17,7 @@ package uk.gov.gchq.maestro.python.operation.handler;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.transport.CredentialsProvider;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
@@ -30,13 +31,19 @@ import java.io.File;
 public class AddPythonAnalyticHandler implements OperationHandler<AddPythonAnalytic> {
 
     private String repositoryRootDirectory;
+    private CredentialsProvider credentialsProvider;
 
     public AddPythonAnalyticHandler() {
         this(PythonUtils.DEFAULT_REPOSITORY_ROOT_DIRECTORY);
     }
 
     public AddPythonAnalyticHandler(final String repositoryRootDirectory) {
+        this(repositoryRootDirectory, null);
+    }
+
+    public AddPythonAnalyticHandler(final String repositoryRootDirectory, final CredentialsProvider credentialsProvider) {
         this.repositoryRootDirectory = repositoryRootDirectory;
+        this.credentialsProvider = credentialsProvider;
     }
 
     @Override
@@ -57,6 +64,7 @@ public class AddPythonAnalyticHandler implements OperationHandler<AddPythonAnaly
             Git.cloneRepository()
                     .setURI(operation.getRepositoryUrl())
                     .setDirectory(file)
+                    .setCredentialsProvider(credentialsProvider)
                     .call();
         } catch (GitAPIException e) {
             throw new OperationException(e);
@@ -72,5 +80,14 @@ public class AddPythonAnalyticHandler implements OperationHandler<AddPythonAnaly
 
     public String getRepositoryRootDirectory() {
         return this.repositoryRootDirectory;
+    }
+
+    public AddPythonAnalyticHandler credentialsProvider(final CredentialsProvider credentialsProvider) {
+        this.credentialsProvider = credentialsProvider;
+        return this;
+    }
+
+    public CredentialsProvider getCredentialsProvider() {
+        return this.credentialsProvider;
     }
 }
