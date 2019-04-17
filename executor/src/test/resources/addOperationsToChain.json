@@ -1,0 +1,79 @@
+{
+  "class": "uk.gov.gchq.maestro.hook.AddOperationsToChain",
+  "start": [
+    {
+      "class": "uk.gov.gchq.maestro.operation.impl.DiscardOutput"
+    },
+    {
+      "class": "uk.gov.gchq.maestro.operation.impl.output.ToCsv"
+    }
+  ],
+  "end": [
+    {
+      "class": "uk.gov.gchq.maestro.operation.impl.DiscardOutput"
+    }
+  ],
+  "before": {
+    "uk.gov.gchq.maestro.operation.impl.output.ToCsv": [
+      {
+        "class": "uk.gov.gchq.maestro.operation.impl.output.ToList"
+      }
+    ],
+    "uk.gov.gchq.maestro.operation.impl.output.ToSingletonList": [
+      {
+        "class": "uk.gov.gchq.maestro.operation.impl.job.GetAllJobDetails"
+      }
+    ]
+  },
+  "after": {
+    "uk.gov.gchq.maestro.operation.impl.output.ToStream": [
+      {
+        "class": "uk.gov.gchq.maestro.operation.impl.output.ToSet"
+      },
+      {
+        "class": "uk.gov.gchq.maestro.operation.impl.output.ToList"
+      }
+    ],
+    "uk.gov.gchq.maestro.operation.impl.output.ToSingletonList": [
+      {
+        "class": "uk.gov.gchq.maestro.operation.impl.output.ToArray"
+      },
+      {
+        "class": "uk.gov.gchq.maestro.operation.impl.DiscardOutput"
+      }
+    ]
+  },
+  "authorisedOps": {
+    "auth1": {
+      "start": [
+        {
+          "class": "uk.gov.gchq.maestro.operation.impl.DiscardOutput"
+        }
+      ],
+      "end": [
+        {
+          "class": "uk.gov.gchq.maestro.operation.impl.output.ToArray"
+        }
+      ]
+    },
+    "auth2": {
+      "before": {
+        "uk.gov.gchq.maestro.operation.impl.output.ToSet": [
+          {
+            "class": "uk.gov.gchq.maestro.operation.impl.job.GetAllJobDetails"
+          }
+        ],
+        "uk.gov.gchq.maestro.operation.impl.output.ToArray": [
+          {
+            "class": "uk.gov.gchq.maestro.operation.impl.output.ToList"
+          }
+        ]
+      },
+      "end": [
+        {
+          "class": "uk.gov.gchq.maestro.operation.impl.output.ToSet"
+        }
+      ]
+    }
+  }
+}

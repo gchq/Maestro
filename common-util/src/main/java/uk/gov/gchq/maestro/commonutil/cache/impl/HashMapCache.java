@@ -67,7 +67,7 @@ public class HashMapCache<K, V> implements ICache<K, V> {
                 throw new RuntimeException(e);
             }
         } else {
-            cache.<K, V>put(key, value);
+            cache.put(key, value);
         }
     }
 

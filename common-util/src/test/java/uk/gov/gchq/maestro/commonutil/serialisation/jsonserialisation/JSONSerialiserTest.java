@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import uk.gov.gchq.maestro.commonutil.CommonConstants;
 import uk.gov.gchq.maestro.commonutil.JsonAssert;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.pair.Pair;
@@ -36,6 +35,7 @@ import uk.gov.gchq.maestro.commonutil.serialisation.impl.util.ParameterisedTestO
 import uk.gov.gchq.maestro.commonutil.serialisation.impl.util.SimpleTestObject;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -184,7 +184,7 @@ public class JSONSerialiserTest {
         final SimpleTestObject obj = new SimpleTestObject();
 
         // When
-        final String json = new String(JSONSerialiser.serialise(obj, "x"), CommonConstants.UTF_8);
+        final String json = new String(JSONSerialiser.serialise(obj, "x"), StandardCharsets.UTF_8);
 
         // Then
         assertFalse(json.contains("x"));
@@ -196,7 +196,7 @@ public class JSONSerialiserTest {
         final SimpleTestObject obj = new SimpleTestObject();
 
         // When
-        final String json = new String(JSONSerialiser.serialise(obj), CommonConstants.UTF_8);
+        final String json = new String(JSONSerialiser.serialise(obj), StandardCharsets.UTF_8);
 
         // Then
         assertTrue(json.contains("x"));

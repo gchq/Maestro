@@ -21,8 +21,8 @@ import uk.gov.gchq.maestro.operation.Operation;
 
 public final class FederatedStoreConstants {
     // Operation options
-    public static final String KEY_OPERATION_OPTIONS_GRAPH_IDS = "gaffer.federated.operation.executorIds";
-    public static final String KEY_SKIP_FAILED_FEDERATED_STORE_EXECUTE = "gaffer.federatedstore.operation.skipFailedFederatedStoreExecute";
+    public static final String KEY_OPERATION_OPTIONS_GRAPH_IDS = "maestro.federated.operation.graphIds";
+    public static final String KEY_SKIP_FAILED_FEDERATED_STORE_EXECUTE = "maestro.federated.operation.skipFailedFederatedStoreExecute";
     public static final String DEFAULT_VALUE_KEY_SKIP_FAILED_FEDERATED_STORE_EXECUTE = String.valueOf(false);
     public static final String DEFAULT_VALUE_IS_PUBLIC = String.valueOf(false);
 

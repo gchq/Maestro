@@ -13,7 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.gov.gchq.maestro.util.hook;
 
-public class HookPathTest {
+package uk.gov.gchq.maestro.named.operation.serialisation;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
+import uk.gov.gchq.maestro.named.operation.NamedOperationDetail;
+
+/**
+ * {@link TypeReference} objects for named operations.
+ */
+public final class NamedOperationTypeReference {
+    private NamedOperationTypeReference() {
+        // Private constructor to prevent instantiation.
+    }
+
+    public static class IterableNamedOperationDetail extends TypeReference<CloseableIterable<NamedOperationDetail>> {
+    }
 }

@@ -1,0 +1,39 @@
+{
+  "start": [
+    {
+      "class": "uk.gov.gchq.maestro.operation.impl.DiscardOutput"
+    },
+    {
+      "class": "uk.gov.gchq.maestro.operation.impl.output.ToSingletonList"
+    }
+  ],
+  "end": [
+    {
+      "class": "uk.gov.gchq.maestro.operation.impl.output.ToCsv"
+    }
+  ],
+  "before": {
+    "uk.gov.gchq.maestro.operation.impl.output.ToArray": [
+      {
+        "class": "uk.gov.gchq.maestro.operation.impl.output.ToStream"
+      }
+    ],
+    "uk.gov.gchq.maestro.operation.impl.output.ToSet": [
+      {
+        "class": "uk.gov.gchq.maestro.operation.impl.job.GetAllJobDetails"
+      }
+    ]
+  },
+  "after": {
+    "uk.gov.gchq.maestro.operation.impl.output.toList": [
+      {
+        "class": "uk.gov.gchq.maestro.operation.impl.output.ToArray"
+      }
+    ],
+    "uk.gov.gchq.maestro.operation.impl.job.GetJobDetails": [
+      {
+        "class": "uk.gov.gchq.maestro.operation.impl.output.ToSet"
+      }
+    ]
+  }
+}

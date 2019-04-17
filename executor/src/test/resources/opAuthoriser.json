@@ -1,0 +1,49 @@
+{
+  "class": "uk.gov.gchq.maestro.hook.OperationAuthoriser",
+  "auths": [
+    {
+      "opClass": "uk.gov.gchq.maestro.operation.Operation",
+      "auths": [
+        "User"
+      ],
+      "operator": "AND"
+    },
+    {
+      "opClass": "uk.gov.gchq.maestro.operation.io.Input",
+      "auths": [
+        "ReadUser"
+      ],
+      "operator": "AND"
+    },
+    {
+      "opClass": "uk.gov.gchq.maestro.operation.impl.output.ToList",
+      "auths": [
+        "WriteUser"
+      ],
+      "operator": "AND"
+    },
+    {
+      "opClass": "uk.gov.gchq.maestro.operation.impl.output.ToArray",
+      "auths": [
+        "SuperUser"
+      ],
+      "operator": "AND"
+    },
+    {
+      "opClass": "uk.gov.gchq.maestro.operation.impl.output.ToSet",
+      "auths": [
+        "SuperUser",
+        "AdminUser"
+      ],
+      "operator": "AND"
+    },
+    {
+      "opClass": "uk.gov.gchq.maestro.operation.impl.output.ToSingletonList",
+      "auths": [
+        "TestUser",
+        "OpsUser"
+      ],
+      "operator": "OR"
+    }
+  ]
+}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.util.hook;
+package uk.gov.gchq.maestro.hook;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.slf4j.Logger;

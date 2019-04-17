@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public final class CollectionUtil {
+
     private CollectionUtil() {
         // Private constructor to prevent instantiation.
     }
