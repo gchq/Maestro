@@ -31,11 +31,13 @@ public abstract class MaestroObjectTest<T> {
     @Test
     public void shouldJSONSerialise() throws Exception {
         final T testObject = getTestObject();
+        requireNonNull(testObject);
+        final String jsonString = getJSONString();
+        requireNonNull(jsonString);
 
-        final String executorString = getJSONString();
-        requireNonNull(executorString);
-        final byte[] serialise = JSONSerialiser.serialise(testObject, true);
-        assertEquals(testObject, JSONSerialiser.deserialise(serialise, getTestObjectClass()));
+        final byte[] serialisedTestObject = JSONSerialiser.serialise(testObject, true);
+        assertEquals("json strings are not equal",jsonString, new String(serialisedTestObject));
+        assertEquals("deserialised object is not the same",testObject, JSONSerialiser.deserialise(serialisedTestObject, getTestObjectClass()));
     }
 
     protected abstract Class<T> getTestObjectClass();

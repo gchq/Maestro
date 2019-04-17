@@ -32,7 +32,20 @@ public class FederatedConfigTest extends ConfigTest {
 
     @Override
     protected String getJSONString() {
-        return "";
+        return "{\n" +
+                "  \"id\" : \"configIdValue\",\n" +
+                "  \"operationHandlers\" : {\n" +
+                "    \"uk.gov.gchq.maestro.helper.TestOperation\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
+                "      \"handlerField\" : \"handlerFieldValue1\"\n" +
+                "    }\n" +
+                "  },\n" +
+                "  \"properties\" : {\n" +
+                "    \"configKey\" : \"configValue\"\n" +
+                "  },\n" +
+                "  \"operationHooks\" : [ ],\n" +
+                "  \"requestHooks\" : [ ]\n" +
+                "}";
     }
 
     @Override

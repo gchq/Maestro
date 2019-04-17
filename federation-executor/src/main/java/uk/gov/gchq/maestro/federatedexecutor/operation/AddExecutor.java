@@ -27,9 +27,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.util.Config;
 
-import java.util.Map;
 import java.util.Set;
 
 @JsonPropertyOrder(value = {"class, executor"}, alphabetic = true)
@@ -42,7 +40,7 @@ public class AddExecutor extends FederatedOperation<AddExecutor> {
     private boolean disabledByDefault = FederatedExecutorStorage.DEFAULT_DISABLED_BY_DEFAULT;
 
     public AddExecutor() {
-        addOption(FederatedStoreConstants.KEY_OPERATION_OPTIONS_GRAPH_IDS, ""); //TODO ?
+        addOption(FederatedStoreConstants.KEY_OPERATION_OPTIONS_EXECUTOR_IDS, ""); //TODO ?
     }
 
     @Override

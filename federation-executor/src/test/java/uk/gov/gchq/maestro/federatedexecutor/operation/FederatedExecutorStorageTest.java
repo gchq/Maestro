@@ -37,7 +37,7 @@ public class FederatedExecutorStorageTest extends MaestroObjectTest<FederatedExe
         return "{\n" +
                 "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage\",\n" +
                 "  \"storage\" : {\n" +
-                "    \"{\\n  \\\"class\\\" : \\\"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess\\\",\\n  \\\"addingUserId\\\" : \\\"testUser1\\\",\\n  \\\"graphAuths\\\" : [ \\\"one\\\" ],\\n  \\\"disabledByDefault\\\" : false,\\n  \\\"public\\\" : false\\n}\" : [ \"java.util.HashSet\", [ {\n" +
+                "    \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess\\\",\\\"addingUserId\\\":\\\"testUser1\\\",\\\"graphAuths\\\":[\\\"one\\\"],\\\"disabledByDefault\\\":false,\\\"public\\\":false}\" : [ \"java.util.HashSet\", [ {\n" +
                 "      \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
                 "      \"config\" : {\n" +
                 "        \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
@@ -48,7 +48,7 @@ public class FederatedExecutorStorageTest extends MaestroObjectTest<FederatedExe
                 "        \"requestHooks\" : [ ]\n" +
                 "      }\n" +
                 "    } ] ],\n" +
-                "    \"{\\n  \\\"class\\\" : \\\"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess\\\",\\n  \\\"addingUserId\\\" : \\\"testUser2\\\",\\n  \\\"graphAuths\\\" : [ \\\"one\\\" ],\\n  \\\"disabledByDefault\\\" : false,\\n  \\\"public\\\" : false\\n}\" : [ \"java.util.HashSet\", [ {\n" +
+                "    \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess\\\",\\\"addingUserId\\\":\\\"testUser2\\\",\\\"graphAuths\\\":[\\\"one\\\"],\\\"disabledByDefault\\\":false,\\\"public\\\":false}\" : [ \"java.util.HashSet\", [ {\n" +
                 "      \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
                 "      \"config\" : {\n" +
                 "        \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +

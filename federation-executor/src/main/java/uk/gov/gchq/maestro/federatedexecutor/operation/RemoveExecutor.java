@@ -22,11 +22,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
 import uk.gov.gchq.maestro.commonutil.Required;
-import uk.gov.gchq.maestro.operation.Operation;
 
-import java.util.Map;
-
-import static uk.gov.gchq.maestro.federatedexecutor.operation.FederatedStoreConstants.KEY_OPERATION_OPTIONS_GRAPH_IDS;
+import static uk.gov.gchq.maestro.federatedexecutor.operation.FederatedStoreConstants.KEY_OPERATION_OPTIONS_EXECUTOR_IDS;
 
 
 @JsonPropertyOrder(value = {"class", "graphId"}, alphabetic = true)
@@ -36,7 +33,7 @@ public class RemoveExecutor extends FederatedOperation<RemoveExecutor> {
     private String graphId;
 
     public RemoveExecutor() {
-        addOption(KEY_OPERATION_OPTIONS_GRAPH_IDS, "");//TODO ?
+        addOption(KEY_OPERATION_OPTIONS_EXECUTOR_IDS, "");//TODO ?
     }
 
     public String getGraphId() {

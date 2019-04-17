@@ -18,17 +18,19 @@ package uk.gov.gchq.maestro.federatedexecutor.operation;
 
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
 
-public class RemoveExecutorTest extends MaestroObjectTest<RemoveExecutor> {
+import static org.junit.Assert.*;
+
+public class GetAllExecutorIdsTest extends MaestroObjectTest<GetAllExecutorIds> {
+
     @Override
-    protected Class<RemoveExecutor> getTestObjectClass() {
-        return RemoveExecutor.class;
+    protected Class<GetAllExecutorIds> getTestObjectClass() {
+        return GetAllExecutorIds.class;
     }
 
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.operation.RemoveExecutor\",\n" +
-                "  \"graphId\" : \"innerGraph1\",\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.operation.GetAllExecutorIds\",\n" +
                 "  \"options\" : {\n" +
                 "    \"maestro.federated.operation.executorIds\" : \"\"\n" +
                 "  }\n" +
@@ -36,7 +38,7 @@ public class RemoveExecutorTest extends MaestroObjectTest<RemoveExecutor> {
     }
 
     @Override
-    protected RemoveExecutor getTestObject() {
-        return new RemoveExecutor().graphId("innerGraph1");
+    protected GetAllExecutorIds getTestObject() throws Exception {
+        return new GetAllExecutorIds();
     }
 }

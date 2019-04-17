@@ -42,7 +42,18 @@ public class FederatedExecutorTest extends MaestroObjectTest<Executor> {
 
     @Override
     protected String getJSONString() {
-        return "";
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
+                "  \"config\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
+                "    \"operationHandlers\" : { },\n" +
+                "    \"properties\" : {\n" +
+                "      \"ExecutorStorage\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage\\\",\\\"storage\\\":{\\\"{\\\\\\\"class\\\\\\\":\\\\\\\"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess\\\\\\\",\\\\\\\"addingUserId\\\\\\\":\\\\\\\"user1\\\\\\\",\\\\\\\"graphAuths\\\\\\\":[],\\\\\\\"disabledByDefault\\\\\\\":false,\\\\\\\"public\\\\\\\":false}\\\":[\\\"java.util.HashSet\\\",[{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"id\\\":\\\"ExecutorId2\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}},{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.util.Config\\\",\\\"id\\\":\\\"ExecutorId1\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}}]]}}\"\n" +
+                "    },\n" +
+                "    \"operationHooks\" : [ ],\n" +
+                "    \"requestHooks\" : [ ]\n" +
+                "  }\n" +
+                "}";
     }
 
     @Test

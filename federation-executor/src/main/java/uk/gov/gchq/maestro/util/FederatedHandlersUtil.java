@@ -26,11 +26,10 @@ import uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor;
 import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess;
 import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.federatedexecutor.operation.RemoveExecutor;
-import uk.gov.gchq.maestro.federatedexecutor.operation.handler.impl.AddExecutorHandler;
-import uk.gov.gchq.maestro.federatedexecutor.operation.handler.impl.RemoveExecutorHandler;
 import uk.gov.gchq.maestro.user.User;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -118,5 +117,20 @@ public final class FederatedHandlersUtil {
         final boolean isRemoved = deserialisedExecutorStorage.remove(executorId, user);
         FederatedPropertiesUtil.putSerialisedExecutorStorage(properties, deserialisedExecutorStorage);
         return isRemoved;
+    }
+
+    public static Collection<String> getAllExecutorsFrom(final Executor executor, final User user) throws MaestroCheckedException {
+        final Config config = executor.getConfig();
+        return getAllExecutorsFrom(config, user);
+    }
+
+    public static Collection<String> getAllExecutorsFrom(final Config config, final User user) throws MaestroCheckedException {
+        final Properties properties = config.getProperties();
+        return getAllExecutorsFrom(properties, user);
+    }
+
+    public static Collection<String> getAllExecutorsFrom(final Properties properties, final User user) throws MaestroCheckedException {
+        final FederatedExecutorStorage deserialisedExecutorStorage = FederatedPropertiesUtil.getDeserialisedExecutorStorage(properties);
+        return deserialisedExecutorStorage.getAllIds(user);
     }
 }
