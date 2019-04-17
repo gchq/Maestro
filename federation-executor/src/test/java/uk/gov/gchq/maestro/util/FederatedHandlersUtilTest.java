@@ -20,62 +20,48 @@ import org.junit.Test;
 
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
+import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess;
+import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage;
+import uk.gov.gchq.maestro.user.User;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class FederatedUtilTest {
+public class FederatedHandlersUtilTest {
     @Test
     public void shouldGetExecutor() throws MaestroCheckedException {
         //given
         final Executor expected = new Executor().config(new Config().id("ExecutorId1"));
         final Properties properties = new Properties();
-        properties.put("ExecutorStore_Executor1", "{\"class\":\"uk.gov.gchq.maestro.Executor\",\"config\":{\"class\":\"uk.gov.gchq.maestro.util.Config\",\"id\":\"ExecutorId1\",\"operationHandlers\":{},\"hooks\":[]}}\"");
+        final FederatedExecutorStorage storage = new FederatedExecutorStorage().put(expected, new FederatedAccess(null, "tempUser", false));
+        FederatedPropertiesUtil.putSerialisedExecutorStorage(properties, storage);
 
         //when
-        final HashMap<String, Executor> executors = FederatedUtil.getFederatedExecutors(properties);
+        final List<Executor> executors = FederatedHandlersUtil.getExecutorsFrom(properties, new User("tempUser"), null);
 
         //then
         assertEquals(1, executors.size());
-        assertEquals(expected, executors.get("Executor1"));
-    }
-
-    @Test
-    public void shouldErrorWithFailedDeserialising() {
-        //given
-        final String key = "ExecutorStore_Executor1";
-        final String value = "";
-        final Properties properties = new Properties();
-        properties.put(key, value);
-
-        try {
-            //when
-            FederatedUtil.getFederatedExecutors(properties);
-            fail("exception expected");
-        } catch (MaestroCheckedException e) {
-            //then
-            assertEquals(String.format(FederatedUtil.ERROR_DESERIALISING_EXECUTOR_FROM_PROPERTY_VALUE_STRING, key, value), e.getMessage());
-        }
+        assertEquals(expected, executors.get(0));
     }
 
     @Test
     public void shouldErrorWithWrongValueType() {
         //given
-        final String key = "ExecutorStore_Executor1";
         final Integer value = 1;
         final Properties properties = new Properties();
-        properties.put(key, value);
+        properties.put(FederatedPropertiesUtil.EXECUTOR_STORAGE, value);
 
         try {
             //when
-            FederatedUtil.getFederatedExecutors(properties);
+            FederatedHandlersUtil.getExecutorsFrom(properties, null, null);
             fail("exception expected");
         } catch (MaestroCheckedException e) {
             //then
-            assertEquals(String.format(FederatedUtil.VALUE_FOR_PROPERTY_S_EXPECTED_STRING_FOUND_S, key, value.getClass()), e.getMessage());
+            assertTrue(e.getMessage().contains(String.format(FederatedPropertiesUtil.VALUE_FOR_PROPERTY_KEY_S_EXPECTED_CLASS_S_FOUND_S, FederatedPropertiesUtil.EXECUTOR_STORAGE, String.class.getCanonicalName(), value.getClass().getCanonicalName())));
         }
     }
 }

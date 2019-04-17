@@ -17,17 +17,19 @@
 package uk.gov.gchq.maestro.helper;
 
 import org.junit.Test;
+import org.junit.internal.runners.statements.Fail;
 
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public abstract class MaestroObjectTest<T> {
 
     @Test
-    public void shouldJSONSerialise() throws SerialisationException {
+    public void shouldJSONSerialise() throws Exception {
         final T testObject = getTestObject();
 
         final String executorString = getJSONString();
@@ -40,5 +42,5 @@ public abstract class MaestroObjectTest<T> {
 
     protected abstract String getJSONString();
 
-    protected abstract T getTestObject();
+    protected abstract T getTestObject() throws Exception;
 }

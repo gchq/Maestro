@@ -16,18 +16,20 @@
 
 package uk.gov.gchq.maestro.federatedexecutor.operation;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import uk.gov.gchq.maestro.user.User;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -59,6 +61,8 @@ import java.util.Set;
  *
  * @see #isValidToExecute(User)
  */
+@JsonPropertyOrder(value = {"class", "addingUserId", "graphAuths"}, alphabetic = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
 public class FederatedAccess implements Serializable {
     private static final long serialVersionUID = 1399629017857618033L;
 
@@ -77,7 +81,8 @@ public class FederatedAccess implements Serializable {
         this.isPublic = isPublic;
     }
 
-    public FederatedAccess(final Set<String> graphAuths, final String addingUser, final boolean isPublic, final boolean disabledByDefault) {
+    @JsonCreator
+    public FederatedAccess(@JsonProperty("graphAuths") final Set<String> graphAuths, @JsonProperty("addingUser") final String addingUser, @JsonProperty("isPublic") final boolean isPublic, @JsonProperty("disabledByDefault") final boolean disabledByDefault) {
         this(graphAuths, addingUser, isPublic);
         this.disabledByDefault = disabledByDefault;
     }
@@ -129,8 +134,21 @@ public class FederatedAccess implements Serializable {
         return (null == this.graphAuths || this.graphAuths.isEmpty());
     }
 
-    public void setGraphAuths(final Set<String> graphAuths) {
-        this.graphAuths = graphAuths;
+    public FederatedAccess setGraphAuths(final Set<String> graphAuths) {
+        if (Objects.nonNull(graphAuths)) {
+            this.graphAuths = graphAuths;
+        } else {
+            this.graphAuths.clear();
+        }
+        return this;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public Set<String> getGraphAuths() {
+        return Collections.unmodifiableSet(graphAuths);
     }
 
     @Override
@@ -161,78 +179,5 @@ public class FederatedAccess implements Serializable {
                 .append(addingUserId)
                 .append(disabledByDefault)
                 .toHashCode();
-    }
-
-    public static class Builder {
-        private String addingUserId;
-        private Set<String> graphAuths;
-        private final Builder self = this;
-        private boolean isPublic = false;
-        private boolean disabledByDefault;
-
-        public Builder graphAuths(final String... opAuth) {
-            if (null == opAuth) {
-                this.graphAuths = null;
-            } else {
-                graphAuths(Arrays.asList(opAuth));
-            }
-            return self;
-        }
-
-        public Builder graphAuths(final Collection<? extends String> graphAuths) {
-            if (null == graphAuths) {
-                this.graphAuths = null;
-            } else {
-                final HashSet<String> authSet = Sets.newHashSet(graphAuths);
-                authSet.removeAll(Lists.newArrayList("", null));
-                this.graphAuths = authSet;
-            }
-            return self;
-        }
-
-        public Builder addGraphAuths(final Collection<? extends String> graphAuths) {
-            if (null != graphAuths) {
-                final HashSet<String> authSet = Sets.newHashSet(graphAuths);
-                authSet.removeAll(Lists.newArrayList("", null));
-                if (null == this.graphAuths) {
-                    this.graphAuths = authSet;
-                } else {
-                    this.graphAuths.addAll(authSet);
-                }
-            }
-            return self;
-        }
-
-        public Builder addingUserId(final String addingUser) {
-            this.addingUserId = addingUser;
-            return self;
-        }
-
-        public Builder disabledByDefault(final boolean disabledByDefault) {
-            this.disabledByDefault = disabledByDefault;
-            return self;
-        }
-
-        public FederatedAccess build() {
-            return new FederatedAccess(graphAuths, addingUserId, isPublic, disabledByDefault);
-        }
-
-        public Builder makePublic() {
-            isPublic = true;
-            return self;
-        }
-
-        public Builder makePrivate() {
-            isPublic = false;
-            return self;
-        }
-
-        public Builder clone(final FederatedAccess that) {
-            this.graphAuths = that.graphAuths;
-            this.addingUserId = that.addingUserId;
-            this.isPublic = that.isPublic;
-            this.disabledByDefault = that.disabledByDefault;
-            return self;
-        }
     }
 }

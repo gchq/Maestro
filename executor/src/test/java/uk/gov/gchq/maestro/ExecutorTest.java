@@ -56,7 +56,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     }
 
     @Override
-    public void shouldJSONSerialise() throws uk.gov.gchq.maestro.commonutil.exception.SerialisationException {
+    public void shouldJSONSerialise() throws Exception {
         super.shouldJSONSerialise();
         final Executor testObject = getTestObject();
 

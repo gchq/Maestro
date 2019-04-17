@@ -26,18 +26,18 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
+import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.util.Config;
 
 import java.util.Map;
 import java.util.Set;
 
-@JsonPropertyOrder(value = {"class", "id"}, alphabetic = true)
+@JsonPropertyOrder(value = {"class, executor"}, alphabetic = true)
 @JsonInclude(Include.NON_DEFAULT)
-public class AddExecutor implements FederatedOperation {
-    private Config config;
+public class AddExecutor extends FederatedOperation<AddExecutor> {
+    private Executor executor;
     private String parentConfigId;
     private Set<String> executorAuths;
-    private Map<String, String> options;
     private boolean isPublic = false;
     private boolean disabledByDefault = FederatedExecutorStorage.DEFAULT_DISABLED_BY_DEFAULT;
 
@@ -48,7 +48,7 @@ public class AddExecutor implements FederatedOperation {
     @Override
     public AddExecutor shallowClone() throws CloneFailedException {
         final AddExecutor addExecutor = new AddExecutor()
-                .config(this.config)
+                .executor(this.executor)
                 .parentConfigId(this.parentConfigId)
                 .disabledByDefault(this.disabledByDefault)
                 .options(this.options)
@@ -61,12 +61,14 @@ public class AddExecutor implements FederatedOperation {
         return addExecutor;
     }
 
-    public Config getConfig() {
-        return config;
+    @JsonGetter("executor")
+    public Executor getExecutor() {
+        return executor;
     }
 
-    public AddExecutor config(final Config config) {
-        this.config = config;
+    @JsonSetter("executor")
+    public AddExecutor executor(final Executor executor) {
+        this.executor = executor;
         return this;
     }
 
@@ -85,17 +87,6 @@ public class AddExecutor implements FederatedOperation {
 
     public AddExecutor disabledByDefault(final boolean disabledByDefault) {
         this.disabledByDefault = disabledByDefault;
-        return this;
-    }
-
-    @Override
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    @Override
-    public AddExecutor options(final Map<String, String> options) {
-        this.options = options;
         return this;
     }
 
@@ -132,7 +123,7 @@ public class AddExecutor implements FederatedOperation {
         return new EqualsBuilder()
                 .append(isPublic, that.isPublic)
                 .append(disabledByDefault, that.disabledByDefault)
-                .append(config, that.config)
+                .append(executor, that.executor)
                 .append(parentConfigId, that.parentConfigId)
                 .append(executorAuths, that.executorAuths)
                 .append(options, that.options)
@@ -142,7 +133,7 @@ public class AddExecutor implements FederatedOperation {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(config)
+                .append(executor)
                 .append(parentConfigId)
                 .append(executorAuths)
                 .append(options)

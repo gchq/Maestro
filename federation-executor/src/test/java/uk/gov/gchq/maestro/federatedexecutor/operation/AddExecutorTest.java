@@ -16,6 +16,7 @@
 
 package uk.gov.gchq.maestro.federatedexecutor.operation;
 
+import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
 import uk.gov.gchq.maestro.util.Config;
 
@@ -35,16 +36,20 @@ public class AddExecutorTest extends MaestroObjectTest<AddExecutor> {
     protected String getJSONString() {
         return "{\n" +
                 "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor\",\n" +
-                "  \"config\" : {\n" +
-                "    \"id\" : \"idValue1\",\n" +
-                "    \"operationHandlers\" : { },\n" +
-                "    \"properties\" : { },\n" +
-                "    \"operationHooks\" : [ ],\n" +
-                "    \"requestHooks\" : [ ]\n" +
+                "  \"executor\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
+                "    \"config\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
+                "      \"id\" : \"idValue1\",\n" +
+                "      \"operationHandlers\" : { },\n" +
+                "      \"properties\" : { },\n" +
+                "      \"operationHooks\" : [ ],\n" +
+                "      \"requestHooks\" : [ ]\n" +
+                "    }\n" +
                 "  },\n" +
                 "  \"executorAuths\" : [ \"auth1\", \"auth3\", \"auth2\" ],\n" +
                 "  \"options\" : {\n" +
-                "    \"op2\" : \"val2\",\n" + //TODO make ordered.
+                "    \"op2\" : \"val2\",\n" +
                 "    \"op1\" : \"val1\"\n" +
                 "  }\n" +
                 "}";
@@ -65,6 +70,6 @@ public class AddExecutorTest extends MaestroObjectTest<AddExecutor> {
                 .auths(auths)
                 .disabledByDefault(false)
                 .options(options)
-                .config(new Config().id("idValue1"));
+                .executor(new Executor().config(new Config().id("idValue1")));
     }
 }

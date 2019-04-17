@@ -31,6 +31,7 @@ public class FederationTest extends MaestroObjectTest<Executor> {
                 "  \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
                 "  \"config\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
+                "    \"id\" : \"ExecutorId1\",\n"+
                 "    \"operationHandlers\" : { },\n" +
                 "    \"properties\" : { },\n" +
                 "    \"operationHooks\" : [ ],\n" +
@@ -42,7 +43,7 @@ public class FederationTest extends MaestroObjectTest<Executor> {
     @Override
     protected Executor getTestObject() {
         final Executor executor = new Executor()
-                .config(new Config());
+                .config(new Config().id("ExecutorId1"));
         return executor;
     }
 }

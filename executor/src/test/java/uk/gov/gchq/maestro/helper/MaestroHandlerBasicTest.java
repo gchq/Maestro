@@ -27,9 +27,17 @@ import uk.gov.gchq.maestro.util.Config;
 
 import static org.junit.Assert.fail;
 
-public abstract class MaestroHandlerTest<Op extends Operation, H extends OperationHandler<Op>> {
+/**
+ * Abstract test to perform the initial basic form of testing for a handler.
+ *
+ * @param <Op> The Operation
+ * @param <H>  The Handler
+ * @see OperationHandler
+ */
+public abstract class MaestroHandlerBasicTest<Op extends Operation, H extends OperationHandler<Op>> {
     public static final String EXECUTOR_ID = "testExecutorId";
     protected Executor testExecutor;
+    protected Context context;
 
     @Before
     public void setUp() throws Exception {
@@ -37,25 +45,25 @@ public abstract class MaestroHandlerTest<Op extends Operation, H extends Operati
     }
 
     @Test
-    public void shouldHandler() throws Exception {
-        final Op op = getOp();
-        final H handler = getHandler();
-        final Object handlerValue = handler.doOperation(op, new Context(), testExecutor);
+    public void shouldHandleABasicExample() throws Exception {
+        final Op op = getBasicOp();
+        final H handler = getBasicHandler();
+        final Object handlerValue = handler.doOperation(op, context, testExecutor);
         inspectReturnFromHandler(handlerValue);
         inspectFields();
     }
 
     @Test
-    public void shouldExecute() throws Exception {
-        final Op op = getOp();
-        final Object executeValue = testExecutor.execute(op, new Context());
+    public void shouldExecuteABasicExample() throws Exception {
+        final Op op = getBasicOp();
+        final Object executeValue = testExecutor.execute(op, context);
         inspectReturnFromExecute(executeValue);
         inspectFields();
     }
 
-    protected abstract H getHandler() throws Exception;
+    protected abstract H getBasicHandler() throws Exception;
 
-    protected abstract Op getOp() throws Exception;
+    protected abstract Op getBasicOp() throws Exception;
 
     protected void inspectFields() throws Exception {
         fail("Override test method: inspectFields");

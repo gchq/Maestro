@@ -16,12 +16,24 @@
 
 package uk.gov.gchq.maestro.federatedexecutor.operation;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.CacheOperationException;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
+import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
 import uk.gov.gchq.maestro.commonutil.exception.OverwritingException;
 import uk.gov.gchq.maestro.user.User;
 
@@ -37,6 +49,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
+@JsonPropertyOrder(value = {"class", "storage"}, alphabetic = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
 public class FederatedExecutorStorage {
     public static final boolean DEFAULT_DISABLED_BY_DEFAULT = false;
     public static final String ERROR_ADDING_GRAPH_TO_CACHE = "Error adding executor, ExecutorId is known within the cache, but %s is different. ExecutorId: %s";
@@ -44,10 +58,29 @@ public class FederatedExecutorStorage {
     public static final String ACCESS_IS_NULL = "Can not put executor into storage without a FederatedAccess key.";
     public static final String GRAPH_IDS_NOT_VISIBLE = "The following executorIds are not visible or do not exist: %s";
     public static final String UNABLE_TO_MERGE_THE_SCHEMAS_FOR_ALL_OF_YOUR_FEDERATED_GRAPHS = "Unable to merge the schemas for all of your federated executors: %s. You can limit which executors to query for using the operation option: %s";
-    private Map<FederatedAccess, Set<Executor>> storage = new HashMap<>();
+    public static final String ERROR_GETTING_S_FROM_FEDERATED_EXECUTOR_STORAGE_S = "Error getting: %s from FederatedExecutorStorage -> %s";
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
+    @JsonSerialize(keyUsing = MapStorageSerialiser.class)
+    @JsonDeserialize(keyUsing = MapStorageDeserialiser.class)
+    private final Map<FederatedAccess, Set<Executor>> storage = new HashMap<>();
     private FederatedExecutorCache federatedStoreCache = new FederatedExecutorCache();
     private Boolean isCacheEnabled = false;
     // private ExecutorLibrary executorLibrary; TODO
+
+
+    public FederatedExecutorStorage() {
+    }
+
+    @JsonCreator
+    public FederatedExecutorStorage(@JsonProperty("storage") final Map<FederatedAccess, Set<Executor>> storage) {
+        this.storage.putAll(storage);
+    }
+
+    @JsonGetter("storage")
+    public Map<FederatedAccess, Set<Executor>> getStorage() {
+        // return Collections.unmodifiableMap(storage);
+        return storage;
+    }
 
     protected void startCacheServiceLoader() throws MaestroCheckedException {
         if (CacheServiceLoader.isEnabled()) {
@@ -73,9 +106,8 @@ public class FederatedExecutorStorage {
      * @param access   access required to for the executor.
      * @throws MaestroCheckedException if unable to put arguments into storage
      */
-    public void put(final Executor executor, final FederatedAccess access) throws MaestroCheckedException {
+    public FederatedExecutorStorage put(final Executor executor, final FederatedAccess access) throws MaestroCheckedException {
         if (executor != null) {
-            String executorId = executor.getConfig().getId();
             try {
                 if (null == access) {
                     throw new IllegalArgumentException(ACCESS_IS_NULL);
@@ -99,11 +131,12 @@ public class FederatedExecutorStorage {
                     existingExecutors.add(builtExecutor);
                 }
             } catch (final Exception e) {
-                throw new MaestroCheckedException("Error adding executor " + executorId + " to storage due to: " + e.getMessage(), e);
+                throw new MaestroCheckedException("Error adding executor id: " + executor.getConfig().getId() + " to storage", e);
             }
         } else {
             throw new MaestroCheckedException("Executor cannot be null");
         }
+        return this;
     }
 
 
@@ -178,12 +211,16 @@ public class FederatedExecutorStorage {
      * @param executorIds the executorIds to get executors for.
      * @return visible executors from the given executorIds.
      */
-    public Collection<Executor> get(final User user, final List<String> executorIds) {
+    public Collection<Executor> get(final User user, final List<String> executorIds) throws MaestroCheckedException {
         if (null == user) {
             return Collections.emptyList();
         }
 
-        validateAllGivenExecutorIdsAreVisibleForUser(user, executorIds);
+        try {
+            validateAllGivenExecutorIdsAreVisibleForUser(user, executorIds);
+        } catch (MaestroCheckedException e) {
+            throw new MaestroCheckedException(String.format(ERROR_GETTING_S_FROM_FEDERATED_EXECUTOR_STORAGE_S, executorIds.toString(), e.getMessage()), e);
+        }
         Stream<Executor> executors = getStream(user, executorIds);
         if (null != executorIds) {
             executors = executors.sorted((g1, g2) -> executorIds.indexOf(g1.getConfig().getId()) - executorIds.indexOf(g2.getConfig().getId()));
@@ -193,13 +230,14 @@ public class FederatedExecutorStorage {
     }
 
 
-    private void validateAllGivenExecutorIdsAreVisibleForUser(final User user, final Collection<String> executorIds) {
+    private void validateAllGivenExecutorIdsAreVisibleForUser(final User user, final Collection<String> executorIds) throws MaestroCheckedException {
         if (null != executorIds) {
             final Collection<String> visibleIds = getAllIds(user);
             if (!visibleIds.containsAll(executorIds)) {
                 final Set<String> notVisibleIds = Sets.newHashSet(executorIds);
                 notVisibleIds.removeAll(visibleIds);
-                throw new IllegalArgumentException(String.format(GRAPH_IDS_NOT_VISIBLE, notVisibleIds));
+                final IllegalArgumentException e = new IllegalArgumentException(String.format(GRAPH_IDS_NOT_VISIBLE, notVisibleIds));
+                throw new MaestroCheckedException(e.getMessage(), e);
             }
         }
     }
@@ -285,13 +323,13 @@ public class FederatedExecutorStorage {
     private void validateSameAsFromCache(final Executor newExecutor, final String executorId) {
         //TODO
         // final Executor fromCache = federatedStoreCache.getExecutorFromCache(executorId).getExecutor(executorLibrary);
-        // if (!newExecutor.getConfig().getProperties().getProperties().equals(fromCache.getConfig().getProperties().getProperties())) {
+        // if (!newExecutor.getExecutor().getProperties().getProperties().equals(fromCache.getExecutor().getProperties().getProperties())) {
         //     throw new RuntimeException(String.format(ERROR_ADDING_GRAPH_TO_CACHE, ExecutorConfigEnum.PROPERTIES.toString(), executorId));
         // } else {
         //     if (!JsonUtil.equals(newExecutor.getSchema().toJson(false), fromCache.getSchema().toJson(false))) {
         //         throw new RuntimeException(String.format(ERROR_ADDING_GRAPH_TO_CACHE, ExecutorConfigEnum.SCHEMA.toString(), executorId));
         //     } else {
-        //         if (!newExecutor.getConfig().getId().equals(fromCache.getConfig().getId())) {
+        //         if (!newExecutor.getExecutor().getId().equals(fromCache.getExecutor().getId())) {
         //             throw new RuntimeException(String.format(ERROR_ADDING_GRAPH_TO_CACHE, "ExecutorId", executorId));
         //         }
         //     }
@@ -343,5 +381,39 @@ public class FederatedExecutorStorage {
         for (final String executorId : allExecutorIds) {
             makeExecutorFromCache(executorId);
         }
+    }
+
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final FederatedExecutorStorage that = (FederatedExecutorStorage) o;
+
+        return new EqualsBuilder()
+                .append(storage, that.storage)
+                // .append(federatedStoreCache, that.federatedStoreCache) TODO Examine if/when this is required/used
+                .append(isCacheEnabled, that.isCacheEnabled)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(storage)
+                // .append(federatedStoreCache) TODO Examine if/when this is required/used
+                .append(isCacheEnabled)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("storage", storage)
+                // .append("federatedStoreCache", federatedStoreCache)  TODO Examine if/when this is required/used
+                .append("isCacheEnabled", isCacheEnabled)
+                .toString();
     }
 }

@@ -16,42 +16,63 @@
 
 package uk.gov.gchq.maestro.federatedexecutor.operation.handler.impl;
 
-import org.junit.Assert;
+import org.junit.Before;
 
+import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor;
-import uk.gov.gchq.maestro.helper.MaestroHandlerTest;
+import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage;
+import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
+import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
-import uk.gov.gchq.maestro.util.FederatedUtil;
+import uk.gov.gchq.maestro.util.FederatedPropertiesUtil;
 
+import java.util.Collection;
+
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class AddExecutorHandlerTest extends MaestroHandlerTest<AddExecutor, AddExecutorHandler> {
+public class AddExecutorHandlerBasicTest extends MaestroHandlerBasicTest<AddExecutor, AddExecutorHandler> {
 
     public static final String INNER_EXECUTOR_ID = "innerExecutorId";
+    private User testUser1;
 
     @Override
-    protected AddExecutor getOp() {
-        return new AddExecutor()
-                .config(new Config().id(INNER_EXECUTOR_ID));
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        testExecutor.getConfig().addOperationHandler(AddExecutor.class, new AddExecutorHandler());
+        testUser1 = new User("testUser1");
+        context = new Context(testUser1);
     }
 
     @Override
-    protected AddExecutorHandler getHandler() {
+    protected AddExecutor getBasicOp() {
+        return new AddExecutor()
+                .executor(getInnerExecutor("A"));//TODO Improve the complexity of whats beeing added + test result.
+    }
+
+    public static Executor getInnerExecutor(final String s) {
+        return new Executor().config(new Config().id(INNER_EXECUTOR_ID+ s));
+    }
+
+    @Override
+    protected AddExecutorHandler getBasicHandler() {
         return new AddExecutorHandler();
     }
 
     @Override
-    protected void inspectFields() {
+    protected void inspectFields() throws Exception {
         final Config config = testExecutor.getConfig();
         assertNotNull(config);
-        final String key = FederatedUtil.EXECUTOR_STORE + AddExecutorHandlerTest.INNER_EXECUTOR_ID;
-        final Object value = config.getProperties().getProperties().get(key);
+        final FederatedExecutorStorage value = FederatedPropertiesUtil.getDeserialisedExecutorStorage(config.getProperties());
         assertNotNull("expected value is null", value);
-        assertTrue(value instanceof Executor);
-        Assert.assertEquals(AddExecutorHandlerTest.INNER_EXECUTOR_ID, ((Executor) value).getConfig().getId());
+        final Collection<Executor> all = value.getAll(testUser1);
+        assertNotNull(all);
+        assertEquals(1, all.size());
+        assertEquals(INNER_EXECUTOR_ID+"A", all.iterator().next().getConfig().getId());
     }
 
 

@@ -19,8 +19,25 @@ package uk.gov.gchq.maestro.federatedexecutor.operation;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 
-public interface FederatedOperation extends Operation {
-    static boolean hasFederatedOperations(final OperationChain<?> operationChain) {
+import java.util.Map;
+
+public abstract class FederatedOperation<T extends FederatedOperation> implements Operation {
+
+    protected Map<String, String> options;
+
+    @Override
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    @Override
+    public T options(final Map<String, String> options) {
+        this.options = options;
+        return (T) this;
+    }
+
+    public static boolean hasFederatedOperations(final OperationChain<?> operationChain) {
+        //TODO WHAT WHT? FederatedOperation?
         for (final Operation operation : operationChain.getOperations()) {
             if (operation instanceof FederatedOperation) {
                 return true;

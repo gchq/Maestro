@@ -57,7 +57,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     }
 
     @Override
-    protected Config getTestObject() {
+    protected Config getTestObject() throws Exception{
         final Config config = new Config();
         config.addOperationHandler(TestOperation.class, new TestHandler().fieldHandler("handlerFieldValue1"));
         final Properties properties = new Properties();
