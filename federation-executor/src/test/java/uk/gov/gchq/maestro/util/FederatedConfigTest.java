@@ -19,14 +19,12 @@ package uk.gov.gchq.maestro.util;
 import com.google.common.collect.Sets;
 
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage;
-import uk.gov.gchq.maestro.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedAccess;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage;
 
 import java.util.Properties;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
 
 public class FederatedConfigTest extends ConfigTest {
 

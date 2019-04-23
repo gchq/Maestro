@@ -23,7 +23,7 @@ import org.apache.commons.lang3.exception.CloneFailedException;
 
 import uk.gov.gchq.maestro.commonutil.Required;
 
-import static uk.gov.gchq.maestro.federatedexecutor.operation.FederatedStoreConstants.KEY_OPERATION_OPTIONS_EXECUTOR_IDS;
+import static uk.gov.gchq.maestro.federatedexecutor.FederatedStoreConstants.KEY_OPERATION_OPTIONS_EXECUTOR_IDS;
 
 
 @JsonPropertyOrder(value = {"class", "graphId"}, alphabetic = true)
@@ -33,7 +33,7 @@ public class RemoveExecutor extends FederatedOperation<RemoveExecutor> {
     private String graphId;
 
     public RemoveExecutor() {
-        addOption(KEY_OPERATION_OPTIONS_EXECUTOR_IDS, "");//TODO ?
+        addOption(KEY_OPERATION_OPTIONS_EXECUTOR_IDS, ""); //TODO ?
     }
 
     public String getGraphId() {
@@ -54,9 +54,13 @@ public class RemoveExecutor extends FederatedOperation<RemoveExecutor> {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         final RemoveExecutor that = (RemoveExecutor) o;
 

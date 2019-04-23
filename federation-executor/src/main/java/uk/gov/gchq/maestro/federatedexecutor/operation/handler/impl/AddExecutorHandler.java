@@ -47,7 +47,7 @@ public class AddExecutorHandler implements OperationHandler<AddExecutor> {
 
         try {
             FederatedHandlersUtil.addExecutorTo(operation, executor, user.getUserId());
-        } catch (MaestroCheckedException e) {
+        } catch (final MaestroCheckedException e) {
             throw new OperationException(String.format(ERROR_ADDING_EXECUTOR_ID_S_TO_S_S, operation.getExecutor().getConfig().getId(), executor.getConfig().getId(), e.getMessage()), e);
         }
 

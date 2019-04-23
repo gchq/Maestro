@@ -17,14 +17,11 @@
 package uk.gov.gchq.maestro.helper;
 
 import org.junit.Test;
-import org.junit.internal.runners.statements.Fail;
 
-import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public abstract class MaestroObjectTest<T> {
 
@@ -36,8 +33,8 @@ public abstract class MaestroObjectTest<T> {
         requireNonNull(jsonString);
 
         final byte[] serialisedTestObject = JSONSerialiser.serialise(testObject, true);
-        assertEquals("json strings are not equal",jsonString, new String(serialisedTestObject));
-        assertEquals("deserialised object is not the same",testObject, JSONSerialiser.deserialise(serialisedTestObject, getTestObjectClass()));
+        assertEquals("json strings are not equal", jsonString, new String(serialisedTestObject));
+        assertEquals("deserialised object is not the same", testObject, JSONSerialiser.deserialise(serialisedTestObject, getTestObjectClass()));
     }
 
     protected abstract Class<T> getTestObjectClass();

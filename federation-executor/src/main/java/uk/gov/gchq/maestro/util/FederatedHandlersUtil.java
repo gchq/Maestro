@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedAccess;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.federatedexecutor.operation.RemoveExecutor;
 import uk.gov.gchq.maestro.user.User;
 
@@ -44,17 +44,17 @@ public final class FederatedHandlersUtil {
         //No instance
     }
 
-    public static List<Executor> getExecutorsFrom(final Executor executor, User user, final String executorId) throws MaestroCheckedException {
+    public static List<Executor> getExecutorsFrom(final Executor executor, final User user, final String executorId) throws MaestroCheckedException {
         final ArrayList<String> executorIds = Lists.newArrayList(executorId);
         return getExecutorsFrom(executor, user, executorIds);
     }
 
-    public static List<Executor> getExecutorsFrom(final Executor executor, User user, final ArrayList<String> executorIds) throws MaestroCheckedException {
+    public static List<Executor> getExecutorsFrom(final Executor executor, final User user, final ArrayList<String> executorIds) throws MaestroCheckedException {
         requireNonNull(executor);
         final Config config = executor.getConfig();
         try {
             return getExecutorsFrom(config, user, executorIds);
-        } catch (MaestroCheckedException e) {
+        } catch (final MaestroCheckedException e) {
             throw new MaestroCheckedException(String.format(ERROR_GETTING_S_FROM_S_S, executorIds.toString(), config.getId(), e.getMessage()), e);
         }
     }

@@ -20,8 +20,8 @@ import org.junit.Test;
 
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedAccess;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.user.User;
 
 import java.util.List;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.federatedexecutor.operation;
+package uk.gov.gchq.maestro.federatedexecutor;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess;
 
 import java.io.IOException;
 
@@ -30,7 +29,7 @@ public class MapStorageSerialiser extends JsonSerializer<FederatedAccess> {
     @Override
     public void serialize(final FederatedAccess  storage, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
 
-        final byte[] serialise = JSONSerialiser.serialise(storage);//TODO improve
+        final byte[] serialise = JSONSerialiser.serialise(storage); //TODO improve
 
         jsonGenerator.writeFieldName(new String(serialise));
 

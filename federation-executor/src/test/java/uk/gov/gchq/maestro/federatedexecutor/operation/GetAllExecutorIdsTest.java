@@ -18,8 +18,6 @@ package uk.gov.gchq.maestro.federatedexecutor.operation;
 
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
 
-import static org.junit.Assert.*;
-
 public class GetAllExecutorIdsTest extends MaestroObjectTest<GetAllExecutorIds> {
 
     @Override

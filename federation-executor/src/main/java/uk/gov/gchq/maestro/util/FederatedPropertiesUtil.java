@@ -20,8 +20,8 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedAccess;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage;
 
 import java.util.Map;
 import java.util.Properties;
@@ -52,7 +52,7 @@ public final class FederatedPropertiesUtil {
                 }
             }
             return rtn;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new MaestroCheckedException(String.format(ERROR_GETTING_DESERIALISED_FEDERATED_EXECUTOR_STORAGE_KEY_S_FROM_PROPERTIES_S, EXECUTOR_STORAGE, e.getMessage()), e);
         }
     }
@@ -61,14 +61,14 @@ public final class FederatedPropertiesUtil {
         try {
             final FederatedExecutorStorage deserialisedExecutorStorage = getDeserialisedExecutorStorage(properties);
             if (nonNull(deserialisedExecutorStorage)) {
-                for (Map.Entry<FederatedAccess, Set<Executor>> entry : deserialisedExecutorStorage.getStorage().entrySet()) {
+                for (final Map.Entry<FederatedAccess, Set<Executor>> entry : deserialisedExecutorStorage.getStorage().entrySet()) {
                     executorStorage.put(entry.getValue(), entry.getKey());
                 }
             }
 
             putSerialisedExecutorStorage(properties, executorStorage);
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new MaestroCheckedException(String.format(ERROR_MERGING_AND_ADDING_FEDERATED_EXECUTOR_STORAGE_TO_PROPERTIES_S, e.getMessage()), e);
         }
     }
@@ -76,7 +76,7 @@ public final class FederatedPropertiesUtil {
     public static void putSerialisedExecutorStorage(final Properties properties, final FederatedExecutorStorage serialisedExecutorStorage) throws MaestroCheckedException {
         try {
             properties.put(EXECUTOR_STORAGE, new String(JSONSerialiser.serialise(serialisedExecutorStorage)));
-        } catch (SerialisationException e) {
+        } catch (final SerialisationException e) {
             throw new MaestroCheckedException(String.format(ERROR_SERIALISING_AND_ADDING_FEDERATED_EXECUTOR_STORAGE_TO_PROPERTIES_S, e.getMessage()));
         }
     }

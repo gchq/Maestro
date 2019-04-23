@@ -19,13 +19,13 @@ import com.google.common.collect.Lists;
 import org.junit.Test;
 
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedAccess;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
-import uk.gov.gchq.maestro.util.FederatedPropertiesUtil;
 import uk.gov.gchq.maestro.util.FederatedHandlersUtil;
+import uk.gov.gchq.maestro.util.FederatedPropertiesUtil;
 
 import java.util.ArrayList;
 import java.util.List;

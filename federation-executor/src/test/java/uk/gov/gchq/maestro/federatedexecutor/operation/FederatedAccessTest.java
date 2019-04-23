@@ -18,9 +18,8 @@ package uk.gov.gchq.maestro.federatedexecutor.operation;
 
 import com.google.common.collect.Sets;
 
+import uk.gov.gchq.maestro.federatedexecutor.FederatedAccess;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
-
-import static org.junit.Assert.*;
 
 public class FederatedAccessTest extends MaestroObjectTest<FederatedAccess> {
 

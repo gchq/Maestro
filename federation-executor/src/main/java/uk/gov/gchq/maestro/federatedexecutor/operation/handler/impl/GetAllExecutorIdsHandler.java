@@ -32,7 +32,7 @@ public class GetAllExecutorIdsHandler implements OperationHandler<GetAllExecutor
     public Object doOperation(final GetAllExecutorIds operation, final Context context, final Executor executor) throws OperationException {
         try {
            return FederatedHandlersUtil.getAllExecutorsFrom(executor, context.getUser());
-        } catch (MaestroCheckedException e) {
+        } catch (final MaestroCheckedException e) {
             throw new OperationException(String.format(ERROR_GETTING_ALL_EXECUTOR_IDS_FROM_S_S, executor.getConfig().getId(), e.getMessage()), e);
         }
     }

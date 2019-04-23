@@ -14,26 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.federatedexecutor.operation;
+package uk.gov.gchq.maestro.federatedexecutor;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.KeyDeserializer;
-import com.google.common.collect.Sets;
 
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage;
 
 import java.io.IOException;
-import java.util.HashSet;
 
 public class MapStorageDeserialiser extends KeyDeserializer {
     @Override
     public FederatedAccess deserializeKey(final String s, final DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-       return JSONSerialiser.deserialise(s,FederatedAccess.class);
+        return JSONSerialiser.deserialise(s, FederatedAccess.class);
     }
 }

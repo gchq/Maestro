@@ -17,10 +17,10 @@
 package uk.gov.gchq.maestro.federatedexecutor.operation;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
+import uk.gov.gchq.maestro.federatedexecutor.FederatedStoreConstants;
 import uk.gov.gchq.maestro.operation.io.Output;
 import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 

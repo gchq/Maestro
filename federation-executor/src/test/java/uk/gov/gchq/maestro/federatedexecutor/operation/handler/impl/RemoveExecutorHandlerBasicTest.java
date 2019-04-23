@@ -22,18 +22,20 @@ import org.junit.Before;
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.federatedexecutor.operation.RemoveExecutor;
 import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.FederatedHandlersUtil;
-import uk.gov.gchq.maestro.util.FederatedPropertiesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class RemoveExecutorHandlerBasicTest extends MaestroHandlerBasicTest<RemoveExecutor, RemoveExecutorHandler> {
     private User testUser1;

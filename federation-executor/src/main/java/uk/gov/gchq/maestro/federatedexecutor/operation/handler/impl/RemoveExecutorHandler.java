@@ -34,7 +34,7 @@ public class RemoveExecutorHandler implements OperationHandler<RemoveExecutor> {
         final boolean isRemoved;
         try {
             isRemoved = FederatedHandlersUtil.removeExecutorsFrom(executor, operation, context.getUser());
-        } catch (MaestroCheckedException e) {
+        } catch (final MaestroCheckedException e) {
             throw new OperationException(String.format(ERROR_REMOVING_EXECUTOR_ID_S_FROM_S_S, operation.getGraphId(), executor.getConfig().getId(), e.getMessage()), e);
         }
 

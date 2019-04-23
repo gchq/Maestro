@@ -20,8 +20,8 @@ import org.junit.Before;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor;
-import uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
@@ -29,10 +29,9 @@ import uk.gov.gchq.maestro.util.FederatedPropertiesUtil;
 
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class AddExecutorHandlerBasicTest extends MaestroHandlerBasicTest<AddExecutor, AddExecutorHandler> {
 
@@ -51,11 +50,11 @@ public class AddExecutorHandlerBasicTest extends MaestroHandlerBasicTest<AddExec
     @Override
     protected AddExecutor getBasicOp() {
         return new AddExecutor()
-                .executor(getInnerExecutor("A"));//TODO Improve the complexity of whats beeing added + test result.
+                .executor(getInnerExecutor("A")); //TODO Improve the complexity of whats beeing added + test result.
     }
 
     public static Executor getInnerExecutor(final String s) {
-        return new Executor().config(new Config().id(INNER_EXECUTOR_ID+ s));
+        return new Executor().config(new Config().id(INNER_EXECUTOR_ID + s));
     }
 
     @Override
@@ -72,7 +71,7 @@ public class AddExecutorHandlerBasicTest extends MaestroHandlerBasicTest<AddExec
         final Collection<Executor> all = value.getAll(testUser1);
         assertNotNull(all);
         assertEquals(1, all.size());
-        assertEquals(INNER_EXECUTOR_ID+"A", all.iterator().next().getConfig().getId());
+        assertEquals(INNER_EXECUTOR_ID + "A", all.iterator().next().getConfig().getId());
     }
 
 

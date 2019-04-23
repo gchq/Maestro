@@ -23,8 +23,6 @@ import uk.gov.gchq.maestro.util.Config;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static org.junit.Assert.*;
-
 public class AddExecutorTest extends MaestroObjectTest<AddExecutor> {
 
     @Override

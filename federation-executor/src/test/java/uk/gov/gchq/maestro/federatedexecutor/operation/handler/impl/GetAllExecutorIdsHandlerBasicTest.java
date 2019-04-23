@@ -17,22 +17,20 @@
 package uk.gov.gchq.maestro.federatedexecutor.operation.handler.impl;
 
 import com.google.common.collect.Lists;
-import org.junit.Assert;
 import org.junit.Before;
 
 import uk.gov.gchq.maestro.Context;
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor;
 import uk.gov.gchq.maestro.federatedexecutor.operation.GetAllExecutorIds;
 import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.user.User;
-import uk.gov.gchq.maestro.util.Config;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class GetAllExecutorIdsHandlerBasicTest extends MaestroHandlerBasicTest<GetAllExecutorIds, GetAllExecutorIdsHandler> {
 

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.federatedexecutor.operation;
+package uk.gov.gchq.maestro.federatedexecutor;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

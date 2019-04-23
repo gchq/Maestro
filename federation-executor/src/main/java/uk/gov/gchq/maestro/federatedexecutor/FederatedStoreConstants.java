@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.federatedexecutor.operation;
+package uk.gov.gchq.maestro.federatedexecutor;
 
 
 import uk.gov.gchq.maestro.operation.Operation;

@@ -18,6 +18,8 @@ package uk.gov.gchq.maestro.federatedexecutor.operation;
 import com.google.common.collect.Sets;
 
 import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedAccess;
+import uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.federatedexecutor.operation.handler.impl.AddExecutorHandlerBasicTest;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
 import uk.gov.gchq.maestro.util.Config;

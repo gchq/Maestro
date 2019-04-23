@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.federatedexecutor.operation;
+package uk.gov.gchq.maestro.federatedexecutor;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -33,7 +32,6 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.CacheOperationException;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
-import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
 import uk.gov.gchq.maestro.commonutil.exception.OverwritingException;
 import uk.gov.gchq.maestro.user.User;
 
@@ -95,17 +93,6 @@ public class FederatedExecutorStorage {
         }
     }
 
-    /**
-     * places a executor into storage, protected by the given access.
-     * <p> ExecutorId can't already exist, otherwise {@link
-     * uk.gov.gchq.maestro.commonutil.exception.OverwritingException} is thrown.
-     * <p> Access can't be null otherwise {@link IllegalArgumentException} is
-     * thrown
-     *
-     * @param executor the executor to add to the storage.
-     * @param access   access required to for the executor.
-     * @throws MaestroCheckedException if unable to put arguments into storage
-     */
     public FederatedExecutorStorage put(final Executor executor, final FederatedAccess access) throws MaestroCheckedException {
         if (executor != null) {
             try {
@@ -203,14 +190,6 @@ public class FederatedExecutorStorage {
         }
     }
 
-    /**
-     * returns all executors objects matching the given executorIds, that is visible
-     * to the user.
-     *
-     * @param user        to match visibility against.
-     * @param executorIds the executorIds to get executors for.
-     * @return visible executors from the given executorIds.
-     */
     public Collection<Executor> get(final User user, final List<String> executorIds) throws MaestroCheckedException {
         if (null == user) {
             return Collections.emptyList();
@@ -218,7 +197,7 @@ public class FederatedExecutorStorage {
 
         try {
             validateAllGivenExecutorIdsAreVisibleForUser(user, executorIds);
-        } catch (MaestroCheckedException e) {
+        } catch (final MaestroCheckedException e) {
             throw new MaestroCheckedException(String.format(ERROR_GETTING_S_FROM_FEDERATED_EXECUTOR_STORAGE_S, executorIds.toString(), e.getMessage()), e);
         }
         Stream<Executor> executors = getStream(user, executorIds);
@@ -386,9 +365,13 @@ public class FederatedExecutorStorage {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         final FederatedExecutorStorage that = (FederatedExecutorStorage) o;
 
