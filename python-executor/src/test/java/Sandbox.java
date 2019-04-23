@@ -15,6 +15,7 @@
  */
 
 import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
@@ -34,6 +35,8 @@ import uk.gov.gchq.maestro.util.Config;
 import uk.gov.gchq.maestro.util.Request;
 import uk.gov.gchq.maestro.util.hook.Hook;
 
+import java.io.Console;
+
 public class Sandbox {
 
     private static User USER = new User("User01");
@@ -47,7 +50,7 @@ public class Sandbox {
 
     public static void main(final String[] args) throws OperationException, SerialisationException {
 
-        CredentialsProvider credentialsProvider = null;
+        CredentialsProvider credentialsProvider = getCredentialsProviderFromUser();
 
         Config config = new Config.Builder()
                 .addRequestHook(new ThrowExceptionHook())
@@ -75,6 +78,28 @@ public class Sandbox {
         final Executor executor = new Executor()
                 .config(config);
 
-        executor.execute(new UpdatePythonAnalytic().name("blah"), USER);
+//        executor.execute(new AddPythonAnalytic().name("test").repositoryUrl("https://github.com/d47853/maestro-test.git"), USER);
+        final String returnedValue = executor.execute(new RunPythonAnalytic<>().name("test"), USER);
+        System.out.println(returnedValue);
+    }
+
+    private static CredentialsProvider getCredentialsProviderFromUser() {
+        final Console console = System.console();
+
+        if (console == null) {
+            // will not work in IDE
+            return null;
+        }
+
+        console.printf("\nEnter Git credentials\n");
+        console.printf("----------------------------------------------\n");
+        console.printf("Username: ");
+        final String username = console.readLine();
+
+        console.printf("Password: ");
+        final String password = new String(console.readPassword());
+        console.printf("\n");
+
+        return new UsernamePasswordCredentialsProvider(username, password);
     }
 }

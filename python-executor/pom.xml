@@ -28,7 +28,7 @@
 
     <properties>
         <jgit.version>5.3.0.201903130848-r</jgit.version>
-        <docker.client.version>8.15.1</docker.client.version>
+        <docker.client.version>8.9.2</docker.client.version>
     </properties>
 
     <dependencies>
@@ -52,6 +52,7 @@
             <artifactId>docker-client</artifactId>
             <version>${docker.client.version}</version>
         </dependency>
+
     </dependencies>
 
 </project>

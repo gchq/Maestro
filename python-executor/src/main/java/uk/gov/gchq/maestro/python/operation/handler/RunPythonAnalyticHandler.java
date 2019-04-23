@@ -73,21 +73,23 @@ public class RunPythonAnalyticHandler implements OperationHandler<RunPythonAnaly
 
         String containerId = null;
         try {
-            docker.pull("python");
+//            docker.pull("python");
             final HostConfig hostConfig = HostConfig.builder()
                     .appendBinds(analyticDirectory.getAbsolutePath() + ":/analytic")
                     .build();
             final ContainerCreation container = docker.createContainer(ContainerConfig.builder()
                     .hostConfig(hostConfig)
-                    .cmd("cd /analytic", "pip install -r requirements.txt")
+                    .image("python")
+                    .workingDir("/analytic")
+                    .cmd("sh", "-c", "pip install -r requirements.txt")
+                    .cmd("sh", "-c", "while :; do sleep 1; done")
                     .build());
 
             containerId = container.id();
-
-
             docker.startContainer(containerId);
             final ExecCreation execCreation;
             try {
+//                final String[] runCommand = {"sh", "-c", "ls"};
                 final String[] runCommand = {"python", "/analytic/main.py", new String(JSONSerialiser.serialise(operation.getInput()))};
                 execCreation = docker.execCreate(containerId,
                         runCommand,
@@ -98,12 +100,7 @@ public class RunPythonAnalyticHandler implements OperationHandler<RunPythonAnaly
             }
 
             final LogStream outputStream = docker.execStart(execCreation.id());
-            final String output = outputStream.readFully();
-
-
-            docker.close();
-
-            return output;
+            return outputStream.readFully();
 
         } catch (final DockerException | InterruptedException e) {
             throw new OperationException(e);
