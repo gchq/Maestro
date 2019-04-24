@@ -16,31 +16,30 @@
 
 package uk.gov.gchq.maestro.federatedexecutor.operation;
 
-import com.google.common.collect.Sets;
-
-import uk.gov.gchq.maestro.federatedexecutor.FederatedAccess;
+import uk.gov.gchq.koryphe.impl.binaryoperator.Max;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.operation.Operation;
 
-public class FederatedAccessTest extends MaestroObjectTest<FederatedAccess> {
+public class FederatedOperationTest extends MaestroObjectTest<FederatedOperation> {
 
     @Override
-    protected Class<FederatedAccess> getTestObjectClass() {
-        return FederatedAccess.class;
+    protected Class<FederatedOperation> getTestObjectClass() {
+        return FederatedOperation.class;
     }
 
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.FederatedAccess\",\n" +
-                "  \"addingUserId\" : \"userId\",\n" +
-                "  \"graphAuths\" : [ \"A\", \"B\", \"C\" ],\n" +
-                "  \"disabledByDefault\" : false,\n" +
-                "  \"public\" : false\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedOperation\",\n" +
+                "  \"ids\" : [ \"a\", \"b\", \"c\" ],\n" +
+                "  \"mergeOperation\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.koryphe.impl.binaryoperator.Max\"\n" +
+                "  }\n" +
                 "}";
     }
 
     @Override
-    protected FederatedAccess getTestObject() throws Exception {
-        return new FederatedAccess(Sets.newHashSet("A", "B", "C"), "userId");
+    protected FederatedOperation getTestObject() throws Exception {
+        return new FederatedOperation().operation((Operation) null).ids("a", "b", "c").mergeOperation(new Max());
     }
 }

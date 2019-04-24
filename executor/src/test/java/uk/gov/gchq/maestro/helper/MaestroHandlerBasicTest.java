@@ -23,6 +23,7 @@ import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
+import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
 
 import static org.junit.Assert.fail;
@@ -38,9 +39,12 @@ public abstract class MaestroHandlerBasicTest<Op extends Operation, H extends Op
     public static final String EXECUTOR_ID = "testExecutorId";
     protected Executor testExecutor;
     protected Context context;
+    protected User testUser;
 
     @Before
     public void setUp() throws Exception {
+        testUser = new User("testUser");
+        context = getContext();
         testExecutor = getTestExecutor();
     }
 
@@ -71,6 +75,10 @@ public abstract class MaestroHandlerBasicTest<Op extends Operation, H extends Op
 
     protected Executor getTestExecutor() throws Exception {
         return new Executor().config(new Config(EXECUTOR_ID));
+    }
+
+    protected Context getContext() {
+        return new Context(testUser);
     }
 
     protected void inspectReturnFromHandler(final Object value) throws Exception {

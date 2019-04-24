@@ -22,15 +22,19 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
 import uk.gov.gchq.maestro.commonutil.Required;
+import uk.gov.gchq.maestro.operation.Operation;
+
+import java.util.Map;
 
 import static uk.gov.gchq.maestro.federatedexecutor.FederatedStoreConstants.KEY_OPERATION_OPTIONS_EXECUTOR_IDS;
 
 
 @JsonPropertyOrder(value = {"class", "graphId"}, alphabetic = true)
-public class RemoveExecutor extends FederatedOperation<RemoveExecutor> {
+public class RemoveExecutor implements Operation {
 
     @Required
     private String graphId;
+    protected Map<String, String> options;
 
     public RemoveExecutor() {
         addOption(KEY_OPERATION_OPTIONS_EXECUTOR_IDS, ""); //TODO ?
@@ -74,5 +78,16 @@ public class RemoveExecutor extends FederatedOperation<RemoveExecutor> {
         return new HashCodeBuilder(17, 37)
                 .append(graphId)
                 .toHashCode();
+    }
+
+    @Override
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    @Override
+    public RemoveExecutor options(final Map<String, String> options) {
+        this.options = options;
+        return (RemoveExecutor) this;
     }
 }

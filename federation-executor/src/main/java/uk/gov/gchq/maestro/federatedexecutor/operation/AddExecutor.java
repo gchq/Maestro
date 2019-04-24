@@ -29,12 +29,15 @@ import org.apache.commons.lang3.exception.CloneFailedException;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.federatedexecutor.FederatedStoreConstants;
+import uk.gov.gchq.maestro.operation.Operation;
 
+import java.util.Map;
 import java.util.Set;
 
 @JsonPropertyOrder(value = {"class, executor"}, alphabetic = true)
 @JsonInclude(Include.NON_DEFAULT)
-public class AddExecutor extends FederatedOperation<AddExecutor> {
+public class AddExecutor implements Operation {
+    protected Map<String, String> options;
     private Executor executor;
     private String parentConfigId;
     private Set<String> executorAuths;
@@ -144,5 +147,16 @@ public class AddExecutor extends FederatedOperation<AddExecutor> {
                 .append(isPublic)
                 .append(disabledByDefault)
                 .toHashCode();
+    }
+
+    @Override
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    @Override
+    public AddExecutor options(final Map<String, String> options) {
+        this.options = options;
+        return (AddExecutor) this;
     }
 }

@@ -16,6 +16,7 @@
 
 package uk.gov.gchq.maestro.util;
 
+import com.google.common.collect.Lists;
 import org.junit.Test;
 
 import uk.gov.gchq.maestro.Executor;
@@ -41,11 +42,28 @@ public class FederatedHandlersUtilTest {
         FederatedPropertiesUtil.putSerialisedExecutorStorage(properties, storage);
 
         //when
-        final List<Executor> executors = FederatedHandlersUtil.getExecutorsFrom(properties, new User("tempUser"), null);
+        final List<Executor> executors = FederatedHandlersUtil.getExecutorsFrom(properties, new User("tempUser"), Lists.newArrayList("ExecutorId1"));
 
         //then
         assertEquals(1, executors.size());
         assertEquals(expected, executors.get(0));
+    }
+
+    @Test
+    public void shouldNotGetExecutorWithNull() throws MaestroCheckedException {
+        //given
+        final Executor expected = new Executor().config(new Config().id("ExecutorId1"));
+        final Properties properties = new Properties();
+        final FederatedExecutorStorage storage = new FederatedExecutorStorage().put(expected, new FederatedAccess(null, "tempUser", false));
+        FederatedPropertiesUtil.putSerialisedExecutorStorage(properties, storage);
+
+        //when
+        try {
+            final List<Executor> executors = FederatedHandlersUtil.getExecutorsFrom(properties, new User("tempUser"), null);
+            fail("exception expected");
+        } catch (Exception e) {
+            assertEquals("Can't get Executors with null ids", e.getMessage());
+        }
     }
 
     @Test

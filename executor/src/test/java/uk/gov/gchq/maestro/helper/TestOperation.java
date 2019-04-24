@@ -32,7 +32,7 @@ public class TestOperation implements Operation {
         return field;
     }
 
-    public TestOperation setField(final String field) {
+    public TestOperation field(final String field) {
         this.field = field;
         return this;
     }
@@ -64,7 +64,7 @@ public class TestOperation implements Operation {
     @Override
     public Operation shallowClone() throws CloneFailedException {
         final TestOperation testOperation = new TestOperation();
-        testOperation.setField(field);
+        testOperation.field(field);
         testOperation.options(options);
         return testOperation;
     }

@@ -16,25 +16,26 @@
 
 package uk.gov.gchq.maestro.federatedexecutor.operation;
 
+import com.google.common.collect.Sets;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.exception.CloneFailedException;
+
+import uk.gov.gchq.koryphe.binaryoperator.KorypheBinaryOperator;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-public abstract class FederatedOperation<T extends FederatedOperation> implements Operation {
+public class FederatedOperation implements Operation {
 
-    protected Map<String, String> options;
-
-    @Override
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    @Override
-    public T options(final Map<String, String> options) {
-        this.options = options;
-        return (T) this;
-    }
+    private Operation operation;
+    private Set<String> ids;
+    private Map<String, String> options = new HashMap<>();
+    private KorypheBinaryOperator mergeOperation;
 
     public static boolean hasFederatedOperations(final OperationChain<?> operationChain) {
         //TODO WHAT WHT? FederatedOperation?
@@ -45,5 +46,86 @@ public abstract class FederatedOperation<T extends FederatedOperation> implement
         }
 
         return false;
+    }
+
+    @Override
+    public Operation shallowClone() throws CloneFailedException {
+        return new FederatedOperation()
+                .operation(operation)
+                .ids(ids)
+                .mergeOperation(mergeOperation)
+                .options(options);
+    }
+
+    private FederatedOperation ids(final Set<String> ids) {
+        this.ids = ids;
+        return this;
+    }
+
+    @Override
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    @Override
+    public FederatedOperation options(final Map<String, String> options) {
+        this.options = options;
+        return this;
+    }
+
+    public FederatedOperation operation(final Operation operation) {
+        this.operation = operation;
+        return this;
+    }
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public FederatedOperation ids(final String... ids) {
+        return ids(Sets.newLinkedHashSet(Arrays.asList(ids)));
+    }
+
+    public Set<String> getIds() {
+        return ids;
+    }
+
+    public FederatedOperation mergeOperation(final KorypheBinaryOperator mergeOperation) {
+        this.mergeOperation = mergeOperation;
+        return this;
+    }
+
+    public KorypheBinaryOperator getMergeOperation() {
+        return mergeOperation;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final FederatedOperation that = (FederatedOperation) o;
+
+        return new EqualsBuilder()
+                .append(operation, that.operation)
+                .append(ids, that.ids)
+                .append(options, that.options)
+                .append(mergeOperation, that.mergeOperation)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(operation)
+                .append(ids)
+                .append(options)
+                .append(mergeOperation)
+                .toHashCode();
     }
 }

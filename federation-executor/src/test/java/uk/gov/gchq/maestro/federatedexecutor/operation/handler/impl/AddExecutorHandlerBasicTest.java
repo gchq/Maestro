@@ -16,14 +16,10 @@
 
 package uk.gov.gchq.maestro.federatedexecutor.operation.handler.impl;
 
-import org.junit.Before;
-
-import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor;
 import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
-import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
 import uk.gov.gchq.maestro.util.FederatedPropertiesUtil;
 
@@ -36,16 +32,6 @@ import static org.junit.Assert.assertNull;
 public class AddExecutorHandlerBasicTest extends MaestroHandlerBasicTest<AddExecutor, AddExecutorHandler> {
 
     public static final String INNER_EXECUTOR_ID = "innerExecutorId";
-    private User testUser1;
-
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        testExecutor.getConfig().addOperationHandler(AddExecutor.class, new AddExecutorHandler());
-        testUser1 = new User("testUser1");
-        context = new Context(testUser1);
-    }
 
     @Override
     protected AddExecutor getBasicOp() {
@@ -68,7 +54,7 @@ public class AddExecutorHandlerBasicTest extends MaestroHandlerBasicTest<AddExec
         assertNotNull(config);
         final FederatedExecutorStorage value = FederatedPropertiesUtil.getDeserialisedExecutorStorage(config.getProperties());
         assertNotNull("expected value is null", value);
-        final Collection<Executor> all = value.getAll(testUser1);
+        final Collection<Executor> all = value.getAll(testUser);
         assertNotNull(all);
         assertEquals(1, all.size());
         assertEquals(INNER_EXECUTOR_ID + "A", all.iterator().next().getConfig().getId());
@@ -84,4 +70,12 @@ public class AddExecutorHandlerBasicTest extends MaestroHandlerBasicTest<AddExec
     protected void inspectReturnFromExecute(final Object value) {
         assertNull(value);
     }
+
+    @Override
+    protected Executor getTestExecutor() throws Exception {
+        final Executor testExecutor = super.getTestExecutor();
+        testExecutor.getConfig().addOperationHandler(AddExecutor.class, getBasicHandler());
+        return testExecutor;
+    }
+
 }

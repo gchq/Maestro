@@ -37,9 +37,9 @@ public class FederatedExecutorStorageTest extends MaestroObjectTest<FederatedExe
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedExecutorStorage\",\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage\",\n" +
                 "  \"storage\" : {\n" +
-                "    \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess\\\",\\\"addingUserId\\\":\\\"testUser1\\\",\\\"graphAuths\\\":[\\\"one\\\"],\\\"disabledByDefault\\\":false,\\\"public\\\":false}\" : [ \"java.util.HashSet\", [ {\n" +
+                "    \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federatedexecutor.FederatedAccess\\\",\\\"addingUserId\\\":\\\"testUser1\\\",\\\"graphAuths\\\":[\\\"one\\\"],\\\"disabledByDefault\\\":false,\\\"public\\\":false}\" : [ \"java.util.HashSet\", [ {\n" +
                 "      \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
                 "      \"config\" : {\n" +
                 "        \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
@@ -50,7 +50,7 @@ public class FederatedExecutorStorageTest extends MaestroObjectTest<FederatedExe
                 "        \"requestHooks\" : [ ]\n" +
                 "      }\n" +
                 "    } ] ],\n" +
-                "    \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedAccess\\\",\\\"addingUserId\\\":\\\"testUser2\\\",\\\"graphAuths\\\":[\\\"one\\\"],\\\"disabledByDefault\\\":false,\\\"public\\\":false}\" : [ \"java.util.HashSet\", [ {\n" +
+                "    \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federatedexecutor.FederatedAccess\\\",\\\"addingUserId\\\":\\\"testUser2\\\",\\\"graphAuths\\\":[\\\"one\\\"],\\\"disabledByDefault\\\":false,\\\"public\\\":false}\" : [ \"java.util.HashSet\", [ {\n" +
                 "      \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
                 "      \"config\" : {\n" +
                 "        \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +

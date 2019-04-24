@@ -256,12 +256,13 @@ public class Config {
         updateJsonSerialiser(properties);
     }
 
-    public <OP extends Operation> void addOperationHandler(final Class<? extends Operation> opClass, final OperationHandler<OP> handler) {
+    public <OP extends Operation> Config addOperationHandler(final Class<? extends Operation> opClass, final OperationHandler<OP> handler) {
         if (null == handler) {
             operationHandlers.remove(opClass);
         } else {
             operationHandlers.put(opClass, handler);
         }
+        return this;
     }
 
     public OperationHandler<? extends Operation> getOperationHandler(final Class<?

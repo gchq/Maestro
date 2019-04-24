@@ -21,10 +21,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
 import uk.gov.gchq.maestro.federatedexecutor.FederatedStoreConstants;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.io.Output;
 import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 
-public class GetAllExecutorIds extends FederatedOperation<GetAllExecutorIds> implements Output<Iterable<? extends String>> {
+import java.util.Map;
+
+public class GetAllExecutorIds implements Output<Iterable<? extends String>>, Operation {
+
+    protected Map<String, String> options;
 
     public GetAllExecutorIds() {
         addOption(FederatedStoreConstants.KEY_OPERATION_OPTIONS_EXECUTOR_IDS, ""); //TODO ?
@@ -50,5 +55,16 @@ public class GetAllExecutorIds extends FederatedOperation<GetAllExecutorIds> imp
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .toHashCode();
+    }
+
+    @Override
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    @Override
+    public GetAllExecutorIds options(final Map<String, String> options) {
+        this.options = options;
+        return (GetAllExecutorIds) this;
     }
 }

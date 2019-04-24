@@ -37,11 +37,13 @@ import uk.gov.gchq.maestro.user.User;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -191,6 +193,7 @@ public class FederatedExecutorStorage {
     }
 
     public Collection<Executor> get(final User user, final List<String> executorIds) throws MaestroCheckedException {
+        Objects.requireNonNull(executorIds, "Can't get Executors with null ids");
         if (null == user) {
             return Collections.emptyList();
         }
@@ -202,10 +205,10 @@ public class FederatedExecutorStorage {
         }
         Stream<Executor> executors = getStream(user, executorIds);
         if (null != executorIds) {
-            executors = executors.sorted((g1, g2) -> executorIds.indexOf(g1.getConfig().getId()) - executorIds.indexOf(g2.getConfig().getId()));
+            executors = executors.sorted(Comparator.comparingInt(g -> executorIds.indexOf(g.getConfig().getId())));
         }
-        final Set<Executor> rtn = executors.collect(Collectors.toCollection(LinkedHashSet::new));
-        return Collections.unmodifiableCollection(rtn);
+        final LinkedHashSet<Executor> rtn = executors.collect(Collectors.toCollection(LinkedHashSet::new));
+        return Collections.unmodifiableSet(rtn);
     }
 
 

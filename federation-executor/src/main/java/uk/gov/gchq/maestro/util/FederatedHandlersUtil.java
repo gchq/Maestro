@@ -66,6 +66,7 @@ public final class FederatedHandlersUtil {
     }
 
     public static List<Executor> getExecutorsFrom(final Properties properties, final User user, final List<String> executorIds) throws MaestroCheckedException {
+        requireNonNull("Can't get Executors with null ids");
         List<Executor> rtn = new ArrayList<>();
         final FederatedExecutorStorage deserialisedExecutorStorage = FederatedPropertiesUtil.getDeserialisedExecutorStorage(properties);
         if (nonNull(deserialisedExecutorStorage)) {

@@ -19,6 +19,7 @@ package uk.gov.gchq.maestro.helper;
 import org.junit.Test;
 
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.operation.Operation;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
@@ -36,6 +37,15 @@ public abstract class MaestroObjectTest<T> {
         assertEquals("json strings are not equal", jsonString, new String(serialisedTestObject));
         assertEquals("deserialised object is not the same", testObject, JSONSerialiser.deserialise(serialisedTestObject, getTestObjectClass()));
     }
+
+    @Test
+    public void shouldShallowClone() throws Exception {
+        final T testObject = getTestObject();
+        if (testObject instanceof Operation) {
+            assertEquals(testObject, ((Operation) testObject).shallowClone());
+        }
+    }
+
 
     protected abstract Class<T> getTestObjectClass();
 

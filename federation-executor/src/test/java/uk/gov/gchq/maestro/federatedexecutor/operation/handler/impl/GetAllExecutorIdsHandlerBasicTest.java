@@ -17,13 +17,11 @@
 package uk.gov.gchq.maestro.federatedexecutor.operation.handler.impl;
 
 import com.google.common.collect.Lists;
-import org.junit.Before;
 
-import uk.gov.gchq.maestro.Context;
+import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor;
 import uk.gov.gchq.maestro.federatedexecutor.operation.GetAllExecutorIds;
 import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
-import uk.gov.gchq.maestro.user.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,27 +31,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class GetAllExecutorIdsHandlerBasicTest extends MaestroHandlerBasicTest<GetAllExecutorIds, GetAllExecutorIdsHandler> {
-
-    private User testUser1;
-
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        testExecutor.getConfig().addOperationHandler(GetAllExecutorIds.class, new GetAllExecutorIdsHandler());
-        testUser1 = new User("testUser1");
-        context = new Context(testUser1);
-        try {
-            final AddExecutorHandlerBasicTest addExecutorHandlerBasicTest = new AddExecutorHandlerBasicTest();
-            final AddExecutor basicOp = new AddExecutor().executor(AddExecutorHandlerBasicTest.getInnerExecutor("A"));
-            final AddExecutorHandler basicHandler = addExecutorHandlerBasicTest.getBasicHandler();
-            basicHandler.doOperation(basicOp, this.context, this.testExecutor);
-            final AddExecutor basicOp2 = new AddExecutor().executor(AddExecutorHandlerBasicTest.getInnerExecutor("B"));
-            basicHandler.doOperation(basicOp2, this.context, this.testExecutor);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed setUp", e);
-        }
-    }
 
     @Override
     protected GetAllExecutorIdsHandler getBasicHandler() throws Exception {
@@ -88,4 +65,23 @@ public class GetAllExecutorIdsHandlerBasicTest extends MaestroHandlerBasicTest<G
     protected void inspectFields() throws Exception {
         //empty
     }
+
+    @Override
+    protected Executor getTestExecutor() throws Exception {
+        final Executor testExecutor = super.getTestExecutor();
+        testExecutor.getConfig().addOperationHandler(GetAllExecutorIds.class, new GetAllExecutorIdsHandler());
+
+        try {
+            final AddExecutorHandler basicHandler = new AddExecutorHandler();
+            final AddExecutor addExecutor = new AddExecutor();
+
+            basicHandler.doOperation(addExecutor.executor(AddExecutorHandlerBasicTest.getInnerExecutor("A")), this.context, testExecutor);
+            basicHandler.doOperation(addExecutor.executor(AddExecutorHandlerBasicTest.getInnerExecutor("B")), this.context, testExecutor);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed setUp of getTestExecutor", e);
+        }
+
+        return testExecutor;
+    }
+
 }
