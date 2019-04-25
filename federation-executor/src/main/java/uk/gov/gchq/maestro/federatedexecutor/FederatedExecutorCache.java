@@ -46,7 +46,7 @@ public class FederatedExecutorCache extends Cache<Pair<Executor, FederatedAccess
     }
 
     public void addExecutorToCache(final Executor executor, final FederatedAccess access, final boolean overwrite) throws CacheOperationException {
-        String id = executor.getConfig().getId(); //TODO Id or given id from Add operation?
+        String id = executor.getConfig().getId();
         Pair<Executor, FederatedAccess> pair = new Pair<>(executor, access);
         try {
             addToCache(id, pair, overwrite);

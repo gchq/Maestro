@@ -87,9 +87,6 @@ public final class FederatedHandlersUtil {
     }
 
     public static Properties addExecutorTo(final Executor addingExecutor, final Properties properties, final FederatedAccess federatedAccess) throws MaestroCheckedException {
-        // TODO op.getAuths();
-        // TODO op.isPublic();
-
         final FederatedExecutorStorage storage = new FederatedExecutorStorage()
                 .put(addingExecutor, federatedAccess);
 

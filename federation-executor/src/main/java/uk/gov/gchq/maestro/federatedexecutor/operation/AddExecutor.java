@@ -44,10 +44,6 @@ public class AddExecutor implements Operation {
     private boolean isPublic = false;
     private boolean disabledByDefault = FederatedExecutorStorage.DEFAULT_DISABLED_BY_DEFAULT;
 
-    public AddExecutor() {
-        addOption(FederatedStoreConstants.KEY_OPERATION_OPTIONS_EXECUTOR_IDS, ""); //TODO ?
-    }
-
     @Override
     public AddExecutor shallowClone() throws CloneFailedException {
         final AddExecutor addExecutor = new AddExecutor()

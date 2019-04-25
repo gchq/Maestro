@@ -36,7 +36,7 @@ public class AddExecutorHandlerBasicTest extends MaestroHandlerBasicTest<AddExec
     @Override
     protected AddExecutor getBasicOp() {
         return new AddExecutor()
-                .executor(getInnerExecutor("A")); //TODO Improve the complexity of whats beeing added + test result.
+                .executor(getInnerExecutor("A")); //TODO Improve the complexity of whats being added + test result.
     }
 
     public static Executor getInnerExecutor(final String s) {

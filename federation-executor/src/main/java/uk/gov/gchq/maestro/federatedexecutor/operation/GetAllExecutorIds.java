@@ -31,10 +31,6 @@ public class GetAllExecutorIds implements Output<Iterable<? extends String>>, Op
 
     protected Map<String, String> options;
 
-    public GetAllExecutorIds() {
-        addOption(FederatedStoreConstants.KEY_OPERATION_OPTIONS_EXECUTOR_IDS, ""); //TODO ?
-    }
-
     @Override
     public TypeReference<Iterable<? extends String>> getOutputTypeReference() {
         return new TypeReferenceImpl.IterableString();

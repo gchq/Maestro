@@ -29,7 +29,7 @@ public class MapStorageSerialiser extends JsonSerializer<FederatedAccess> {
     @Override
     public void serialize(final FederatedAccess  storage, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
 
-        final byte[] serialise = JSONSerialiser.serialise(storage); //TODO improve
+        final byte[] serialise = JSONSerialiser.serialise(storage);
 
         jsonGenerator.writeFieldName(new String(serialise));
 

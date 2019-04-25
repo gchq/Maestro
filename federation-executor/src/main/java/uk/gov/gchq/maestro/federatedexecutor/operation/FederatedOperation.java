@@ -37,17 +37,6 @@ public class FederatedOperation implements Operation {
     private Map<String, String> options = new HashMap<>();
     private KorypheBinaryOperator mergeOperation;
 
-    public static boolean hasFederatedOperations(final OperationChain<?> operationChain) {
-        //TODO WHAT WHT? FederatedOperation?
-        for (final Operation operation : operationChain.getOperations()) {
-            if (operation instanceof FederatedOperation) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     @Override
     public Operation shallowClone() throws CloneFailedException {
         return new FederatedOperation()
