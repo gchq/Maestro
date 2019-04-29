@@ -18,7 +18,7 @@ package uk.gov.gchq.maestro.federatedexecutor.operation;
 
 import uk.gov.gchq.koryphe.impl.binaryoperator.Max;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
-import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.helper.TestOperation;
 
 public class FederatedOperationTest extends MaestroObjectTest<FederatedOperation> {
 
@@ -32,6 +32,9 @@ public class FederatedOperationTest extends MaestroObjectTest<FederatedOperation
         return "{\n" +
                 "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.operation.FederatedOperation\",\n" +
                 "  \"ids\" : [ \"a\", \"b\", \"c\" ],\n" +
+                "  \"operation\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.helper.TestOperation\"\n" +
+                "  },\n" +
                 "  \"mergeOperation\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.koryphe.impl.binaryoperator.Max\"\n" +
                 "  }\n" +
@@ -40,6 +43,6 @@ public class FederatedOperationTest extends MaestroObjectTest<FederatedOperation
 
     @Override
     protected FederatedOperation getTestObject() throws Exception {
-        return new FederatedOperation().operation((Operation) null).ids("a", "b", "c").mergeOperation(new Max());
+        return new FederatedOperation().operation(new TestOperation()).ids("a", "b", "c").mergeOperation(new Max());
     }
 }

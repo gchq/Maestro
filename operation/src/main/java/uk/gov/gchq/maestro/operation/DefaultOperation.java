@@ -17,9 +17,14 @@ package uk.gov.gchq.maestro.operation;
 
 import org.apache.commons.lang3.exception.CloneFailedException;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class DefaultOperation implements Operation {
+
+
+    private Map<String, String> options = new HashMap<>();
+
     public Operation setWrappedOp(final Operation operation) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
@@ -31,7 +36,7 @@ public class DefaultOperation implements Operation {
 
     @Override
     public Map<String, String> getOptions() {
-        return null;
+        return options;
     }
 
     @Override

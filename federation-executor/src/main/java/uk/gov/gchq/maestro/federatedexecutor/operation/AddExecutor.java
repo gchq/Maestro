@@ -26,14 +26,18 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
+import uk.gov.gchq.koryphe.Since;
+import uk.gov.gchq.koryphe.Summary;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.federatedexecutor.FederatedExecutorStorage;
-import uk.gov.gchq.maestro.federatedexecutor.FederatedStoreConstants;
 import uk.gov.gchq.maestro.operation.Operation;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
+@Since("0.0.1")
+@Summary("Adds a sub Executor to the config of the current Executor")
 @JsonPropertyOrder(value = {"class, executor"}, alphabetic = true)
 @JsonInclude(Include.NON_DEFAULT)
 public class AddExecutor implements Operation {
@@ -152,7 +156,11 @@ public class AddExecutor implements Operation {
 
     @Override
     public AddExecutor options(final Map<String, String> options) {
-        this.options = options;
+        if (Objects.nonNull(options)) {
+            this.options = options;
+        } else {
+            this.options.clear();
+        }
         return (AddExecutor) this;
     }
 }

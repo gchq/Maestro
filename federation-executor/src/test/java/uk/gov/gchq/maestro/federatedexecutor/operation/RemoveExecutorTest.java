@@ -28,10 +28,7 @@ public class RemoveExecutorTest extends MaestroObjectTest<RemoveExecutor> {
     protected String getJSONString() {
         return "{\n" +
                 "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.operation.RemoveExecutor\",\n" +
-                "  \"graphId\" : \"innerGraph1\",\n" +
-                "  \"options\" : {\n" +
-                "    \"maestro.federated.operation.executorIds\" : \"\"\n" +
-                "  }\n" +
+                "  \"graphId\" : \"innerGraph1\"\n" +
                 "}";
     }
 

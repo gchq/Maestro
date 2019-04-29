@@ -28,10 +28,7 @@ public class GetAllExecutorIdsTest extends MaestroObjectTest<GetAllExecutorIds> 
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.operation.GetAllExecutorIds\",\n" +
-                "  \"options\" : {\n" +
-                "    \"maestro.federated.operation.executorIds\" : \"\"\n" +
-                "  }\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.operation.GetAllExecutorIds\"\n" +
                 "}";
     }
 

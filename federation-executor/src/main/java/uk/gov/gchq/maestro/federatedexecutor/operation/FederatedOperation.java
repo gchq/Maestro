@@ -16,20 +16,26 @@
 
 package uk.gov.gchq.maestro.federatedexecutor.operation;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
+import uk.gov.gchq.koryphe.Since;
+import uk.gov.gchq.koryphe.Summary;
 import uk.gov.gchq.koryphe.binaryoperator.KorypheBinaryOperator;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.OperationChain;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
+@Since("0.0.1")
+@Summary("Federates the operation to sub executors and combines the different results using the mergeOperation")
+@JsonPropertyOrder(value = {"class", "ids", "operation", "mergeOperation"}, alphabetic = true)
 public class FederatedOperation implements Operation {
 
     private Operation operation;
@@ -58,7 +64,11 @@ public class FederatedOperation implements Operation {
 
     @Override
     public FederatedOperation options(final Map<String, String> options) {
-        this.options = options;
+        if (Objects.nonNull(options)) {
+            this.options = options;
+        } else {
+            this.options.clear();
+        }
         return this;
     }
 

@@ -76,6 +76,7 @@ public final class FederatedHandlersUtil {
     }
 
     public static Executor addExecutorTo(final AddExecutor op, final Executor parent, final String userId) throws MaestroCheckedException {
+        requireNonNull(op);
         final FederatedAccess access = new FederatedAccess(op.getAuths(), userId, op.isPublic(), op.isDisabledByDefault());
         addExecutorTo(op.getExecutor(), parent.getConfig(), access);
         return parent;

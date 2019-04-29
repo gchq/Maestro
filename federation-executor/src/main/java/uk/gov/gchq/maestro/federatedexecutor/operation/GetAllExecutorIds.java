@@ -16,17 +16,23 @@
 
 package uk.gov.gchq.maestro.federatedexecutor.operation;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
-import uk.gov.gchq.maestro.federatedexecutor.FederatedStoreConstants;
+import uk.gov.gchq.koryphe.Since;
+import uk.gov.gchq.koryphe.Summary;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.io.Output;
 import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 
 import java.util.Map;
+import java.util.Objects;
 
+@Since("0.0.1")
+@Summary("Gets all the Executor Ids for the current User.")
+@JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public class GetAllExecutorIds implements Output<Iterable<? extends String>>, Operation {
 
     protected Map<String, String> options;
@@ -60,7 +66,11 @@ public class GetAllExecutorIds implements Output<Iterable<? extends String>>, Op
 
     @Override
     public GetAllExecutorIds options(final Map<String, String> options) {
-        this.options = options;
+        if (Objects.nonNull(options)) {
+            this.options = options;
+        } else {
+            this.options.clear();
+        }
         return (GetAllExecutorIds) this;
     }
 }

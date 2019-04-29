@@ -17,11 +17,17 @@
 package uk.gov.gchq.maestro.federatedexecutor.operation;
 
 import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.util.Config;
 
 import java.util.HashMap;
 import java.util.HashSet;
+
+import static java.util.Objects.requireNonNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class AddExecutorTest extends MaestroObjectTest<AddExecutor> {
 
@@ -70,4 +76,47 @@ public class AddExecutorTest extends MaestroObjectTest<AddExecutor> {
                 .options(options)
                 .executor(new Executor().config(new Config().id("idValue1")));
     }
+
+    protected String getJSONNullString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor\"\n" +
+                "}";
+    }
+
+    protected AddExecutor getTestNullObject() {
+        return new AddExecutor()
+                .auths(null)
+                .options(null)
+                .executor(null);
+    }
+
+    @Override
+    public void shouldJSONSerialise() throws Exception {
+        super.shouldJSONSerialise();
+
+        final uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor testObject = getTestNullObject();
+        requireNonNull(testObject);
+        final String jsonString = getJSONNullString();
+        requireNonNull(jsonString);
+
+        final byte[] serialisedTestObject = JSONSerialiser.serialise(testObject, true);
+        assertNotNull("serialised testObject is null", serialisedTestObject);
+        assertEquals("json strings are not equal, between serialisedTestObject and jsonString", jsonString, new String(serialisedTestObject));
+        final uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor deserialise = JSONSerialiser.deserialise(serialisedTestObject, getTestObjectClass());
+        assertNotNull("deserialised testObject is null", deserialise);
+        assertEquals("deserialised object is not the same as testObject", testObject, deserialise);
+
+    }
+
+    @Override
+    public void shouldShallowCloneOperation() throws Exception {
+        super.shouldShallowCloneOperation();
+
+        final uk.gov.gchq.maestro.federatedexecutor.operation.AddExecutor testObject = getTestNullObject();
+        if (testObject instanceof Operation) {
+            assertEquals("testObject.shallowClone() is not equal to original testObject", testObject, ((Operation) testObject).shallowClone());
+        }
+    }
+
+
 }

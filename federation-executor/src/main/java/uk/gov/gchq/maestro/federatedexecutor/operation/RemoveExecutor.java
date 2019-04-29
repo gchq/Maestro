@@ -21,13 +21,16 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.CloneFailedException;
 
+import uk.gov.gchq.koryphe.Since;
+import uk.gov.gchq.koryphe.Summary;
 import uk.gov.gchq.maestro.commonutil.Required;
 import uk.gov.gchq.maestro.operation.Operation;
 
 import java.util.Map;
+import java.util.Objects;
 
-
-
+@Since("0.0.1")
+@Summary("removes a sub Executor from the config of the current Executor")
 @JsonPropertyOrder(value = {"class", "graphId"}, alphabetic = true)
 public class RemoveExecutor implements Operation {
 
@@ -65,6 +68,7 @@ public class RemoveExecutor implements Operation {
 
         return new EqualsBuilder()
                 .append(graphId, that.graphId)
+                .append(options, that.options)
                 .isEquals();
     }
 
@@ -72,6 +76,7 @@ public class RemoveExecutor implements Operation {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(graphId)
+                .append(options)
                 .toHashCode();
     }
 
@@ -82,7 +87,11 @@ public class RemoveExecutor implements Operation {
 
     @Override
     public RemoveExecutor options(final Map<String, String> options) {
-        this.options = options;
+        if (Objects.nonNull(options)) {
+            this.options = options;
+        } else {
+            this.options.clear();
+        }
         return (RemoveExecutor) this;
     }
 }
