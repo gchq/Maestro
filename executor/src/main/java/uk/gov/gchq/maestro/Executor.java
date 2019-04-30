@@ -36,11 +36,13 @@ import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.hook.Hook;
 import uk.gov.gchq.maestro.jobtracker.JobDetail;
+import uk.gov.gchq.maestro.jobtracker.JobStatus;
+import uk.gov.gchq.maestro.jobtracker.JobTracker;
 import uk.gov.gchq.maestro.operation.DefaultOperation;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
+import uk.gov.gchq.maestro.operation.handler.job.util.JobExecutor;
 import uk.gov.gchq.maestro.operation.impl.initialisation.Initialiser;
-import uk.gov.gchq.maestro.operation.impl.job.Job;
 import uk.gov.gchq.maestro.operation.validator.OperationValidation;
 import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
@@ -159,24 +161,6 @@ public class Executor {
         return new Result(result, clonedRequest.getContext());
     }
 
-
-    /**
-     * DO NOT USE
-     *
-     * @param operation the operation to execute.
-     * @param context   the context executing the job.
-     * @return the job detail.
-     * @throws OperationException thrown if jobs are not configured.
-     * @deprecated This is only here so if the executejob endpoint is hit it
-     * will just wrap it in a Job Op and pass it to the executor, DO NOT USE.
-     * Executes a given operation job and returns the job detail.
-     */
-    // TODO remove this method before first release
-    public JobDetail executeJob(final Operation operation,
-                                final Context context) throws OperationException {
-        return execute(new Job.Builder().operation(operation).build(), context);
-    }
-
     /**
      * @param operationClass the operation class to check
      * @return true if the provided operation is supported.
@@ -221,6 +205,7 @@ public class Executor {
             startCacheServiceLoader(config.getProperties());
             addExecutorService(config.getProperties());
             try {
+                startScheduledJobs();
                 runInitOperation();
             } catch (final Exception e) {
                 throw new ExecutorException(e);
@@ -229,6 +214,16 @@ public class Executor {
             throw new ExecutorException(new IllegalArgumentException("Config is null"));
         }
         return this;
+    }
+
+    public void startScheduledJobs() throws OperationException {
+        if (JobTracker.isCacheEnabled() && ExecutorService.isEnabled()) {
+            for (JobDetail jobDetailFromCache : JobTracker.getAllJobs()) {
+                if (jobDetailFromCache.getStatus().equals(JobStatus.SCHEDULED_PARENT)) {
+                    JobExecutor.executeJob(jobDetailFromCache, this);
+                }
+            }
+        }
     }
 
     @JsonGetter("config")

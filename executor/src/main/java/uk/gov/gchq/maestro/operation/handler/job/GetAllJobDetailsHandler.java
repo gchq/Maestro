@@ -37,6 +37,6 @@ public class GetAllJobDetailsHandler implements OutputOperationHandler<GetAllJob
         if (!JobTracker.isCacheEnabled()) {
             throw new OperationException("The Job Tracker has not been configured", SERVICE_UNAVAILABLE);
         }
-        return JobTracker.getAllJobs(context.getUser());
+        return JobTracker.getAllJobs();
     }
 }

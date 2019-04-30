@@ -40,6 +40,6 @@ public class GetJobDetailsHandler implements OutputOperationHandler<GetJobDetail
         }
 
         final String jobId = null != operation.getJobId() ? operation.getJobId() : context.getJobId();
-        return JobTracker.getJob(jobId, context.getUser());
+        return JobTracker.getJob(jobId);
     }
 }
