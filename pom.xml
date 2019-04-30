@@ -32,6 +32,7 @@
         <module>executor</module>
         <module>proxy-executor</module>
         <module>federation-executor</module>
+        <module>example</module>
     </modules>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -44,6 +45,11 @@
         <guava.version>13.0.1</guava.version>
         <skip.surefire.tests>false</skip.surefire.tests>
         <skip.failsafe.tests>false</skip.failsafe.tests>
+        <jersey.version>2.25</jersey.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
+        <maven-war-plugin.version>3.0.0</maven-war-plugin.version>
+        <json4s.version>3.2.11</json4s.version>
+        <swagger.version>1.5.15</swagger.version>
         <exclude.tests/>
 
         <java.version>1.8</java.version>
@@ -132,10 +138,14 @@
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
-                <artifactId>common-util</artifactId>
+                <artifactId>rest-api</artifactId>
                 <version>${project.parent.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>rest-api</artifactId>
+                <version>${project.parent.version}</version>
+                <classifier>classes</classifier>
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
