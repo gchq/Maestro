@@ -27,6 +27,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.koryphe.Since;
 import uk.gov.gchq.maestro.commonutil.CloseableUtil;
 import uk.gov.gchq.maestro.commonutil.ExecutorService;
 import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
@@ -54,6 +55,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.Objects.nonNull;
 
+@Since("0.0.1")
 @JsonPropertyOrder(value = {"class", "config"}, alphabetic = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 public class Executor {

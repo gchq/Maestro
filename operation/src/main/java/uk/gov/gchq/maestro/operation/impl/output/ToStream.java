@@ -35,7 +35,7 @@ import java.util.stream.Stream;
  * @see uk.gov.gchq.maestro.operation.impl.output.ToStream.Builder
  */
 @JsonPropertyOrder(value = {"class", "input"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Converts an Iterable to a Stream")
 public class ToStream<T> implements
         InputOutput<Iterable<? extends T>, Stream<? extends T>>,

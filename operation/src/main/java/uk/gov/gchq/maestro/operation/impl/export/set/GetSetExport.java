@@ -36,7 +36,7 @@ import java.util.Map;
  * So ExportToSet and GetSetExport must be used inside a single operation chain.
  */
 @JsonPropertyOrder(value = {"class", "start", "end"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Fetches data from a Set cache")
 public class GetSetExport implements
         GetExport,

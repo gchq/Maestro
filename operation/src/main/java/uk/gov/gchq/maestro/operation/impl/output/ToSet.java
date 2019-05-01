@@ -36,7 +36,7 @@ import java.util.Set;
  * @see uk.gov.gchq.maestro.operation.impl.output.ToSet.Builder
  */
 @JsonPropertyOrder(value = {"class", "input"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Converts an Iterable to a Set")
 public class ToSet<T> implements
         InputOutput<Iterable<? extends T>, Set<? extends T>>,

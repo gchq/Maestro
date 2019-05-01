@@ -34,7 +34,7 @@ import java.util.List;
  *              in the chain.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Simple data access object, enabling (de)serialisation of an OperationChain")
 public class OperationChainDAO<OUT> extends OperationChain<OUT> {
 

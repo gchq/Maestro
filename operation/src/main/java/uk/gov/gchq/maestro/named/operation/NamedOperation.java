@@ -52,7 +52,7 @@ import java.util.Map;
  * @param <O>      the output type
  */
 @JsonPropertyOrder(value = {"class", "input", "operationName"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Runs a named operation")
 public class NamedOperation<I_ITEM, O> implements
         InputOutput<Iterable<? extends I_ITEM>, O>,

@@ -51,7 +51,7 @@ import static java.util.Objects.nonNull;
  * and adding it to a Maestro instance.
  */
 @JsonPropertyOrder(value = {"class", "operationName", "description", "score", "operations"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Adds a new named operation")
 public class AddNamedOperation implements Operation, Operations<Operation> {
     @Required

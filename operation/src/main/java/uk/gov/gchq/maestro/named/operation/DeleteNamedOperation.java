@@ -30,7 +30,7 @@ import java.util.Map;
  * {@link NamedOperation} from a Maestro instance.
  */
 @JsonPropertyOrder(value = {"class", "operationName"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Deletes a named operation")
 public class DeleteNamedOperation implements Operation {
     @Required

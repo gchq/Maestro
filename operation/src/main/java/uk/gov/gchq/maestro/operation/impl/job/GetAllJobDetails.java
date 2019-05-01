@@ -34,7 +34,7 @@ import java.util.Map;
  * related to a Maestro instance.
  */
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Gets all running and historic job details")
 public class GetAllJobDetails implements
         Output<CloseableIterable<JobDetail>> {

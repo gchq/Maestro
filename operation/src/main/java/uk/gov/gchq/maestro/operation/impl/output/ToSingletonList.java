@@ -36,7 +36,7 @@ import java.util.Map;
  * @see uk.gov.gchq.maestro.operation.impl.output.ToSingletonList.Builder
  */
 @JsonPropertyOrder(value = {"class", "input"}, alphabetic = true)
-@Since("1.7.0")
+@Since("0.0.1")
 @Summary("Converts a single input of type T to a List")
 public class ToSingletonList<T> implements InputOutput<T, List<? extends T>> {
     private T input;

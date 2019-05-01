@@ -37,7 +37,7 @@ import java.util.Map;
  * @see ExportToResultCache
  */
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Fetches data from a result cache")
 public class GetResultCacheExport implements
         GetExport,

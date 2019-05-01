@@ -41,7 +41,7 @@ import java.util.Map;
  * Maestro instance.
  */
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
-@Since("2.0.0")
+@Since("0.0.1")
 @Summary("Add a job")
 public class Job implements Output<JobDetail> {
     private static final String CHARSET_NAME = CommonConstants.UTF_8;

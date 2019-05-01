@@ -38,7 +38,7 @@ import java.util.Map;
  * @see ToCsv.Builder
  */
 @JsonPropertyOrder(value = {"class", "input", "elementGenerator"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Converts objects to CSV Strings")
 public class ToCsv<T> implements
         InputOutput<Iterable<? extends T>, Iterable<? extends String>>,

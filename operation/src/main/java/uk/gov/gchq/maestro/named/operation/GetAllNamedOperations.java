@@ -34,7 +34,7 @@ import java.util.Map;
  * instance.
  */
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Gets all available named operations")
 public class GetAllNamedOperations implements
         Output<CloseableIterable<NamedOperationDetail>> {

@@ -35,7 +35,7 @@ import java.util.Set;
  * The results can be of any type - as long as they are json serialisable.
  */
 @JsonPropertyOrder(value = {"class", "input", "key"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Exports to a cache backed by a Maestro instance")
 public class ExportToResultCache<T> implements
         ExportTo<T> {

@@ -33,7 +33,7 @@ import java.util.Map;
  * a job on a Maestro instance.
  */
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Gets the results of a job")
 public class GetJobResults extends GetResultCacheExport {
     private Map<String, String> options;

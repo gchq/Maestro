@@ -33,7 +33,7 @@ import java.util.Map;
  * to execute a given {@link OperationChain}.
  */
 @JsonPropertyOrder(value = {"class", "operationChain"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Scores an OperationChain")
 public class ScoreOperationChain implements Output<Integer> {
     private OperationChain operationChain;

@@ -31,7 +31,7 @@ import java.util.Map;
  * cancel the job, if it is scheduled.
  */
 @JsonPropertyOrder(value = {"jobId"}, alphabetic = true)
-@Since("1.9.0")
+@Since("0.0.1")
 @Summary("Cancels a scheduled job")
 public class CancelScheduledJob implements Operation {
     @Required

@@ -62,7 +62,7 @@ import java.util.stream.Collectors;
  * @see uk.gov.gchq.maestro.operation.OperationChain.Builder
  */
 @JsonPropertyOrder(value = {"class", "operations"}, alphabetic = true)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("A chain of operations where the results are passed between each operation")
 public class OperationChain<OUT> implements Output<OUT>,
         Operations<Operation> {
