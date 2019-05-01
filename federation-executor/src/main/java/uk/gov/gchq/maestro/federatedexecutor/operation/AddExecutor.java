@@ -161,6 +161,6 @@ public class AddExecutor implements Operation {
         } else {
             this.options.clear();
         }
-        return (AddExecutor) this;
+        return this;
     }
 }

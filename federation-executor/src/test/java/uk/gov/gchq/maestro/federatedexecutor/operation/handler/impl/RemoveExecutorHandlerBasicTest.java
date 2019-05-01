@@ -62,7 +62,7 @@ public class RemoveExecutorHandlerBasicTest extends MaestroHandlerBasicTest<Remo
 
     @Override
     protected void inspectReturnFromHandler(final Object value) {
-        assertNull(value);
+        inspectReturnFromExecute(value);
     }
 
     @Override

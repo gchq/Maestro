@@ -52,7 +52,7 @@ public class FederatedOperationHandlerTest extends MaestroHandlerBasicTest<Feder
 
     @Override
     protected void inspectReturnFromHandler(final Object value) throws Exception {
-        assertEquals("AHandler,OpField,CHandler,OpField,BHandler,OpField", value);
+        inspectReturnFromExecute(value);
     }
 
     @Override

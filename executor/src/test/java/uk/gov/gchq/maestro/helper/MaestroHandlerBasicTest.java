@@ -82,7 +82,11 @@ public abstract class MaestroHandlerBasicTest<Op extends Operation, H extends Op
     }
 
     protected void inspectReturnFromHandler(final Object value) throws Exception {
-        fail("Override test method: inspectReturnFromHandler");
+        try {
+            inspectReturnFromExecute(value);
+        } catch (AssertionError e) {
+            fail("Override test method: inspectReturnFromHandler or " + e.getMessage());
+        }
     }
 
     protected void inspectReturnFromExecute(final Object value) throws Exception {

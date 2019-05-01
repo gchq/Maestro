@@ -70,8 +70,10 @@ public abstract class MaestroObjectTest<T> {
             expected.put("one", "two");
             testOperation.options(expected);
             final Map<String, String> actual = testOperation.getOptions();
-            Assert.assertEquals(expected, actual);
+            Assert.assertEquals("returned options not equal to expected", expected, actual);
             assertEquals("two", testOperation.getOption("one"));
+            final Map<String, String> clonedOptions = testOperation.shallowClone().getOptions();
+            assertEquals(actual, clonedOptions);
         }
     }
 
