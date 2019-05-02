@@ -26,10 +26,7 @@ import uk.gov.gchq.maestro.helper.TestHandler;
 import uk.gov.gchq.maestro.helper.TestOperation;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.impl.initialisation.Initialiser;
-import uk.gov.gchq.maestro.operation.impl.job.Job;
-import uk.gov.gchq.maestro.operation.impl.output.ToList;
 import uk.gov.gchq.maestro.util.Config;
-import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
 import java.util.Properties;
 
@@ -122,7 +119,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
         }
     }
 
-    @Test
+  /*  @Test
     public void shouldRestartAndInitialiseJobsUsingCacheService() throws OperationException {
         Properties properties = new Properties();
         ExecutorPropertiesUtil.setCacheClass(properties, "uk.gov.gchq.gaffer.cache.impl.JcsCacheService");
@@ -134,7 +131,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
         Context context = new Context();
         executor.execute(new Job.Builder().operation(new ToList<>()).build(), context);
     }
-
+*/
     @Override
     protected Class<Executor> getTestObjectClass() {
         return Executor.class;

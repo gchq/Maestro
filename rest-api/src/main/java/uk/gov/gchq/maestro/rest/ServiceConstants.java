@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public final class ServiceConstants {
 
     static {
         final String apiVersion = System.getProperty(SystemProperty.REST_API_VERSION, SystemProperty.CORE_VERSION);
-        GAFFER_MEDIA_TYPE = "gaffer.v" + apiVersion.charAt(0) + "; format=json";
+        GAFFER_MEDIA_TYPE = "maestro.v" + apiVersion.charAt(0) + "; format=json";
     }
 
     private ServiceConstants() {

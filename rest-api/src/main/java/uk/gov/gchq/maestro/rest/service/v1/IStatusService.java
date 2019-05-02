@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import uk.gov.gchq.gaffer.rest.SystemStatus;
 import uk.gov.gchq.maestro.rest.SystemStatus;
 
 import javax.ws.rs.GET;
@@ -28,8 +27,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static uk.gov.gchq.gaffer.rest.ServiceConstants.INTERNAL_SERVER_ERROR;
-import static uk.gov.gchq.gaffer.rest.ServiceConstants.OK;
+import static uk.gov.gchq.maestro.rest.ServiceConstants.INTERNAL_SERVER_ERROR;
+import static uk.gov.gchq.maestro.rest.ServiceConstants.OK;
 
 /**
  * An {@code StatusService} has methods to check the status of the system

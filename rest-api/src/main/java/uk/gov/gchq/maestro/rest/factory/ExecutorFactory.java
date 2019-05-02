@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import uk.gov.gchq.maestro.util.Config;
 import java.nio.file.Paths;
 
 /**
- * A {@code GraphFactory} creates instances of {@link Executor} to be reused for all queries.
+ * An {@code ExecutorFactory} creates instances of {@link Executor} to be reused for all queries.
  */
 public class ExecutorFactory {
     private Executor executor;
@@ -38,7 +38,7 @@ public class ExecutorFactory {
      *
      * @return the Executor
      */
-    public Executor createExecutor() {
+    public static Executor createExecutor() {
         final Config.Builder configBuilder = new Config.Builder();
 
         final String maestroConfigPath = System.getProperty(SystemProperty.MAESTRO_CONFIG_PATH);
@@ -47,6 +47,10 @@ public class ExecutorFactory {
         }
 
         return new Executor().config(configBuilder.build());
+    }
+
+    public void setExecutor(final Executor executor) {
+        this.executor = executor;
     }
 
     /**

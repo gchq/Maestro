@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import io.swagger.annotations.SwaggerDefinition;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 /**
- * Empty interface containing the Swagger API definitions for the v1 Gaffer REST
+ * Empty interface containing the Swagger API definitions for the v1 Maestro REST
  * API.
  */
 @SwaggerDefinition(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,10 @@
 package uk.gov.gchq.maestro.rest;
 
 import uk.gov.gchq.maestro.commonutil.DebugUtil;
-import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.rest.factory.ExecutorFactory;
 import uk.gov.gchq.maestro.rest.factory.UnknownUserFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -32,14 +29,13 @@ import java.util.Properties;
 public abstract class SystemProperty {
     // KEYS
     public static final String MAESTRO_CONFIG_PATH = "maestro.config";
-    public static final String GAFFER_VERSION = "gaffer.version";
+    public static final String MAESTRO_VERSION = "maestro.version";
     public static final String KORYPHE_VERSION = "koryphe.version";
-    public static final String BASE_PATH = "gaffer.rest-api.basePath";
-    public static final String REST_API_VERSION = "gaffer.rest-api.version";
-    public static final String GRAPH_FACTORY_CLASS = "gaffer.graph.factory.class";
-    public static final String USER_FACTORY_CLASS = "gaffer.user.factory.class";
-    public static final String SERVICES_PACKAGE_PREFIX = "gaffer.rest-api.resourcePackage";
-    public static final String PACKAGE_PREFIXES = "gaffer.package.prefixes";
+    public static final String BASE_PATH = "maestro.rest-api.basePath";
+    public static final String REST_API_VERSION = "maestro.rest-api.version";
+    public static final String USER_FACTORY_CLASS = "maestro.user.factory.class";
+    public static final String SERVICES_PACKAGE_PREFIX = "maestro.rest-api.resourcePackage";
+    public static final String PACKAGE_PREFIXES = "maestro.package.prefixes";
     public static final String JSON_SERIALISER_CLASS = JSONSerialiser.JSON_SERIALISER_CLASS_KEY;
     public static final String JSON_SERIALISER_MODULES = JSONSerialiser.JSON_SERIALISER_MODULES;
     public static final String REST_DEBUG = DebugUtil.DEBUG;
@@ -48,33 +44,33 @@ public abstract class SystemProperty {
     /**
      * A CSV of properties to expose via the properties endpoint.
      */
-    public static final String EXPOSED_PROPERTIES = "gaffer.properties";
-    public static final String APP_TITLE = "gaffer.properties.app.title";
-    public static final String APP_DESCRIPTION = "gaffer.properties.app.description";
-    public static final String APP_BANNER_COLOUR = "gaffer.properties.app.banner.colour";
-    public static final String APP_BANNER_DESCRIPTION = "gaffer.properties.app.banner.description";
-    public static final String APP_DOCUMENTATION_URL = "gaffer.properties.app.doc.url";
-    public static final String LOGO_LINK = "gaffer.properties.app.logo.link";
-    public static final String LOGO_IMAGE_URL = "gaffer.properties.app.logo.src";
-    public static final String FAVICON_SMALL_URL = "gaffer.properties.app.logo.favicon.small";
-    public static final String FAVICON_LARGE_URL = "gaffer.properties.app.logo.favicon.large";
+    public static final String EXPOSED_PROPERTIES = "maestro.properties";
+    public static final String APP_TITLE = "maestro.properties.app.title";
+    public static final String APP_DESCRIPTION = "maestro.properties.app.description";
+    public static final String APP_BANNER_COLOUR = "maestro.properties.app.banner.colour";
+    public static final String APP_BANNER_DESCRIPTION = "maestro.properties.app.banner.description";
+    public static final String APP_DOCUMENTATION_URL = "maestro.properties.app.doc.url";
+    public static final String LOGO_LINK = "maestro.properties.app.logo.link";
+    public static final String LOGO_IMAGE_URL = "maestro.properties.app.logo.src";
+    public static final String FAVICON_SMALL_URL = "maestro.properties.app.logo.favicon.small";
+    public static final String FAVICON_LARGE_URL = "maestro.properties.app.logo.favicon.large";
 
     // DEFAULTS
     /**
      * Comma separated list of package prefixes to search for Functions and {@link uk.gov.gchq.maestro.operation.Operation}s.
      */
     public static final String PACKAGE_PREFIXES_DEFAULT = "uk.gov.gchq";
-    public static final String SERVICES_PACKAGE_PREFIX_DEFAULT = "uk.gov.gchq.gaffer.rest";
+    public static final String SERVICES_PACKAGE_PREFIX_DEFAULT = "uk.gov.gchq.maestro.rest";
     public static final String BASE_PATH_DEFAULT = "rest";
     public static final String CORE_VERSION = "2.0.0";
-    public static final String GAFFER_VERSION_DEFAULT = getVersion(GAFFER_VERSION);
+    public static final String MAESTRO_VERSION_DEFAULT = getVersion(MAESTRO_VERSION);
     public static final String KORYPHE_VERSION_DEFAULT = getVersion(KORYPHE_VERSION);
     public static final String GRAPH_FACTORY_CLASS_DEFAULT = ExecutorFactory.class.getName();
     public static final String USER_FACTORY_CLASS_DEFAULT = UnknownUserFactory.class.getName();
     public static final String REST_DEBUG_DEFAULT = DebugUtil.DEBUG_DEFAULT;
     public static final String APP_TITLE_DEFAULT = "Gaffer REST";
     public static final String APP_DESCRIPTION_DEFAULT = "The Gaffer REST service.";
-    public static final String APP_DOCUMENTATION_URL_DEFAULT = "https://gchq.github.io/gaffer-doc/";
+    public static final String APP_DOCUMENTATION_URL_DEFAULT = "https://gchq.github.io/maestro-doc/";
     public static final String LOGO_LINK_DEFAULT = "https://github.com/gchq/Gaffer";
     public static final String LOGO_IMAGE_URL_DEFAULT = "images/logo.png";
 
@@ -85,20 +81,6 @@ public abstract class SystemProperty {
     }
 
     private static String getVersion(final String propertyKey) {
-        if (versionProperties == null) {
-            loadVersionProperties();
-        }
-        return versionProperties.getProperty(propertyKey);
-    }
-
-    private static void loadVersionProperties() {
-        try {
-            Properties prop = new Properties();
-            InputStream input = StreamUtil.openStream(SystemProperty.class, "version.properties");
-            prop.load(input);
-            versionProperties = prop;
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
+        return "0.0.1";
     }
 }

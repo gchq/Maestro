@@ -497,10 +497,10 @@ public class Config {
         // Merge configs
         public Builder merge(final Config thatConfig) {
             if (null != thatConfig) {
-                if (null != this.config.getId()) {
+                if (null == this.config.getId()) {
                     this.config.id(thatConfig.getId());
                 }
-                if (null != this.config.getDescription()) {
+                if (null == this.config.getDescription()) {
                     this.config.setDescription(thatConfig.getDescription());
                 }
                 thatConfig.getRequestHooks().forEach(hook -> this.config.addRequestHook(hook));

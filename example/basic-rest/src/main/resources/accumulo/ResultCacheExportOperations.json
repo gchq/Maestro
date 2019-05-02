@@ -1,17 +1,17 @@
 {
   "operations": [
     {
-      "operation": "uk.gov.gchq.gaffer.operation.impl.export.resultcache.ExportToGafferResultCache",
+      "operation": "uk.gov.gchq.maestro.operation.impl.export.resultcache.ExportToResultCache",
       "handler": {
-        "class": "uk.gov.gchq.gaffer.operation.export.resultcache.handler.ExportToGafferResultCacheHandler",
+        "class": "uk.gov.gchq.maestro.operation.export.resultcache.handler.ExportToResultCacheHandler",
         "timeToLive": 86400000,
         "storePropertiesPath": "accumulo/cache-store.properties"
       }
     },
     {
-      "operation": "uk.gov.gchq.gaffer.operation.impl.export.resultcache.GetGafferResultCacheExport",
+      "operation": "uk.gov.gchq.maestro.operation.impl.export.resultcache.GetResultCacheExport",
       "handler": {
-        "class": "uk.gov.gchq.gaffer.operation.export.resultcache.handler.GetGafferResultCacheExportHandler",
+        "class": "uk.gov.gchq.maestro.operation.export.resultcache.handler.GetResultCacheExportHandler",
         "timeToLive": 86400000,
         "storePropertiesPath": "accumulo/cache-store.properties"
       }

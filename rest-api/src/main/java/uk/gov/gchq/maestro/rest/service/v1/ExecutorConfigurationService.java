@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,17 +23,9 @@ import uk.gov.gchq.maestro.rest.factory.UserFactory;
 
 import javax.inject.Inject;
 
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 /**
- * An implementation of {@link IExecutorConfigurationService}. By default it will use a singleton
+ * An implementation of {@link IExecutorConfigurationService}. By default it will use an
  * {@link uk.gov.gchq.maestro.Executor} generated using the {@link uk.gov.gchq.maestro.rest.factory.ExecutorFactory}.
- * <p>
- * Currently the {@link uk.gov.gchq.maestro.operation.Operation}s, {@link Predicate}s,
- * {@link Function}s and {@link uk.gov.gchq.gaffer.data.generator.ElementGenerator}s available
- * are only returned if they are in a package prefixed with 'gaffer'.
  */
 public class ExecutorConfigurationService implements IExecutorConfigurationService {
     @Inject

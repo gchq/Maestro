@@ -25,11 +25,10 @@ import uk.gov.gchq.maestro.jobtracker.JobTracker;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.operation.Operations;
-import uk.gov.gchq.maestro.operation.handler.job.JobHandler;
 import uk.gov.gchq.maestro.operation.impl.export.resultcache.ExportToResultCache;
 
 /**
- * This class is used within the {@link JobHandler} and {@link Executor} to
+ * This class is used within the {@link uk.gov.gchq.maestro.operation.handler.job.JobHandler} and {@link Executor} to
  * execute (scheduled and non-scheduled) {@link uk.gov.gchq.maestro.operation.impl.job.Job}s using
  * the {@link JobTracker} and {@link ExecutorService}.
  */

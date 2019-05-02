@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  */
 @Path("/executor")
 @Produces(APPLICATION_JSON)
-@Api(value = "/graph")
+@Api(value = "/executor")
 public interface IExecutorConfigurationService {
     @GET
     @Path("/description")

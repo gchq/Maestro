@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Crown Copyright
+ * Copyright 2019 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,10 @@ public class OperationService implements IOperationService {
     @Inject
     private UserFactory userFactory;
 
+    public OperationService() {
+
+    }
+
     @Override
     public Object execute(final Operation operation) {
         return _execute(operation);
@@ -59,7 +63,7 @@ public class OperationService implements IOperationService {
     }
 
     protected <O> O _execute(final Operation operation) {
-        return _execute(new OperationChainDAO<O>(operation));
+        return _execute(new OperationChainDAO<>(operation));
     }
 
     @SuppressWarnings("ThrowFromFinallyBlock")

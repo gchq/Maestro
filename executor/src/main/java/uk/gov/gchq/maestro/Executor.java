@@ -218,7 +218,7 @@ public class Executor {
 
     public void startScheduledJobs() throws OperationException {
         if (JobTracker.isCacheEnabled() && ExecutorService.isEnabled()) {
-            for (JobDetail jobDetailFromCache : JobTracker.getAllJobs()) {
+            for (final JobDetail jobDetailFromCache : JobTracker.getAllJobs()) {
                 if (jobDetailFromCache.getStatus().equals(JobStatus.SCHEDULED_PARENT)) {
                     JobExecutor.executeJob(jobDetailFromCache, this);
                 }

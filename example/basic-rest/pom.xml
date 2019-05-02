@@ -14,7 +14,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <store.type>accumulo</store.type>
+        <storeb.type>accumulo</storeb.type>
         <standalone-path>rest</standalone-path>
         <standalone-port>8080</standalone-port>
     </properties>
@@ -50,6 +50,7 @@
                     <dependency>
                         <groupId>uk.gov.gchq.maestro</groupId>
                         <artifactId>rest-api</artifactId>
+                        <version>${project.parent.version}</version>
                         <type>war</type>
                     </dependency>
                 </dependencies>
@@ -96,20 +97,14 @@
                             <port>${standalone-port}</port>
                             <systemProperties>
                                 <maestro.properties.app.title>
-                                    Basic maestro Example
+                                    Basic Maestro Example
                                 </maestro.properties.app.title>
-                                <maestro.properties.app.description>
-                                    Example using a very basic schema
-                                </maestro.properties.app.description>
                                 <maestro.rest-api.basePath>
                                     ${standalone-path}
                                 </maestro.rest-api.basePath>
                                 <maestro.graph.config>
-                                    ${project.build.outputDirectory}/graphConfig.json
+                                    ${project.build.outputDirectory}/config.json
                                 </maestro.graph.config>
-                                <maestro.schemas>
-                                    ${project.parent.basedir}/basic-model/src/main/resources/schema
-                                </maestro.schemas>
                                 <maestro.storeProperties>
                                     ${project.build.outputDirectory}/${store.type}/store.properties
                                 </maestro.storeProperties>
