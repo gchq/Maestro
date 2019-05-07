@@ -20,7 +20,6 @@ import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.CacheOperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.commonutil.iterable.WrappedCloseableIterable;
-import uk.gov.gchq.maestro.user.User;
 
 import java.util.List;
 import java.util.Objects;
@@ -43,10 +42,8 @@ public final class JobTracker {
      * Add or update the job details relating to a job in the job tracker cache.
      *
      * @param jobDetail the job details to update
-     * @param user      the user making the request
      */
-    public static void addOrUpdateJob(final JobDetail jobDetail,
-                                      final User user) {
+    public static void addOrUpdateJob(final JobDetail jobDetail) {
         validateJobDetail(jobDetail);
         try {
             CacheServiceLoader.getService().putInCache(CACHE_NAME, jobDetail.getJobId(), jobDetail);
@@ -68,24 +65,22 @@ public final class JobTracker {
      * Get the details of a specific job.
      *
      * @param jobId the ID of the job to lookup
-     * @param user  the user making the request to the job tracker
      * @return the {@link JobDetail} object for the requested job
      */
-    public static JobDetail getJob(final String jobId, final User user) {
+    public static JobDetail getJob(final String jobId) {
         return CacheServiceLoader.getService().getFromCache(CACHE_NAME, jobId);
     }
 
     /**
      * Get all jobs from the job tracker cache.
      *
-     * @param user the user making the request to the job tracker
      * @return a {@link CloseableIterable} containing all of the job details
      */
-    public static CloseableIterable<JobDetail> getAllJobs(final User user) {
+    public static CloseableIterable<JobDetail> getAllJobs() {
         final Set<String> jobIds = CacheServiceLoader.getService().getAllKeysFromCache(CACHE_NAME);
         final List<JobDetail> jobs = jobIds.stream()
                 .filter(Objects::nonNull)
-                .map(jobId -> getJob(jobId, user))
+                .map(jobId -> getJob(jobId))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 

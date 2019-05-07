@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app metadata-complete="false" version="3.1">
+
+    <display-name>Maestro REST example</display-name>
+
+    <listener>
+        <listener-class>uk.gov.gchq.maestro.rest.ServletLifecycleListener
+        </listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>Maestro REST example v1</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>
+                uk.gov.gchq.maestro.rest.application.ApplicationConfig
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>swagger.scanner.id</param-name>
+            <param-value>v1</param-value>
+        </init-param>
+        <init-param>
+            <param-name>swagger.config.id</param-name>
+            <param-value>v1</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Maestro REST example v1</servlet-name>
+        <url-pattern>/v1/*</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>OriginFilter</filter-name>
+        <filter-class>uk.gov.gchq.maestro.rest.filter.OriginFilter
+        </filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>OriginFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+</web-app>
+

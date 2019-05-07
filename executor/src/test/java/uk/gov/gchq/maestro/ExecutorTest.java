@@ -119,6 +119,19 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
         }
     }
 
+  /*  @Test
+    public void shouldRestartAndInitialiseJobsUsingCacheService() throws OperationException {
+        Properties properties = new Properties();
+        ExecutorPropertiesUtil.setCacheClass(properties, "uk.gov.gchq.gaffer.cache.impl.JcsCacheService");
+        properties.setProperty("gaffer.cache.config.file", "resources/cache.ccf");
+        ExecutorPropertiesUtil.setJobTrackerEnabled(properties, true);
+        Config config = new Config.Builder().executorProperties(properties).build();
+
+        Executor executor = new Executor(config);
+        Context context = new Context();
+        executor.execute(new Job.Builder().operation(new ToList<>()).build(), context);
+    }
+*/
     @Override
     protected Class<Executor> getTestObjectClass() {
         return Executor.class;
