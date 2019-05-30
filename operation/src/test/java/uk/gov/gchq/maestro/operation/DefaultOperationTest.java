@@ -16,12 +16,7 @@
 
 package uk.gov.gchq.maestro.operation;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import uk.gov.gchq.maestro.helper.TestOperation;
-
-import static org.junit.Assert.*;
 
 public class DefaultOperationTest extends uk.gov.gchq.maestro.helper.MaestroObjectTest<DefaultOperation> {
 

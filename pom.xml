@@ -29,11 +29,6 @@
         <module>common-util</module>
         <module>data</module>
         <module>operation</module>
-        <module>executor</module>
-        <module>library</module>
-        <module>example</module>
-        <module>proxy-executor</module>
-        <module>federation-executor</module>
     </modules>
 
     <name>${project.groupId}:${project.artifactId}</name>
