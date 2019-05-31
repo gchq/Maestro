@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.named.operation;
+package uk.gov.gchq.maestro.operation;
 
 import org.junit.Test;
+
+import uk.gov.gchq.maestro.named.operation.ParameterDetail;
 
 import java.util.Arrays;
 import java.util.List;

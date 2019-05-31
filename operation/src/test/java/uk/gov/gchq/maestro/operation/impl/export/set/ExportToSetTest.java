@@ -16,75 +16,25 @@
 
 package uk.gov.gchq.maestro.operation.impl.export.set;
 
-import org.junit.Test;
-
-import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+public class ExportToSetTest extends OperationTest {
+    @Override
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"ExportToSet\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"key\" : \"key\"\n" +
+                "  }\n" +
+                "}";
+    }
 
-
-public class ExportToSetTest extends OperationTest<ExportToSet> {
-    @Test
-    public void shouldJSONSerialiseAndDeserialise() throws SerialisationException {
-        // Given
+    @Override
+    protected Operation getFullyPopulatedTestObject() throws Exception {
         final String key = "key";
-        final ExportToSet op = new ExportToSet.Builder<>()
-                .key(key)
-                .build();
-
-        // When
-        byte[] json = JSONSerialiser.serialise(op, true);
-        final ExportToSet deserialisedOp = JSONSerialiser.deserialise(json, ExportToSet.class);
-
-        // Then
-        assertEquals(key, deserialisedOp.getKey());
-    }
-
-    @Test
-    @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // When
-        final ExportToSet op = new ExportToSet.Builder<>()
-                .key("key")
-                .build();
-
-        // Then
-        assertEquals("key", op.getKey());
-    }
-
-    @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final String key = "key";
-        final String input = "input";
-        final ExportToSet exportToSet = new ExportToSet.Builder<>()
-                .key(key)
-                .input(input)
-                .build();
-
-        // When
-        ExportToSet clone = exportToSet.shallowClone();
-
-        // Then
-        assertNotSame(exportToSet, clone);
-        assertEquals(key, clone.getKey());
-        assertEquals(input, clone.getInput());
-    }
-
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(Object.class, outputClass);
-    }
-
-    @Override
-    protected ExportToSet getTestObject() {
-        return new ExportToSet();
+        return new Operation("ExportToSet")
+                .operationArg("key", key);
     }
 }

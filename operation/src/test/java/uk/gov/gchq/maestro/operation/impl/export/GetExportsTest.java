@@ -16,89 +16,44 @@
 
 package uk.gov.gchq.maestro.operation.impl.export;
 
-import org.junit.Test;
-
-import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.operation.OperationTest;
-import uk.gov.gchq.maestro.operation.impl.export.set.GetSetExport;
-
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import uk.gov.gchq.maestro.operation.Operation;
 
 
-public class GetExportsTest extends OperationTest<GetExports> {
-    @Test
-    public void shouldJSONSerialiseAndDeserialise() throws SerialisationException {
-        // Given
-        final GetExports op = new GetExports.Builder()
-                .exports(new GetSetExport.Builder()
-                                .key("key1")
-                                .build(),
-                        new GetSetExport.Builder()
-                                .key("key2")
-                                .build())
-                .build();
-
-        // When
-        byte[] json = JSONSerialiser.serialise(op, true);
-        final GetExports deserialisedOp = JSONSerialiser.deserialise(json, GetExports.class);
-
-        // Then
-        assertEquals("key1", deserialisedOp.getGetExports().get(0).getKey());
-        assertEquals("key2", deserialisedOp.getGetExports().get(1).getKey());
-    }
-
-    @Test
+public class GetExportsTest extends OperationTest {
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // When
-        final GetExports op = new GetExports.Builder()
-                .exports(new GetSetExport.Builder()
-                                .key("key1")
-                                .build(),
-                        new GetSetExport.Builder()
-                                .key("key2")
-                                .build())
-                .build();
-
-        // Then
-        assertEquals("key1", op.getGetExports().get(0).getKey());
-        assertEquals("key2", op.getGetExports().get(1).getKey());
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"GetExports\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"exports\" : [ \"[Luk.gov.gchq.maestro.operation.Operation;\", [ {\n" + //TODO Luk
+                "      \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "      \"id\" : \"GetSetExport\",\n" +
+                "      \"operationArgs\" : {\n" +
+                "        \"key\" : \"key1\"\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "      \"id\" : \"GetSetExport\",\n" +
+                "      \"operationArgs\" : {\n" +
+                "        \"key\" : \"key2\"\n" +
+                "      }\n" +
+                "    } ] ]\n" +
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final GetSetExport getSetExport = new GetSetExport.Builder()
-                .key("key1")
-                .build();
-
-        final GetExports getExports = new GetExports.Builder()
-                .exports(getSetExport)
-                .build();
-
-        // When
-        final GetExports clone = getExports.shallowClone();
-
-        // Then
-        assertNotSame(getExports, clone);
-        assertEquals(getSetExport, clone.getGetExports().iterator().next());
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("GetExports")
+                .operationArg("exports", new Operation[]{
+                        new Operation("GetSetExport")
+                                .operationArg("key","key1")
+                                ,
+                        new Operation("GetSetExport")
+                                .operationArg("key","key2")
+                                });
     }
 
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(Map.class, outputClass);
-    }
-
-    @Override
-    protected GetExports getTestObject() {
-        return new GetExports();
-    }
 }

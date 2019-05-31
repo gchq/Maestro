@@ -17,88 +17,36 @@
 package uk.gov.gchq.maestro.operation.impl.export.resultcache;
 
 import com.google.common.collect.Sets;
-import org.junit.Test;
 
-import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
 import java.util.HashSet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
 
-
-public class ExportToResultCacheTest extends OperationTest<ExportToResultCache> {
-    @Test
-    public void shouldJSONSerialiseAndDeserialise() throws SerialisationException {
-        // Given
-        final String key = "key";
-        final HashSet<String> opAuths = Sets.newHashSet("1", "2");
-        final ExportToResultCache op = new ExportToResultCache.Builder<>()
-                .opAuths(opAuths)
-                .key(key)
-                .build();
-
-        // When
-        byte[] json = JSONSerialiser.serialise(op, true);
-        final ExportToResultCache deserialisedOp = JSONSerialiser.deserialise(json, ExportToResultCache.class);
-
-        // Then
-        assertEquals(key, deserialisedOp.getKey());
-        assertEquals(opAuths, deserialisedOp.getOpAuths());
-    }
-
-    @Test
+public class ExportToResultCacheTest extends OperationTest {
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // When
-        final String key = "key";
-        final HashSet<String> opAuths = Sets.newHashSet("1", "2");
-        final ExportToResultCache op = new ExportToResultCache.Builder<>()
-                .opAuths(opAuths)
-                .key(key)
-                .build();
-
-        // Then
-        assertEquals(key, op.getKey());
-        assertEquals(opAuths, op.getOpAuths());
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"ExportToResultCache\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"input\" : \"input\",\n" +
+                "    \"key\" : \"key\",\n" +
+                "    \"opAuths\" : [ \"java.util.HashSet\", [ \"1\", \"2\" ] ]\n" +
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
+    protected Operation getFullyPopulatedTestObject() throws Exception {
         final String key = "key";
         final HashSet<String> opAuths = Sets.newHashSet("1", "2");
         final String input = "input";
-        final ExportToResultCache exportToMaestroResultCache = new ExportToResultCache.Builder<>()
-                .key(key)
-                .opAuths(opAuths)
-                .input(input)
-                .build();
-
-        // When
-        ExportToResultCache clone = exportToMaestroResultCache.shallowClone();
-
-        // Then
-        assertNotSame(exportToMaestroResultCache, clone);
-        assertEquals(key, clone.getKey());
-        assertEquals(input, clone.getInput());
-        assertEquals(opAuths, clone.getOpAuths());
-    }
-
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(Object.class, outputClass);
-    }
-
-    @Override
-    protected ExportToResultCache getTestObject() {
-        return new ExportToResultCache();
+        return new Operation("ExportToResultCache")
+                .operationArg("key", key)
+                .operationArg("opAuths", opAuths)
+                .operationArg("input", input);
     }
 }
 

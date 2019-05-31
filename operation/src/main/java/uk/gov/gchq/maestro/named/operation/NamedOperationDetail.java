@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Simple POJO containing the details associated with a {@link NamedOperation}.
+ * Simple POJO containing the details associated with a NamedOperation.
  */
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class NamedOperationDetail implements Serializable {

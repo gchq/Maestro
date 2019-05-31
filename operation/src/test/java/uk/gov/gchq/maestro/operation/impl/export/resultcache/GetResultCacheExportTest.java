@@ -16,77 +16,32 @@
 
 package uk.gov.gchq.maestro.operation.impl.export.resultcache;
 
-import org.junit.Test;
-
-import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
-import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
 
+public class GetResultCacheExportTest extends OperationTest {
 
-public class GetResultCacheExportTest extends OperationTest<GetResultCacheExport> {
-    @Test
-    public void shouldJSONSerialiseAndDeserialise() throws SerialisationException {
-        // Given
-        final String key = "key";
-        final GetResultCacheExport op = new GetResultCacheExport.Builder()
-                .key(key)
-                .build();
-
-        // When
-        byte[] json = JSONSerialiser.serialise(op, true);
-        final GetResultCacheExport deserialisedOp = JSONSerialiser.deserialise(json, GetResultCacheExport.class);
-
-        // Then
-        assertEquals(key, deserialisedOp.getKey());
-    }
-
-    @Test
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // When
-        final String key = "key";
-        final GetResultCacheExport op = new GetResultCacheExport.Builder()
-                .key(key)
-                .build();
-
-        // Then
-        assertEquals(key, op.getKey());
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"GetResultCacheExport\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"jobId\" : \"jobId\",\n" +
+                "    \"key\" : \"key\"\n" +
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
+    protected Operation getFullyPopulatedTestObject() throws Exception {
         final String key = "key";
         final String jobId = "jobId";
-        final GetResultCacheExport getMaestroResultCacheExport = new GetResultCacheExport.Builder()
-                .key(key)
-                .jobId(jobId)
-                .build();
 
-        // When
-        GetResultCacheExport clone = getMaestroResultCacheExport.shallowClone();
-
-        // Then
-        assertNotSame(getMaestroResultCacheExport, clone);
-        assertEquals(key, clone.getKey());
-        assertEquals(jobId, clone.getJobId());
+        return new Operation("GetResultCacheExport")
+                .operationArg("key", key)
+                .operationArg("jobId", jobId);
     }
 
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(CloseableIterable.class, outputClass);
-    }
-
-    @Override
-    protected GetResultCacheExport getTestObject() {
-        return new GetResultCacheExport();
-    }
 }

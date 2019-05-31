@@ -16,53 +16,23 @@
 
 package uk.gov.gchq.maestro.operation.impl.job;
 
-import org.junit.Test;
-
-import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
 
+public class GetAllJobDetailsTest extends OperationTest {
 
-public class GetAllJobDetailsTest extends OperationTest<GetAllJobDetails> {
-
-    @Test
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // When
-        final GetAllJobDetails op = getTestObject();
-
-        // Then
-        assertNotNull(op);
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"GetAllJobDetails\",\n" +
+                "  \"operationArgs\" : { }\n" +
+                "}";
     }
 
     @Override
-    protected GetAllJobDetails getTestObject() {
-        return new GetAllJobDetails();
-    }
-
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(CloseableIterable.class, outputClass);
-    }
-
-    @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final GetAllJobDetails getAllJobDetails = new GetAllJobDetails.Builder()
-                .build();
-
-        // When
-        GetAllJobDetails clone = getAllJobDetails.shallowClone();
-
-        // Then
-        assertNotSame(getAllJobDetails, clone);
-        assertNotNull(clone);
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("GetAllJobDetails");
     }
 }

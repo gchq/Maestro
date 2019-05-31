@@ -16,28 +16,36 @@
 
 package uk.gov.gchq.maestro.operation;
 
-import uk.gov.gchq.maestro.helper.TestOperation;
+import com.google.common.collect.ImmutableSet;
 
-public class DefaultOperationTest extends uk.gov.gchq.maestro.helper.MaestroObjectTest<DefaultOperation> {
+import java.util.Set;
 
-    @Override
-    protected Class<DefaultOperation> getTestObjectClass() {
-        return DefaultOperation.class;
-    }
+public class DefaultOperationTest extends OperationTest {
 
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.operation.DefaultOperation\",\n" +
-                "  \"wrappedOp\" : {\n" +
-                "    \"class\" : \"uk.gov.gchq.maestro.helper.TestOperation\"\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"DefaultOperation\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"wrappedOp\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "      \"id\" : \"innerOp\",\n" +
+                "      \"operationArgs\" : { }\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
     }
 
     @Override
-    protected DefaultOperation getTestObject() throws Exception {
-        return new DefaultOperation().setWrappedOp(new TestOperation());
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("DefaultOperation")
+                .operationArg("wrappedOp",
+                        new Operation("innerOp"));
     }
 
+    @Override
+    protected Set<String> getRequiredFields() {
+        return ImmutableSet.of("wrappedOp");
+    }
 }

@@ -16,63 +16,27 @@
 
 package uk.gov.gchq.maestro.operation.impl.output;
 
-import com.google.common.collect.Lists;
-import org.junit.Test;
-
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.iterableWithSize;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
+public class ToStreamTest extends OperationTest {
 
-
-public class ToStreamTest extends OperationTest<ToStream> {
-
-    @Test
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // Given
-        final ToStream<String> toStream = new ToStream.Builder<String>().input("1", "2").build();
-
-        // Then
-        assertThat(toStream.getInput(), is(notNullValue()));
-        assertThat(toStream.getInput(), iterableWithSize(2));
-        assertThat(toStream.getInput(), containsInAnyOrder("1", "2"));
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"ToStream\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"1\", \"2\" ] ]\n" + //TODO Ljava ?
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final String input = "1";
-        final ToStream toStream = new ToStream.Builder<>()
-                .input(input)
-                .build();
-
-        // When
-        final ToStream clone = toStream.shallowClone();
-
-        // Then
-        assertNotSame(toStream, clone);
-        assertEquals(Lists.newArrayList(input), clone.getInput());
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("ToStream")
+                .input(new Object[]{"1", "2"});
     }
 
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(Stream.class, outputClass);
-    }
-
-    @Override
-    protected ToStream getTestObject() {
-        return new ToStream();
-    }
 }

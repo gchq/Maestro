@@ -16,62 +16,26 @@
 
 package uk.gov.gchq.maestro.operation.impl.output;
 
-import org.junit.Test;
-
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import java.util.List;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.iterableWithSize;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
+public class ToListTest extends OperationTest {
 
-
-public class ToListTest extends OperationTest<ToList> {
-
-    @Test
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // Given
-        final ToList<String> toList = new ToList.Builder<String>().input("1", "2").build();
-
-        // Then
-        assertThat(toList.getInput(), is(notNullValue()));
-        assertThat(toList.getInput(), iterableWithSize(2));
-        assertThat(toList.getInput(), containsInAnyOrder("1", "2"));
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"ToList\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"1\", \"2\" ] ]\n" + //TODO Ljava ?
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final String input = "1";
-        final ToList toList = new ToList.Builder<>()
-                .input(input)
-                .build();
-
-        // When
-        final ToList clone = toList.shallowClone();
-
-        // Then
-        assertNotSame(toList, clone);
-        assertEquals(input, clone.getInput().iterator().next());
-    }
-
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(List.class, outputClass);
-    }
-
-    @Override
-    protected ToList getTestObject() {
-        return new ToList();
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("ToList")
+                .input(new Object[]{"1", "2"});
     }
 }

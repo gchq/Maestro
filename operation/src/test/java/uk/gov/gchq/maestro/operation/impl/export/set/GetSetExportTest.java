@@ -16,92 +16,33 @@
 
 package uk.gov.gchq.maestro.operation.impl.export.set;
 
-import org.junit.Test;
-
-import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
 
+public class GetSetExportTest extends OperationTest {
 
-public class GetSetExportTest extends OperationTest<GetSetExport> {
-    @Test
-    public void shouldJSONSerialiseAndDeserialise() throws SerialisationException {
-        // Given
-        final GetSetExport operation = new GetSetExport.Builder()
-                .key("key")
-                .jobId("jobId")
-                .start(0)
-                .end(5)
-                .build();
-
-        // When
-        byte[] json = JSONSerialiser.serialise(operation, true);
-        final GetSetExport deserialisedOp = JSONSerialiser.deserialise(json, GetSetExport.class);
-
-        // Then
-        assertEquals("key", deserialisedOp.getKey());
-        assertEquals("jobId", deserialisedOp.getJobId());
-        assertEquals(0, deserialisedOp.getStart());
-        assertEquals(5, (int) deserialisedOp.getEnd());
-    }
-
-    @Test
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // When
-        final GetSetExport operation = new GetSetExport.Builder()
-                .key("key")
-                .jobId("jobId")
-                .start(0)
-                .end(5)
-                .build();
-
-        // Then
-        assertEquals("key", operation.getKey());
-        assertEquals("jobId", operation.getJobId());
-        assertEquals(0, operation.getStart());
-        assertEquals(5, (int) operation.getEnd());
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"GetSetExport\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"end\" : 5,\n" +
+                "    \"jobId\" : \"jobId\",\n" +
+                "    \"key\" : \"key\",\n" +
+                "    \"start\" : 0\n" +
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final String key = "key";
-        final String jobId = "jobId";
-        final int start = 0;
-        final int end = 5;
-        final GetSetExport getSetExport = new GetSetExport.Builder()
-                .key(key)
-                .jobId(jobId)
-                .start(start)
-                .end(end)
-                .build();
-
-        // When
-        GetSetExport clone = getSetExport.shallowClone();
-
-        // Then
-        assertNotSame(getSetExport, clone);
-        assertEquals(key, clone.getKey());
-        assertEquals(jobId, clone.getJobId());
-        assertEquals(start, clone.getStart());
-        assertEquals(end, (int) clone.getEnd());
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("GetSetExport")
+                .operationArg("key", "key")
+                .operationArg("jobId", "jobId")
+                .operationArg("start", 0)
+                .operationArg("end", 5);
     }
 
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(Iterable.class, outputClass);
-    }
-
-    @Override
-    protected GetSetExport getTestObject() {
-        return new GetSetExport();
-    }
 }

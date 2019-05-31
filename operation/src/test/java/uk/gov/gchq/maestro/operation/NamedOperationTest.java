@@ -13,30 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package uk.gov.gchq.maestro.operation;
 
-package uk.gov.gchq.maestro.operation.impl.output;
+import com.google.common.collect.Sets;
 
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
+import java.util.Collections;
+import java.util.Set;
 
-public class ToArrayTest extends OperationTest {
-
+public class NamedOperationTest extends OperationTest {
     @Override
     protected String getJSONString() {
         return "{\n" +
                 "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
-                "  \"id\" : \"ToArray\",\n" +
+                "  \"id\" : \"NamedOperation\",\n" +
                 "  \"operationArgs\" : {\n" +
-                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"1\", \"2\" ] ]\n" + //TODO Ljava
+                "    \"operationName\" : \"testOpName\",\n" +
+                "    \"test\" : \"testVal\"\n" +
                 "  }\n" +
                 "}";
     }
 
     @Override
     protected Operation getFullyPopulatedTestObject() throws Exception {
-        return new Operation("ToArray")
-                .operationArg("input", new Object[]{"1", "2"});
+        return new Operation("NamedOperation")
+                .operationArg("operationName", "testOpName")
+                .addOperationArgs(Collections.singletonMap("test", "testVal"));
+    }
+
+    @Override
+    protected Set<String> getRequiredFields() {
+        return Sets.newHashSet("operationName");
     }
 
 }

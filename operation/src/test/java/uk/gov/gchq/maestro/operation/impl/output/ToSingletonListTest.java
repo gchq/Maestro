@@ -17,43 +17,27 @@
 package uk.gov.gchq.maestro.operation.impl.output;
 
 
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
-
-public class ToSingletonListTest extends OperationTest<ToSingletonList> {
+public class ToSingletonListTest extends OperationTest {
 
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // Given
-        final ToSingletonList<Integer> operation = new ToSingletonList.Builder<Integer>()
-                .input(1)
-                .build();
-
-        // Then
-        assertTrue(operation.getInput().equals(1));
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"ToSingletonList\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"input\" : 1\n" +
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final int input = 1;
-        final ToSingletonList operation = new ToSingletonList.Builder<>()
-                .input(input)
-                .build();
-
-        // When
-        final ToSingletonList clone = operation.shallowClone();
-
-        // Then
-        assertNotSame(operation, clone);
-        assertEquals(input, clone.getInput());
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("ToSingletonList")
+                .input(1);
     }
 
-    @Override
-    protected ToSingletonList getTestObject() {
-        return new ToSingletonList();
-    }
+
 }

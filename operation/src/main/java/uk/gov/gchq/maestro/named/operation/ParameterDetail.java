@@ -29,8 +29,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Simple POJO providing parameter details for
- * {@link uk.gov.gchq.maestro.named.operation.NamedOperation}s.
+ * Simple POJO providing parameter details for NamedOperations.
  */
 @JsonDeserialize(builder = ParameterDetail.Builder.class)
 public class ParameterDetail implements Serializable {
