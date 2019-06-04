@@ -29,6 +29,7 @@
         <module>common-util</module>
         <module>data</module>
         <module>operation</module>
+        <module>executor</module>
     </modules>
 
     <name>${project.groupId}:${project.artifactId}</name>

@@ -142,6 +142,10 @@ public class Operation {
         return inputOperationArg(input);
     }
 
+    public Object input(){
+        return get("input");
+    }
+
     public Object getOrDefault(final String key, final Object defaultValue) {
         return operationArgs.getOrDefault(key, defaultValue);
     }

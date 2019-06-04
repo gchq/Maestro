@@ -28,6 +28,7 @@ import uk.gov.gchq.koryphe.ValidationResult;
 import uk.gov.gchq.koryphe.util.SummaryUtil;
 import uk.gov.gchq.koryphe.util.VersionUtil;
 import uk.gov.gchq.maestro.commonutil.Required;
+import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.operation.Operation;
@@ -261,6 +262,14 @@ public abstract class MaestroObjectTest<T> {
     protected T fromJson(final byte[] jsonObj) {
         try {
             return JSONSerialiser.deserialise(jsonObj, getTestObjectClass());
+        } catch (final SerialisationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected T fromJson(final String path) {
+        try {
+            return JSONSerialiser.deserialise(StreamUtil.openStream(getClass(), path), getTestObjectClass());
         } catch (final SerialisationException e) {
             throw new RuntimeException(e);
         }
