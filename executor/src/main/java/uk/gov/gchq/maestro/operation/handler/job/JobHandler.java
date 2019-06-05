@@ -22,46 +22,29 @@ import uk.gov.gchq.maestro.jobtracker.JobDetail;
 import uk.gov.gchq.maestro.jobtracker.JobStatus;
 import uk.gov.gchq.maestro.jobtracker.Repeat;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
-
-import java.util.Arrays;
 
 import static uk.gov.gchq.maestro.operation.handler.job.util.JobExecutor.addOrUpdateJobDetail;
 import static uk.gov.gchq.maestro.operation.handler.job.util.JobExecutor.executeJob;
 
 public class JobHandler implements OutputOperationHandler<JobDetail> {
     @Override
-    public JobDetail doOperation(final Operation/*Job*/ operation, final Context context,
-                                 final Executor executor) throws OperationException {
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(operation));
-        JobDetail jobDetail = addOrUpdateJobDetail((Operation) Fields.OpAsOperation.get(operation), context, null, JobStatus.RUNNING);
-        jobDetail.setRepeat((Repeat) Fields.Repeat.get(operation));
+    public JobDetail _doOperation(final Operation/*Job*/ operation, final Context context,
+                                  final Executor executor) throws OperationException {
+        JobDetail jobDetail = addOrUpdateJobDetail((Operation) operation.get("OpAsOperation"), context, null, JobStatus.RUNNING);
+        jobDetail.setRepeat((Repeat) operation.get("Repeat"));
 
         return executeJob(jobDetail, context, executor);
     }
 
-    public enum Fields {
-        OpAsOperation(Operation.class),
-        Repeat(Repeat.class);
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass())
+                .field("OpAsOperation", Operation.class)
+                .field("Repeat", Repeat.class);
     }
+
 
 }

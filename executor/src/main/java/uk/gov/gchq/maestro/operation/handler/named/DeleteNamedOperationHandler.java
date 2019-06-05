@@ -20,12 +20,11 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.handler.named.cache.NamedOperationCache;
 import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
-
-import java.util.Arrays;
 
 /**
  * Operation Handler for DeleteNamedOperation.
@@ -54,12 +53,11 @@ public class DeleteNamedOperationHandler implements OperationHandler {
      * @throws OperationException thrown if the user doesn't have permission to delete the NamedOperation
      */
     @Override
-    public Void doOperation(final Operation operation,
-                            final Context context, final Executor executor) throws OperationException {
+    public Void _doOperation(final Operation operation,
+                             final Context context, final Executor executor) throws OperationException {
         try {
-            Arrays.stream(AddNamedOperationHandler.Fields.values()).forEach(f -> f.validate(operation));
 
-            cache.deleteNamedOperation((String) Fields.OperationName.get(operation),
+            cache.deleteNamedOperation((String) operation.get("OperationName"),
                     context.getUser(),
                     ExecutorPropertiesUtil.getAdminAuth(executor.getConfig().getProperties()));
         } catch (final MaestroCheckedException e) {
@@ -68,25 +66,8 @@ public class DeleteNamedOperationHandler implements OperationHandler {
         return null;
     }
 
-    public enum Fields {
-        OperationName(String.class);
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass()).field("OperationName", String.class);
     }
 }

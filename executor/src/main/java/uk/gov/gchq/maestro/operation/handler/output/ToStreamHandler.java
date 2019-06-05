@@ -20,10 +20,10 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.stream.Streams;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 /**
@@ -34,11 +34,9 @@ import java.util.stream.Stream;
  */
 public class ToStreamHandler<T> implements OutputOperationHandler<Stream<? extends T>> {
     @Override
-    public Stream<? extends T> doOperation(final Operation/*ToStream<T>*/ operation,
+    public Stream<? extends T> _doOperation(final Operation/*ToStream<T>*/ operation,
                                            final Context context,
                                            final Executor executor) throws OperationException {
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(operation));
-        //TODO Logic allows for null but Above validation will throw a uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException
         final Iterable<T> input = (Iterable<T>) operation.input();
         if (null == input) {
             return null;
@@ -47,27 +45,8 @@ public class ToStreamHandler<T> implements OutputOperationHandler<Stream<? exten
         return Streams.toStream(input);
     }
 
-    public enum Fields {
-        Input(Iterable.class);
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass()).field("Input",Iterable.class);
     }
-
-
 }

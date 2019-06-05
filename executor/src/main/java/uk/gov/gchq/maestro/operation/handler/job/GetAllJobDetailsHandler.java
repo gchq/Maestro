@@ -23,6 +23,8 @@ import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.jobtracker.JobDetail;
 import uk.gov.gchq.maestro.jobtracker.JobTracker;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 
 import static uk.gov.gchq.maestro.commonutil.exception.Status.SERVICE_UNAVAILABLE;
@@ -33,10 +35,15 @@ import static uk.gov.gchq.maestro.commonutil.exception.Status.SERVICE_UNAVAILABL
  */
 public class GetAllJobDetailsHandler implements OutputOperationHandler<CloseableIterable<JobDetail>> {
     @Override
-    public CloseableIterable<JobDetail> doOperation(final Operation /*GetAllJobDetails*/ operation, final Context context, final Executor executor) throws OperationException {
+    public CloseableIterable<JobDetail> _doOperation(final Operation /*GetAllJobDetails*/ operation, final Context context, final Executor executor) throws OperationException {
         if (!JobTracker.isCacheEnabled()) {
             throw new OperationException("The Job Tracker has not been configured", SERVICE_UNAVAILABLE);
         }
         return JobTracker.getAllJobs();
+    }
+
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass());
     }
 }

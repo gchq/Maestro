@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.operation.handler;
+package uk.gov.gchq.maestro.operation.handler.named;
 
-import uk.gov.gchq.maestro.Context;
-import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.commonutil.exception.OperationException;
+import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.operation.Operation;
 
-/**
- * An {@code OutputOperationHandler} defines how to handle a specific operations.
- */
-public interface OutputOperationHandler<O> extends OperationHandler {
+public class AddNamedOperationHandlerBasicTest extends MaestroHandlerBasicTest<AddNamedOperationHandler> {
     @Override
-    O _doOperation(final Operation operation, final Context context,
-                  final Executor executor) throws OperationException;
+    protected AddNamedOperationHandler getBasicHandler() throws Exception {
+        return null;
+    }
+
+    @Override
+    protected Operation getBasicOp() throws Exception {
+        return null;
+    }
 }

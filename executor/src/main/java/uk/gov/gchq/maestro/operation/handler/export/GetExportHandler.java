@@ -21,9 +21,8 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
-
-import java.util.Arrays;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 
 /**
  * Abstract class describing how to handle GetExport operations.
@@ -35,34 +34,17 @@ public abstract class GetExportHandler extends ExportOperationHandler {
                                             final Executor executor,
                                             final Operation exporter)
             throws OperationException {
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(operation));
         return getExport(operation, exporter);
     }
 
     protected CloseableIterable<?> getExport(final Operation export, final Operation exporter) throws OperationException {
-        final Object o = Fields.KeyOrDefault.get(export);
+        final Object o = export.get("KeyOrDefault");
         return (CloseableIterable<?>) exporter.get((String) o);
     }
 
-    public enum Fields {
-        KeyOrDefault(String.class);
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass())
+                .field("KeyOrDefault", String.class);
     }
 }

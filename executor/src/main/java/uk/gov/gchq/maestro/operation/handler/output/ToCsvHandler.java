@@ -20,10 +20,9 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.data.generator.StringGenerator;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
-
-import java.util.Arrays;
 
 /**
  * A {@code ToCsvHandler} handles ToCsv operations by applying the provided
@@ -32,15 +31,14 @@ import java.util.Arrays;
  */
 public class ToCsvHandler<T> implements OutputOperationHandler<Iterable<? extends String>> {
     @Override
-    public Iterable<? extends String> doOperation(final Operation operation,
-                                                  final Context context,
-                                                  final Executor executor) throws OperationException {
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(operation));
+    public Iterable<? extends String> _doOperation(final Operation operation,
+                                                   final Context context,
+                                                   final Executor executor) throws OperationException {
         if (null == operation.input()) {
             return null;
         }
 
-        final uk.gov.gchq.maestro.data.generator.StringGenerator generator = (StringGenerator) Fields.ElementGenerator.get(operation);
+        final uk.gov.gchq.maestro.data.generator.StringGenerator generator = (StringGenerator) operation.get("ElementGenerator");
         if (null == generator) {
             throw new IllegalArgumentException("ToCsv operation requires a generator");
         }
@@ -50,27 +48,9 @@ public class ToCsvHandler<T> implements OutputOperationHandler<Iterable<? extend
         return csv;
     }
 
-    public enum Fields {
-        ElementGenerator(uk.gov.gchq.maestro.data.generator.StringGenerator.class);
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass()).field("ElementGenerator", StringGenerator.class);
     }
-
 
 }

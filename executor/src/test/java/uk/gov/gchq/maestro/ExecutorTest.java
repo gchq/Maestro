@@ -23,6 +23,7 @@ import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.helper.MaestroObjectTest;
 import uk.gov.gchq.maestro.helper.TestHandler;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.util.Config;
 
@@ -68,7 +69,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     @Test
     public void shouldRunTestHandler() throws SerialisationException, OperationException {
         final Executor executor = getFullyPopulatedTestObject();
-        final Object execute = executor.execute(new Operation("TestOperation").operationArg( "field","opFieldValue1"), new Context());
+        final Object execute = executor.execute(new Operation("TestOperation").operationArg("field", "opFieldValue1"), new Context());
         assertEquals("handlerFieldValue1,opFieldValue1", execute);
     }
 
@@ -123,8 +124,13 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     private class InitialiserHandlerImpl implements OperationHandler {
 
         @Override
-        public Object doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
+        public Object _doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
             throw new OperationException("Thrown within InitialiserHandlerImpl");
+        }
+
+        @Override
+        public FieldDeclaration getFieldDeclaration() {
+            return new FieldDeclaration(this.getClass());
         }
     }
 }

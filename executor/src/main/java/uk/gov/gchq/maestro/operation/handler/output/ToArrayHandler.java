@@ -22,12 +22,12 @@ import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -46,10 +46,9 @@ import java.util.Set;
 public class ToArrayHandler<T> implements OutputOperationHandler<T[]> {
     @SuppressFBWarnings(value = "PZLA_PREFER_ZERO_LENGTH_ARRAYS")
     @Override
-    public T[] doOperation(final Operation /*ToArray<T>*/ operation, final Context context,
-                           final Executor executor) throws OperationException {
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(operation));
-        if (null == operation.input() || Iterables.isEmpty((Iterable<T>) Fields.Input.get(operation))) {
+    public T[] _doOperation(final Operation /*ToArray<T>*/ operation, final Context context,
+                            final Executor executor) throws OperationException {
+        if (null == operation.input() || Iterables.isEmpty((Iterable<T>) operation.input())) {
             return null;
         }
 
@@ -63,7 +62,7 @@ public class ToArrayHandler<T> implements OutputOperationHandler<T[]> {
 
         } else {
             collection = new ArrayList<>();
-            for (final T t : (Iterable<T>) Fields.Input.get(operation)) {
+            for (final T t : (Iterable<T>) operation.input()) {
                 if (null != t) {
                     classes.add(t.getClass());
                 }
@@ -89,26 +88,11 @@ public class ToArrayHandler<T> implements OutputOperationHandler<T[]> {
         return collection.toArray((T[]) Array.newInstance(clazz, collection.size()));
     }
 
-    public enum Fields {
-        Input(Iterable.class);
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass())
+                .field("input", Iterable.class);
     }
+
 
 }

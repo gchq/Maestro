@@ -22,10 +22,9 @@ import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.export.GetExportHandler;
-
-import java.util.Arrays;
 
 /**
  * Implementation of the {@link GetExportHandler} to retrieve exported created by a SetExporter.
@@ -33,10 +32,9 @@ import java.util.Arrays;
 public class GetSetExportHandler extends GetExportHandler {
     @Override
     protected CloseableIterable<?> getExport(final Operation export, final Operation exporter) throws OperationException {
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(export));
-        final String o = (String) Fields.KeyOrDefault.get(export);
-        final int o1 = (int) Fields.Start.get(export);
-        final Integer o2 = (Integer) Fields.End.get(export);
+        final String o = (String) export.get("KeyOrDefault");
+        final int o1 = (int)export.get("Start");
+        final Integer o2 = (Integer) export.get("End");
         throw new MaestroRuntimeException("examine SetExporterTest not finished implemented exporter.get(o, o1, o2)");
         // return (CloseableIterable<?>) exporter.get(o, o1, o2); TODO examine SetExporterTest not finished implemented
     }
@@ -52,29 +50,12 @@ public class GetSetExportHandler extends GetExportHandler {
         return new Operation("SetExporter");
     }
 
-    public enum Fields {
-        Start(Integer.class),
-        End(Integer.class),
-        KeyOrDefault(String.class);
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass())
+                .field("Start", Integer.class)
+                .field("End", Integer.class)
+                .field("KeyOrDefault", String.class)
+                ;
     }
-
 }

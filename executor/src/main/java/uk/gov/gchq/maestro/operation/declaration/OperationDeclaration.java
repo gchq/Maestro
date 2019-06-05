@@ -18,6 +18,7 @@ package uk.gov.gchq.maestro.operation.declaration;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 
 /**
@@ -47,6 +48,7 @@ public class OperationDeclaration {
         return this;
     }
 
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -55,4 +57,25 @@ public class OperationDeclaration {
                 .build();
     }
 
+    public static class Builder {
+        private final OperationDeclaration instance;
+
+        public Builder() {
+            instance = new OperationDeclaration();
+        }
+
+        public Builder operation(final Operation operation) {
+            this.instance.operationId(operation.getId());
+            return this;
+        }
+
+        public Builder handler(final OperationHandler handler) {
+            this.instance.handler(handler);
+            return this;
+        }
+
+        public OperationDeclaration build() {
+            return this.instance;
+        }
+    }
 }

@@ -23,10 +23,9 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.jobtracker.JobDetail;
 import uk.gov.gchq.maestro.jobtracker.JobTracker;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
-
-import java.util.Arrays;
 
 import static uk.gov.gchq.maestro.commonutil.exception.Status.SERVICE_UNAVAILABLE;
 
@@ -36,38 +35,19 @@ import static uk.gov.gchq.maestro.commonutil.exception.Status.SERVICE_UNAVAILABL
  */
 public class GetJobDetailsHandler implements OutputOperationHandler<JobDetail> {
     @Override
-    public JobDetail doOperation(final Operation /*GetJobDetails*/ operation,
-                                 final Context context, final Executor executor) throws OperationException {
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(operation));
+    public JobDetail _doOperation(final Operation /*GetJobDetails*/ operation,
+                                  final Context context, final Executor executor) throws OperationException {
         if (!JobTracker.isCacheEnabled()) {
             throw new OperationException("The Job Tracker has not been configured", SERVICE_UNAVAILABLE);
         }
-        final String j = (String) Fields.JobId.get(operation);
+        final String j = (String) operation.get("JobId");
         final String jobId = null != j ? j : context.getJobId();
         return JobTracker.getJob(jobId);
     }
 
-    public enum Fields {
-        JobId(String.class);
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass()).field("JobId", String.class);
     }
-
 
 }

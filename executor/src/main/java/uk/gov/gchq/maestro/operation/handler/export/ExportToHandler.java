@@ -21,13 +21,14 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 /**
  * Abstract class describing how to handle  ExportTo operations.
- *
  */
 public abstract class ExportToHandler extends ExportOperationHandler {
     @Override
@@ -57,5 +58,11 @@ public abstract class ExportToHandler extends ExportOperationHandler {
             inputItr = Collections.singleton(input);
         }
         return inputItr;
+    }
+
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass())
+                .field("input", Object.class);
     }
 }

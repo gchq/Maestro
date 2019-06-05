@@ -21,10 +21,9 @@ import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
-
-import java.util.Arrays;
 
 /**
  * Operation handler for . Named operations are resolved by
@@ -34,31 +33,13 @@ import java.util.Arrays;
  */
 public class NamedOperationHandler implements OutputOperationHandler {
     @Override
-    public Object doOperation(final Operation operation,
+    public Object _doOperation(final Operation operation,
                               final Context context, final Executor executor) throws OperationException {
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(operation));
-        throw new UnsupportedOperationException("The named operation: " + Fields.OperationName.get(operation) + " was not found.");
+        throw new UnsupportedOperationException("The named operation: " + operation.get("OperationName") + " was not found.");
     }
 
-    public enum Fields {
-        OperationName(String.class);
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass()).field("OperationName",String.class);
     }
 }

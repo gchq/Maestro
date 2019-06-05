@@ -20,15 +20,21 @@ import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.handler.OperationHandler;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 
 /**
  * A {@code DiscardOutputHandler} handles DiscardOutput operations.
  */
 public class DiscardOutputHandler implements OperationHandler {
     @Override
-    public Void doOperation(final Operation operation, final Context context, final Executor executor)
+    public Void _doOperation(final Operation operation, final Context context, final Executor executor)
             throws OperationException {
         return null;
+    }
+
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass());
     }
 }

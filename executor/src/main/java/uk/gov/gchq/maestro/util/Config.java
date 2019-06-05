@@ -679,8 +679,9 @@ public class Config {
             if (null == operationHandlers) {
                 operationHandlers = new LinkedHashMap<>();
             }
-            operationHandlers.put(operationDeclaration.getOperationId(),
-                    operationDeclaration.getHandler());
+            //TODO
+            // operationHandlers.put(operationDeclaration.getOperationId(),
+            //         operationDeclaration.getHandler());
             return this;
         }
 

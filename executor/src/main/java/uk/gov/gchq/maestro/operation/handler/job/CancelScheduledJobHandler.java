@@ -22,23 +22,19 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.jobtracker.JobStatus;
 import uk.gov.gchq.maestro.jobtracker.JobTracker;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
-import uk.gov.gchq.maestro.operation.handler.output.ToStreamHandler;
-
-import java.util.Arrays;
 
 public class CancelScheduledJobHandler implements OperationHandler {
     @Override
-    public Void doOperation(final Operation /*CancelScheduledJob*/ operation,
-                            final Context context, final Executor executor) throws OperationException {
-        Arrays.stream(ToStreamHandler.Fields.values()).forEach(f -> f.validate(operation));
-
+    public Void _doOperation(final Operation /*CancelScheduledJob*/ operation,
+                             final Context context, final Executor executor) throws OperationException {
         if (!JobTracker.isCacheEnabled()) {
             throw new OperationException("JobTracker not enabled");
         }
         //TODO Logic allows for null but Above validation will throw a uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException
-        final String o = (String) Fields.JobId.get(operation);
+        final String o = (String) operation.get("JobId");
         if (null == o) {
             throw new OperationException("job id must be specified");
         }
@@ -49,25 +45,10 @@ public class CancelScheduledJobHandler implements OperationHandler {
             throw new OperationException("Job with jobId: " + o + " is not a scheduled job and cannot be cancelled.");
         }
         return null;
-    }public enum Fields {
-        JobId(String.class);
+    }
 
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass()).field("JobId", String.class);
     }
 }

@@ -20,7 +20,8 @@ import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 
 import java.util.Arrays;
@@ -29,38 +30,18 @@ import java.util.List;
 
 public class ToSingletonListHandler<T> implements OutputOperationHandler<List<? extends T>> {
     @Override
-    public List<? extends T> doOperation(final Operation /*ToSingletonList<T>*/ operation,
+    public List<? extends T> _doOperation(final Operation /*ToSingletonList<T>*/ operation,
                                          final Context context,
                                          final Executor executor) throws OperationException {
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(operation));
-
         if (null != operation.input()) {
-            return Collections.singletonList((T) Fields.Input.get(operation));
+            return Collections.singletonList((T) operation.input());
         } else {
             throw new OperationException("Input cannot be null");
         }
     }
 
-
-    public enum Fields {
-        Input;
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass()).field("Input",Object.class);
     }
 }

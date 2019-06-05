@@ -27,6 +27,8 @@ import uk.gov.gchq.maestro.commonutil.iterable.WrappedCloseableIterable;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JsonSerialisationUtil;
 import uk.gov.gchq.maestro.named.operation.NamedOperationDetail;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 import uk.gov.gchq.maestro.operation.handler.named.cache.NamedOperationCache;
 import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
@@ -61,7 +63,7 @@ public class GetAllNamedOperationsHandler implements OutputOperationHandler<Clos
      * @throws OperationException thrown if the cache has not been initialized in the operation declarations file
      */
     @Override
-    public CloseableIterable<NamedOperationDetail> doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
+    public CloseableIterable<NamedOperationDetail> _doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
         final CloseableIterable<NamedOperationDetail> ops =
                 cache.getAllNamedOperations(context.getUser(),
                         ExecutorPropertiesUtil.getAdminAuth(executor.getConfig().getProperties()));
@@ -76,7 +78,7 @@ public class GetAllNamedOperationsHandler implements OutputOperationHandler<Clos
                     final List<Operation> opList = namedOp.getOperationChainWithDefaultParams().getOperations();
                     if (CollectionUtils.isNotEmpty(opList)) {
                         final Operation firstOp = opList.get(0);
-                        if (firstOp.containsKey("Input") ) {
+                        if (firstOp.containsKey("Input")) {
                             namedOp.setInputType(JsonSerialisationUtil.getSerialisedFieldClasses(firstOp.getClass().getName()).get("input"));
                         }
                     }
@@ -88,4 +90,8 @@ public class GetAllNamedOperationsHandler implements OutputOperationHandler<Clos
         }
     }
 
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass());
+    }
 }

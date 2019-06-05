@@ -22,6 +22,8 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 
 import java.util.LinkedHashMap;
@@ -33,7 +35,7 @@ import java.util.Map;
  */
 public class GetExportsHandler implements OutputOperationHandler<Map<String, CloseableIterable<?>>> {
     @Override
-    public Map<String, CloseableIterable<?>> doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
+    public Map<String, CloseableIterable<?>> _doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
         final Map<String, CloseableIterable<?>> exports = new LinkedHashMap<>();
         for (final Operation getExport : (List<Operation>) operation.get("GetExports")) {
             final CloseableIterable<?> export = executor.execute(new OperationChain(getExport.getId(), getExport), context);
@@ -41,5 +43,13 @@ public class GetExportsHandler implements OutputOperationHandler<Map<String, Clo
         }
 
         return exports;
+    }
+
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass())
+                .field("GetExports", List.class)
+                .field("KeyOrDefault", String.class)
+                ;
     }
 }

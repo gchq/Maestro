@@ -23,10 +23,10 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.stream.MaestroCollectors;
 import uk.gov.gchq.maestro.commonutil.stream.Streams;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 
-import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -42,9 +42,7 @@ import java.util.Set;
  */
 public class ToSetHandler<T> implements OutputOperationHandler<Set<? extends T>> {
     @Override
-    public Set<T> doOperation(final Operation/*ToSet<T> */operation, final Context context, final Executor executor) throws OperationException {
-
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(operation));
+    public Set<T> _doOperation(final Operation/*ToSet<T> */operation, final Context context, final Executor executor) throws OperationException {
 
         //TODO Logic allows for null but Above validation will throw a uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException
         final Iterable<T> input = (Iterable<T>) operation.input();
@@ -56,27 +54,8 @@ public class ToSetHandler<T> implements OutputOperationHandler<Set<? extends T>>
                 .collect(MaestroCollectors.toLinkedHashSet());
     }
 
-    public enum Fields {
-        Input;
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass()).field("instanceOf", Object.class);
     }
-
-
 }

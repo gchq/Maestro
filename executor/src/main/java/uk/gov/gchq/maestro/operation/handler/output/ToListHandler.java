@@ -20,10 +20,10 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.stream.Streams;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,11 +39,8 @@ import java.util.stream.Collectors;
  */
 public class ToListHandler<T> implements OperationHandler {
     @Override
-    public List<T> doOperation(final Operation operation,
+    public List<T> _doOperation(final Operation operation,
                                final Context context, final Executor executor) throws OperationException {
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(operation));
-
-
         final Object input = operation.input();
         if (null == input) {
             return null;
@@ -53,26 +50,9 @@ public class ToListHandler<T> implements OperationHandler {
                 .collect(Collectors.toList());
     }
 
-    public enum Fields {
-        input(Iterable.class);
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass()).field("input", Iterable.class);
     }
 
 }

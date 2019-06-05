@@ -21,8 +21,9 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
-import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 import uk.gov.gchq.maestro.operation.optimiser.OperationOptimiser;
 import uk.gov.gchq.maestro.operation.validator.OperationValidation;
 import uk.gov.gchq.maestro.operation.validator.OperationValidator;
@@ -42,7 +43,7 @@ public class OperationChainHandler implements OperationHandler, OperationValidat
     private List<OperationOptimiser> operationOptimisers = new ArrayList<>();
 
     @Override
-    public Object doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
+    public Object _doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
         return this.doOperation((OperationChain) operation, context, executor);
     }
 
@@ -93,5 +94,10 @@ public class OperationChainHandler implements OperationHandler, OperationValidat
         if (null == op.input()) {
             op.operationArg("Input", result);
         }
+    }
+
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass());
     }
 }

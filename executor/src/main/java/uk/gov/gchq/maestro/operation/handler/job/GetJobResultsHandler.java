@@ -23,10 +23,9 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
-import uk.gov.gchq.maestro.operation.fields.FieldsUtil;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
-
-import java.util.Arrays;
 
 /**
  * A {@code GetJobResultsHandler} handles GetJobResults operations by querying
@@ -34,43 +33,24 @@ import java.util.Arrays;
  */
 public class GetJobResultsHandler implements OutputOperationHandler<CloseableIterable<?>> {
     @Override
-    public CloseableIterable<?> doOperation(final Operation /*GetJobResults*/ operation,
-                                            final Context context,
-                                            final Executor executor) throws OperationException {
-        Arrays.stream(Fields.values()).forEach(f -> f.validate(operation));
+    public CloseableIterable<?> _doOperation(final Operation /*GetJobResults*/ operation,
+                                             final Context context,
+                                             final Executor executor) throws OperationException {
         if (!executor.isSupported("GetResultCacheExport")) {
             throw new OperationException("Getting job results is not supported as the GetResultCacheExport operation has not been configured for this Maestro instance.");
         }
 
         // Delegates the operation to the GetResultCacheExport operation handler.
         return executor.execute(new OperationChain("GetResultCacheExport", new Operation("GetResultCacheExport")
-                .operationArg("jobId", Fields.JobId.get(operation))
-                .operationArg("key", Fields.KeyOrDefault.get(operation))
+                .operationArg("jobId", operation.get("JobId"))
+                .operationArg("key", operation.get("KeyOrDefault"))
         ), context);
     }
 
-    public enum Fields {
-        JobId(String.class),
-        KeyOrDefault(String.class);
-
-        Class instanceOf;
-
-        Fields() {
-            this(Object.class);
-        }
-
-        Fields(final Class instanceOf) {
-            this.instanceOf = instanceOf;
-        }
-
-        public void validate(Operation operation) {
-            FieldsUtil.validate(this, operation, instanceOf);
-        }
-
-        public Object get(Operation operation) {
-            return FieldsUtil.get(operation, this);
-        }
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass())
+                .field("JobId", String.class)
+                .field("KeyOrDefault", String.class);
     }
-
-
 }

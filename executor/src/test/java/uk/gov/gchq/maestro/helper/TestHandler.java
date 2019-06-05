@@ -23,11 +23,29 @@ import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class TestHandler implements OperationHandler {
 
     private String handlerField;
+
+    @Override
+    public Object _doOperation(final Operation operation, final Context context, final Executor executor) {
+        return handlerField + "," + operation.get("Field");
+    }
+
+    @Override
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration(this.getClass())
+                .field("field", String.class);
+    }
 
     public String getHandlerField() {
         return handlerField;
@@ -36,11 +54,6 @@ public class TestHandler implements OperationHandler {
     public TestHandler fieldHandler(final String field) {
         this.handlerField = field;
         return this;
-    }
-
-    @Override
-    public Object doOperation(final Operation operation, final Context context, final Executor executor) {
-        return handlerField + "," + operation.get("Field");
     }
 
     @Override

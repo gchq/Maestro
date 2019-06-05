@@ -28,7 +28,7 @@ import uk.gov.gchq.maestro.operation.handler.OperationHandler;
  */
 public abstract class ExportOperationHandler implements OperationHandler {
     @Override
-    public Object doOperation(final Operation operation,
+    public Object _doOperation(final Operation operation,
                               final Context context, final Executor executor)
             throws OperationException {
         Operation exporter = context.getExporter(getExporterId());
