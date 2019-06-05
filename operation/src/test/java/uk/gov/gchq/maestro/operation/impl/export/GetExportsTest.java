@@ -16,8 +16,8 @@
 
 package uk.gov.gchq.maestro.operation.impl.export;
 
-import uk.gov.gchq.maestro.operation.OperationTest;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.OperationTest;
 
 
 public class GetExportsTest extends OperationTest {
@@ -49,11 +49,10 @@ public class GetExportsTest extends OperationTest {
         return new Operation("GetExports")
                 .operationArg("exports", new Operation[]{
                         new Operation("GetSetExport")
-                                .operationArg("key","key1")
-                                ,
+                                .operationArg("key", "key1"),
                         new Operation("GetSetExport")
-                                .operationArg("key","key2")
-                                });
+                                .operationArg("key", "key2")
+                });
     }
 
 }

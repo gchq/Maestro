@@ -34,19 +34,19 @@ import java.util.List;
 @Summary("Simple data access object, enabling (de)serialisation of an OperationChain")
 public class OperationChainDAO extends OperationChain {
 
-    public OperationChainDAO(String id) {
+    public OperationChainDAO(final String id) {
         super(id);
     }
 
-    public OperationChainDAO(String id, final Operation operation) {
+    public OperationChainDAO(final String id, final Operation operation) {
         super(id, operation);
     }
 
-    public OperationChainDAO(String id, final List<Operation> operations) {
+    public OperationChainDAO(final String id, final List<Operation> operations) {
         super(id, operations);
     }
 
-    public OperationChainDAO(String id, final OperationChain operationChain) {
+    public OperationChainDAO(final String id, final OperationChain operationChain) {
         super(id, operationChain.getOperations());
         options(operationChain.getOptions());
     }

@@ -22,10 +22,8 @@ import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 
 /**
  * Utility class which contains a number of inner classes for different {@link TypeReference}s
- * used by the Maestro project to denote the output type of an
- * {@link uk.gov.gchq.maestro.operation.io.Output}.
+ * used by the Maestro project to denote the output type of an Output.
  *
- * @see uk.gov.gchq.maestro.operation.io.Output#getOutputTypeReference()
  */
 public final class TypeReferenceImpl {
     private TypeReferenceImpl() {

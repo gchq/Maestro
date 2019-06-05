@@ -25,12 +25,10 @@ import uk.gov.gchq.maestro.commonutil.iterable.ChainedIterable;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.operation.Operation;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 
 public class SetExporterTest {
@@ -72,23 +70,5 @@ public class SetExporterTest {
         final List key2 = (List) exporter.get("key2");
         final CloseableIterable<?> export2 = new ChainedIterable<>(key2);
         assertEquals(valuesB, Lists.newArrayList(export2));
-    }
-
-    @Test
-    public void shouldGetSubsetOfValuesFromMap() {
-        // Given
-        final List<Integer> values1 = Arrays.asList(1, 2, 3, 4, 5);
-        final Operation exporter = new Operation("SetExporter");
-        final int start = 2;
-        final int end = 3;
-        // exporter.add("key", values1);
-
-        // When
-        // try (CloseableIterable<?> results = exporter.get("key", start, end)) {
-
-            // Then
-            // assertEquals(values1.subList(start, end), Lists.newArrayList(results));
-        // }
-        fail("not completed");
     }
 }

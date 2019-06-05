@@ -29,11 +29,11 @@ import static org.junit.Assert.assertThat;
 
 
 public class GetJobResultsTest extends OperationTest {
-    String DEFAULT_KEY = "ALL";
+    private static final String DEFAULT_KEY = "ALL";
 
     @Ignore(value = "This logic needs to be migrated to Handler")
     @Test
-    public void shouldReturnNullIfSetKey() {//TODO to handler
+    public void shouldReturnNullIfSetKey() { //TODO to handler
         // When
         final Operation jobResults = new Operation("GetJobResults")
                 .operationArg("key", DEFAULT_KEY);
@@ -44,7 +44,7 @@ public class GetJobResultsTest extends OperationTest {
 
     @Ignore(value = "This logic needs to be migrated to Handler")
     @Test
-    public void shouldThrowError() {//TODO to handler
+    public void shouldThrowError() { //TODO to handler
         // When
         try {
             final Operation jobResults = new Operation("GetJobResults")

@@ -20,7 +20,7 @@ import uk.gov.gchq.maestro.commonutil.exception.MaestroNullPointerException;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
 import uk.gov.gchq.maestro.operation.Operation;
 
-public class FieldsUtil {
+public final class FieldsUtil {
 
     public static final String FIELD_S_WAS_NOT_FOUND_IN_OPERATION_S = "field: %s was not found in operation: %s";
     public static final String FIELD_S_WAS_NOT_INSTANCE_OF_S = "field: %s was not instance of %s";
@@ -28,16 +28,17 @@ public class FieldsUtil {
     private FieldsUtil() {
     }
 
-    public static <E extends Enum<E>> void validate(E e, Operation operation, Class instanceOf) {
+    public static <E extends Enum<E>> void validate(final E e, final Operation operation, final Class instanceOf) {
         final Object obj = operation.get(e.name());
-        if (obj == null)
+        if (obj == null) {
             throw new MaestroNullPointerException(String.format(FIELD_S_WAS_NOT_FOUND_IN_OPERATION_S, e.name(), operation.getId()));
+        }
         if (!instanceOf.isAssignableFrom(obj.getClass())) {
             throw new MaestroRuntimeException(String.format(FIELD_S_WAS_NOT_INSTANCE_OF_S, e.name(), instanceOf));
         }
     }
 
-    public static <E extends Enum<E>> Object get(Operation operation, E e) {
+    public static <E extends Enum<E>> Object get(final Operation operation, final E e) {
         return operation.get(e.name());
     }
 }

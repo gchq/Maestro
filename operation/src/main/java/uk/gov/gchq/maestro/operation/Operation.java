@@ -142,7 +142,7 @@ public class Operation {
         return inputOperationArg(input);
     }
 
-    public Object input(){
+    public Object input() {
         return get("input");
     }
 
@@ -207,6 +207,7 @@ public class Operation {
      *
      * @param name  the name of the option
      * @param value the value of the option
+     * @return Operation
      */
     public Operation option(final String name, final String value) {
         if (null == getOptions()) {

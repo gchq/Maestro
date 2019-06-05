@@ -36,7 +36,6 @@ import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -73,7 +72,7 @@ public class OperationChain extends Operation implements Operations {
     }
 
     @JsonCreator
-    public OperationChain(@JsonProperty("id") final String id, @JsonProperty("operations") Operation... operations) {
+    public OperationChain(@JsonProperty("id") final String id, @JsonProperty("operations") final Operation... operations) {
         this(id, new ArrayList<>(operations.length));
         for (final Operation operation : operations) {
             this.operations.add(operation);
