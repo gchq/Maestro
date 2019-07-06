@@ -16,33 +16,30 @@
 
 package uk.gov.gchq.maestro.helper;
 
-import org.junit.Before;
-
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
 
 public class TestHandlerTest extends MaestroHandlerBasicTest<TestHandler> {
 
+    public static final String TEST_OPERATION = "TestOperation";
+
     @Override
     protected Executor getTestExecutor() throws Exception {
-        final Executor testExecutor = super.getTestExecutor();
-        final HashMap<String, OperationHandler> map = new HashMap<>(testExecutor.getOperationHandlerMap());
-        map.put("TestHandler", new TestHandler());
-        return testExecutor.operationHandlerMap(testExecutor.getOperationHandlerMap());
+        return super.getTestExecutor()
+                .addHandler(TEST_OPERATION, getTestHandler());
     }
 
     @Override
-    protected TestHandler getBasicHandler() throws Exception {
-        return new TestHandler();
+    protected TestHandler getTestHandler() throws Exception {
+        return new TestHandler().handlerField("handlerValue1");
     }
 
     @Override
     protected Operation getBasicOp() throws Exception {
-        return new Operation("TestHandler");
+        return new Operation(TEST_OPERATION)
+                .operationArg(TestHandler.FIELD, "operationValue1");
     }
 
     @Override
@@ -51,11 +48,32 @@ public class TestHandlerTest extends MaestroHandlerBasicTest<TestHandler> {
     }
 
     @Override
-    protected void inspectReturnFromHandler(final Object value) throws Exception {
-
+    protected void inspectReturnFromExecute(final Object value) throws Exception {
+        assertEquals("handlerValue1,operationValue1", value);
     }
 
     @Override
-    protected void inspectReturnFromExecute(final Object value) throws Exception {
+    protected Class<TestHandler> getTestObjectClass() {
+        return TestHandler.class;
+    }
+
+    @Override
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
+                "  \"fieldDeclaration\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.operation.declaration.FieldDeclaration\",\n" +
+                "    \"handlerClass\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
+                "    \"fieldDeclarations\" : {\n" +
+                "      \"field\" : \"java.lang.String\"\n" +
+                "    }\n" +
+                "  },\n" +
+                "  \"handlerField\" : \"handlerValue1\"\n" +
+                "}";
+    }
+
+    @Override
+    protected TestHandler getFullyPopulatedTestObject() throws Exception {
+        return getTestHandler();
     }
 }

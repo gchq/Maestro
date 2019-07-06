@@ -42,8 +42,15 @@ public class ConfigTest extends MaestroObjectTest<Config> {
         return "{\n" +
                 "  \"id\" : \"configIdValue\",\n" +
                 "  \"operationHandlers\" : {\n" +
-                "    \"uk.gov.gchq.maestro.helper.TestOperation\" : {\n" +
+                "    \"testOperation\" : {\n" +
                 "      \"class\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
+                "      \"fieldDeclaration\" : {\n" +
+                "        \"class\" : \"uk.gov.gchq.maestro.operation.declaration.FieldDeclaration\",\n" +
+                "        \"handlerClass\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
+                "        \"fieldDeclarations\" : {\n" +
+                "          \"field\" : \"java.lang.String\"\n" +
+                "        }\n" +
+                "      },\n" +
                 "      \"handlerField\" : \"handlerFieldValue1\"\n" +
                 "    }\n" +
                 "  },\n" +
@@ -58,7 +65,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     @Override
     protected Config getFullyPopulatedTestObject() throws Exception {
         final Config config = new Config();
-        config.addOperationHandler("testOperation", new TestHandler().fieldHandler("handlerFieldValue1"));
+        config.addOperationHandler("testOperation", new TestHandler().handlerField("handlerFieldValue1"));
         final Properties properties = new Properties();
         properties.put("configKey", "configValue");
         config.setProperties(properties);
@@ -73,7 +80,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
         final Config config = new Config.Builder()
                 .id("testId")
                 .operationHandler(new OperationDeclaration()
-                        .handler(new TestHandler().fieldHandler("handlerFieldValue1"))
+                        .handler(new TestHandler().handlerField("handlerFieldValue1"))
                         .operationId("testOperation"))
                 .executorProperties(properties)
                 .addRequestHook(new TestHook("testFieldVal"))
@@ -95,8 +102,8 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     public void shouldBuildConfigCorrectly() {
         // Given
         final Properties mergedProperties = new Properties();
-        mergedProperties.put("key2", "value2");
         mergedProperties.put("key1", "value1");
+        mergedProperties.put("key2", "value2");
         mergedProperties.put("testKey", "value1");
         final Properties testProperties = new Properties();
         testProperties.put("key2", "value2");

@@ -21,7 +21,6 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
-import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 
 /**
  * A {@code DiscardOutputHandler} handles DiscardOutput operations.

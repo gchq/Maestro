@@ -22,7 +22,6 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
-import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 
 /**
@@ -34,12 +33,12 @@ import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 public class NamedOperationHandler implements OutputOperationHandler {
     @Override
     public Object _doOperation(final Operation operation,
-                              final Context context, final Executor executor) throws OperationException {
+                               final Context context, final Executor executor) throws OperationException {
         throw new UnsupportedOperationException("The named operation: " + operation.get("OperationName") + " was not found.");
     }
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass()).field("OperationName",String.class);
+        return new FieldDeclaration(this.getClass()).field("OperationName", String.class);
     }
 }

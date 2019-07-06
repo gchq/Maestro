@@ -23,7 +23,6 @@ import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
-import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 
 import java.util.LinkedHashMap;
@@ -49,7 +48,6 @@ public class GetExportsHandler implements OutputOperationHandler<Map<String, Clo
     public FieldDeclaration getFieldDeclaration() {
         return new FieldDeclaration(this.getClass())
                 .field("GetExports", List.class)
-                .field("KeyOrDefault", String.class)
-                ;
+                .field("KeyOrDefault", String.class);
     }
 }

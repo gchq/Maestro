@@ -22,7 +22,6 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
-import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 
 /**
  * Abstract class describing how to handle GetExport operations.

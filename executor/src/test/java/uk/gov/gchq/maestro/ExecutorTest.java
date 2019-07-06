@@ -42,8 +42,15 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "  \"config\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
                 "    \"operationHandlers\" : {\n" +
-                "      \"uk.gov.gchq.maestro.helper.TestOperation\" : {\n" +
+                "      \"testOperation\" : {\n" +
                 "        \"class\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
+                "        \"fieldDeclaration\" : {\n" +
+                "          \"class\" : \"uk.gov.gchq.maestro.operation.declaration.FieldDeclaration\",\n" +
+                "          \"handlerClass\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
+                "          \"fieldDeclarations\" : {\n" +
+                "            \"field\" : \"java.lang.String\"\n" +
+                "          }\n" +
+                "        },\n" +
                 "        \"handlerField\" : \"handlerFieldValue1\"\n" +
                 "      }\n" +
                 "    },\n" +
@@ -62,7 +69,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
         final Properties properties = new Properties();
         properties.put("configKey", "configValue");
         config.setProperties(properties);
-        config.addOperationHandler("TestOperation", new TestHandler().fieldHandler("handlerFieldValue1"));
+        config.addOperationHandler("testOperation", new TestHandler().handlerField("handlerFieldValue1"));
         return new Executor().config(config);
     }
 

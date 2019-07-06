@@ -16,6 +16,9 @@
 package uk.gov.gchq.maestro.operation.handler;
 
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
@@ -26,8 +29,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
+@JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public interface OperationHandler {
 
+
+    String OPERATION_DID_NOT_CONTAIN_REQUIRED_FIELDS = "Operation did not contain required fields. [";
+    String FIELD_S_OF_TYPE_S = "Field:%s of Type:%s, ";
 
     default Object doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
 
@@ -36,28 +44,37 @@ public interface OperationHandler {
         if (collect.isEmpty()) {
             return _doOperation(operation, context, executor);
         } else {
-            final StringBuilder errorMessage = new StringBuilder().append("Operation did not contain required fields");
+            final StringBuilder errorMessage = new StringBuilder().append(OPERATION_DID_NOT_CONTAIN_REQUIRED_FIELDS);
             collect.forEach(errorMessage::append);
+            errorMessage.append(" ]");
             throw new IllegalArgumentException(errorMessage.toString());
         }
     }
 
     default List<String> getOperationErrorsForIncorrectValueType(final Operation operation) {
-        return getFieldDeclaration().getFieldDeclarations().entrySet().stream()
+        final FieldDeclaration fieldDeclaration = getFieldDeclaration();
+        return fieldDeclaration.getFieldDeclarations().entrySet().stream()
                 .filter(e -> {
-                    final Object opValue = operation.get(e.getKey());
-                    return (Objects.isNull(opValue) || e.getValue().isInstance(operation.get(e.getKey())));
+                    final String key = e.getKey();
+                    final Object opValue = operation.get(key);
+                    final boolean containsKey = operation.containsKey(key);
+                    final boolean containsOptional = fieldDeclaration.optionalContains(key);
+                    return ((!containsKey && !containsOptional) || (Objects.nonNull(opValue) && !e.getValue().isInstance(operation.get(key))));
                 })
-                .map(e -> String.format("Field:%s of Type:%s", e.getKey(), e.getValue())).collect(Collectors.toList());
+                .map(e -> String.format(FIELD_S_OF_TYPE_S, e.getKey(), e.getValue().getCanonicalName())).collect(Collectors.toList());
     }
 
     default List<String> getOperationErrorsForNullAndIncorrectValueType(final Operation operation) {
-        return getFieldDeclaration().getFieldDeclarations().entrySet().stream()
+        final FieldDeclaration fieldDeclaration = this.getFieldDeclaration();
+        return fieldDeclaration.getFieldDeclarations().entrySet().stream()
                 .filter(e -> {
-                    final Object opValue = operation.get(e.getKey());
-                    return (Objects.nonNull(opValue) && e.getValue().isInstance(operation.get(e.getKey())));
+                    final String key = e.getKey();
+                    final Object opValue = operation.get(key);
+                    final boolean containsKey = operation.containsKey(key);
+                    final boolean containsOptional = fieldDeclaration.optionalContains(key);
+                    return ((!containsKey && !containsOptional) || Objects.isNull(opValue) || !e.getValue().isInstance(operation.get(key)));
                 })
-                .map(e -> String.format("Field:%s of Type:%s", e.getKey(), e.getValue())).collect(Collectors.toList());
+                .map(e -> String.format(FIELD_S_OF_TYPE_S, e.getKey(), e.getValue().getCanonicalName())).collect(Collectors.toList());
     }
 
     Object _doOperation(Operation operation, Context context, Executor executor) throws OperationException;

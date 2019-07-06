@@ -21,7 +21,6 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.stream.Streams;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
-import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 
 import java.util.stream.Stream;
@@ -35,8 +34,8 @@ import java.util.stream.Stream;
 public class ToStreamHandler<T> implements OutputOperationHandler<Stream<? extends T>> {
     @Override
     public Stream<? extends T> _doOperation(final Operation/*ToStream<T>*/ operation,
-                                           final Context context,
-                                           final Executor executor) throws OperationException {
+                                            final Context context,
+                                            final Executor executor) throws OperationException {
         final Iterable<T> input = (Iterable<T>) operation.input();
         if (null == input) {
             return null;
@@ -47,6 +46,6 @@ public class ToStreamHandler<T> implements OutputOperationHandler<Stream<? exten
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass()).field("Input",Iterable.class);
+        return new FieldDeclaration(this.getClass()).field("Input", Iterable.class);
     }
 }

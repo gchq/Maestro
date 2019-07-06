@@ -184,8 +184,13 @@ public class Executor {
     }
 
     @JsonIgnore
-    private OperationHandler getHandler(Operation operation) {
+    private OperationHandler getHandler(final Operation operation) {
         return config.getOperationHandler(operation);
+    }
+
+    public Executor addHandler(final String operationID, final OperationHandler handler) {
+        config.getOperationHandlers().put(operationID, handler);
+        return this;
     }
 
     @JsonIgnore

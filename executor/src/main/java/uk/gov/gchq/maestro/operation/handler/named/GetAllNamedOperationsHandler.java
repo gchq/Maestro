@@ -28,7 +28,6 @@ import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JsonSerial
 import uk.gov.gchq.maestro.named.operation.NamedOperationDetail;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
-import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 import uk.gov.gchq.maestro.operation.handler.named.cache.NamedOperationCache;
 import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;

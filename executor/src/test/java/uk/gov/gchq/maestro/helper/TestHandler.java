@@ -17,6 +17,7 @@
 package uk.gov.gchq.maestro.helper;
 
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import uk.gov.gchq.maestro.Context;
@@ -24,35 +25,31 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
-import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
+@JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public class TestHandler implements OperationHandler {
 
+    public static final String FIELD = "field";
     private String handlerField;
 
     @Override
     public Object _doOperation(final Operation operation, final Context context, final Executor executor) {
-        return handlerField + "," + operation.get("Field");
+        return handlerField + "," + operation.get(FIELD);
     }
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
         return new FieldDeclaration(this.getClass())
-                .field("field", String.class);
+                .field(FIELD, String.class);
     }
 
     public String getHandlerField() {
         return handlerField;
     }
 
-    public TestHandler fieldHandler(final String field) {
-        this.handlerField = field;
+    public TestHandler handlerField(final String handlerField) {
+        this.handlerField = handlerField;
         return this;
     }
 

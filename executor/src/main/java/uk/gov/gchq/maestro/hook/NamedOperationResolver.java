@@ -98,8 +98,8 @@ public class NamedOperationResolver implements Hook {
     private void updateOperationInput(final OperationChain opChain,
                                       final Object input) {
         final Operation firstOp = opChain.getOperations().get(0);
-        if (null != input && (firstOp.containsKey("Input") ) && null == (firstOp).input()) {
-            ( firstOp).input(input);
+        if (null != input && (firstOp.containsKey("Input")) && null == (firstOp).input()) {
+            (firstOp).input(input);
         }
     }
 }

@@ -24,7 +24,9 @@ import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A single {@code OperationDeclaration} describes an operationId handlerClass.
@@ -32,8 +34,9 @@ import java.util.Map;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 @JsonPropertyOrder(value = {"class", "handlerClass"}, alphabetic = true)
 public class FieldDeclaration {
-    private final Class<? extends OperationHandler> handlerClass;
+    private final Class<? extends OperationHandler> handlerClass; //TODO required? repetitive, less modular?
     private Map<String, Class> fieldDeclarations = new HashMap<>();
+    private Set<String> optionalFields = new HashSet<>();
 
     @JsonCreator
     public FieldDeclaration(@JsonProperty("handlerClass") final Class<? extends OperationHandler> handlerClass, @JsonProperty("fieldDeclarations") final Map<String, Class> fieldDeclarations) {
@@ -57,11 +60,28 @@ public class FieldDeclaration {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("handlerClass", handlerClass)
+                .append("fieldDeclarations", fieldDeclarations)
                 .build();
     }
 
     public FieldDeclaration field(final String field, final Class valueClass) {
         fieldDeclarations.put(field, valueClass);
         return this;
+    }
+
+    public FieldDeclaration fieldOptional(final String field, final Class valueClass) {
+        field(field, valueClass);
+        optionalFields.add(field);
+        return this;
+    }
+
+    public FieldDeclaration fieldRequired(final String field, final Class valueClass) {
+        field(field, valueClass);
+        optionalFields.remove(field);
+        return this;
+    }
+
+    public boolean optionalContains(final String field) {
+        return optionalFields.contains(field);
     }
 }

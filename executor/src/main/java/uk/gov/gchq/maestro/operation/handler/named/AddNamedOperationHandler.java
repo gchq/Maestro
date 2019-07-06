@@ -16,6 +16,9 @@
 
 package uk.gov.gchq.maestro.operation.handler.named;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
@@ -29,13 +32,23 @@ import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.handler.named.cache.NamedOperationCache;
 import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Operation handler for AddNamedOperation which adds a Named Operation to the cache.
  */
+@JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public class AddNamedOperationHandler implements OperationHandler {
+    public static final String DESCRIPTION = "Description";
+    public static final String OPERATION_CHAIN = "OperationChain";
+    public static final String OPERATION_NAME = "OperationName";
+    public static final String PARAMETERS = "Parameters";
+    public static final String READ_ACCESS_ROLES = "ReadAccessRoles";
+    public static final String SCORE = "Score";
+    public static final String WRITE_ACCESS_ROLES = "WriteAccessRoles";
+    public static final String OVERWRITE_FLAG = "overwriteFlag";
     private final NamedOperationCache cache;
 
     public AddNamedOperationHandler() {
@@ -63,19 +76,19 @@ public class AddNamedOperationHandler implements OperationHandler {
                              final Context context, final Executor executor) throws OperationException {
         try {
             final NamedOperationDetail namedOperationDetail = new NamedOperationDetail.Builder()
-                    .operationChain((String) operation.get("OperationChainAsString"))
-                    .operationName((String) operation.get("OperationName"))
+                    .operationChain((OperationChain) operation.get(OPERATION_CHAIN))
+                    .operationName((String) operation.get(OPERATION_NAME))
                     .creatorId(context.getUser().getUserId())
-                    .readers((List<String>) operation.get("ReadAccessRoles"))
-                    .writers((List<String>) operation.get("WriteAccessRoles"))
-                    .description((String) operation.get("Description"))
-                    .parameters((Map<String, ParameterDetail>) operation.get("Parameters"))
-                    .score((Integer) operation.get("Score"))
+                    .readers((List<String>) operation.get(READ_ACCESS_ROLES))
+                    .writers((List<String>) operation.get(WRITE_ACCESS_ROLES))
+                    .description((String) operation.get(DESCRIPTION))
+                    .parameters((Map<String, ParameterDetail>) operation.get(PARAMETERS))
+                    .score((Integer) operation.get(SCORE))
                     .build();
 
-            validate(namedOperationDetail.getOperationChainWithDefaultParams(), namedOperationDetail);
+            validate(namedOperationDetail.getOperationChainWithDefaultParams(), namedOperationDetail, executor.getOperationHandlerMap());
 
-            cache.addNamedOperation(namedOperationDetail, (Boolean) operation.get("overwriteFlag"), context
+            cache.addNamedOperation(namedOperationDetail, (Boolean) operation.getOrDefault(OVERWRITE_FLAG, false), context
                             .getUser(),
                     ExecutorPropertiesUtil.getAdminAuth(executor.getConfig().getProperties()));
         } catch (final MaestroCheckedException e) {
@@ -84,7 +97,22 @@ public class AddNamedOperationHandler implements OperationHandler {
         return null;
     }
 
-    private void validate(final OperationChain operationChain, final NamedOperationDetail namedOperationDetail) throws OperationException {
+    private void validate(final OperationChain operationChain, final NamedOperationDetail namedOperationDetail, final Map<String, OperationHandler> operationHandlerMap) throws OperationException {
+        final HashSet<String> operationKeysForThisHandler = new HashSet<>();
+
+        for (final Map.Entry<String, OperationHandler> entry : operationHandlerMap.entrySet()) {
+            final OperationHandler value = entry.getValue();
+            if (this.equals(value)) {
+                operationKeysForThisHandler.add(entry.getKey());
+            }
+        }
+
+        for (final Operation operation : operationChain.getOperations()) {
+            if (operationKeysForThisHandler.contains(operation.getId())) {
+                throw new OperationException("Unapproved behaviour. OperationChain for AddNamedOperationHandler should not contain an operation handled by AddNamedOperationHandler. id: " + operation.getId());
+            }
+        }
+
         if (null != namedOperationDetail.getParameters()) {
             String operationString = namedOperationDetail.getOperations();
             for (final Map.Entry<String, ParameterDetail> parameterDetail : namedOperationDetail.getParameters().entrySet()) {
@@ -99,15 +127,24 @@ public class AddNamedOperationHandler implements OperationHandler {
     @Override
     public FieldDeclaration getFieldDeclaration() {
         return new FieldDeclaration(this.getClass())
-                .field("Description", String.class)
-                .field("OperationChainAsString", String.class)
-                .field("OperationName", String.class)
-                .field("Parameters", Map.class)
-                .field("ReadAccessRoles", List.class)
-                .field("Score", Integer.class)
-                .field("WriteAccessRoles", List.class)
-                .field("overwriteFlag", Boolean.class)
-                ;
+                .fieldRequired(OPERATION_NAME, String.class)
+                .fieldRequired(DESCRIPTION, String.class)
+                .fieldRequired(OPERATION_CHAIN, OperationChain.class)
+                .fieldOptional(WRITE_ACCESS_ROLES, List.class) //TODO check optional?
+                .fieldOptional(READ_ACCESS_ROLES, List.class) //TODO check optional?
+                .fieldOptional(PARAMETERS, Map.class)
+                .fieldOptional(SCORE, Integer.class)
+                .fieldOptional(OVERWRITE_FLAG, Boolean.class);
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        return (this == o || (o != null && getClass() == o.getClass()));
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .toHashCode();
+    }
 }

@@ -21,18 +21,16 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
-import uk.gov.gchq.maestro.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OutputOperationHandler;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class ToSingletonListHandler<T> implements OutputOperationHandler<List<? extends T>> {
     @Override
     public List<? extends T> _doOperation(final Operation /*ToSingletonList<T>*/ operation,
-                                         final Context context,
-                                         final Executor executor) throws OperationException {
+                                          final Context context,
+                                          final Executor executor) throws OperationException {
         if (null != operation.input()) {
             return Collections.singletonList((T) operation.input());
         } else {
@@ -42,6 +40,6 @@ public class ToSingletonListHandler<T> implements OutputOperationHandler<List<? 
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass()).field("Input",Object.class);
+        return new FieldDeclaration(this.getClass()).field("Input", Object.class);
     }
 }

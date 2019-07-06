@@ -31,7 +31,6 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.iterable.WrappedCloseableIterable;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
-import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.named.operation.NamedOperationDetail;
 import uk.gov.gchq.maestro.named.operation.ParameterDetail;
 import uk.gov.gchq.maestro.operation.Operation;
@@ -41,15 +40,10 @@ import uk.gov.gchq.maestro.user.User;
 import uk.gov.gchq.maestro.util.Config;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -57,6 +51,9 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static uk.gov.gchq.maestro.operation.handler.named.AddNamedOperationHandler.DESCRIPTION;
+import static uk.gov.gchq.maestro.operation.handler.named.AddNamedOperationHandler.OPERATION_CHAIN;
+import static uk.gov.gchq.maestro.operation.handler.named.AddNamedOperationHandler.OVERWRITE_FLAG;
 
 public class AddNamedOperationHandlerTest {
     private static final String EMPTY_ADMIN_AUTH = "";
@@ -76,7 +73,7 @@ public class AddNamedOperationHandlerTest {
     @Before
     public void before() throws CacheOperationException {
         storedOperations.clear();
-        addNamedOperation.operationArg("OperationName", (OPERATION_NAME));
+        addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, (OPERATION_NAME));
 
         doAnswer(invocationOnMock -> {
             Object[] args = invocationOnMock.getArguments();
@@ -105,10 +102,10 @@ public class AddNamedOperationHandlerTest {
 
     @After
     public void after() throws CacheOperationException {
-        addNamedOperation.operationArg("OperationName", null);
-        addNamedOperation.operationArg("OperationChain", (String) null);
-        addNamedOperation.operationArg("Description", null);
-        addNamedOperation.operationArg("OverwriteFlag", false);
+        addNamedOperation.operationArg(OPERATION_NAME, null);
+        addNamedOperation.operationArg(OPERATION_CHAIN, (String) null);
+        addNamedOperation.operationArg(DESCRIPTION, null);
+        addNamedOperation.operationArg(OVERWRITE_FLAG, false);
         mockCache.clear();
     }
 
@@ -116,17 +113,18 @@ public class AddNamedOperationHandlerTest {
     @Test
     public void shouldNotAllowForNonRecursiveNamedOperationsToBeNested() throws OperationException {
         OperationChain child =
-                new OperationChain("opChain", new Operation("ToArray"));
-        addNamedOperation.operationArg("OperationChain", child);
-        addNamedOperation.operationArg("OperationName", "child");
+                new OperationChain(OPERATION_CHAIN, new Operation("ToArray"));
+        addNamedOperation.operationArg(OPERATION_CHAIN, child);
+        addNamedOperation.operationArg(OPERATION_NAME, "child");
+        addNamedOperation.operationArg(DESCRIPTION, "test");
         handler.doOperation(addNamedOperation, context, executor);
 
         OperationChain parent = new OperationChain("opchain", Lists.newArrayList(
                 new Operation("NamedOperation").operationArg("name", "child"),
                 new Operation("ToArray")));
 
-        addNamedOperation.operationArg("OperationChain", parent);
-        addNamedOperation.operationArg("OperationName", "parent");
+        addNamedOperation.operationArg(OPERATION_CHAIN, parent);
+        addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, "parent");
 
         exception.expect(OperationException.class);
 
@@ -141,8 +139,9 @@ public class AddNamedOperationHandlerTest {
                     ".ToSingletonList\", " +
                     "\"input\" : \"${param1}\"}] }";
 
-            addNamedOperation.operationArg("OperationChain", opChainJSON);
-            addNamedOperation.operationArg("OperationName", "namedop");
+            addNamedOperation.operationArg(OPERATION_CHAIN, opChainJSON);
+            addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, "namedop");
+            addNamedOperation.operationArg(DESCRIPTION, "test");
             ParameterDetail param = new ParameterDetail.Builder()
                     .defaultValue(1L)
                     .description("Limit param")
@@ -155,20 +154,21 @@ public class AddNamedOperationHandlerTest {
             assert cacheContains("namedop");
 
         } catch (final Exception e) {
-            fail("Expected test to pass without error. Exception " + e.getMessage());
+            new AssertionError("Expected test to pass without error. Exception " + e.getMessage(), e);
         }
 
     }
 
     @Test
-    public void shouldNotAllowForOperationChainWithParameterNotInOperationString() throws OperationException {
+    public void shouldNotAllowForOperationChainWithParameterNotInOperationString() throws OperationException, SerialisationException {
         final String opChainJSON = "{ \"operations\": [ { \"class\":\"uk" +
                 ".gov.gchq.maestro.operation.impl.output" +
                 ".ToSingletonList\", " +
                 "\"input\" : \"${param1}\"}] }";
 
-        addNamedOperation.operationArg("OperationChain", opChainJSON);
-        addNamedOperation.operationArg("OperationName", "namedop");
+        addNamedOperation.operationArg(OPERATION_CHAIN, new OperationChain("opchain", new Operation("ToSingletonList")));
+        addNamedOperation.operationArg(OPERATION_NAME, "namedop");
+        addNamedOperation.operationArg(DESCRIPTION, "test");
 
         // Note the param is String class to get past type checking which will also catch a param
         // with an unknown name if its not a string.
@@ -218,10 +218,11 @@ public class AddNamedOperationHandlerTest {
     @Test
     public void shouldAddNamedOperationWithScoreCorrectly() throws OperationException, CacheOperationException {
         OperationChain opChain =
-                new OperationChain("opChain", new Operation("ToArray"));
-        addNamedOperation.operationArg("OperationChain", opChain);
+                new OperationChain(OPERATION_CHAIN, new Operation("ToArray"));
+        addNamedOperation.operationArg(OPERATION_CHAIN, opChain);
         addNamedOperation.operationArg("Score", 2);
-        addNamedOperation.operationArg("OperationName", "testOp");
+        addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, "testOp");
+        addNamedOperation.operationArg(DESCRIPTION, "test");
 
         handler.doOperation(addNamedOperation, context, executor);
 
@@ -242,83 +243,4 @@ public class AddNamedOperationHandlerTest {
 
     }
 
-    @Test
-    public void shouldGetOperationsWithDefaultParameters() throws Exception {
-        // Given
-        final Operation addNamedOperation = new Operation("AddNamedOperation")
-                .operationArg("operationChain", "{\"class\":\"uk.gov.gchq.maestro.operation.OperationChain\"," +
-                        "\"id\":\"ToArrayChain\"," +
-                        "\"operations\":[{\"class\": \"uk.gov.gchq.maestro.operation.Operation\", " +
-                        "\"input\": [\"${testParameter}\"]," +
-                        "\"id\":\"ToArray\"" +
-                        "}]}")
-                .operationArg("description", "Test Named Operation")
-                .operationArg("operationName", "Test")
-                .operationArg("readAccessRoles", USER)
-                .operationArg("overwriteFlag", false)
-                .operationArg("writeAccessRoles", USER)
-                .operationArg("parameters", new ParameterDetail.Builder()
-                        .description("test")
-                        .defaultValue(1)
-                        .valueClass(Integer.class)
-                        .required(false)
-                        .build())
-                .operationArg("score", 2);
-        // When
-        final OperationChain operationChain = JSONSerialiser.deserialise((String) addNamedOperation.get("operationChain"), OperationChain.class); //TODO this Logic needs to be in handler.
-
-        Collection<Operation> operations = operationChain.getOperations();
-
-        // Then
-        assertEquals(
-                Collections.singletonList("ToArray"),
-                operations.stream().map(o -> o.getId()).collect(Collectors.toList())
-        );
-        final Operation nestedOp = operations.iterator().next();
-        final List<? extends Integer> input =
-                Lists.newArrayList((Integer) nestedOp.get("Input"));
-        assertEquals(Collections.singletonList(1), input); //TODO this logic needs to be in handler
-    }
-
-    @Test
-    public void shouldGetOperationsWhenNoDefaultParameter() throws SerialisationException {
-        final HashMap<String, ParameterDetail> parameters = new HashMap<>();
-        parameters.put("testParameter", new ParameterDetail.Builder()
-                .description("the seed")
-                .valueClass(String.class)
-                .required(false)
-                .build());
-
-        // Given
-        final Operation addNamedOperation = new Operation("AddNamedOperation")
-                .operationArg("operationChain",
-                        "{\"class\":\"uk.gov.gchq.maestro.operation.OperationChain\"," +
-                                "\"id\":\"ToArrayChain\"," +
-                                "\"operations\":[{\"class\": \"uk.gov.gchq.maestro.operation.Operation\", " +
-                                "\"input\": [4]," +
-                                "\"id\":\"ToArray\"" +
-                                "}]}")
-                .operationArg("description", "Test Named Operation")
-                .operationArg("name", "Test")
-                .operationArg("overwrite", false)
-                .operationArg("readAccessRoles", USER)
-                .operationArg("writeAccessRoles", USER)
-                .operationArg("parameter", parameters)
-                .operationArg("score", 2);
-
-        // When
-        final OperationChain operationChain = JSONSerialiser.deserialise((String) addNamedOperation.get("operationChain"), OperationChain.class); //TODO this Logic needs to be in handler.
-
-        Collection<Operation> operations = operationChain.getOperations();
-
-        // Then
-        assertEquals(
-                Collections.singletonList("ToArray"),
-                operations.stream().map(o -> o.getId()).collect(Collectors.toList())
-        );
-        final Operation nestedOp = operations.iterator().next();
-        final List<? extends Integer> input =
-                Lists.newArrayList((Integer) nestedOp.get("Input"));
-        assertEquals(Collections.singletonList(4), input);
-    }
 }

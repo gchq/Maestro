@@ -31,10 +31,10 @@ import static org.junit.Assert.fail;
 /**
  * Abstract test to perform the initial basic form of testing for a handler.
  *
- * @param <H>  The Handler
+ * @param <H> The Handler
  * @see OperationHandler
  */
-public abstract class MaestroHandlerBasicTest<H extends OperationHandler> {
+public abstract class MaestroHandlerBasicTest<H extends OperationHandler> extends MaestroObjectTest<H> {
     public static final String EXECUTOR_ID = "testExecutorId";
     protected Executor testExecutor;
     protected Context context;
@@ -50,7 +50,7 @@ public abstract class MaestroHandlerBasicTest<H extends OperationHandler> {
     @Test
     public void shouldHandleABasicExample() throws Exception {
         final Operation op = getBasicOp();
-        final H handler = getBasicHandler();
+        final H handler = getTestHandler();
         final Object handlerValue = handler.doOperation(op, context, testExecutor);
         inspectReturnFromHandler(handlerValue);
         inspectFields();
@@ -64,7 +64,7 @@ public abstract class MaestroHandlerBasicTest<H extends OperationHandler> {
         inspectFields();
     }
 
-    protected abstract H getBasicHandler() throws Exception;
+    protected abstract H getTestHandler() throws Exception;
 
     protected abstract Operation getBasicOp() throws Exception;
 

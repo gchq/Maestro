@@ -126,7 +126,7 @@ public class ContextTest {
 
         // Then
         assertSame(exporter, context.getExporter(exporter.getId()));
-        fail(/* assertSame(exporter, context.getExporter(Exporter.class));*/);
+        assertSame(exporter, context.getExporter("Exporter"));
 
     }
 

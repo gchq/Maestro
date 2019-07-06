@@ -49,6 +49,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -90,7 +91,7 @@ public class Config {
      * that will be used to handle these operations.
      */
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
-    private final Map<String, OperationHandler> operationHandlers = new LinkedHashMap<>();
+    private final Map<String, OperationHandler> operationHandlers = new TreeMap<>(String::compareToIgnoreCase);
 
     private Library library;
 
@@ -679,9 +680,8 @@ public class Config {
             if (null == operationHandlers) {
                 operationHandlers = new LinkedHashMap<>();
             }
-            //TODO
-            // operationHandlers.put(operationDeclaration.getOperationId(),
-            //         operationDeclaration.getHandler());
+            operationHandlers.put(operationDeclaration.getOperationId(),
+                    operationDeclaration.getHandler());
             return this;
         }
 

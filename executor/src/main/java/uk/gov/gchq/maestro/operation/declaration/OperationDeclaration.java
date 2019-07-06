@@ -33,7 +33,7 @@ public class OperationDeclaration {
         return operationId;
     }
 
-    public OperationDeclaration operationId(String operationId) {
+    public OperationDeclaration operationId(final String operationId) {
         this.operationId = operationId;
         return this;
     }
