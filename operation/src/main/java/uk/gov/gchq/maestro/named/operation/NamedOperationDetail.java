@@ -158,7 +158,7 @@ public class NamedOperationDetail implements Serializable {
 
         OperationChain opChain;
         try {
-            opChain = JSONSerialiser.deserialise(opStringWithDefaults.getBytes(CHARSET_NAME), OperationChainDAO.class);
+            opChain = JSONSerialiser.deserialise(opStringWithDefaults.getBytes(CHARSET_NAME), OperationChain.class);
         } catch (final Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
