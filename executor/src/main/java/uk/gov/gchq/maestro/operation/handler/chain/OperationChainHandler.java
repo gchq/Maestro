@@ -79,11 +79,11 @@ public class OperationChainHandler implements OperationHandler, OperationValidat
                 if (!((OperationChain) op).getOperations().isEmpty()) {
                     final Operation firstOp = ((OperationChain) op).getOperations()
                             .get(0);
-                    if ("Input".equals(firstOp.getId())) {
+                    if (firstOp.getIdComparison("Input")) {
                         setOperationInput(firstOp, result);
                     }
                 }
-            } else if ("Input".equals(op.getId())) {
+            } else if (op.getIdComparison("Input")) {
                 setOperationInput(op, result);
             }
         }

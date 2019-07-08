@@ -85,7 +85,7 @@ import static java.util.Objects.isNull;
 @Since("0.0.1")
 @Summary("An Operation which contains an Id and a mapping of args to be used by handlers associated by the Id.")
 public class Operation {
-    private final String id; //TODO requirement to be mutable?
+    private final String id; //TODO? requirement to be mutable?
     public static final Locale LOCALE = Locale.ENGLISH;
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
     @JsonPropertyOrder(value = {"class"}, alphabetic = true)
@@ -151,8 +151,11 @@ public class Operation {
     }
 
     public String getId() {
-        //TODO case insensitive comparison required.
         return id;
+    }
+
+    public Boolean getIdComparison(final String s) {
+        return getId().toLowerCase(LOCALE).equals(s.toLowerCase(Locale.ENGLISH));
     }
 
     public Set<String> keySet() {

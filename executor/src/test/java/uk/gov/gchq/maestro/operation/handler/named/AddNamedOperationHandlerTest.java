@@ -111,7 +111,7 @@ public class AddNamedOperationHandlerTest {
 
 
     @Test
-    public void shouldNotAllowForNonRecursiveNamedOperationsToBeNested() throws OperationException {
+    public void shouldNotAllowForNonRecursiveNamedOperationsToBeNested() throws Exception{
         OperationChain child =
                 new OperationChain(OPERATION_CHAIN, new Operation("ToArray"));
         addNamedOperation.operationArg(OPERATION_CHAIN, child);
@@ -126,7 +126,7 @@ public class AddNamedOperationHandlerTest {
         addNamedOperation.operationArg(OPERATION_CHAIN, parent);
         addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, "parent");
 
-        exception.expect(OperationException.class);
+        exception.expect(OperationException.class); //TODO Error
 
         handler.doOperation(addNamedOperation, context, executor);
     }

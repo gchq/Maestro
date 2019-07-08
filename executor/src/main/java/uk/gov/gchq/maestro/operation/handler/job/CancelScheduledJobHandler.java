@@ -32,7 +32,6 @@ public class CancelScheduledJobHandler implements OperationHandler {
         if (!JobTracker.isCacheEnabled()) {
             throw new OperationException("JobTracker not enabled");
         }
-        //TODO Logic allows for null but Above validation will throw a uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException
         final String o = (String) operation.get("JobId");
         if (null == o) {
             throw new OperationException("job id must be specified");

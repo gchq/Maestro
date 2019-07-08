@@ -34,7 +34,7 @@ import java.util.Set;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 @JsonPropertyOrder(value = {"class", "handlerClass"}, alphabetic = true)
 public class FieldDeclaration {
-    private final Class<? extends OperationHandler> handlerClass; //TODO required? repetitive, less modular?
+    private final Class<? extends OperationHandler> handlerClass; //TODO? required repetitive, less modular?
     private Map<String, Class> fieldDeclarations = new HashMap<>();
     private Set<String> optionalFields = new HashSet<>();
 

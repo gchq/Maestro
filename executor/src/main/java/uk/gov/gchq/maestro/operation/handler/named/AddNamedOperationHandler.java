@@ -130,8 +130,8 @@ public class AddNamedOperationHandler implements OperationHandler {
                 .fieldRequired(OPERATION_NAME, String.class)
                 .fieldRequired(DESCRIPTION, String.class)
                 .fieldRequired(OPERATION_CHAIN, OperationChain.class)
-                .fieldOptional(WRITE_ACCESS_ROLES, List.class) //TODO check optional?
-                .fieldOptional(READ_ACCESS_ROLES, List.class) //TODO check optional?
+                .fieldOptional(WRITE_ACCESS_ROLES, List.class) //TODO? check optional
+                .fieldOptional(READ_ACCESS_ROLES, List.class) //TODO? check optional
                 .fieldOptional(PARAMETERS, Map.class)
                 .fieldOptional(SCORE, Integer.class)
                 .fieldOptional(OVERWRITE_FLAG, Boolean.class);

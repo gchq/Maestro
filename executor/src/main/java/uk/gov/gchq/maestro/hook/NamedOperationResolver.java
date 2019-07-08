@@ -59,7 +59,7 @@ public class NamedOperationResolver implements Hook {
     private void resolveNamedOperations(final Operations operations, final User user) {
         final List<Operation> updatedOperations = new ArrayList<>(operations.getOperations().size());
         for (final Operation operation : operations.getOperations()) {
-            if ("NamedOperation".equals(operation.getId())) {
+            if (operation.getIdComparison("NamedOperation")) {
                 updatedOperations.addAll(resolveNamedOperation(operation, user));
             } else {
                 if (operation instanceof Operations) {

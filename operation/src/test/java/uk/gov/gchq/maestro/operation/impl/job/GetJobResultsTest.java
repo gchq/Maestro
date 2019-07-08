@@ -16,43 +16,11 @@
 
 package uk.gov.gchq.maestro.operation.impl.job;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
 
 public class GetJobResultsTest extends OperationTest {
-    private static final String DEFAULT_KEY = "ALL";
-
-    @Ignore(value = "This logic needs to be migrated to Handler")
-    @Test
-    public void shouldReturnNullIfSetKey() { //TODO to handler
-        // When
-        final Operation jobResults = new Operation("GetJobResults")
-                .operationArg("key", DEFAULT_KEY);
-
-        // Then
-        assertThat(jobResults.get("Key"), is(nullValue()));
-    }
-
-    @Ignore(value = "This logic needs to be migrated to Handler")
-    @Test
-    public void shouldThrowError() { //TODO to handler
-        // When
-        try {
-            final Operation jobResults = new Operation("GetJobResults")
-                    .operationArg("key", "anythingElse");
-        } catch (IllegalArgumentException e) {
-            assertEquals("Keys cannot be used with this operation", e.getMessage());
-        }
-    }
 
     @Override
     protected String getJSONString() {

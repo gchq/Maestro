@@ -43,7 +43,6 @@ public class ToSetHandler<T> implements OutputOperationHandler<Set<? extends T>>
     @Override
     public Set<T> _doOperation(final Operation/*ToSet<T> */operation, final Context context, final Executor executor) throws OperationException {
 
-        //TODO Logic allows for null but Above validation will throw a uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException
         final Iterable<T> input = (Iterable<T>) operation.input();
         if (null == input) {
             return null;

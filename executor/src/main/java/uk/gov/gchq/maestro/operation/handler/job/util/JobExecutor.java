@@ -114,7 +114,7 @@ public final class JobExecutor {
             boolean hasExport = false;
 
             for (final Operation op : opChain.getOperations()) {
-                if ("ExportToResultCache".equals(op.getId())) {
+                if (op.getIdComparison("ExportToResultCache")) {
                     hasExport = true;
                     break;
                 }

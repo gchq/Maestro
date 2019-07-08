@@ -53,14 +53,16 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ScheduledExecutorService;
 
+import static java.lang.String.*;
 import static java.util.Objects.nonNull;
 
 @Since("0.0.1")
 @JsonPropertyOrder(value = {"class", "config"}, alphabetic = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 public class Executor {
-    public static final String OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S = "Operation %s is not supported by the %s.";
     public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
+    public static final String DEFAULT_OPERATION = "DefaultOperation";
+    public static final String WRAPPED_OP = "WrappedOp";
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     private Config config;
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
@@ -268,11 +270,12 @@ public class Executor {
                 }
                 throw e;
             }
-        } else if (operation.getId().equals("DefaultOperation"/*TODO location for ID strings*/)) {
+        } else if (operation.getIdComparison(DEFAULT_OPERATION)) {
+            /*Id: DEFAULT_OPERATION is acceptable because it is defined below by this handler.*/
             result = doUnhandledOperation(operation);
         } else {
-            final Operation defaultOp = new Operation("DefaultOperation")
-                    .operationArg("WrappedOp", operation);
+            final Operation defaultOp = new Operation(DEFAULT_OPERATION)
+                    .operationArg(WRAPPED_OP, operation);
             result = this.handleOperation(defaultOp, context);
         }
 
@@ -305,7 +308,10 @@ public class Executor {
     }
 
     private Object doUnhandledOperation(final Operation operation) {
-        throw new UnsupportedOperationException(String.format(OPERATION_S_IS_NOT_SUPPORTED_BY_THE_S, operation.getClass(), this.getClass().getSimpleName()));
+        final Class<? extends Operation> aClass = operation.getClass();
+        CloseableUtil.close(operation);
+        final String simpleName = this.getConfig().getId();
+        throw new UnsupportedOperationException(format("Operation %s is not supported by executor: %s. WrappedOp: %s", aClass, simpleName,operation.get(WRAPPED_OP)));
     }
 
     @Override
