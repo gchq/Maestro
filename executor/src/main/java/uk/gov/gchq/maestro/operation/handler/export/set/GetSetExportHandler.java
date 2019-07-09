@@ -18,12 +18,17 @@ package uk.gov.gchq.maestro.operation.handler.export.set;
 
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
+import uk.gov.gchq.maestro.commonutil.iterable.LimitedCloseableIterable;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
 import uk.gov.gchq.maestro.operation.handler.export.GetExportHandler;
+
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of the {@link GetExportHandler} to retrieve exported created by a SetExporter.
@@ -31,11 +36,22 @@ import uk.gov.gchq.maestro.operation.handler.export.GetExportHandler;
 public class GetSetExportHandler extends GetExportHandler {
     @Override
     protected CloseableIterable<?> getExport(final Operation export, final Operation exporter) throws OperationException {
-        final String o = (String) export.get("KeyOrDefault");
-        final int o1 = (int) export.get("Start");
-        final Integer o2 = (Integer) export.get("End");
-        throw new MaestroRuntimeException("examine SetExporterTest not finished implemented exporter.get(o, o1, o2)");
-        // return (CloseableIterable<?>) exporter.get(o, o1, o2); TODO examine SetExporterTest not finished implemented
+        final String key = (String) export.get("KeyOrDefault");
+        final int start = (int) export.get("Start");
+        final Integer end = (Integer) export.get("End");
+        final Map<String, Set<Object>> exports = (Map<String, Set<Object>>) export.getOrDefault("Exports", new HashMap<String, Set<Object>>());
+        final CloseableIterable<?> rtn = get(key, start, end, exports);
+        return rtn;
+    }
+
+    public CloseableIterable<?> get(final String key, final int start, final Integer end, final Map<String, Set<Object>> exports) {
+        return new LimitedCloseableIterable<>(getExport(key, exports), start, end);
+    }
+
+    private Set<Object> getExport(final String key, final Map<String, Set<Object>> exports) {
+        Set<Object> export = exports.computeIfAbsent(key, k -> new LinkedHashSet<>());
+
+        return export;
     }
 
     protected String getExporterId() {
@@ -54,6 +70,7 @@ public class GetSetExportHandler extends GetExportHandler {
         return new FieldDeclaration(this.getClass())
                 .field("Start", Integer.class)
                 .field("End", Integer.class)
-                .field("KeyOrDefault", String.class);
+                .field("KeyOrDefault", String.class)
+                .fieldOptional("Exports", HashMap.class);
     }
 }

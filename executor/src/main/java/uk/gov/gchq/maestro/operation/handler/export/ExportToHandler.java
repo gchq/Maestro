@@ -16,15 +16,20 @@
 
 package uk.gov.gchq.maestro.operation.handler.export;
 
+import com.google.common.collect.Iterables;
+
 import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Abstract class describing how to handle  ExportTo operations.
@@ -37,10 +42,19 @@ public abstract class ExportToHandler extends ExportOperationHandler {
                               final Operation exporter)
             throws OperationException {
         final Iterable<?> inputItr = wrapInIterable(operation.input());
-        throw new MaestroRuntimeException("Not yet implemented");
-        // TODO
-        // exporter.add((String) operation.get("KeyOrDefault"), inputItr);
-        // return operation.input();
+        final Map<String, Set<Object>> exports = (Map<String, Set<Object>>) operation.getOrDefault("Exports", new HashMap<String, Set<Object>>());
+        add((String) operation.get("KeyOrDefault"), inputItr, exports);
+        return operation.input();
+    }
+
+    public void add(final String key, final Iterable<?> results, final Map<String, Set<Object>> exports) {
+        Iterables.addAll(getExport(key, exports), results);
+    }
+
+    private Set<Object> getExport(final String key, final Map<String, Set<Object>> exports) {
+        Set<Object> export = exports.computeIfAbsent(key, k -> new LinkedHashSet<>());
+
+        return export;
     }
 
     private Iterable<?> wrapInIterable(final Object input) {
