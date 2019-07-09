@@ -23,7 +23,9 @@ import uk.gov.gchq.maestro.operation.Operation;
 
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class GetJobResultsHandlerTest {
     private static final String DEFAULT_KEY = "ALL";

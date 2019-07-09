@@ -53,7 +53,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static java.lang.String.*;
+import static java.lang.String.format;
 import static java.util.Objects.nonNull;
 
 @Since("0.0.1")
@@ -311,7 +311,7 @@ public class Executor {
         final Class<? extends Operation> aClass = operation.getClass();
         CloseableUtil.close(operation);
         final String simpleName = this.getConfig().getId();
-        throw new UnsupportedOperationException(format("Operation %s is not supported by executor: %s. WrappedOp: %s", aClass, simpleName,operation.get(WRAPPED_OP)));
+        throw new UnsupportedOperationException(format("Operation %s is not supported by executor: %s. WrappedOp: %s", aClass, simpleName, operation.get(WRAPPED_OP)));
     }
 
     @Override

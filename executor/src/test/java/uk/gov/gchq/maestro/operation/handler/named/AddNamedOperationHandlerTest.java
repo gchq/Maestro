@@ -16,7 +16,6 @@
 
 package uk.gov.gchq.maestro.operation.handler.named;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.junit.After;
 import org.junit.Before;
@@ -107,28 +106,6 @@ public class AddNamedOperationHandlerTest {
         addNamedOperation.operationArg(DESCRIPTION, null);
         addNamedOperation.operationArg(OVERWRITE_FLAG, false);
         mockCache.clear();
-    }
-
-
-    @Test
-    public void shouldNotAllowForNonRecursiveNamedOperationsToBeNested() throws Exception{
-        OperationChain child =
-                new OperationChain(OPERATION_CHAIN, new Operation("ToArray"));
-        addNamedOperation.operationArg(OPERATION_CHAIN, child);
-        addNamedOperation.operationArg(OPERATION_NAME, "child");
-        addNamedOperation.operationArg(DESCRIPTION, "test");
-        handler.doOperation(addNamedOperation, context, executor);
-
-        OperationChain parent = new OperationChain("opchain", Lists.newArrayList(
-                new Operation("NamedOperation").operationArg("name", "child"),
-                new Operation("ToArray")));
-
-        addNamedOperation.operationArg(OPERATION_CHAIN, parent);
-        addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, "parent");
-
-        exception.expect(OperationException.class); //TODO Error
-
-        handler.doOperation(addNamedOperation, context, executor);
     }
 
     @Test

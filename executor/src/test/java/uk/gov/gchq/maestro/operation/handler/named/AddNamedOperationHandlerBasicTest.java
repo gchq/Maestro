@@ -25,7 +25,11 @@ import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.operation.handler.named.cache.NamedOperationCache;
 
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
+import static uk.gov.gchq.maestro.operation.handler.named.AddNamedOperationHandler.DESCRIPTION;
+import static uk.gov.gchq.maestro.operation.handler.named.AddNamedOperationHandler.OPERATION_CHAIN;
+import static uk.gov.gchq.maestro.operation.handler.named.AddNamedOperationHandler.OPERATION_NAME;
 
 public class AddNamedOperationHandlerBasicTest extends MaestroHandlerBasicTest<AddNamedOperationHandler> {
     public static final String NAMED_OPERATION = "NamedOperation";
@@ -34,8 +38,8 @@ public class AddNamedOperationHandlerBasicTest extends MaestroHandlerBasicTest<A
     @Override
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         mockCache = mock(NamedOperationCache.class);
+        super.setUp();
     }
 
     @Override
@@ -46,18 +50,13 @@ public class AddNamedOperationHandlerBasicTest extends MaestroHandlerBasicTest<A
     @Override
     protected Operation getBasicOp() throws Exception {
         OperationChain parent = new OperationChain("opchain", Lists.newArrayList(
-                new Operation("NamedOperation").operationArg("name", "child"),
+                new Operation("AddNamedOperation").operationArg("name", "child"),
                 new Operation("ToArray")));
 
         return new Operation(NAMED_OPERATION)
-                .operationArg("overwriteFlag", null)
-                .operationArg("writeAccessRoles", null)
-                .operationArg("Score", null)
-                .operationArg("Description", null)
-                .operationArg("Parameters", null)
-                .operationArg("OperationName", "testName")
-                .operationArg("OperationChain", parent)
-                .operationArg("ReadAccessRoles", null);
+                .operationArg(OPERATION_NAME, "testName")
+                .operationArg(DESCRIPTION, "testDescription")
+                .operationArg(OPERATION_CHAIN, parent);
     }
 
     @Override
@@ -94,5 +93,18 @@ public class AddNamedOperationHandlerBasicTest extends MaestroHandlerBasicTest<A
     @Override
     protected Executor getTestExecutor() throws Exception {
         return super.getTestExecutor().addHandler(NAMED_OPERATION, getTestHandler());
+    }
+
+    @Override
+    protected void inspectReturnFromExecute(final Object value) throws Exception {
+        assertNull(value);
+    }
+
+    @Override
+    /**
+     * {@link AddNamedOperationHandler} tests the cache values.
+     */
+    protected void inspectFields() throws Exception {
+        //do nothing
     }
 }
