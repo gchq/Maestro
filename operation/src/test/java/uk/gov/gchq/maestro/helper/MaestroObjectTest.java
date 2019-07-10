@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static uk.gov.gchq.maestro.operation.Operation.LOCALE;
@@ -249,6 +250,14 @@ public abstract class MaestroObjectTest<T> {
                 assertTrue(String.format("Key: %s not found in jsonString", key), jsonString.contains(key.toLowerCase(LOCALE)));
             }
         }
+    }
+
+    @Test
+    public void shouldHaveNewInstanceOfFullyPopulatedTestObject() throws Exception {
+        final T a = getFullyPopulatedTestObject();
+        final T b = getFullyPopulatedTestObject();
+        assertEquals(a, b);
+        assertFalse("getFullyPopulatedTestObject does not return a new instance, this is a sanitary practice for testing", a == b);
     }
 
     protected byte[] toJson(final T testObj) {

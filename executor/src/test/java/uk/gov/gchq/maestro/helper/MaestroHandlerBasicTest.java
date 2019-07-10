@@ -73,7 +73,7 @@ public abstract class MaestroHandlerBasicTest<H extends OperationHandler> extend
     }
 
     protected Executor getTestExecutor() throws Exception {
-        return new Executor().config(new Config(EXECUTOR_ID));
+        return new Executor().config(new Config(EXECUTOR_ID)).addHandler(getBasicOp().getId(), getTestHandler());
     }
 
     protected Context getContext() {

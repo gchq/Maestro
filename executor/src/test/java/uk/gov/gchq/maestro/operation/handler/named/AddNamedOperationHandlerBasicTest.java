@@ -19,7 +19,6 @@ package uk.gov.gchq.maestro.operation.handler.named;
 import com.google.common.collect.Lists;
 import org.junit.Before;
 
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
@@ -82,11 +81,6 @@ public class AddNamedOperationHandlerBasicTest extends MaestroHandlerBasicTest<A
                 "    }\n" +
                 "  }\n" +
                 "}";
-    }
-
-    @Override
-    protected Executor getTestExecutor() throws Exception {
-        return super.getTestExecutor().addHandler(NAMED_OPERATION, getTestHandler());
     }
 
     @Override

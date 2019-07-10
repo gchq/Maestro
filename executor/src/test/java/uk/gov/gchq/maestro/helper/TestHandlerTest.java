@@ -16,7 +16,6 @@
 
 package uk.gov.gchq.maestro.helper;
 
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.operation.Operation;
 
 import static org.junit.Assert.assertEquals;
@@ -24,12 +23,6 @@ import static org.junit.Assert.assertEquals;
 public class TestHandlerTest extends MaestroHandlerBasicTest<TestHandler> {
 
     public static final String TEST_OPERATION = "TestOperation";
-
-    @Override
-    protected Executor getTestExecutor() throws Exception {
-        return super.getTestExecutor()
-                .addHandler(TEST_OPERATION, getTestHandler());
-    }
 
     @Override
     protected TestHandler getTestHandler() throws Exception {
