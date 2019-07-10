@@ -85,11 +85,6 @@ public class AddNamedOperationHandlerBasicTest extends MaestroHandlerBasicTest<A
     }
 
     @Override
-    protected AddNamedOperationHandler getFullyPopulatedTestObject() throws Exception {
-        return getTestHandler();
-    }
-
-    @Override
     protected Executor getTestExecutor() throws Exception {
         return super.getTestExecutor().addHandler(NAMED_OPERATION, getTestHandler());
     }

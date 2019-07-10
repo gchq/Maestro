@@ -63,6 +63,7 @@ public class Executor {
     public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
     public static final String DEFAULT_OPERATION = "DefaultOperation";
     public static final String WRAPPED_OP = "WrappedOp";
+    public static final String INITIALISER = "Initialiser";
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     private Config config;
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);

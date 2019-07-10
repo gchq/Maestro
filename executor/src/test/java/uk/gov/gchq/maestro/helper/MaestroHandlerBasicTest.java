@@ -91,4 +91,9 @@ public abstract class MaestroHandlerBasicTest<H extends OperationHandler> extend
     protected void inspectReturnFromExecute(final Object value) throws Exception {
         fail("Override test method: inspectReturnFromExecute");
     }
+
+    @Override
+    protected H getFullyPopulatedTestObject() throws Exception {
+        return getTestHandler();
+    }
 }

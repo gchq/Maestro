@@ -30,6 +30,7 @@
         <module>data</module>
         <module>operation</module>
         <module>executor</module>
+        <module>proxy-executor</module>
     </modules>
 
     <name>${project.groupId}:${project.artifactId}</name>

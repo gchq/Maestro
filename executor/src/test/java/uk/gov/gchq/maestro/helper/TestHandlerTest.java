@@ -71,8 +71,4 @@ public class TestHandlerTest extends MaestroHandlerBasicTest<TestHandler> {
                 "}";
     }
 
-    @Override
-    protected TestHandler getFullyPopulatedTestObject() throws Exception {
-        return getTestHandler();
-    }
 }
