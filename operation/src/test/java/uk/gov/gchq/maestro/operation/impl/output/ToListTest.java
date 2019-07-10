@@ -16,6 +16,8 @@
 
 package uk.gov.gchq.maestro.operation.impl.output;
 
+import com.google.common.collect.Sets;
+
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
@@ -28,7 +30,7 @@ public class ToListTest extends OperationTest {
                 "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
                 "  \"id\" : \"ToList\",\n" +
                 "  \"operationArgs\" : {\n" +
-                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"1\", \"2\" ] ]\n" + //TODO Ljava ?
+                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"1\", \"2\" ] ]\n" + //TODO [L
                 "  }\n" +
                 "}";
     }

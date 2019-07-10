@@ -28,7 +28,7 @@ public class ToSetTest extends OperationTest {
                 "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
                 "  \"id\" : \"ToSet\",\n" +
                 "  \"operationArgs\" : {\n" +
-                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"1\", \"2\" ] ]\n" + //TODO Ljava ?
+                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"1\", \"2\" ] ]\n" + //TODO [L
                 "  }\n" +
                 "}";
     }

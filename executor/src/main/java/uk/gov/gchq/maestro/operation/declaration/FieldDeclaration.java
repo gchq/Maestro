@@ -23,23 +23,18 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
-/**
- * A single {@code OperationDeclaration} describes an operationId handlerClass.
- */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 @JsonPropertyOrder(value = {"class", "handlerClass"}, alphabetic = true)
 public class FieldDeclaration {
     private final Class<? extends OperationHandler> handlerClass; //TODO? required repetitive, less modular?
-    private Map<String, Class> fieldDeclarations = new HashMap<>();
-    private Set<String> optionalFields = new HashSet<>();
+    private TreeMap<String, Class> fieldDeclarations = new TreeMap<>(String::compareToIgnoreCase);
+    private TreeSet<String> optionalFields = new TreeSet<>(String::compareToIgnoreCase);
 
     @JsonCreator
-    public FieldDeclaration(@JsonProperty("handlerClass") final Class<? extends OperationHandler> handlerClass, @JsonProperty("fieldDeclarations") final Map<String, Class> fieldDeclarations) {
+    public FieldDeclaration(@JsonProperty("handlerClass") final Class<? extends OperationHandler> handlerClass, @JsonProperty("fieldDeclarations") final TreeMap<String, Class> fieldDeclarations) {
         this.handlerClass = handlerClass;
         this.fieldDeclarations = fieldDeclarations;
     }
@@ -52,7 +47,7 @@ public class FieldDeclaration {
         return handlerClass;
     }
 
-    public Map<String, Class> getFieldDeclarations() {
+    public TreeMap<String, Class> getFieldDeclarations() {
         return fieldDeclarations;
     }
 

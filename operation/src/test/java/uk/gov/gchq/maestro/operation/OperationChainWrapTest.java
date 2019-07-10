@@ -27,7 +27,7 @@ public class OperationChainWrapTest extends OperationTest {
                 "    \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
                 "    \"id\" : \"innerOperation\",\n" +
                 "    \"operationArgs\" : {\n" +
-                "      \"input\" : [ \"[Ljava.lang.Object;\", [ \"value1\", \"value2\" ] ]\n" + //TODO Ljava
+                "      \"input\" : [ \"[Ljava.lang.Object;\", [ \"value1\", \"value2\" ] ]\n" + //TODO [L
                 "    }\n" +
                 "  } ],\n" +
                 "  \"operationArgs\" : { }\n" +

@@ -27,7 +27,7 @@ public class GetExportsTest extends OperationTest {
                 "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
                 "  \"id\" : \"GetExports\",\n" +
                 "  \"operationArgs\" : {\n" +
-                "    \"exports\" : [ \"[Luk.gov.gchq.maestro.operation.Operation;\", [ {\n" + //TODO Luk
+                "    \"exports\" : [ \"[Luk.gov.gchq.maestro.operation.Operation;\", [ {\n" + //TODO [L
                 "      \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
                 "      \"id\" : \"GetSetExport\",\n" +
                 "      \"operationArgs\" : {\n" +

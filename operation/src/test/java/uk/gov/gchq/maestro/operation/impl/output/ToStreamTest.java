@@ -28,7 +28,7 @@ public class ToStreamTest extends OperationTest {
                 "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
                 "  \"id\" : \"ToStream\",\n" +
                 "  \"operationArgs\" : {\n" +
-                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"1\", \"2\" ] ]\n" + //TODO Ljava ?
+                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"1\", \"2\" ] ]\n" + //TODO [L
                 "  }\n" +
                 "}";
     }
