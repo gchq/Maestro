@@ -40,6 +40,6 @@ public class ToSingletonListHandler<T> implements OutputOperationHandler<List<? 
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass()).field("Input", Object.class);
+        return new FieldDeclaration().field("Input", Object.class);
     }
 }

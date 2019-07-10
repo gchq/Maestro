@@ -51,7 +51,7 @@ public class ToListHandler<T> implements OperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass()).field("input", Iterable.class);
+        return new FieldDeclaration().field("input", Iterable.class);
     }
 
 }

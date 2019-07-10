@@ -34,6 +34,6 @@ public class DiscardOutputHandler implements OperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass());
+        return new FieldDeclaration();
     }
 }

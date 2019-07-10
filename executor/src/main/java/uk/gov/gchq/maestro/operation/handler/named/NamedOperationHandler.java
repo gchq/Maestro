@@ -39,6 +39,6 @@ public class NamedOperationHandler implements OutputOperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass()).field("OperationName", String.class);
+        return new FieldDeclaration().field("OperationName", String.class);
     }
 }

@@ -54,6 +54,6 @@ public class ToSetHandler<T> implements OutputOperationHandler<Set<? extends T>>
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass()).field("instanceOf", Object.class);
+        return new FieldDeclaration().field("instanceOf", Object.class);
     }
 }

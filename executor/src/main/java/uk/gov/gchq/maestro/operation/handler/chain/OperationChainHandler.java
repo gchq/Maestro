@@ -97,6 +97,6 @@ public class OperationChainHandler implements OperationHandler, OperationValidat
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass());
+        return new FieldDeclaration();
     }
 }

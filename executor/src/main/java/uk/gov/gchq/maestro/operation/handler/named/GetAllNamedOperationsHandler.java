@@ -91,6 +91,6 @@ public class GetAllNamedOperationsHandler implements OutputOperationHandler<Clos
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass());
+        return new FieldDeclaration();
     }
 }

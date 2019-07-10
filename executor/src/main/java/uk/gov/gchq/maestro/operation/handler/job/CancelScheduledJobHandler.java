@@ -47,6 +47,6 @@ public class CancelScheduledJobHandler implements OperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass()).field("JobId", String.class);
+        return new FieldDeclaration().field("JobId", String.class);
     }
 }

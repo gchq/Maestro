@@ -70,16 +70,15 @@ public class AddNamedOperationHandlerBasicTest extends MaestroHandlerBasicTest<A
                 "  \"class\" : \"uk.gov.gchq.maestro.operation.handler.named.AddNamedOperationHandler\",\n" +
                 "  \"fieldDeclaration\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.operation.declaration.FieldDeclaration\",\n" +
-                "    \"handlerClass\" : \"uk.gov.gchq.maestro.operation.handler.named.AddNamedOperationHandler\",\n" +
                 "    \"fieldDeclarations\" : {\n" +
+                "      \"description\" : \"java.lang.String\",\n" +
+                "      \"operationChain\" : \"uk.gov.gchq.maestro.operation.OperationChain\",\n" +
+                "      \"operationName\" : \"java.lang.String\",\n" +
                 "      \"overwriteFlag\" : \"java.lang.Boolean\",\n" +
-                "      \"WriteAccessRoles\" : \"java.util.List\",\n" +
-                "      \"Score\" : \"java.lang.Integer\",\n" +
-                "      \"Description\" : \"java.lang.String\",\n" +
-                "      \"Parameters\" : \"java.util.Map\",\n" +
-                "      \"OperationName\" : \"java.lang.String\",\n" +
-                "      \"OperationChain\" : \"uk.gov.gchq.maestro.operation.OperationChain\",\n" +
-                "      \"ReadAccessRoles\" : \"java.util.List\"\n" +
+                "      \"parameters\" : \"java.util.Map\",\n" +
+                "      \"readAccessRoles\" : \"java.util.List\",\n" +
+                "      \"score\" : \"java.lang.Integer\",\n" +
+                "      \"writeAccessRoles\" : \"java.util.List\"\n" +
                 "    }\n" +
                 "  }\n" +
                 "}";

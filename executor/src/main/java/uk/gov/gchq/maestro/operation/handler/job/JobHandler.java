@@ -40,7 +40,7 @@ public class JobHandler implements OutputOperationHandler<JobDetail> {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass())
+        return new FieldDeclaration()
                 .field("OpAsOperation", Operation.class)
                 .field("Repeat", Repeat.class);
     }

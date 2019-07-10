@@ -58,8 +58,8 @@ public interface OperationHandler {
                 .filter(e -> {
                     final String key = e.getKey();
                     final Object opValue = operation.get(key); //case insensitive
-                    final boolean containsKey = operation.containsKey(key);//case insensitive
-                    final boolean containsOptional = fieldDeclaration.optionalContains(key);//case insensitive
+                    final boolean containsKey = operation.containsKey(key); //case insensitive
+                    final boolean containsOptional = fieldDeclaration.optionalContains(key); //case insensitive
                     return ((!containsKey && !containsOptional) || (Objects.nonNull(opValue) && !e.getValue().isInstance(operation.get(key))));
                 })
                 .map(e -> String.format(FIELD_S_OF_TYPE_S, e.getKey(), e.getValue().getCanonicalName())).collect(Collectors.toList());
@@ -72,7 +72,7 @@ public interface OperationHandler {
                 .filter(e -> {
                     final String key = e.getKey();
                     final Object opValue = operation.get(key); //case insensitive
-                    final boolean containsKey = operation.containsKey(key);//case insensitive
+                    final boolean containsKey = operation.containsKey(key); //case insensitive
                     final boolean containsOptional = fieldDeclaration.optionalContains(key); //case insensitive
                     return ((!containsKey && !containsOptional) || Objects.isNull(opValue) || !e.getValue().isInstance(operation.get(key)));
                 })

@@ -48,7 +48,7 @@ public class GetJobResultsHandler implements OutputOperationHandler<CloseableIte
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass())
+        return new FieldDeclaration()
                 .field("JobId", String.class)
                 .field("KeyOrDefault", String.class);
     }

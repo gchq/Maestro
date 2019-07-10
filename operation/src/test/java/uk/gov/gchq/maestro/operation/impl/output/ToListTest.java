@@ -16,8 +16,6 @@
 
 package uk.gov.gchq.maestro.operation.impl.output;
 
-import com.google.common.collect.Sets;
-
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 

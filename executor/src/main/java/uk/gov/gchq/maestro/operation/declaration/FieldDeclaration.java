@@ -19,9 +19,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
-import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -29,22 +30,15 @@ import java.util.TreeSet;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 @JsonPropertyOrder(value = {"class", "handlerClass"}, alphabetic = true)
 public class FieldDeclaration {
-    private final Class<? extends OperationHandler> handlerClass; //TODO? required repetitive, less modular?
     private TreeMap<String, Class> fieldDeclarations = new TreeMap<>(String::compareToIgnoreCase);
     private TreeSet<String> optionalFields = new TreeSet<>(String::compareToIgnoreCase);
 
     @JsonCreator
-    public FieldDeclaration(@JsonProperty("handlerClass") final Class<? extends OperationHandler> handlerClass, @JsonProperty("fieldDeclarations") final TreeMap<String, Class> fieldDeclarations) {
-        this.handlerClass = handlerClass;
+    public FieldDeclaration(@JsonProperty("fieldDeclarations") final TreeMap<String, Class> fieldDeclarations) {
         this.fieldDeclarations = fieldDeclarations;
     }
 
-    public FieldDeclaration(final Class<? extends OperationHandler> handlerClass) {
-        this.handlerClass = handlerClass;
-    }
-
-    public Class<? extends OperationHandler> getHandlerClass() {
-        return handlerClass;
+    public FieldDeclaration() {
     }
 
     public TreeMap<String, Class> getFieldDeclarations() {
@@ -54,7 +48,6 @@ public class FieldDeclaration {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("handlerClass", handlerClass)
                 .append("fieldDeclarations", fieldDeclarations)
                 .build();
     }
@@ -78,5 +71,31 @@ public class FieldDeclaration {
 
     public boolean optionalContains(final String field) {
         return optionalFields.contains(field);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final FieldDeclaration that = (FieldDeclaration) o;
+
+        return new EqualsBuilder()
+                .append(fieldDeclarations, that.fieldDeclarations)
+                .append(optionalFields, that.optionalFields)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(fieldDeclarations)
+                .append(optionalFields)
+                .toHashCode();
     }
 }

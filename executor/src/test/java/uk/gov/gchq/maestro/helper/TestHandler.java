@@ -40,7 +40,7 @@ public class TestHandler implements OperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass())
+        return new FieldDeclaration()
                 .field(FIELD, String.class);
     }
 

@@ -46,7 +46,6 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "        \"class\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
                 "        \"fieldDeclaration\" : {\n" +
                 "          \"class\" : \"uk.gov.gchq.maestro.operation.declaration.FieldDeclaration\",\n" +
-                "          \"handlerClass\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
                 "          \"fieldDeclarations\" : {\n" +
                 "            \"field\" : \"java.lang.String\"\n" +
                 "          }\n" +
@@ -137,7 +136,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
 
         @Override
         public FieldDeclaration getFieldDeclaration() {
-            return new FieldDeclaration(this.getClass());
+            return new FieldDeclaration();
         }
     }
 }

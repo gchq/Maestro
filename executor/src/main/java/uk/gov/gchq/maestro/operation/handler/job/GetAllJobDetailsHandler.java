@@ -43,6 +43,6 @@ public class GetAllJobDetailsHandler implements OutputOperationHandler<Closeable
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass());
+        return new FieldDeclaration();
     }
 }

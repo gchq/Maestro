@@ -63,7 +63,6 @@ public class TestHandlerTest extends MaestroHandlerBasicTest<TestHandler> {
                 "  \"class\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
                 "  \"fieldDeclaration\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.operation.declaration.FieldDeclaration\",\n" +
-                "    \"handlerClass\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
                 "    \"fieldDeclarations\" : {\n" +
                 "      \"field\" : \"java.lang.String\"\n" +
                 "    }\n" +

@@ -49,7 +49,7 @@ public class ToCsvHandler<T> implements OutputOperationHandler<Iterable<? extend
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass()).field("ElementGenerator", StringGenerator.class);
+        return new FieldDeclaration().field("ElementGenerator", StringGenerator.class);
     }
 
 }

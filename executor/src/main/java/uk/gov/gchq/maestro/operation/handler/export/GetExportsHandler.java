@@ -46,7 +46,7 @@ public class GetExportsHandler implements OutputOperationHandler<Map<String, Clo
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass())
+        return new FieldDeclaration()
                 .field("GetExports", List.class)
                 .field("KeyOrDefault", String.class);
     }

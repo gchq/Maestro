@@ -43,7 +43,7 @@ public abstract class GetExportHandler extends ExportOperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass())
+        return new FieldDeclaration()
                 .field("KeyOrDefault", String.class);
     }
 }

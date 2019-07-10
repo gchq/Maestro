@@ -46,6 +46,6 @@ public class ToStreamHandler<T> implements OutputOperationHandler<Stream<? exten
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass()).field("Input", Iterable.class);
+        return new FieldDeclaration().field("Input", Iterable.class);
     }
 }

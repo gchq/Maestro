@@ -41,13 +41,13 @@ import java.util.Map;
  */
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public class AddNamedOperationHandler implements OperationHandler {
-    public static final String DESCRIPTION = "Description";
-    public static final String OPERATION_CHAIN = "OperationChain";
-    public static final String OPERATION_NAME = "OperationName";
-    public static final String PARAMETERS = "Parameters";
-    public static final String READ_ACCESS_ROLES = "ReadAccessRoles";
-    public static final String SCORE = "Score";
-    public static final String WRITE_ACCESS_ROLES = "WriteAccessRoles";
+    public static final String DESCRIPTION = "description";
+    public static final String OPERATION_CHAIN = "operationChain";
+    public static final String OPERATION_NAME = "operationName";
+    public static final String PARAMETERS = "parameters";
+    public static final String READ_ACCESS_ROLES = "readAccessRoles";
+    public static final String SCORE = "score";
+    public static final String WRITE_ACCESS_ROLES = "writeAccessRoles";
     public static final String OVERWRITE_FLAG = "overwriteFlag";
     private final NamedOperationCache cache;
 
@@ -126,7 +126,7 @@ public class AddNamedOperationHandler implements OperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration(this.getClass())
+        return new FieldDeclaration()
                 .fieldRequired(OPERATION_NAME, String.class)
                 .fieldRequired(DESCRIPTION, String.class)
                 .fieldRequired(OPERATION_CHAIN, OperationChain.class)
