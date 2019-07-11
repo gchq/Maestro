@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.*;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public interface OperationHandler {
@@ -53,28 +55,42 @@ public interface OperationHandler {
 
     default List<String> getOperationErrorsForIncorrectValueType(final Operation operation) {
         final FieldDeclaration fieldDeclaration = getFieldDeclaration();
-        //TODO code smell
         return fieldDeclaration.getFieldDeclarations().entrySet().stream()
                 .filter(e -> {
                     final String key = e.getKey();
-                    final Object opValue = operation.get(key); //case insensitive
-                    final boolean containsKey = operation.containsKey(key); //case insensitive
-                    final boolean containsOptional = fieldDeclaration.optionalContains(key); //case insensitive
-                    return ((!containsKey && !containsOptional) || (Objects.nonNull(opValue) && !e.getValue().isInstance(operation.get(key))));
+                    final boolean noKeyFoundInOperation = !operation.containsKey(key);
+                    final boolean keyIsNotOptional = !fieldDeclaration.optionalContains(key); //case insensitive
+                    final boolean noCompulsoryKeyFound = noKeyFoundInOperation && keyIsNotOptional;
+                    final boolean iskeyInvalid;
+                    if (noCompulsoryKeyFound) {
+                        iskeyInvalid = true;
+                    } else {
+                        final Object value = operation.get(key);
+                        //hasValueNotExpectedType
+                        iskeyInvalid = nonNull(value) && !e.getValue().isInstance(value);
+                    }
+                    return iskeyInvalid;
                 })
                 .map(e -> String.format(FIELD_S_OF_TYPE_S, e.getKey(), e.getValue().getCanonicalName())).collect(Collectors.toList());
     }
 
     default List<String> getOperationErrorsForNullAndIncorrectValueType(final Operation operation) {
         final FieldDeclaration fieldDeclaration = this.getFieldDeclaration();
-        //TODO code smell
         return fieldDeclaration.getFieldDeclarations().entrySet().stream()
                 .filter(e -> {
                     final String key = e.getKey();
-                    final Object opValue = operation.get(key); //case insensitive
-                    final boolean containsKey = operation.containsKey(key); //case insensitive
-                    final boolean containsOptional = fieldDeclaration.optionalContains(key); //case insensitive
-                    return ((!containsKey && !containsOptional) || Objects.isNull(opValue) || !e.getValue().isInstance(operation.get(key)));
+                    final boolean noKeyFoundInOperation = !operation.containsKey(key);
+                    final boolean keyIsNotOptional = !fieldDeclaration.optionalContains(key);//case insensitive
+                    final boolean noCompulsoryKeyFound = noKeyFoundInOperation && keyIsNotOptional;
+                    final boolean isKeyInvalid;
+                    if (noCompulsoryKeyFound) {
+                        isKeyInvalid = true;
+                    } else {
+                        final Object value = operation.get(key);
+                        //noValueOrNotExpectedType
+                        isKeyInvalid = isNull(value) || !e.getValue().isInstance(value);
+                    }
+                    return isKeyInvalid;
                 })
                 .map(e -> String.format(FIELD_S_OF_TYPE_S, e.getKey(), e.getValue().getCanonicalName())).collect(Collectors.toList());
     }
