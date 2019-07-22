@@ -25,6 +25,10 @@ public class MaestroRuntimeException extends RuntimeException {
 
     private Status status = INTERNAL_SERVER_ERROR;
 
+    public MaestroRuntimeException(final Throwable cause) {
+        super(cause);
+    }
+
     public MaestroRuntimeException(final String message) {
         super(message);
     }
