@@ -30,30 +30,30 @@ import java.util.TreeSet;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 @JsonPropertyOrder(value = {"class", "handlerClass"}, alphabetic = true)
 public class FieldDeclaration {
-    private TreeMap<String, Class> fieldDeclarations = new TreeMap<>(String::compareToIgnoreCase);
+    private TreeMap<String, Class> fields = new TreeMap<>(String::compareToIgnoreCase);
     private TreeSet<String> optionalFields = new TreeSet<>(String::compareToIgnoreCase);
 
     @JsonCreator
-    public FieldDeclaration(@JsonProperty("fieldDeclarations") final TreeMap<String, Class> fieldDeclarations) {
-        this.fieldDeclarations = fieldDeclarations;
+    public FieldDeclaration(@JsonProperty("fields") final TreeMap<String, Class> fields) {
+        this.fields = fields;
     }
 
     public FieldDeclaration() {
     }
 
-    public TreeMap<String, Class> getFieldDeclarations() {
-        return fieldDeclarations;
+    public TreeMap<String, Class> getFields() {
+        return fields;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("fieldDeclarations", fieldDeclarations)
+                .append("fields", fields)
                 .build();
     }
 
     public FieldDeclaration field(final String field, final Class valueClass) {
-        fieldDeclarations.put(field, valueClass);
+        fields.put(field, valueClass);
         return this;
     }
 
@@ -86,7 +86,7 @@ public class FieldDeclaration {
         final FieldDeclaration that = (FieldDeclaration) o;
 
         return new EqualsBuilder()
-                .append(fieldDeclarations, that.fieldDeclarations)
+                .append(fields, that.fields)
                 .append(optionalFields, that.optionalFields)
                 .isEquals();
     }
@@ -94,7 +94,7 @@ public class FieldDeclaration {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(fieldDeclarations)
+                .append(fields)
                 .append(optionalFields)
                 .toHashCode();
     }

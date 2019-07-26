@@ -27,9 +27,7 @@ import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
 
 import java.util.List;
 import java.util.TreeMap;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -60,7 +58,7 @@ public interface OperationHandler {
 
     default List<String> getOperationErrorsForIncorrectValueType(final Operation operation) {
         final FieldDeclaration fieldDeclaration = getFieldDeclaration();
-        final TreeMap<String, Class> fieldDeclarations = fieldDeclaration.getFieldDeclarations();
+        final TreeMap<String, Class> fieldDeclarations = fieldDeclaration.getFields();
         final List<String> rtn = fieldDeclarations.entrySet().stream()
                 .filter(e -> {
                     final String key = e.getKey();
@@ -91,7 +89,7 @@ public interface OperationHandler {
 
     default List<String> getOperationErrorsForNullAndIncorrectValueType(final Operation operation) {
         final FieldDeclaration fieldDeclaration = this.getFieldDeclaration();
-        return fieldDeclaration.getFieldDeclarations().entrySet().stream()
+        return fieldDeclaration.getFields().entrySet().stream()
                 .filter(e -> {
                     final String key = e.getKey();
                     final boolean noKeyFoundInOperation = !operation.containsKey(key);

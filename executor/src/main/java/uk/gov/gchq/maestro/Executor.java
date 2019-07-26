@@ -40,6 +40,7 @@ import uk.gov.gchq.maestro.jobtracker.JobDetail;
 import uk.gov.gchq.maestro.jobtracker.JobStatus;
 import uk.gov.gchq.maestro.jobtracker.JobTracker;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.handler.job.util.JobExecutor;
 import uk.gov.gchq.maestro.operation.validator.OperationValidation;
@@ -51,6 +52,7 @@ import uk.gov.gchq.maestro.util.Result;
 
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static java.lang.String.format;
@@ -172,8 +174,8 @@ public class Executor {
         return isSupported(operation.getId());
     }
 
-    public boolean isSupported(final String opId) {
-        return getConfig().contains(opId);
+    public boolean isSupported(final String operationType) {
+        return getOperationHandlerMap().containsKey(operationType);
     }
 
     public void runAsync(final Runnable runnable) {
@@ -186,9 +188,20 @@ public class Executor {
                 ExecutorService.getService() : null;
     }
 
-    @JsonIgnore
     private OperationHandler getHandler(final Operation operation) {
         return config.getOperationHandler(operation);
+    }
+
+
+    public FieldDeclaration getFieldDeclaration(final Operation operation) {
+        final FieldDeclaration rtn;
+        final OperationHandler handler = getHandler(operation);
+        if (nonNull(handler)) {
+            rtn = handler.getFieldDeclaration();
+        } else {
+            rtn = new FieldDeclaration();
+        }
+        return rtn;
     }
 
     public Executor addHandler(final String operationID, final OperationHandler handler) {
@@ -199,6 +212,11 @@ public class Executor {
     @JsonIgnore
     public Map<String, OperationHandler> getOperationHandlerMap() {
         return ImmutableMap.copyOf(config.getOperationHandlers());
+    }
+
+    @JsonIgnore
+    public Set<String> getSupportedOperations() {
+        return getOperationHandlerMap().keySet();
     }
 
     public Executor operationHandlerMap(final Map<String, OperationHandler> operationHandlerMap) {
