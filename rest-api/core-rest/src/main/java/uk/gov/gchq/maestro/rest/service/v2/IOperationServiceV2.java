@@ -101,23 +101,6 @@ public interface IOperationServiceV2 {
             @ApiResponse(code = 501, message = OPERATION_NOT_IMPLEMENTED)})
     Response execute(@ApiParam(value = "The operation to be performed on the executor") final Operation operation);
 
-    @POST
-    @Path("/execute/chunked")
-    @Produces({APPLICATION_JSON, TEXT_PLAIN})
-    @ApiOperation(value = "Performs the given operation on the executor, returning a chunked output",
-            notes = "<b>WARNING</b> - This does not work in Swagger.",
-            response = Object.class,
-            produces = (APPLICATION_JSON + "," + TEXT_PLAIN))
-    @ApiResponses(value = {@ApiResponse(code = 202, message = OK, response = Object.class),
-            @ApiResponse(code = 400, message = BAD_REQUEST),
-            @ApiResponse(code = 403, message = FORBIDDEN),
-            @ApiResponse(code = 500, message = INTERNAL_SERVER_ERROR),
-            @ApiResponse(code = 501, message = OPERATION_NOT_IMPLEMENTED)})
-    Response executeChunked(@ApiParam(value = "The operation to be performed, returning a chunked output") final Operation operation);
-
-    @SuppressFBWarnings
-    Response executeChunkedChain(@ApiParam(value = "The operation chain to be performed, returning a chunked output") final OperationChain opChain);
-
     @GET
     @Path("/{operationType}")
     @ApiOperation(value = "Gets details about the specified operation",
@@ -149,21 +132,6 @@ public interface IOperationServiceV2 {
             @ApiResponse(code = 500, message = INTERNAL_SERVER_ERROR)})
     Response operationExample(@ApiParam(value = "The operation type name, for which a formatted JSON example should be returned") @PathParam("operationType") final String operationType) throws InstantiationException, IllegalAccessException;
 
-    @GET
-    @Path("/{operationType}/next")
-    @ApiOperation(value = "Gets all the compatible operations which could follow the provided operation",
-            notes = "Returns a complete list of all possible compatible operations, " +
-                    "that could follow the queried Operation in an OperationChain.",
-            produces = APPLICATION_JSON,
-            response = String.class,
-            responseContainer = "list",
-            responseHeaders = {
-                    @ResponseHeader(name = MAESTRO_MEDIA_TYPE_HEADER, description = MAESTRO_MEDIA_TYPE_HEADER_DESCRIPTION)
-            })
-    @ApiResponses(value = {@ApiResponse(code = 200, message = OK),
-            @ApiResponse(code = 404, message = OPERATION_NOT_FOUND),
-            @ApiResponse(code = 500, message = INTERNAL_SERVER_ERROR)})
-    Response nextOperations(@ApiParam(value = "The fully qualified class name, for which all possible compatible follow-up operations should be returned") @PathParam("operationType") final String operationType);
 
 }
 
