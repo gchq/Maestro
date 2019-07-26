@@ -28,8 +28,7 @@ import java.util.Map;
 
 /**
  * Default implementation of the {@link uk.gov.gchq.maestro.rest.service.v2.example.ExamplesFactory}
- * interface. Required to be registered with HK2 to allow the correct {@link
- * uk.gov.gchq.maestro.rest.factory.GraphFactory} object to be injected.
+ * interface. Required to be registered with HK2 to allow the correct {@link ExecutorFactory} object to be injected.
  */
 public class DefaultExamplesFactory implements ExamplesFactory {
     public static final String EXAMPLE_OP_CHAIN = "exampleOpChain";

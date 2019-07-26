@@ -112,7 +112,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     /*  @Test
       public void shouldRestartAndInitialiseJobsUsingCacheService() throws OperationException {
           Properties properties = new Properties();
-          ExecutorPropertiesUtil.setCacheClass(properties, "uk.gov.gchq.gaffer.cache.impl.JcsCacheService");
+          ExecutorPropertiesUtil.setCacheClass(properties, "uk.gov.gchq.maestro.cache.impl.JcsCacheService");
           properties.setProperty("gaffer.cache.config.file", "resources/cache.ccf");
           ExecutorPropertiesUtil.setJobTrackerEnabled(properties, true);
           Config config = new Config.Builder().executorProperties(properties).build();
@@ -138,5 +138,12 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
         public FieldDeclaration getFieldDeclaration() {
             return new FieldDeclaration();
         }
+    }
+
+    @Test
+    public void shouldIsSupportedCapitalInsenstive() {
+        assertTrue(getFullyPopulatedTestObject().isSupported("testOperation"));
+        assertTrue(getFullyPopulatedTestObject().isSupported("TESTOPERATION"));
+        assertTrue(getFullyPopulatedTestObject().isSupported("testoperation"));
     }
 }

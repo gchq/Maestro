@@ -32,6 +32,10 @@
             <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>operation</artifactId>
         </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>executor</artifactId>
+        </dependency>
 
         <!-- External dependencies -->
         <dependency>

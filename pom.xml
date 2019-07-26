@@ -30,7 +30,7 @@
         <module>data</module>
         <module>operation</module>
         <module>executor</module>
-        <module>proxy-executor</module>
+        <module>rest-api</module>
     </modules>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -129,6 +129,12 @@
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
                 <artifactId>common-util</artifactId>
+                <version>${project.parent.version}</version>
+                <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>serialisation</artifactId>
                 <version>${project.parent.version}</version>
                 <type>test-jar</type>
             </dependency>
@@ -282,7 +288,11 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${servlet-api.version}</version>
-                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-jersey2-jaxrs</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.containers</groupId>
@@ -343,6 +353,21 @@
                 <groupId>com.fasterxml.jackson.jaxrs</groupId>
                 <artifactId>jackson-jaxrs-base</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.test-framework</groupId>
+                <artifactId>jersey-test-framework-core</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+                <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-grizzly2-http</artifactId>
+                <version>${jersey.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

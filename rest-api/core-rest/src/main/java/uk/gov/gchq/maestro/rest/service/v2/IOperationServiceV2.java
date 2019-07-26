@@ -16,7 +16,6 @@
 
 package uk.gov.gchq.maestro.rest.service.v2;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,7 +24,6 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
 
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.OperationChain;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;

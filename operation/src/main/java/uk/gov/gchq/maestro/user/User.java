@@ -106,6 +106,7 @@ public class User {
     }
 
     public static class Builder {
+        //TODO remove builder
         private String userId;
         private final Set<String> dataAuths = new HashSet<>();
         private final Set<String> opAuths = new HashSet<>();
