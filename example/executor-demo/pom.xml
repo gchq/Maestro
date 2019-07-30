@@ -23,7 +23,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>federated-demo</artifactId>
+    <artifactId>executor-demo</artifactId>
     <packaging>war</packaging>
 
     <properties>
@@ -122,7 +122,7 @@
                                     ${project.build.outputDirectory}/executorConfig.json <!--TODO examine-->
                                 </maestro.executor.config>
                                 <maestro.storeProperties>
-                                    ${project.build.outputDirectory}/federatedStore.properties <!--TODO examine-->
+                                    ${project.build.outputDirectory}/exampleExecutor.properties <!--TODO examine-->
                                 </maestro.storeProperties>
                                 <maestro.error-mode.debug>
                                     false
