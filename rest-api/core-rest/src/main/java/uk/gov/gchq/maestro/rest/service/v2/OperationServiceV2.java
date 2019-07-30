@@ -121,7 +121,7 @@ public class OperationServiceV2 implements IOperationServiceV2 {
                     .header(MAESTRO_MEDIA_TYPE_HEADER, MAESTRO_MEDIA_TYPE)
                     .build();
         } else {
-            LOGGER.info("Operation: {} was explicitly supported by the executor.", operationType);
+            LOGGER.info("Operation: {} was not explicitly supported by the executor.", operationType);
             return Response.status(NOT_FOUND)
                     .entity(new Error.ErrorBuilder()
                             .status(Status.NOT_FOUND)
