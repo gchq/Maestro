@@ -175,7 +175,7 @@ public class Executor {
     }
 
     public boolean isSupported(final String operationType) {
-        return getOperationHandlerMap().containsKey(operationType);
+        return config.getOperationHandlers().containsKey(operationType);
     }
 
     public void runAsync(final Runnable runnable) {

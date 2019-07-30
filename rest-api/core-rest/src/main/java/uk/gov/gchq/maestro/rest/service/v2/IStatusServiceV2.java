@@ -29,9 +29,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static uk.gov.gchq.maestro.rest.ServiceConstants.INTERNAL_SERVER_ERROR;
 import static uk.gov.gchq.maestro.rest.ServiceConstants.MAESTRO_MEDIA_TYPE_HEADER;
 import static uk.gov.gchq.maestro.rest.ServiceConstants.MAESTRO_MEDIA_TYPE_HEADER_DESCRIPTION;
-import static uk.gov.gchq.maestro.rest.ServiceConstants.INTERNAL_SERVER_ERROR;
 import static uk.gov.gchq.maestro.rest.ServiceConstants.OK;
 
 /**

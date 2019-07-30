@@ -117,11 +117,11 @@ public class DefaultExecutorFactory implements ExecutorFactory {
                 final byte[] bytes;
                 try {
                     bytes = (null != path) ? Files.readAllBytes(path) : null;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     throw new IllegalArgumentException("Unable to read config from path: " + path, e);
                 }
                 deserialisedConfig = JSONSerialiser.deserialise(bytes, Config.class);
-            } catch (SerialisationException e) {
+            } catch (final SerialisationException e) {
                 throw new IllegalArgumentException("Unable to deserialise config", e);
             }
             executor.config(deserialisedConfig);

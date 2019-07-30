@@ -21,9 +21,9 @@ import io.swagger.jaxrs.listing.SwaggerSerializers;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import uk.gov.gchq.maestro.rest.FactoriesBinder;
+import uk.gov.gchq.maestro.rest.mapper.GenericExceptionMapper;
 import uk.gov.gchq.maestro.rest.mapper.MaestroCheckedExceptionMapper;
 import uk.gov.gchq.maestro.rest.mapper.MaestroRuntimeExceptionMapper;
-import uk.gov.gchq.maestro.rest.mapper.GenericExceptionMapper;
 import uk.gov.gchq.maestro.rest.mapper.ProcessingExceptionMapper;
 import uk.gov.gchq.maestro.rest.mapper.UnauthorisedExceptionMapper;
 import uk.gov.gchq.maestro.rest.mapper.WebApplicationExceptionMapper;

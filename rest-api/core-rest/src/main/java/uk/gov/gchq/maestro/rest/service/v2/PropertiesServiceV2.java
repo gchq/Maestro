@@ -44,14 +44,14 @@ import static uk.gov.gchq.maestro.rest.SystemProperty.APP_TITLE;
 import static uk.gov.gchq.maestro.rest.SystemProperty.APP_TITLE_DEFAULT;
 import static uk.gov.gchq.maestro.rest.SystemProperty.FAVICON_LARGE_URL;
 import static uk.gov.gchq.maestro.rest.SystemProperty.FAVICON_SMALL_URL;
-import static uk.gov.gchq.maestro.rest.SystemProperty.MAESTRO_VERSION;
-import static uk.gov.gchq.maestro.rest.SystemProperty.MAESTRO_VERSION_DEFAULT;
 import static uk.gov.gchq.maestro.rest.SystemProperty.KORYPHE_VERSION;
 import static uk.gov.gchq.maestro.rest.SystemProperty.KORYPHE_VERSION_DEFAULT;
 import static uk.gov.gchq.maestro.rest.SystemProperty.LOGO_IMAGE_URL;
 import static uk.gov.gchq.maestro.rest.SystemProperty.LOGO_IMAGE_URL_DEFAULT;
 import static uk.gov.gchq.maestro.rest.SystemProperty.LOGO_LINK;
 import static uk.gov.gchq.maestro.rest.SystemProperty.LOGO_LINK_DEFAULT;
+import static uk.gov.gchq.maestro.rest.SystemProperty.MAESTRO_VERSION;
+import static uk.gov.gchq.maestro.rest.SystemProperty.MAESTRO_VERSION_DEFAULT;
 
 /**
  * An implementation of {@link IPropertiesServiceV2} that gets the configured system properties

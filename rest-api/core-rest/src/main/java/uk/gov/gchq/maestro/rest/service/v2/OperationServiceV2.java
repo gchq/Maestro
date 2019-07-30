@@ -27,11 +27,11 @@ import uk.gov.gchq.maestro.Context;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.CloseableUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
+import uk.gov.gchq.maestro.commonutil.exception.Error;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
-import uk.gov.gchq.maestro.commonutil.pair.Pair;
-import uk.gov.gchq.maestro.commonutil.exception.Error;
 import uk.gov.gchq.maestro.commonutil.exception.Status;
+import uk.gov.gchq.maestro.commonutil.pair.Pair;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JsonSerialisationUtil;
 import uk.gov.gchq.maestro.operation.Operation;
@@ -56,9 +56,9 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static uk.gov.gchq.maestro.rest.ServiceConstants.JOB_ID_HEADER;
 import static uk.gov.gchq.maestro.rest.ServiceConstants.MAESTRO_MEDIA_TYPE;
 import static uk.gov.gchq.maestro.rest.ServiceConstants.MAESTRO_MEDIA_TYPE_HEADER;
-import static uk.gov.gchq.maestro.rest.ServiceConstants.JOB_ID_HEADER;
 
 /**
  * An implementation of {@link IOperationServiceV2}. By default it will use a singleton
@@ -226,7 +226,7 @@ public class OperationServiceV2 implements IOperationServiceV2 {
 
         final TreeMap<String, Class> fieldDeclarations = fieldDeclaration.getFields();
         if (Objects.nonNull(fieldDeclarations)) {
-            for (Map.Entry<String, Class> entry : fieldDeclarations.entrySet()) {
+            for (final Map.Entry<String, Class> entry : fieldDeclarations.entrySet()) {
                 final boolean required = !fieldDeclaration.optionalContains(entry.getKey());
                 final String summary = "summary TBA"; //TODO OperationField summary
                 final String name = entry.getKey();
@@ -242,7 +242,7 @@ public class OperationServiceV2 implements IOperationServiceV2 {
         String outputClass = null;
         if (operation.containsKey(OUTPUT_TYPE_REFERENCE)) {
             final Object outputTypeReference = operation.get(OUTPUT_TYPE_REFERENCE);
-            //TODO? just store the object requred in the Operation map?
+            //TODO? just store the object required in the Operation map?
             outputClass = JsonSerialisationUtil.getTypeString((Type) outputTypeReference);
         }
         return outputClass;

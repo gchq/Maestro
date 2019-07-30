@@ -46,7 +46,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
                 "      \"class\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
                 "      \"fieldDeclaration\" : {\n" +
                 "        \"class\" : \"uk.gov.gchq.maestro.operation.declaration.FieldDeclaration\",\n" +
-                "        \"fieldDeclarations\" : {\n" +
+                "        \"fields\" : {\n" +
                 "          \"field\" : \"java.lang.String\"\n" +
                 "        }\n" +
                 "      },\n" +

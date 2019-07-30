@@ -16,8 +16,8 @@
 
 package uk.gov.gchq.maestro.rest.mapper;
 
-import uk.gov.gchq.maestro.commonutil.exception.ErrorFactory;
 import uk.gov.gchq.maestro.commonutil.exception.Error;
+import uk.gov.gchq.maestro.commonutil.exception.ErrorFactory;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
 
 import javax.ws.rs.core.Response;
