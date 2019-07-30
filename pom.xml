@@ -52,7 +52,7 @@
         <!-- Dependency version properties -->
         <failsafe.version>2.18.1</failsafe.version>
 
-        <koryphe.version>1.6.0</koryphe.version>
+        <koryphe.version>1.7.0</koryphe.version>
         <javassist.version>3.19.0-GA</javassist.version>
         <scala.minor.version>2.11.12</scala.minor.version>
         <jackson.compile.version>2.6.5</jackson.compile.version>
