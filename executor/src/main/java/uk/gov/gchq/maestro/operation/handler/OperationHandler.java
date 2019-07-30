@@ -26,10 +26,10 @@ import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.*;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
@@ -80,7 +80,7 @@ public interface OperationHandler {
                 .filter(e -> {
                     final String key = e.getKey();
                     final boolean noKeyFoundInOperation = !operation.containsKey(key);
-                    final boolean keyIsNotOptional = !fieldDeclaration.optionalContains(key);//case insensitive
+                    final boolean keyIsNotOptional = !fieldDeclaration.optionalContains(key); //case insensitive
                     final boolean noCompulsoryKeyFound = noKeyFoundInOperation && keyIsNotOptional;
                     final boolean isKeyInvalid;
                     if (noCompulsoryKeyFound) {

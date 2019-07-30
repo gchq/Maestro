@@ -30,7 +30,8 @@
         <module>data</module>
         <module>operation</module>
         <module>executor</module>
-        <module>proxy-executor</module>
+        <module>rest-api</module>
+        <module>proxy-handlers</module>
     </modules>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -343,6 +344,11 @@
                 <groupId>com.fasterxml.jackson.jaxrs</groupId>
                 <artifactId>jackson-jaxrs-base</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-jersey2-jaxrs</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

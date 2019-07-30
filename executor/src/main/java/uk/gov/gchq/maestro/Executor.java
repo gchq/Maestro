@@ -61,9 +61,9 @@ import static java.util.Objects.nonNull;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 public class Executor {
     public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
-    public static final String DEFAULT_OPERATION = "DefaultOperation";
-    public static final String WRAPPED_OP = "WrappedOp";
-    public static final String INITIALISER = "Initialiser";
+    public static final String DEFAULT_OPERATION = "defaultOperation";
+    public static final String WRAPPED_OP = "wrappedOp";
+    public static final String INITIALISER = "initialiser";
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     private Config config;
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);

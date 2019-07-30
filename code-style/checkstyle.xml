@@ -148,9 +148,6 @@
         <module name="RedundantModifier">
             <property name="id" value="redundantModifier"/>
         </module>
-        <module name="AvoidNestedBlocks">
-            <property name="id" value="avoidNestedBlocks"/>
-        </module>
         <module name="LeftCurly">
             <property name="id" value="leftCurly"/>
         </module>
