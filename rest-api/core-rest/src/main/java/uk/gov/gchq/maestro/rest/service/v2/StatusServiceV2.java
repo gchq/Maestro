@@ -58,7 +58,7 @@ public class StatusServiceV2 implements IStatusServiceV2 {
                                .build();
             }
         } catch (final Exception e) {
-            throw new MaestroRuntimeException("Unable to create graph.", e, Status.INTERNAL_SERVER_ERROR);
+            throw new MaestroRuntimeException("Unable to create executor.", e, Status.INTERNAL_SERVER_ERROR);
         }
 
         return Response.status(503)

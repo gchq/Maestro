@@ -15,7 +15,7 @@
  */
 
 /**
- * Exception mappers for the Gaffer REST API. These are responsible for catching
+ * Exception mappers for the Maestro REST API. These are responsible for catching
  * thrown exceptions and turning them into intelligible error messages which can
  * be presented to users.
  */

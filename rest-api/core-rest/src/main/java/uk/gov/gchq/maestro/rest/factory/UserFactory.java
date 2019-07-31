@@ -21,7 +21,7 @@ import uk.gov.gchq.maestro.user.User;
 
 /**
  * A {@code UserFactory} creates instances of {@link User}s for use when executing
- * queries on a graph.
+ * queries on a executor.
  */
 public interface UserFactory {
 

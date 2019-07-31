@@ -15,6 +15,6 @@
  */
 
 /**
- * The examples service implementation for v2 of the Gaffer REST API.
+ * The examples service implementation for v2 of the Maestro REST API.
  */
 package uk.gov.gchq.maestro.rest.service.v2.example;

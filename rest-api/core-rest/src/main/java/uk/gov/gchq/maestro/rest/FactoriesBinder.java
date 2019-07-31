@@ -31,11 +31,11 @@ import javax.inject.Singleton;
 public class FactoriesBinder extends AbstractBinder {
     @Override
     protected void configure() {
-        bind(getDefaultGraphFactory()).to(ExecutorFactory.class).in(Singleton.class);
+        bind(getDefaultExecutorFactory()).to(ExecutorFactory.class).in(Singleton.class);
         bind(getDefaultUserFactory()).to(UserFactory.class).in(Singleton.class);
     }
 
-    private Class<? extends ExecutorFactory> getDefaultGraphFactory() {
+    private Class<? extends ExecutorFactory> getDefaultExecutorFactory() {
         return getFactory(SystemProperty.EXECUTOR_FACTORY_CLASS, SystemProperty.EXECUTOR_FACTORY_CLASS_DEFAULT, ExecutorFactory.class);
     }
 

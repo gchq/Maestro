@@ -15,7 +15,7 @@
  */
 
 /**
- * Application classes which provide the main point of access for the Gaffer REST
+ * Application classes which provide the main point of access for the Maestro REST
  * API.
  */
 package uk.gov.gchq.maestro.rest.application;

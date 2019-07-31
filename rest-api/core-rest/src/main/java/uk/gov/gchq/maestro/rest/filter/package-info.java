@@ -15,6 +15,6 @@
  */
 
 /**
- * Servlet filters for the Gaffer REST API.
+ * Servlet filters for the Maestro REST API.
  */
 package uk.gov.gchq.maestro.rest.filter;

@@ -40,11 +40,11 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 public interface IExamplesServiceV2 {
 
     @GET
-    @Path("/graph/operations/execute")
+    @Path("/executor/operations/execute")
     Operation execute() throws InstantiationException, IllegalAccessException;
 
     @GET
-    @Path("/graph/operations/execute/chunked")
+    @Path("/executor/operations/execute/chunked")
     Operation executeChunked() throws InstantiationException, IllegalAccessException;
 
 }

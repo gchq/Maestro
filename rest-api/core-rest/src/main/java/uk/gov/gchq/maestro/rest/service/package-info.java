@@ -15,6 +15,6 @@
  */
 
 /**
- * Service implementations for Gaffer, containing the implemented RESTful endpoints.
+ * Service implementations for Maestro, containing the implemented RESTful endpoints.
  */
 package uk.gov.gchq.maestro.rest.service;

@@ -47,7 +47,7 @@ public interface ExecutorFactory {
     /**
      * Get the {@link Executor} instance.
      *
-     * @return the graph
+     * @return the executor
      */
     Executor getExecutor();
 }
