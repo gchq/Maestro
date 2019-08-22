@@ -69,7 +69,7 @@ public class AddNamedOperationHandlerBasicTest extends MaestroHandlerBasicTest<A
                 "  \"class\" : \"uk.gov.gchq.maestro.operation.handler.named.AddNamedOperationHandler\",\n" +
                 "  \"fieldDeclaration\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.operation.declaration.FieldDeclaration\",\n" +
-                "    \"fieldDeclarations\" : {\n" +
+                "    \"fields\" : {\n" +
                 "      \"description\" : \"java.lang.String\",\n" +
                 "      \"operationChain\" : \"uk.gov.gchq.maestro.operation.OperationChain\",\n" +
                 "      \"operationName\" : \"java.lang.String\",\n" +

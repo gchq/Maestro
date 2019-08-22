@@ -54,14 +54,9 @@
         </dependency>
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
-            <artifactId>rest-api</artifactId>
+            <artifactId>core-rest</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.gchq.maestro</groupId>
-            <artifactId>rest-api</artifactId>
-            <type>test-jar</type>
         </dependency>
     </dependencies>
 

@@ -23,15 +23,15 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.CommonTestConstants;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.rest.factory.RestApiTestClient;
-import uk.gov.gchq.maestro.rest.factory.RestApiV1TestClient;
+import uk.gov.gchq.maestro.rest.RestApiTestClient;
+import uk.gov.gchq.maestro.rest.service.v2.RestApiV2TestClient;
 import uk.gov.gchq.maestro.util.Config;
 
 import java.io.IOException;
 
 public class SingleProxyInitialiseHandler extends ProxyInitialiseHandler {
     public static final TemporaryFolder TEST_FOLDER = new TemporaryFolder(CommonTestConstants.TMP_DIRECTORY);
-    private static final RestApiTestClient CLIENT = new RestApiV1TestClient();
+    private static final RestApiTestClient CLIENT = new RestApiV2TestClient();
 
     @Override
     public Object _doOperation(final Operation ignore, final Context context, final Executor executor) throws OperationException {

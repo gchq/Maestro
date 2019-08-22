@@ -26,6 +26,7 @@ import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
 
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -38,6 +39,8 @@ public interface OperationHandler {
 
     String OPERATION_DID_NOT_CONTAIN_REQUIRED_FIELDS = "Operation did not contain required fields. [";
     String FIELD_S_OF_TYPE_S = "Field:%s of Type:%s, ";
+    String SUMMARY = "Summary";
+    String FIELD_WITH_FIRST_UPPERCASE = "Field name defined in Handler started with uppercase case, bad aesthetics when FieldDeclaration is JSONSerialised. field: %s";
 
     default Object doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
 
@@ -55,7 +58,8 @@ public interface OperationHandler {
 
     default List<String> getOperationErrorsForIncorrectValueType(final Operation operation) {
         final FieldDeclaration fieldDeclaration = getFieldDeclaration();
-        return fieldDeclaration.getFieldDeclarations().entrySet().stream()
+        final TreeMap<String, Class> fieldDeclarations = fieldDeclaration.getFields();
+        final List<String> rtn = fieldDeclarations.entrySet().stream()
                 .filter(e -> {
                     final String key = e.getKey();
                     final boolean noKeyFoundInOperation = !operation.containsKey(key);
@@ -71,12 +75,21 @@ public interface OperationHandler {
                     }
                     return iskeyInvalid;
                 })
-                .map(e -> String.format(FIELD_S_OF_TYPE_S, e.getKey(), e.getValue().getCanonicalName())).collect(Collectors.toList());
+                .map(e -> String.format(FIELD_S_OF_TYPE_S, e.getKey(), e.getValue().getCanonicalName()))
+                .collect(Collectors.toList());
+
+        final List<String> fieldsWithCapitals = fieldDeclarations.keySet().stream().filter(s -> Character.isUpperCase(s.charAt(0)))
+                .map(s -> String.format(FIELD_WITH_FIRST_UPPERCASE, s))
+                .collect(Collectors.toList());
+
+        rtn.addAll(fieldsWithCapitals);
+
+        return rtn;
     }
 
     default List<String> getOperationErrorsForNullAndIncorrectValueType(final Operation operation) {
         final FieldDeclaration fieldDeclaration = this.getFieldDeclaration();
-        return fieldDeclaration.getFieldDeclarations().entrySet().stream()
+        return fieldDeclaration.getFields().entrySet().stream()
                 .filter(e -> {
                     final String key = e.getKey();
                     final boolean noKeyFoundInOperation = !operation.containsKey(key);
