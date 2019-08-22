@@ -16,6 +16,7 @@
 package uk.gov.gchq.maestro.operation.handler;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -111,4 +112,10 @@ public interface OperationHandler {
     Object _doOperation(Operation operation, Context context, Executor executor) throws OperationException;
 
     FieldDeclaration getFieldDeclaration();
+
+    @JsonProperty("fieldDeclaration")
+    default FieldDeclaration jsonNonEmptyFieldDeclaration() {
+        final FieldDeclaration fieldDeclaration = getFieldDeclaration();
+        return fieldDeclaration.getFields().isEmpty() ? null : fieldDeclaration;
+    }
 }
