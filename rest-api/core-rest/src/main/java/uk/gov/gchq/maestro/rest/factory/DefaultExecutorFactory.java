@@ -60,21 +60,6 @@ public class DefaultExecutorFactory implements ExecutorFactory {
         }
     }
 
-    protected static Path[] getSchemaPaths() {
-        final String schemaPaths = System.getProperty(SystemProperty.SCHEMA_PATHS);
-        if (null == schemaPaths) {
-            return new Path[0];
-        }
-
-        final String[] schemaPathsArray = schemaPaths.split(",");
-        final Path[] paths = new Path[schemaPathsArray.length];
-        for (int i = 0; i < paths.length; i++) {
-            paths[i] = Paths.get(schemaPathsArray[i]);
-        }
-
-        return paths;
-    }
-
     @Override
     public Executor getExecutor() {
         if (singletonExecutor) {

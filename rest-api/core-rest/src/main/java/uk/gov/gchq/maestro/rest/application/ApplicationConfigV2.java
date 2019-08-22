@@ -37,7 +37,7 @@ import static uk.gov.gchq.maestro.rest.application.ApplicationConfigV2.VERSION;
 @Path(VERSION)
 public class ApplicationConfigV2 extends ApplicationConfig {
 
-    static final String VERSION = "v2";
+    public static final String VERSION = "v2";
     public static final String UK_GOV_GCHQ_MAESTRO_REST_SERVICE_V_2 = "uk.gov.gchq.maestro.rest.service.v2";
 
     public ApplicationConfigV2() {

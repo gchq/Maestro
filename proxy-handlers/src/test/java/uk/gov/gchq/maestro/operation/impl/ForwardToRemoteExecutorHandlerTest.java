@@ -22,6 +22,7 @@ import org.junit.Assert;
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 
 
 public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<ForwardToRemoteExecutorHandler> {
@@ -33,7 +34,8 @@ public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<
 
     @Override
     protected Operation getBasicOp() throws Exception {
-        return new Operation("DefaultOperation").operationArg(Executor.WRAPPED_OP, new Operation("test"));
+        return new Operation("DefaultOperation").operationArg(Executor.WRAPPED_OP, new Operation("test")
+                .operationArg(ForwardToRemoteExecutorHandler.OUTPUT_TYPE_REFERENCE, new TypeReferenceImpl.Integer()));
     }
 
     @Override
@@ -61,7 +63,9 @@ public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<
 
     @Override
     protected String getJSONString() {
-        return "";
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.impl.ForwardToRemoteExecutorHandler\"\n" +
+                "}";
     }
 
 }

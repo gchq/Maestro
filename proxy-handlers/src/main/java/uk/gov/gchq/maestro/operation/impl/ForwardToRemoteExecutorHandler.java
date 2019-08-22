@@ -16,7 +16,10 @@
 
 package uk.gov.gchq.maestro.operation.impl;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,9 +43,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Properties;
 
+@JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public class ForwardToRemoteExecutorHandler implements OperationHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ForwardToRemoteExecutorHandler.class);
-    public static final String OUTPUT_TYPE_REFERENCE = "OutputTypeReference";
+    public static final String OUTPUT_TYPE_REFERENCE = "outputTypeReference";
     private Client client;
 
 
@@ -64,7 +68,7 @@ public class ForwardToRemoteExecutorHandler implements OperationHandler {
         }
 
 
-        final URL url = (URL) ExecutorPropertiesUtil.getMaestroUrl(properties, "operations/execute");
+        final URL url = (URL) ExecutorPropertiesUtil.getMaestroUrl(properties, "executor/operations/execute");
         try {
             return doPost(url, opChainJson, (TypeReference) operation.get(OUTPUT_TYPE_REFERENCE), context);
         } catch (final OperationException e) {
@@ -91,7 +95,27 @@ public class ForwardToRemoteExecutorHandler implements OperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration()
-                .fieldRequired(OUTPUT_TYPE_REFERENCE, TypeReference.class);
+        return new FieldDeclaration();
+                // .fieldRequired(OUTPUT_TYPE_REFERENCE, TypeReference.class);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final ForwardToRemoteExecutorHandler that = (ForwardToRemoteExecutorHandler) o;
+
+        return new EqualsBuilder()
+                //Don't compare client
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                //Don't compare client
+                .toHashCode();
     }
 }

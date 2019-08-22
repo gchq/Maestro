@@ -63,7 +63,7 @@ public final class ExecutorPropertiesUtil {
      */
     public static final String REFLECTION_PACKAGES = "maestro.executor.reflection.packages";
     public static final String STRICT_JSON = JSONSerialiser.STRICT_JSON;
-    private static final String MAESTRO_REST_API_VERSION = "v1";
+    private static final String MAESTRO_REST_API_VERSION = "v2";
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorPropertiesUtil.class);
 
 

@@ -54,11 +54,11 @@ public class HashMapHandlerTest extends MaestroHandlerBasicTest<HashMapHandler> 
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"HashMapHandler\",\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.impl.HashMapHandler\",\n" +
                 "  \"delegateMap\" : { },\n" +
                 "  \"fieldDeclaration\" : {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.operation.declaration.FieldDeclaration\",\n" +
-                "    \"fieldDeclarations\" : {\n" +
+                "    \"fields\" : {\n" +
                 "      \"mapCommand\" : \"java.lang.String\",\n" +
                 "      \"mapGetKey\" : \"java.lang.Object\",\n" +
                 "      \"mapKey\" : \"java.lang.Object\",\n" +

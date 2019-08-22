@@ -32,7 +32,6 @@ import java.util.Properties;
 public abstract class SystemProperty {
     // KEYS
     public static final String EXECUTOR_CONFIG_PATH = "maestro.executor.config";
-    public static final String SCHEMA_PATHS = "maestro.schemas";
     public static final String MAESTRO_PROPERTIES_PATH = "maestro.properties";
     public static final String MAESTRO_VERSION = "maestro.version";
     public static final String KORYPHE_VERSION = "koryphe.version";

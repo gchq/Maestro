@@ -26,6 +26,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.hook.Hook;
 import uk.gov.gchq.maestro.hook.HookPath;
@@ -100,6 +101,10 @@ public class Config {
 
     public Config(final String id) {
         this.id = id;
+    }
+
+    public static Config getConfigFromPath(final Class clazz, final String configResourcePath) throws uk.gov.gchq.maestro.commonutil.exception.SerialisationException {
+        return JSONSerialiser.deserialise(StreamUtil.openStream(clazz, configResourcePath), Config.class);
     }
 
     public String getId() {
@@ -332,6 +337,10 @@ public class Config {
                 .append(operationHandlers)
                 .append(library)
                 .toHashCode();
+    }
+
+    public byte[] serialise() throws SerialisationException {
+        return JSONSerialiser.serialise(this, true);
     }
 
     public static class Builder {

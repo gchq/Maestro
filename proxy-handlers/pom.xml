@@ -32,6 +32,10 @@
             <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>executor</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-grizzly2-http</artifactId>
+        </dependency>
 
         <!--Test Dependency-->
         <dependency>
