@@ -23,6 +23,9 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
+import uk.gov.gchq.maestro.util.Config;
+
+import static org.junit.Assert.*;
 
 
 public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<ForwardToRemoteExecutorHandler> {
@@ -40,9 +43,10 @@ public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<
 
     @Override
     protected Executor getTestExecutor() throws Exception {
-        final Executor testExecutor = super.getTestExecutor();
-        testExecutor.getConfig().addOperationHandler(Executor.DEFAULT_OPERATION, new ForwardToRemoteExecutorHandler());
-        testExecutor.getConfig().addOperationHandler(Executor.INITIALISER, new ProxyInitialiseHandler()/*TODO*/);
+        final Config config = super.getTestExecutor().getConfig();
+        config.addOperationHandler(Executor.DEFAULT_OPERATION, new ForwardToRemoteExecutorHandler());
+        config.addOperationHandler(Executor.INITIALISER, new ProxyInitialiseHandler()/*TODO*/);
+        final Executor testExecutor = new Executor(config);
         return testExecutor;
     }
 
@@ -53,7 +57,7 @@ public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<
 
     @Override
     protected void inspectFields() throws Exception {
-        Assert.fail("Inspect remote executor action");
+        fail("Inspect remote executor action");
     }
 
     @Override

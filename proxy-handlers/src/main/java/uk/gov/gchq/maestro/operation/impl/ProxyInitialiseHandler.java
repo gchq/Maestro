@@ -16,7 +16,11 @@
 
 package uk.gov.gchq.maestro.operation.impl;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +41,7 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Properties;
 
+@JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public class ProxyInitialiseHandler implements OperationHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProxyInitialiseHandler.class);
 
@@ -75,6 +80,26 @@ public class ProxyInitialiseHandler implements OperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return null;
+        return new FieldDeclaration();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final ProxyInitialiseHandler that = (ProxyInitialiseHandler) o;
+
+        return new EqualsBuilder()
+                //Don't compare client
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                //Don't compare client
+                .toHashCode();
     }
 }

@@ -32,6 +32,7 @@ import java.util.Properties;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static uk.gov.gchq.maestro.Executor.INITIALISER;
 
 public class ExecutorTest extends MaestroObjectTest<Executor> {
 
@@ -83,7 +84,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     public void shouldUseInitialiserHandlerUsingConfigBuilderMethod() {
         // Given
         final Config config = new Config();
-        config.addOperationHandler("Initialiser", new InitialiserHandlerImpl());
+        config.addOperationHandler(INITIALISER, new InitialiserHandlerImpl());
 
         // When / Then
         try {
@@ -98,11 +99,27 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     public void shouldUseInitialiserHandlerUsingConstructor() {
         // Given
         final Config config = new Config();
-        config.addOperationHandler("Initialiser", new InitialiserHandlerImpl());
+        config.addOperationHandler(INITIALISER, new InitialiserHandlerImpl());
 
         // When / Then
         try {
             new Executor(config);
+            fail("Exception expected");
+        } catch (final Exception e) {
+            assertTrue(e.getCause().getMessage().equals("Thrown within InitialiserHandlerImpl"));
+        }
+    }
+
+    @Test
+    public void shouldInitaliseWhenConfigIsUpdated() {
+        // Given
+        final Config config = new Config();
+        final Executor executor = new Executor();
+
+        // When / Then
+        try {
+            final Config config1 = executor.getConfig();
+            config1.addOperationHandler(INITIALISER, new InitialiserHandlerImpl());
             fail("Exception expected");
         } catch (final Exception e) {
             assertTrue(e.getCause().getMessage().equals("Thrown within InitialiserHandlerImpl"));
