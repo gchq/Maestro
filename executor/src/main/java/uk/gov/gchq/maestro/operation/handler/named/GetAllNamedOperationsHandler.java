@@ -65,7 +65,7 @@ public class GetAllNamedOperationsHandler implements OutputOperationHandler<Clos
     public CloseableIterable<NamedOperationDetail> _doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
         final CloseableIterable<NamedOperationDetail> ops =
                 cache.getAllNamedOperations(context.getUser(),
-                        ExecutorPropertiesUtil.getAdminAuth(executor.getConfig().getProperties()));
+                        ExecutorPropertiesUtil.getAdminAuth(executor));
         return new WrappedCloseableIterable<>(IterableUtil.map(ops, new AddInputType()));
     }
 

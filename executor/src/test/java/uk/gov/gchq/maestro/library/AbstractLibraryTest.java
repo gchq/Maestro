@@ -40,9 +40,9 @@ public abstract class AbstractLibraryTest {
     private Properties executorProperties = new Properties();
     private Properties executorProperties1 = new Properties();
     private Config config =
-            new Config.Builder().executorProperties(executorProperties).build();
+            new Config().setProperties(executorProperties);
     private Config config1 =
-            new Config.Builder().executorProperties(executorProperties1).build();
+            new Config().setProperties(executorProperties1);
 
     public abstract Library createLibraryInstance();
 

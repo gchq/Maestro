@@ -36,14 +36,12 @@ import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.operation.handler.named.cache.NamedOperationCache;
 import uk.gov.gchq.maestro.user.User;
-import uk.gov.gchq.maestro.util.Config;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
@@ -72,7 +70,9 @@ public class AddNamedOperationHandlerTest {
     @Before
     public void before() throws CacheOperationException {
         storedOperations.clear();
-        addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, (OPERATION_NAME));
+
+        doAnswer(invocationOnMock -> invocationOnMock.getArguments()[1])
+                .when(executor).getPropertyOrDefault(any(String.class), any(String.class));
 
         doAnswer(invocationOnMock -> {
             Object[] args = invocationOnMock.getArguments();
@@ -93,7 +93,7 @@ public class AddNamedOperationHandlerTest {
             return result;
         }).when(mockCache).getNamedOperation(anyString(), any(User.class), eq(EMPTY_ADMIN_AUTH));
 
-        given(executor.getConfig()).willReturn(new Config());
+        // given(executor.getConfig()).willReturn(new Config());
     }
 
     @Rule
@@ -143,6 +143,7 @@ public class AddNamedOperationHandlerTest {
                 ".ToSingletonList\", " +
                 "\"input\" : \"${param1}\"}] }";
 
+        addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, (OPERATION_NAME));
         addNamedOperation.operationArg(OPERATION_CHAIN, new OperationChain("opchain", new Operation("ToSingletonList")));
         addNamedOperation.operationArg(OPERATION_NAME, "namedop");
         addNamedOperation.operationArg(DESCRIPTION, "test");
@@ -201,6 +202,7 @@ public class AddNamedOperationHandlerTest {
         addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, "testOp");
         addNamedOperation.operationArg(DESCRIPTION, "test");
 
+        //TODO mock Executor needs to know return a handlerMap
         handler.doOperation(addNamedOperation, context, executor);
 
         final NamedOperationDetail result = mockCache.getNamedOperation("testOp", new User(), EMPTY_ADMIN_AUTH);

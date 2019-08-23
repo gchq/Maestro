@@ -43,7 +43,7 @@ public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<
 
     @Override
     protected Executor getTestExecutor() throws Exception {
-        final Config config = super.getTestExecutor().getConfig();
+        final Config config = super.getTestExecutor().getConfigCopy();
         config.addOperationHandler(Executor.DEFAULT_OPERATION, new ForwardToRemoteExecutorHandler());
         config.addOperationHandler(Executor.INITIALISER, new ProxyInitialiseHandler()/*TODO*/);
         final Executor testExecutor = new Executor(config);

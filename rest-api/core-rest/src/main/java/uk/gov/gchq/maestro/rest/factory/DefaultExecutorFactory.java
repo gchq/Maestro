@@ -86,14 +86,7 @@ public class DefaultExecutorFactory implements ExecutorFactory {
 
     @Override
     public Executor createExecutor() {
-        final Executor executor = new Executor();
-
-        resolveConfig(executor);
-
-        return executor;
-    }
-
-    public void resolveConfig(final Executor executor) {
+        final Executor rtn;
         final String executorConfigPath = System.getProperty(SystemProperty.EXECUTOR_CONFIG_PATH);
         if (null != executorConfigPath) {
             final Config deserialisedConfig;
@@ -109,8 +102,11 @@ public class DefaultExecutorFactory implements ExecutorFactory {
             } catch (final SerialisationException e) {
                 throw new IllegalArgumentException("Unable to deserialise config", e);
             }
-            executor.config(deserialisedConfig);
+            rtn = new Executor(deserialisedConfig);
+        } else {
+            rtn = new Executor();
         }
+        return rtn;
     }
 
     public Properties getProperties() {

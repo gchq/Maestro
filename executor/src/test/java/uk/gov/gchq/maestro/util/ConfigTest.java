@@ -76,15 +76,14 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     public void shouldJsonSerialiseAndDeserialise() throws SerialisationException {
         final Properties properties = new Properties();
         properties.put("configKey", "configValue");
-        final Config config = new Config.Builder()
+        final Config config = new Config()
                 .id("testId")
-                .operationHandler(new OperationDeclaration()
+                .addOperationHandler(new OperationDeclaration()
                         .handler(new TestHandler().handlerField("handlerFieldValue1"))
                         .operationId("testOperation"))
-                .executorProperties(properties)
+                .setProperties(properties)
                 .addRequestHook(new TestHook("testFieldVal"))
-                .library(new NoLibrary())
-                .build();
+                .library(new NoLibrary());
 
         byte[] serialisedConfig = JSONSerialiser.serialise(config);
         Config deserialisedConfig = JSONSerialiser.deserialise(serialisedConfig, Config.class);
@@ -114,13 +113,12 @@ public class ConfigTest extends MaestroObjectTest<Config> {
                         .handler(new TestHandler());
 
         // When
-        final Config config = new Config.Builder()
-                .operationHandler(testOpDeclaration)
-                .executorProperties(StreamUtil.executorProps(getClass()))
-                .executorProperties(testProperties)
+        final Config config = new Config()
+                .addOperationHandler(testOpDeclaration)
+                .addProperties(ExecutorPropertiesUtil.loadProperties(StreamUtil.executorProps(getClass())))
+                .addProperties(ExecutorPropertiesUtil.loadProperties(testProperties))
                 .addOperationHook(testOpHook)
-                .addRequestHook(testReqHook)
-                .build();
+                .addRequestHook(testReqHook);
 
         // Then
         assertEquals(ImmutableMap.of(testOpDeclaration.getOperationId(), testOpDeclaration.getHandler()), config.getOperationHandlers());

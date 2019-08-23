@@ -16,10 +16,11 @@
 
 package uk.gov.gchq.maestro;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -66,15 +67,15 @@ public class Executor {
     public static final String DEFAULT_OPERATION = "defaultOperation";
     public static final String WRAPPED_OP = "wrappedOp";
     public static final String INITIALISER = "initialiser";
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
-    private Config config;
+    public Config config;
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
 
     public Executor() {
         this(new Config());
     }
 
-    public Executor(final Config config) {
+    @JsonCreator
+    public Executor(@JsonProperty("config") final Config config) {
         config(config);
     }
 
@@ -86,7 +87,7 @@ public class Executor {
 
     private void addExecutorService(final Properties properties) {
         if (null != properties) {
-            ExecutorService.initialise(ExecutorPropertiesUtil.getJobExecutorThreadCount(properties));
+            ExecutorService.initialise(ExecutorPropertiesUtil.getJobExecutorThreadCount(this));
         }
     }
 
@@ -204,11 +205,6 @@ public class Executor {
         return rtn;
     }
 
-    public Executor addHandler(final String operationID, final OperationHandler handler) {
-        config.getOperationHandlers().put(operationID, handler);
-        return this;
-    }
-
     @JsonIgnore
     public Map<String, OperationHandler> getOperationHandlerMap() {
         return ImmutableMap.copyOf(config.getOperationHandlers());
@@ -219,16 +215,7 @@ public class Executor {
         return getOperationHandlerMap().keySet();
     }
 
-    public Executor operationHandlerMap(final Map<String, OperationHandler> operationHandlerMap) {
-        this.config.getOperationHandlers().clear();
-        if (nonNull(operationHandlerMap)) {
-            this.config.getOperationHandlers().putAll(operationHandlerMap);
-        }
-        return this;
-    }
-
-    @JsonSetter(value = "config")
-    public Executor config(final Config config) {
+    private Executor config(final Config config) {
         if (nonNull(config)) {
             this.config = config;
             startCacheServiceLoader(config.getProperties());
@@ -255,9 +242,15 @@ public class Executor {
         }
     }
 
-    @JsonGetter("config")
-    public Config getConfig() {
+    private Config getConfig() {
         return config;
+    }
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
+    @JsonGetter("config")
+    public Config getConfigCopy() throws SerialisationException {
+        //TODO implement deep clone.
+        return JSONSerialiser.deserialise(JSONSerialiser.serialise(config), Config.class);
     }
 
     private Object handleOperation(final Operation operation,
@@ -355,5 +348,21 @@ public class Executor {
         return new HashCodeBuilder(17, 37)
                 .append(config)
                 .toHashCode();
+    }
+
+    public String getPropertyOrDefault(final String key, final String defaultValue) {
+        return config.getPropertyOrDefault(key, defaultValue);
+    }
+
+    public String getProperty(final String key) {
+        return config.getProperty(key);
+    }
+
+    public Object setProperty(final String key, final String value) {
+        return config.setProperty(key, value);
+    }
+
+    public String getDescription() {
+        return config.getDescription();
     }
 }

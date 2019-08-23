@@ -88,9 +88,10 @@ public class AddNamedOperationHandler implements OperationHandler {
 
             validate(namedOperationDetail.getOperationChainWithDefaultParams(), namedOperationDetail, executor.getOperationHandlerMap());
 
-            cache.addNamedOperation(namedOperationDetail, (Boolean) operation.getOrDefault(OVERWRITE_FLAG, false), context
-                            .getUser(),
-                    ExecutorPropertiesUtil.getAdminAuth(executor.getConfig().getProperties()));
+            cache.addNamedOperation(namedOperationDetail,
+                    (Boolean) operation.getOrDefault(OVERWRITE_FLAG, false),
+                    context.getUser(),
+                    ExecutorPropertiesUtil.getAdminAuth(executor));
         } catch (final MaestroCheckedException e) {
             throw new OperationException(e.getMessage(), e);
         }
@@ -113,7 +114,7 @@ public class AddNamedOperationHandler implements OperationHandler {
             }
         }
 
-        if (null != namedOperationDetail.getParameters()) {
+        if (null != namedOperationDetail.getParameters()) { //TODO Review test this logic
             String operationString = namedOperationDetail.getOperations();
             for (final Map.Entry<String, ParameterDetail> parameterDetail : namedOperationDetail.getParameters().entrySet()) {
                 String varName = "${" + parameterDetail.getKey() + "}";

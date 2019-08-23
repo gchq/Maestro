@@ -49,7 +49,7 @@ public class ExecutorConfigurationServiceV2 implements IExecutorConfigurationSer
 
     @Override
     public Response getDescription() {
-        return Response.ok(executorFactory.getExecutor().getConfig().getDescription())
+        return Response.ok(executorFactory.getExecutor().getDescription())
                 .header(MAESTRO_MEDIA_TYPE_HEADER, MAESTRO_MEDIA_TYPE)
                 .build();
     }

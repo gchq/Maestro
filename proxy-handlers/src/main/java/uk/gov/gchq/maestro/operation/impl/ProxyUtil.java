@@ -21,6 +21,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.slf4j.Logger;
 
 import uk.gov.gchq.maestro.Context;
+import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.CommonConstants;
 import uk.gov.gchq.maestro.commonutil.StringUtil;
 import uk.gov.gchq.maestro.commonutil.exception.Error;
@@ -45,10 +46,10 @@ public final class ProxyUtil {
     private ProxyUtil() {
     }
 
-    protected static Client createClient(final Properties properties) {
+    protected static Client createClient(final Executor executor) {
         final Client client = ClientBuilder.newClient();
-        client.property(ClientProperties.CONNECT_TIMEOUT, ExecutorPropertiesUtil.getConnectTimeout(properties));
-        client.property(ClientProperties.READ_TIMEOUT, ExecutorPropertiesUtil.getReadTimeout(properties));
+        client.property(ClientProperties.CONNECT_TIMEOUT, ExecutorPropertiesUtil.getConnectTimeout(executor));
+        client.property(ClientProperties.READ_TIMEOUT, ExecutorPropertiesUtil.getReadTimeout(executor));
         return client;
     }
 

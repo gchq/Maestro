@@ -54,13 +54,12 @@ public class ForwardToRemoteExecutorHandler implements OperationHandler {
 
     @Override
     public Object _doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
-        client = ProxyUtil.createClient(executor.getConfig().getProperties());
-        final Properties properties = executor.getConfig().getProperties();
+        client = ProxyUtil.createClient(executor);
 
-        return executeOpChainViaUrl(properties, operation, context);
+        return executeOpChainViaUrl(executor, operation, context);
     }
 
-    public Object executeOpChainViaUrl(final Properties properties, final Operation operation, final Context context) throws OperationException {
+    public Object executeOpChainViaUrl(final Executor executor, final Operation operation, final Context context) throws OperationException {
         final String opChainJson;
         try {
             opChainJson = new String(JSONSerialiser.serialise(operation), CommonConstants.UTF_8);
@@ -69,7 +68,7 @@ public class ForwardToRemoteExecutorHandler implements OperationHandler {
         }
 
 
-        final URL url = (URL) ExecutorPropertiesUtil.getMaestroUrl(properties, "executor/operations/execute");
+        final URL url = (URL) ExecutorPropertiesUtil.getMaestroUrl(executor, "executor/operations/execute");
         try {
             return doPost(url, opChainJson, (TypeReference) operation.get(OUTPUT_TYPE_REFERENCE), context);
         } catch (final OperationException e) {

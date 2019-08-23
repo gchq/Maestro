@@ -58,7 +58,7 @@ public class DeleteNamedOperationHandler implements OperationHandler {
 
             cache.deleteNamedOperation((String) operation.get("OperationName"),
                     context.getUser(),
-                    ExecutorPropertiesUtil.getAdminAuth(executor.getConfig().getProperties()));
+                    ExecutorPropertiesUtil.getAdminAuth(executor));
         } catch (final MaestroCheckedException e) {
             throw new OperationException(e.getMessage(), e);
         }

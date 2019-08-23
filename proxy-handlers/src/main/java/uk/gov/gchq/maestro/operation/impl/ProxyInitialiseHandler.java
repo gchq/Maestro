@@ -49,15 +49,14 @@ public class ProxyInitialiseHandler implements OperationHandler {
 
     @Override
     public Object _doOperation(final Operation ignore, final Context context, final Executor executor) throws OperationException {
-        final Properties properties = executor.getConfig().getProperties();
-        client = ProxyUtil.createClient(properties);
-        checkDelegateStoreStatus(properties);
+        client = ProxyUtil.createClient(executor);
+        checkDelegateStoreStatus(executor);
         return null;
     }
 
 
-    protected void checkDelegateStoreStatus(final Properties properties) throws OperationException {
-        final URL url = ExecutorPropertiesUtil.getMaestroUrl(properties, "graph/status");
+    protected void checkDelegateStoreStatus(final Executor executor) throws OperationException {
+        final URL url = ExecutorPropertiesUtil.getMaestroUrl(executor, "graph/status");
         final LinkedHashMap status = doGet(url, new TypeReferenceImpl.Map(), null);
         LOGGER.info("ProxyUtil REST API status: {}", status.get("description"));
     }

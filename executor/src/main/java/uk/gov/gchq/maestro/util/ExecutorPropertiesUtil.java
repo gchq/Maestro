@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.koryphe.util.ReflectionUtil;
+import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiserModules;
@@ -105,7 +106,7 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static Properties loadProperties(final Properties props) {
-        Properties properties = new Properties();
+        Properties properties = new Properties(); //Todo ?
         properties.putAll(props);
         return properties;
     }
@@ -142,14 +143,14 @@ public final class ExecutorPropertiesUtil {
      * function
      * will return an empty object.
      *
-     * @param properties to be retrieved from
+     * @param executor to be retrieved from
      * @return The Operation Definitions to load dynamically
      */
     @JsonIgnore
-    public static OperationDeclarations getOperationDeclarations(final Properties properties) {
+    public static OperationDeclarations getOperationDeclarations(final Executor executor) {
         OperationDeclarations declarations = null;
 
-        final String declarationsPaths = properties.getProperty(OPERATION_DECLARATIONS);
+        final String declarationsPaths = executor.getProperty(OPERATION_DECLARATIONS);
         if (null != declarationsPaths) {
             declarations = OperationDeclarations.fromPaths(declarationsPaths);
         }
@@ -161,110 +162,131 @@ public final class ExecutorPropertiesUtil {
         return declarations;
     }
 
-    public static Boolean getJobTrackerEnabled(final Properties properties) {
-        return Boolean.valueOf(properties.getProperty(JOB_TRACKER_ENABLED, "false"));
+    public static Boolean getJobTrackerEnabled(final Executor executor) {
+        return Boolean.valueOf(executor.getPropertyOrDefault(JOB_TRACKER_ENABLED, "false"));
     }
 
-    public static void setJobTrackerEnabled(final Properties properties, final Boolean jobTrackerEnabled) {
-        properties.setProperty(JOB_TRACKER_ENABLED, jobTrackerEnabled.toString());
+    public static void setJobTrackerEnabled(final Executor executor, final Boolean jobTrackerEnabled) {
+        executor.setProperty(JOB_TRACKER_ENABLED, jobTrackerEnabled.toString());
     }
 
-    public static String getReflectionPackages(final Properties properties) {
-        return properties.getProperty(REFLECTION_PACKAGES);
+    public static String getReflectionPackages(final Executor executor) {
+        return executor.getProperty(REFLECTION_PACKAGES);
     }
 
-    public static void setReflectionPackages(final Properties properties, final String packages) {
-        properties.setProperty(REFLECTION_PACKAGES, packages);
+    public static String getReflectionPackages(final Config config) {
+        return config.getProperty(REFLECTION_PACKAGES);
+    }
+
+    public static void setReflectionPackages(final Executor executor, final String packages) {
+        executor.setProperty(REFLECTION_PACKAGES, packages);
         ReflectionUtil.addReflectionPackages(packages);
     }
 
-    public static Integer getJobExecutorThreadCount(final Properties properties) {
-        return Integer.parseInt(properties.getProperty(EXECUTOR_SERVICE_THREAD_COUNT, EXECUTOR_SERVICE_THREAD_COUNT_DEFAULT));
+    public static Integer getJobExecutorThreadCount(final Executor executor) {
+        return Integer.parseInt(executor.getPropertyOrDefault(EXECUTOR_SERVICE_THREAD_COUNT, EXECUTOR_SERVICE_THREAD_COUNT_DEFAULT));
     }
 
-    public static void addOperationDeclarationPaths(final Properties properties, final String... newPaths) {
+    public static void addOperationDeclarationPaths(final Executor executor, final String... newPaths) {
         final String newPathsCsv = StringUtils.join(newPaths, ",");
-        String combinedPaths = getOperationDeclarationPaths(properties);
+        String combinedPaths = getOperationDeclarationPaths(executor);
         if (null == combinedPaths) {
             combinedPaths = newPathsCsv;
         } else {
             combinedPaths = combinedPaths + "," + newPathsCsv;
         }
-        setOperationDeclarationPaths(properties, combinedPaths);
+        setOperationDeclarationPaths(executor, combinedPaths);
     }
 
-    public static String getOperationDeclarationPaths(final Properties properties) {
-        return properties.getProperty(OPERATION_DECLARATIONS);
+    public static String getOperationDeclarationPaths(final Executor executor) {
+        return executor.getProperty(OPERATION_DECLARATIONS);
     }
 
-    public static void setOperationDeclarationPaths(final Properties properties, final String paths) {
-        properties.setProperty(OPERATION_DECLARATIONS, paths);
+    public static String getOperationDeclarationPaths(final Config config) {
+        return config.getProperty(OPERATION_DECLARATIONS);
     }
 
-    public static String getJsonSerialiserClass(final Properties properties) {
-        return properties.getProperty(JSON_SERIALISER_CLASS);
+    public static void setOperationDeclarationPaths(final Executor executor, final String paths) {
+        executor.setProperty(OPERATION_DECLARATIONS, paths);
     }
 
-    @JsonIgnore
-    public static void setJsonSerialiserClass(final Properties properties, final Class<? extends JSONSerialiser> jsonSerialiserClass) {
-        setJsonSerialiserClass(properties, jsonSerialiserClass.getName());
+    public static String getJsonSerialiserClass(final Executor executor) {
+        return executor.getProperty(JSON_SERIALISER_CLASS);
     }
 
-    public static void setJsonSerialiserClass(final Properties properties, final String jsonSerialiserClass) {
-        properties.setProperty(JSON_SERIALISER_CLASS, jsonSerialiserClass);
-    }
-
-    public static String getJsonSerialiserModules(final Properties properties) {
-        return properties.getProperty(JSON_SERIALISER_MODULES, "");
+    public static String getJsonSerialiserClass(final Config config) {
+        return config.getProperty(JSON_SERIALISER_CLASS);
     }
 
     @JsonIgnore
-    public static void setJsonSerialiserModules(final Properties properties, final Set<Class<? extends JSONSerialiserModules>> modules) {
+    public static void setJsonSerialiserClass(final Executor executor, final Class<? extends JSONSerialiser> jsonSerialiserClass) {
+        setJsonSerialiserClass(executor, jsonSerialiserClass.getName());
+    }
+
+    public static void setJsonSerialiserClass(final Executor executor, final String jsonSerialiserClass) {
+        executor.setProperty(JSON_SERIALISER_CLASS, jsonSerialiserClass);
+    }
+
+    public static String getJsonSerialiserModules(final Executor executor) {
+        return executor.getPropertyOrDefault(JSON_SERIALISER_MODULES, "");
+    }
+
+    public static String getJsonSerialiserModules(final Config config) {
+        return config.getPropertyOrDefault(JSON_SERIALISER_MODULES, "");
+    }
+
+    @JsonIgnore
+    public static void setJsonSerialiserModules(final Executor executor, final Set<Class<? extends JSONSerialiserModules>> modules) {
         final Set<String> moduleNames = new HashSet<>(modules.size());
         for (final Class module : modules) {
             moduleNames.add(module.getName());
         }
-        setJsonSerialiserModules(properties, StringUtils.join(moduleNames, ","));
+        setJsonSerialiserModules(executor, StringUtils.join(moduleNames, ","));
     }
 
-    public static void setJsonSerialiserModules(final Properties properties, final String modules) {
-        properties.setProperty(JSON_SERIALISER_MODULES, modules);
+    public static void setJsonSerialiserModules(final Executor executor, final String modules) {
+        executor.setProperty(JSON_SERIALISER_MODULES, modules);
     }
 
-    public static Boolean getStrictJson(final Properties properties) {
-        final String strictJson = properties.getProperty(STRICT_JSON);
+    public static Boolean getStrictJson(final Executor executor) {
+        final String strictJson = executor.getProperty(STRICT_JSON);
         return null == strictJson ? null : Boolean.parseBoolean(strictJson);
     }
 
-    public static void setStrictJson(final Properties properties, final Boolean strictJson) {
-        properties.setProperty(STRICT_JSON, null == strictJson ? null : Boolean.toString(strictJson));
+    public static Boolean getStrictJson(final Config con) {
+        final String strictJson = con.getProperty(STRICT_JSON);
+        return null == strictJson ? null : Boolean.parseBoolean(strictJson);
     }
 
-    public static String getAdminAuth(final Properties properties) {
-        return properties.getProperty(ADMIN_AUTH, "");
+    public static void setStrictJson(final Executor executor, final Boolean strictJson) {
+        executor.setProperty(STRICT_JSON, null == strictJson ? null : Boolean.toString(strictJson));
     }
 
-    public static void setAdminAuth(final Properties properties, final String adminAuth) {
-        properties.setProperty(ADMIN_AUTH, adminAuth);
+    public static String getAdminAuth(final Executor executor) {
+        return executor.getPropertyOrDefault(ADMIN_AUTH, "");
     }
 
-    public static void setCacheClass(final Properties properties, final String cacheClass) {
-        properties.setProperty(CACHE_CLASS, cacheClass);
+    public static void setAdminAuth(final Executor executor, final String adminAuth) {
+        executor.getPropertyOrDefault(ADMIN_AUTH, adminAuth);
     }
 
-    public static void getCacheClass(final Properties properties) {
-        properties.getProperty(CACHE_CLASS);
+    public static void setCacheClass(final Executor executor, final String cacheClass) {
+        executor.setProperty(CACHE_CLASS, cacheClass);
     }
 
-    public static URL getMaestroUrl(final Properties properties) {
-        return getMaestroUrl(properties, null);
+    public static void getCacheClass(final Executor executor) {
+        executor.getProperty(CACHE_CLASS);
     }
 
-    public static URL getMaestroUrl(final Properties properties, final String suffix) {
-        return getMaestroUrl(properties, "http", suffix);
+    public static URL getMaestroUrl(final Executor executor) {
+        return getMaestroUrl(executor, null);
     }
 
-    public static URL getMaestroUrl(final Properties properties, final String protocol, final String suffix) {
+    public static URL getMaestroUrl(final Executor executor, final String suffix) {
+        return getMaestroUrl(executor, "http", suffix);
+    }
+
+    public static URL getMaestroUrl(final Executor executor, final String protocol, final String suffix) {
         final String urlSuffix;
         if (StringUtils.isNotEmpty(suffix)) {
             urlSuffix = prepend("/", suffix);
@@ -273,14 +295,14 @@ public final class ExecutorPropertiesUtil {
         }
 
         try {
-            String contextRoot = prepend("/", getGafferContextRoot(properties));
+            String contextRoot = prepend("/", getGafferContextRoot(executor));
             contextRoot = addSuffix("/", contextRoot) + MAESTRO_REST_API_VERSION;
-            return new URL(protocol, getMaestroHost(properties), getMaestroPort(properties),
+            return new URL(protocol, getMaestroHost(executor), getMaestroPort(executor),
                     contextRoot + urlSuffix);
         } catch (final MalformedURLException e) {
-            throw new IllegalArgumentException("Could not create Gaffer URL from host (" + getMaestroHost(properties)
-                    + "), port (" + getMaestroPort(properties)
-                    + ") and context root (" + getGafferContextRoot(properties) + ")", e);
+            throw new IllegalArgumentException("Could not create Gaffer URL from host (" + getMaestroHost(executor)
+                    + "), port (" + getMaestroPort(executor)
+                    + ") and context root (" + getGafferContextRoot(executor) + ")", e);
         }
     }
 
@@ -292,8 +314,8 @@ public final class ExecutorPropertiesUtil {
         return string;
     }
 
-    public static String getGafferContextRoot(final Properties properties) {
-        return (String) properties.getOrDefault(MAESTRO_CONTEXT_ROOT, DEFAULT_MAESTRO_CONTEXT_ROOT);
+    public static String getGafferContextRoot(final Executor executor) {
+        return (String) executor.config.getPropertyOrDefault(MAESTRO_CONTEXT_ROOT, DEFAULT_MAESTRO_CONTEXT_ROOT);
     }
 
     protected static String addSuffix(final String suffix, final String string) {
@@ -304,12 +326,12 @@ public final class ExecutorPropertiesUtil {
         return string;
     }
 
-    public static String getMaestroHost(final Properties properties) {
-        return (String) properties.getOrDefault(MAESTRO_HOST, DEFAULT_MAESTRO_HOST);
+    public static String getMaestroHost(final Executor executor) {
+        return (String) executor.config.getPropertyOrDefault(MAESTRO_HOST, DEFAULT_MAESTRO_HOST);
     }
 
-    public static int getMaestroPort(final Properties properties) {
-        final String portStr = (String) properties.getOrDefault(MAESTRO_PORT, null);
+    public static int getMaestroPort(final Executor executor) {
+        final String portStr = (String) executor.config.getPropertyOrDefault(MAESTRO_PORT, null);
         try {
             return null == portStr ? DEFAULT_MAESTRO_PORT : Integer.parseInt(portStr);
         } catch (final NumberFormatException e) {
@@ -321,16 +343,16 @@ public final class ExecutorPropertiesUtil {
         set(MAESTRO_HOST, gafferHost);
     }
 
-    public static String getGafferHost(final Properties properties) {
-        return (String) properties.getOrDefault(MAESTRO_HOST, DEFAULT_MAESTRO_HOST);
+    public static String getGafferHost(final Executor executor) {
+        return (String) executor.config.getPropertyOrDefault(MAESTRO_HOST, DEFAULT_MAESTRO_HOST);
     }
 
     public static void setGafferPort(final int gafferPort) {
         set(MAESTRO_PORT, String.valueOf(gafferPort));
     }
 
-    public static int getConnectTimeout(final Properties properties) {
-        final String timeout = (String) properties.getOrDefault(CONNECT_TIMEOUT, null);
+    public static int getConnectTimeout(final Executor executor) {
+        final String timeout = (String) executor.config.getPropertyOrDefault(CONNECT_TIMEOUT, null);
         try {
             return null == timeout ? DEFAULT_CONNECT_TIMEOUT : Integer.parseInt(timeout);
         } catch (final NumberFormatException e) {
@@ -338,12 +360,12 @@ public final class ExecutorPropertiesUtil {
         }
     }
 
-    public static void setConnectTimeout(final Properties properties, final int timeout) {
-        properties.setProperty(CONNECT_TIMEOUT, String.valueOf(timeout));
+    public static void setConnectTimeout(final Executor executor, final int timeout) {
+        executor.setProperty(CONNECT_TIMEOUT, String.valueOf(timeout));
     }
 
-    public static int getReadTimeout(final Properties properties) {
-        final String timeout = (String) properties.getOrDefault(READ_TIMEOUT, null);
+    public static int getReadTimeout(final Executor executor) {
+        final String timeout = (String) executor.config.getPropertyOrDefault(READ_TIMEOUT, null);
         try {
             return null == timeout ? DEFAULT_READ_TIMEOUT : Integer.parseInt(timeout);
         } catch (final NumberFormatException e) {
@@ -351,7 +373,7 @@ public final class ExecutorPropertiesUtil {
         }
     }
 
-    public static void setReadTimeout(final Properties properties, final int timeout) {
-        properties.setProperty(READ_TIMEOUT, String.valueOf(timeout));
+    public static void setReadTimeout(final Executor executor, final int timeout) {
+        executor.setProperty(READ_TIMEOUT, String.valueOf(timeout));
     }
 }

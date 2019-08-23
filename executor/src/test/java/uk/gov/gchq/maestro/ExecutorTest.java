@@ -70,7 +70,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
         properties.put("configKey", "configValue");
         config.setProperties(properties);
         config.addOperationHandler("testOperation", new TestHandler().handlerField("handlerFieldValue1"));
-        return new Executor().config(config);
+        return new Executor(config);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
 
         // When / Then
         try {
-            new Executor().config(config);
+            new Executor(config);
             fail("Exception expected");
         } catch (final Exception e) {
             assertTrue(e.getCause().getMessage().equals("Thrown within InitialiserHandlerImpl"));
@@ -110,22 +110,6 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
         }
     }
 
-    @Test
-    public void shouldInitaliseWhenConfigIsUpdated() {
-        // Given
-        final Config config = new Config();
-        final Executor executor = new Executor();
-
-        // When / Then
-        try {
-            final Config config1 = executor.getConfig();
-            config1.addOperationHandler(INITIALISER, new InitialiserHandlerImpl());
-            fail("Exception expected");
-        } catch (final Exception e) {
-            assertTrue(e.getCause().getMessage().equals("Thrown within InitialiserHandlerImpl"));
-        }
-    }
-
     /*  @Test
       public void shouldRestartAndInitialiseJobsUsingCacheService() throws OperationException {
           Properties properties = new Properties();
@@ -139,6 +123,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
           executor.execute(new Job.Builder().operation(new ToList<>()).build(), context);
       }
   */
+
     @Override
     protected Class<Executor> getTestObjectClass() {
         return Executor.class;
@@ -158,7 +143,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     }
 
     @Test
-    public void shouldIsSupportedCapitalInsenstive() {
+    public void shouldIsSupportedCapitalInsensitive() {
         assertTrue(getFullyPopulatedTestObject().isSupported("testOperation"));
         assertTrue(getFullyPopulatedTestObject().isSupported("TESTOPERATION"));
         assertTrue(getFullyPopulatedTestObject().isSupported("testoperation"));
