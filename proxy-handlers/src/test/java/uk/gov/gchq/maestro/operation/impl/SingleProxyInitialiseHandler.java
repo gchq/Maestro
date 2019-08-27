@@ -16,6 +16,7 @@
 
 package uk.gov.gchq.maestro.operation.impl;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.junit.rules.TemporaryFolder;
 
 import uk.gov.gchq.maestro.Context;
@@ -25,10 +26,10 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.rest.RestApiTestClient;
 import uk.gov.gchq.maestro.rest.service.v2.RestApiV2TestClient;
-import uk.gov.gchq.maestro.util.Config;
 
 import java.io.IOException;
 
+@JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public class SingleProxyInitialiseHandler extends ProxyInitialiseHandler {
     public static final TemporaryFolder TEST_FOLDER = new TemporaryFolder(CommonTestConstants.TMP_DIRECTORY);
     private static final RestApiTestClient CLIENT = new RestApiV2TestClient();
@@ -40,7 +41,7 @@ public class SingleProxyInitialiseHandler extends ProxyInitialiseHandler {
         return null;
     }
 
-    public void startMapStoreRestApi() throws OperationException {
+    public void startMapStoreRestApi() throws OperationException { //TODO RENAME
         try {
             TEST_FOLDER.delete();
             TEST_FOLDER.create();
@@ -48,10 +49,8 @@ public class SingleProxyInitialiseHandler extends ProxyInitialiseHandler {
             throw new OperationException("Unable to create temporary folder", e);
         }
 
-        final Config config = new Config("configID"); //TODO load from config file.
-
         try {
-            CLIENT.reinitialiseExecutor(TEST_FOLDER, config);
+            CLIENT.reinitialiseExecutor(TEST_FOLDER, "/remoteClientConfig.json");
         } catch (final IOException e) {
             throw new OperationException("Unable to reinitialise delegate executor", e);
         }

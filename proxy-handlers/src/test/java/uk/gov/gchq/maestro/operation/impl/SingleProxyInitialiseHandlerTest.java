@@ -18,32 +18,33 @@ package uk.gov.gchq.maestro.operation.impl;
 
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
+import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.helper.MaestroInitialiseHandlerBasicTest;
 import uk.gov.gchq.maestro.operation.Operation;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
-public class ProxyInitialiseHandlerTest extends MaestroHandlerBasicTest<ProxyInitialiseHandler> {
+public class SingleProxyInitialiseHandlerTest extends MaestroInitialiseHandlerBasicTest<SingleProxyInitialiseHandler> {
 
     @Override
-    protected ProxyInitialiseHandler getTestHandler() throws Exception {
-        return new ProxyInitialiseHandler();
+    protected SingleProxyInitialiseHandler getTestHandler() throws Exception {
+        return new SingleProxyInitialiseHandler();
     }
 
     @Override
-    protected Operation getBasicOp() throws Exception {
-        return new Operation("test");
+    protected Operation getBasicOp() {
+        return new Operation(Executor.INITIALISER);
     }
 
     @Override
-    protected Class<ProxyInitialiseHandler> getTestObjectClass() {
-        return ProxyInitialiseHandler.class;
+    protected Class<SingleProxyInitialiseHandler> getTestObjectClass() {
+        return SingleProxyInitialiseHandler.class;
     }
 
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.operation.impl.ProxyInitialiseHandler\"\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.impl.SingleProxyInitialiseHandler\"\n" +
                 "}";
     }
 

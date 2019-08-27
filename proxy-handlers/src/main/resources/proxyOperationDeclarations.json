@@ -13,18 +13,6 @@
       }
     },
     {
-      "operation": "uk.gov.gchq.maestro.executor.operation.GetSchema",
-      "handler": {
-        "class": "uk.gov.gchq.maestro.proxyExecutor.operation.handler.GetSchemaDoGetHandler"
-      }
-    },
-    {
-      "operation": "uk.gov.gchq.maestro.executor.operation.GetTraits",
-      "handler": {
-        "class": "uk.gov.gchq.maestro.proxyExecutor.operation.handler.GetTraitsDoGetHandler"
-      }
-    },
-    {
       "operation": "uk.gov.gchq.maestro.executor.operation.GetPropertiesClass",
       "handler": {
         "class": "uk.gov.gchq.maestro.proxyExecutor.operation.handler.GetPropertiesClassHandler",

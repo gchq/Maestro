@@ -47,8 +47,10 @@ import java.util.TreeMap;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 @JsonPropertyOrder(value = {"class", "id", "description", "operationHandlers", "hooks", "properties", "library"}, alphabetic = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 public class Config {
     /**
      * The id of the Executor.
@@ -99,10 +101,10 @@ public class Config {
     public Config(@JsonProperty("id") final String id, @JsonProperty("description") final String description, @JsonProperty("requestHooks") final List<Hook> requestHooks, @JsonProperty("operationHooks") final List<Hook> operationHooks, @JsonProperty("properties") final Properties properties, @JsonProperty("operationHandlers") final Map<String, OperationHandler> operationHandlers, @JsonProperty("library") final Library library) {
         this.id = id;
         this.description = description;
-        this.requestHooks = requestHooks;
-        this.operationHooks = operationHooks;
+        setRequestHooks(requestHooks);
+        setOperationHooks(operationHooks);
         this.properties = properties;
-        this.operationHandlers = operationHandlers;
+        setOperationHandlers(operationHandlers);
         this.library = library;
     }
 
@@ -124,9 +126,8 @@ public class Config {
     }
 
     public void setRequestHooks(final List<Hook> requestHooks) {
-        if (null == requestHooks) {
-            this.requestHooks.clear();
-        } else {
+        this.requestHooks.clear();
+        if (nonNull(requestHooks)) {
             requestHooks.forEach(this::addRequestHook);
         }
     }
@@ -136,9 +137,8 @@ public class Config {
     }
 
     public void setOperationHooks(final List<Hook> operationHooks) {
-        if (null == operationHooks) {
-            this.operationHooks.clear();
-        } else {
+        this.operationHooks.clear();
+        if (nonNull(operationHooks)) {
             operationHooks.forEach(this::addOperationHook);
         }
     }
@@ -283,6 +283,7 @@ public class Config {
     }
 
     public Config addOperationHandlers(final Map<String, OperationHandler> operationHandlers) {
+        requireNonNull(operationHandlers);
         for (final Map.Entry<String, OperationHandler> entry : operationHandlers.entrySet()) {
             addOperationHandler(entry.getKey(), entry.getValue());
         }
@@ -290,8 +291,10 @@ public class Config {
     }
 
     public Config setOperationHandlers(final Map<String, OperationHandler> operationHandlers) {
-        operationHandlers.clear();
-        addOperationHandlers(operationHandlers);
+        this.operationHandlers.clear();
+        if (nonNull(operationHandlers)) {
+            addOperationHandlers(operationHandlers);
+        }
         return this;
     }
 

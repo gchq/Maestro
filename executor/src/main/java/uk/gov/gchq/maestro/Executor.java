@@ -322,8 +322,7 @@ public class Executor {
     private Object doUnhandledOperation(final Operation operation) {
         final Class<? extends Operation> aClass = operation.getClass();
         CloseableUtil.close(operation);
-        final String simpleName = this.getConfig().getId();
-        throw new UnsupportedOperationException(format("Operation %s is not supported by executor: %s. WrappedOp: %s", aClass, simpleName, operation.get(WRAPPED_OP)));
+        throw new UnsupportedOperationException(format("Operation %s is not supported by executor: %s. WrappedOp: %s", operation.getId(), this.getConfig().getId(), operation.get(WRAPPED_OP)));
     }
 
     @Override

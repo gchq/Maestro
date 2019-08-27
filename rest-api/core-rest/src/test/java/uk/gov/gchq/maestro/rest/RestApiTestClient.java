@@ -79,7 +79,7 @@ public abstract class RestApiTestClient {
     }
 
     public void reinitialiseExecutor(final TemporaryFolder testFolder, final Config config) throws IOException {
-        FileUtils.writeByteArrayToFile(testFolder.newFile("config.json"), config.serialise());
+        FileUtils.writeByteArrayToFile(testFolder.newFile(StreamUtil.EXECUTOR_CONFIG), config.serialise());
 
         // set properties for REST service
         System.setProperty(SystemProperty.EXECUTOR_CONFIG_PATH, testFolder.getRoot() + StreamUtil.EXECUTOR_CONFIG);

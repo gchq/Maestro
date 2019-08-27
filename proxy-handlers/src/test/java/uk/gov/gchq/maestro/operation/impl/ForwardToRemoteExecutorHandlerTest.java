@@ -17,7 +17,6 @@
 package uk.gov.gchq.maestro.operation.impl;
 
 import junit.framework.TestCase;
-import org.junit.Assert;
 
 import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
@@ -25,7 +24,7 @@ import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 import uk.gov.gchq.maestro.util.Config;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 
 public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<ForwardToRemoteExecutorHandler> {
@@ -42,12 +41,11 @@ public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<
     }
 
     @Override
-    protected Executor getTestExecutor() throws Exception {
-        final Config config = super.getTestExecutor().getConfigCopy();
+    protected Config getExecutorConfig() throws Exception {
+        final Config config = super.getExecutorConfig();
         config.addOperationHandler(Executor.DEFAULT_OPERATION, new ForwardToRemoteExecutorHandler());
-        config.addOperationHandler(Executor.INITIALISER, new ProxyInitialiseHandler()/*TODO*/);
-        final Executor testExecutor = new Executor(config);
-        return testExecutor;
+        config.addOperationHandler(Executor.INITIALISER, new SingleProxyInitialiseHandler());
+        return config;
     }
 
     @Override
@@ -62,7 +60,7 @@ public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<
 
     @Override
     protected Class<ForwardToRemoteExecutorHandler> getTestObjectClass() {
-        return null;
+        return ForwardToRemoteExecutorHandler.class;
     }
 
     @Override

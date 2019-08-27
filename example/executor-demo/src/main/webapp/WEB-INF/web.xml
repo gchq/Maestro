@@ -19,7 +19,7 @@
         metadata-complete="false"
         version="3.1">
 
-    <display-name>Executor Rest Api</display-name>
+    <display-name>Executor Rest example</display-name>
 
     <!-- Copied from rest api web.xml-->
     <listener>

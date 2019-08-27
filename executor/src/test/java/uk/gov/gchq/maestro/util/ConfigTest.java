@@ -40,6 +40,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     @Override
     protected String getJSONString() {
         return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.util.Config\",\n" +
                 "  \"id\" : \"configIdValue\",\n" +
                 "  \"operationHandlers\" : {\n" +
                 "    \"testOperation\" : {\n" +

@@ -16,6 +16,7 @@
 package uk.gov.gchq.maestro.operation.handler;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -36,7 +37,6 @@ import static java.util.Objects.nonNull;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public interface OperationHandler {
-
 
     String OPERATION_DID_NOT_CONTAIN_REQUIRED_FIELDS = "Operation did not contain required fields. [";
     String FIELD_S_OF_TYPE_S = "Field:%s of Type:%s, ";
@@ -111,6 +111,7 @@ public interface OperationHandler {
 
     Object _doOperation(Operation operation, Context context, Executor executor) throws OperationException;
 
+    @JsonIgnore
     FieldDeclaration getFieldDeclaration();
 
     @JsonProperty("fieldDeclaration")

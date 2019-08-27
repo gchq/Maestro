@@ -72,8 +72,19 @@ public abstract class MaestroHandlerBasicTest<H extends OperationHandler> extend
         fail("Override test method: inspectFields");
     }
 
-    protected Executor getTestExecutor() throws Exception {
-        return new Executor(new Config(EXECUTOR_ID).addOperationHandler(getBasicOp().getId(), getTestHandler()));
+    private Executor getTestExecutor() throws Exception {
+        return new Executor(getExecutorConfig());
+    }
+
+    /**
+     * This method contains helper to align the test operation to be handled automatically by the test handler.
+     *
+     * @return config
+     * @throws Exception exception
+     */
+    protected Config getExecutorConfig() throws Exception {
+        return new Config(EXECUTOR_ID)
+                .addOperationHandler(getBasicOp().getId(), getTestHandler());
     }
 
     protected Context getContext() {

@@ -29,6 +29,7 @@ import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.operation.handler.InitialiserHandler;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
@@ -42,7 +43,7 @@ import java.util.LinkedHashMap;
 import java.util.Properties;
 
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
-public class ProxyInitialiseHandler implements OperationHandler {
+public class ProxyInitialiseHandler implements InitialiserHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProxyInitialiseHandler.class);
 
     private Client client;
@@ -55,8 +56,8 @@ public class ProxyInitialiseHandler implements OperationHandler {
     }
 
 
-    protected void checkDelegateStoreStatus(final Executor executor) throws OperationException {
-        final URL url = ExecutorPropertiesUtil.getMaestroUrl(executor, "graph/status");
+    protected void checkDelegateStoreStatus(final Executor executor) throws OperationException { //TODO rename
+        final URL url = ExecutorPropertiesUtil.getMaestroUrl(executor, "/executor/status");
         final LinkedHashMap status = doGet(url, new TypeReferenceImpl.Map(), null);
         LOGGER.info("ProxyUtil REST API status: {}", status.get("description"));
     }

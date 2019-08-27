@@ -32,7 +32,6 @@ import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerial
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
 import uk.gov.gchq.maestro.operation.handler.OperationHandler;
-import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
 import javax.ws.rs.client.Client;
@@ -42,8 +41,6 @@ import javax.ws.rs.core.Response;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.Properties;
 
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public class ForwardToRemoteExecutorHandler implements OperationHandler {
@@ -96,7 +93,7 @@ public class ForwardToRemoteExecutorHandler implements OperationHandler {
     @Override
     public FieldDeclaration getFieldDeclaration() {
         return new FieldDeclaration();
-        // .fieldRequired(OUTPUT_TYPE_REFERENCE, TypeReference.class);
+        // .fieldRequired(OUTPUT_TYPE_REFERENCE, TypeReference.class); //TODO check review
     }
 
     @Override
