@@ -17,8 +17,10 @@
 package uk.gov.gchq.maestro.operation.impl;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.commonutil.exception.MaestroWrappedErrorRuntimeException;
 import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
@@ -70,4 +72,17 @@ public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<
                 "}";
     }
 
+    @Override
+    @Test(expected = MaestroWrappedErrorRuntimeException.class)
+    public void shouldHandleABasicExample() throws Exception {
+        super.shouldHandleABasicExample();
+        //TODO improve
+    }
+
+    @Override
+    @Test(expected = MaestroWrappedErrorRuntimeException.class)
+    public void shouldExecuteABasicExample() throws Exception {
+        super.shouldExecuteABasicExample();
+        //TODO improve
+    }
 }

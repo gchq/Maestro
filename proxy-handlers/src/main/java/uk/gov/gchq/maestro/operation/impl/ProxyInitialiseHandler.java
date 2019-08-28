@@ -17,7 +17,6 @@
 package uk.gov.gchq.maestro.operation.impl;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -30,7 +29,6 @@ import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
 import uk.gov.gchq.maestro.operation.handler.InitialiserHandler;
-import uk.gov.gchq.maestro.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
@@ -40,7 +38,6 @@ import javax.ws.rs.core.Response;
 
 import java.net.URL;
 import java.util.LinkedHashMap;
-import java.util.Properties;
 
 @JsonPropertyOrder(value = {"class"}, alphabetic = true)
 public class ProxyInitialiseHandler implements InitialiserHandler {
@@ -85,9 +82,13 @@ public class ProxyInitialiseHandler implements InitialiserHandler {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         final ProxyInitialiseHandler that = (ProxyInitialiseHandler) o;
 

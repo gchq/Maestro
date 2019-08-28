@@ -39,7 +39,6 @@ import javax.ws.rs.core.Response;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.Properties;
 
 public final class ProxyUtil {
 
