@@ -29,7 +29,7 @@ import static uk.gov.gchq.maestro.rest.ServiceConstants.MAESTRO_MEDIA_TYPE_HEADE
 
 /**
  * An implementation of {@link IExecutorConfigurationServiceV2}. By default it will use a singleton
- * {@link uk.gov.gchq.maestro.Executor} generated using the {@link ExecutorFactory}.
+ * {@link uk.gov.gchq.maestro.executor.Executor} generated using the {@link ExecutorFactory}.
  */
 public class ExecutorConfigurationServiceV2 implements IExecutorConfigurationServiceV2 {
     @Inject

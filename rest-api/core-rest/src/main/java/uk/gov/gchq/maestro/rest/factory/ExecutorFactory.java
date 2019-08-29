@@ -16,11 +16,11 @@
 
 package uk.gov.gchq.maestro.rest.factory;
 
-import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.executor.Executor;
 import uk.gov.gchq.maestro.rest.SystemProperty;
 
 /**
- * A {@code ExecutorFactory} creates instances of {@link uk.gov.gchq.maestro.Executor} to be reused for all queries.
+ * A {@code ExecutorFactory} creates instances of {@link Executor} to be reused for all queries.
  */
 public interface ExecutorFactory {
 

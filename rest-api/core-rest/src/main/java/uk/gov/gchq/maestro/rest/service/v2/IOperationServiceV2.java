@@ -48,7 +48,7 @@ import static uk.gov.gchq.maestro.rest.ServiceConstants.OPERATION_NOT_IMPLEMENTE
 
 /**
  * An {@code IOperationServiceV2} has methods to execute {@link Operation}s on the
- * {@link uk.gov.gchq.maestro.Executor}.
+ * {@link uk.gov.gchq.maestro.executor.Executor}.
  */
 @Path("/executor/operations")
 @Api(value = "operations")

@@ -16,7 +16,7 @@
 
 package uk.gov.gchq.maestro.operation;
 
-import uk.gov.gchq.maestro.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 
 public abstract class OperationTest extends MaestroObjectTest<Operation> {
 

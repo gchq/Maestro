@@ -36,8 +36,8 @@ import static uk.gov.gchq.maestro.rest.ServiceConstants.MAESTRO_MEDIA_TYPE_HEADE
 import static uk.gov.gchq.maestro.rest.ServiceConstants.OK;
 
 /**
- * An {@code IExecutorConfigurationService} has methods to get {@link uk.gov.gchq.maestro.Executor} configuration information
- * such as the {@link uk.gov.gchq.maestro.operation.handler.OperationHandler}'s available.
+ * An {@code IExecutorConfigurationService} has methods to get {@link uk.gov.gchq.maestro.executor.Executor} configuration information
+ * such as the {@link uk.gov.gchq.maestro.executor.operation.handler.OperationHandler}'s available.
  */
 @Path("/executor/config")
 @Produces(APPLICATION_JSON)

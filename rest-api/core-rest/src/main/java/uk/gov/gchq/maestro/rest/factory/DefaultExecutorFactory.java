@@ -15,13 +15,13 @@
  */
 package uk.gov.gchq.maestro.rest.factory;
 
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.executor.util.Config;
+import uk.gov.gchq.maestro.executor.util.ExecutorPropertiesUtil;
 import uk.gov.gchq.maestro.rest.SystemProperty;
-import uk.gov.gchq.maestro.util.Config;
-import uk.gov.gchq.maestro.util.ExecutorPropertiesUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,7 +31,7 @@ import java.util.Properties;
 
 /**
  * Default implementation of the {@link ExecutorFactory} interface, used by HK2 to
- * instantiate default {@link uk.gov.gchq.maestro.Executor} instances.
+ * instantiate default {@link Executor} instances.
  */
 public class DefaultExecutorFactory implements ExecutorFactory {
     private static Executor executor;

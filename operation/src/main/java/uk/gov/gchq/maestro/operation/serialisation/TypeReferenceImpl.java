@@ -71,10 +71,10 @@ public final class TypeReferenceImpl {
         return (TypeReference) new IterableObj();
     }
 
-    public static class JobDetail extends TypeReference<uk.gov.gchq.maestro.jobtracker.JobDetail> {
+    public static class JobDetail extends TypeReference<uk.gov.gchq.maestro.operation.jobtracker.JobDetail> {
     }
 
-    public static class JobDetailIterable extends TypeReference<CloseableIterable<uk.gov.gchq.maestro.jobtracker.JobDetail>> {
+    public static class JobDetailIterable extends TypeReference<CloseableIterable<uk.gov.gchq.maestro.operation.jobtracker.JobDetail>> {
     }
 
     public static class Map extends TypeReference<java.util.LinkedHashMap> {

@@ -30,14 +30,14 @@ import static uk.gov.gchq.maestro.rest.ServiceConstants.MAESTRO_MEDIA_TYPE_HEADE
 
 /**
  * An implementation of {@link IStatusServiceV2}.
- * By default it will use a singleton {@link uk.gov.gchq.maestro.Executor} generated
+ * By default it will use a singleton {@link uk.gov.gchq.maestro.executor.Executor} generated
  * using the {@link ExecutorFactory}.
  * All operations are simply delegated to the Executor.
  * Pre and post operation hooks are available by extending this class and implementing
  * preOperationHook and/or postOperationHook.
  * <p>
  * By default queries will be executed with an UNKNOWN user containing no auths.
- * The userFactory.createUser() method should be overridden and a {@link uk.gov.gchq.maestro.user.User}
+ * The userFactory.createUser() method should be overridden and a {@link uk.gov.gchq.maestro.operation.user.User}
  * object should be created from the http request.
  * </p>
  */

@@ -22,12 +22,12 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.rules.TemporaryFolder;
 
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.executor.util.Config;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.rest.factory.DefaultExecutorFactory;
-import uk.gov.gchq.maestro.util.Config;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

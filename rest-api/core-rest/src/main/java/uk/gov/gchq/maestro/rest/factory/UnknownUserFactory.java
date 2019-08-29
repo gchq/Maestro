@@ -15,11 +15,11 @@
  */
 package uk.gov.gchq.maestro.rest.factory;
 
-import uk.gov.gchq.maestro.user.User;
+import uk.gov.gchq.maestro.operation.user.User;
 
 import java.util.HashSet;
 
-import static uk.gov.gchq.maestro.user.User.UNKNOWN_USER_ID;
+import static uk.gov.gchq.maestro.operation.user.User.UNKNOWN_USER_ID;
 
 /**
  * Default implementation of the {@link UserFactory} interface. This default implementation

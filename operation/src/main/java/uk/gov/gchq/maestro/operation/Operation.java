@@ -65,10 +65,10 @@ import static java.util.Objects.isNull;
  * </p>
  * <p>
  * Operation implementations need to implement this Operation interface and any of the following interfaces they wish to make use of:
- * uk.gov.gchq.maestro.operation.io.Input
- * uk.gov.gchq.maestro.operation.io.Output
- * uk.gov.gchq.maestro.operation.io.InputOutput (Use this instead of Input and Output if your operation takes both input and output.)
- * uk.gov.gchq.maestro.operation.io.MultiInput (Use this in addition if you operation takes multiple inputs. This will help with json  serialisation)
+ * uk.gov.gchq.maestro.executor.operation.io.Input
+ * uk.gov.gchq.maestro.executor.operation.io.Output
+ * uk.gov.gchq.maestro.executor.operation.io.InputOutput (Use this instead of Input and Output if your operation takes both input and output.)
+ * uk.gov.gchq.maestro.executor.operation.io.MultiInput (Use this in addition if you operation takes multiple inputs. This will help with json  serialisation)
  * </p>
  * <p>
  * Each Operation impl should have a corresponding unit test class

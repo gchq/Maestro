@@ -15,9 +15,9 @@
  */
 package uk.gov.gchq.maestro.rest.factory;
 
-import uk.gov.gchq.maestro.Context;
+import uk.gov.gchq.maestro.executor.Context;
+import uk.gov.gchq.maestro.operation.user.User;
 import uk.gov.gchq.maestro.rest.SystemProperty;
-import uk.gov.gchq.maestro.user.User;
 
 /**
  * A {@code UserFactory} creates instances of {@link User}s for use when executing

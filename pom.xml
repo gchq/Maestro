@@ -32,6 +32,7 @@
         <module>executor</module>
         <module>rest-api</module>
         <module>proxy-handlers</module>
+        <!--<module>federation-handlers</module>-->
         <module>example</module>
     </modules>
 

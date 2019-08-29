@@ -16,9 +16,9 @@
 
 package uk.gov.gchq.maestro.operation.impl.job;
 
-import uk.gov.gchq.maestro.jobtracker.Repeat;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
+import uk.gov.gchq.maestro.operation.jobtracker.Repeat;
 
 public class JobTest extends OperationTest {
     final String testJobId = "testId";
@@ -40,7 +40,7 @@ public class JobTest extends OperationTest {
                 "      }\n" +
                 "    },\n" +
                 "    \"repeat\" : {\n" +
-                "      \"class\" : \"uk.gov.gchq.maestro.jobtracker.Repeat\",\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.operation.jobtracker.Repeat\",\n" +
                 "      \"initialDelay\" : 0,\n" +
                 "      \"repeatPeriod\" : 0,\n" +
                 "      \"timeUnit\" : \"SECONDS\"\n" +

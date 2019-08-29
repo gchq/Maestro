@@ -23,8 +23,6 @@ import org.glassfish.jersey.server.ChunkedOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.gchq.maestro.Context;
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.CloseableUtil;
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 import uk.gov.gchq.maestro.commonutil.exception.Error;
@@ -34,14 +32,16 @@ import uk.gov.gchq.maestro.commonutil.exception.Status;
 import uk.gov.gchq.maestro.commonutil.pair.Pair;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JsonSerialisationUtil;
+import uk.gov.gchq.maestro.executor.Context;
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.executor.util.Request;
+import uk.gov.gchq.maestro.executor.util.Result;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
-import uk.gov.gchq.maestro.operation.declaration.FieldDeclaration;
 import uk.gov.gchq.maestro.rest.factory.ExecutorFactory;
 import uk.gov.gchq.maestro.rest.factory.UserFactory;
 import uk.gov.gchq.maestro.rest.service.v2.example.ExamplesFactory;
-import uk.gov.gchq.maestro.util.Request;
-import uk.gov.gchq.maestro.util.Result;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
@@ -62,7 +62,7 @@ import static uk.gov.gchq.maestro.rest.ServiceConstants.MAESTRO_MEDIA_TYPE_HEADE
 
 /**
  * An implementation of {@link IOperationServiceV2}. By default it will use a singleton
- * {@link uk.gov.gchq.maestro.Executor} generated using the {@link ExecutorFactory}.
+ * {@link Executor} generated using the {@link ExecutorFactory}.
  * All operations are simple delegated to the executor.
  * Pre and post operation hooks are available by extending this class and implementing preOperationHook and/or
  * postOperationHook.
@@ -249,7 +249,7 @@ public class OperationServiceV2 implements IOperationServiceV2 {
     }
 
     /**
-     * POJO to store details for a single user defined field in an {@link uk.gov.gchq.maestro.operation.Operation}.
+     * POJO to store details for a single user defined field in an {@link Operation}.
      */
     private class OperationField {
         private final String name;
@@ -331,7 +331,7 @@ public class OperationServiceV2 implements IOperationServiceV2 {
     }
 
     /**
-     * POJO to store details for a user specified {@link uk.gov.gchq.maestro.operation.Operation}
+     * POJO to store details for a user specified {@link Operation}
      * class.
      */
     protected class OperationDetail {
