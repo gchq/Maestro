@@ -16,6 +16,8 @@
 package uk.gov.gchq.maestro.commonutil.exception;
 
 public class MaestroNullPointerException extends MaestroRuntimeException {
+    private static final long serialVersionUID = -1653881390914784442L;
+
     public MaestroNullPointerException(final String message) {
         super(message);
     }

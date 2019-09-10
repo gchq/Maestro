@@ -33,7 +33,7 @@ import java.util.List;
  */
 @JsonDeserialize(builder = ParameterDetail.Builder.class)
 public class ParameterDetail implements Serializable {
-    private static final long serialVersionUID = -883113279877131469L;
+    private static final long serialVersionUID = 4512824958587203802L;
     private String description;
     private Object defaultValue;
     private Class valueClass;

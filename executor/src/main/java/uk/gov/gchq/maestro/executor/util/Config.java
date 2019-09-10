@@ -51,7 +51,8 @@ import static java.util.Objects.requireNonNull;
 
 @JsonPropertyOrder(value = {"class", "id", "description", "operationHandlers", "hooks", "properties", "library"}, alphabetic = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
-public class Config {
+public class Config implements Comparable<Config>, Serializable {
+    private static final long serialVersionUID = -2117037145523533002L;
     /**
      * The id of the Executor.
      */

@@ -32,8 +32,8 @@ import java.nio.charset.Charset;
  * POJO containing details of a Maestro job.
  */
 public class JobDetail implements Serializable {
-    private static final long serialVersionUID = -1677432285205724269L;
     private static final String CHARSET_NAME = CommonConstants.UTF_8;
+    private static final long serialVersionUID = 8649921413344868572L;
     private String parentJobId;
     private Repeat repeat;
     private String jobId;

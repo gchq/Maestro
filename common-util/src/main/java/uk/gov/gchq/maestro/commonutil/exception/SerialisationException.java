@@ -22,7 +22,8 @@ import java.io.IOException;
  * An {@code SerialisationException} is thrown when serialisation/deserialisation fails.
  */
 public class SerialisationException extends IOException {
-    private static final long serialVersionUID = 1624476078972832393L;
+
+    private static final long serialVersionUID = -3038410402141069945L;
 
     public SerialisationException(final String message) {
         super(message);

@@ -67,6 +67,8 @@ public class Executor {
     public static final String DEFAULT_OPERATION = "defaultOperation";
     public static final String WRAPPED_OP = "wrappedOp";
     public static final String INITIALISER = "initialiser";
+    public static final String NO_HANDLER_WAS_FOUND_FOR_OPERATION = "Error in Executor: %s No handler was found for operation type: %s, this is an illegal state because a default handler should have been selected.";
+    private static final long serialVersionUID = -5566921581366812872L;
     public Config config;
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
 

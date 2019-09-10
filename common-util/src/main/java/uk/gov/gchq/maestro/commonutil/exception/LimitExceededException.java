@@ -21,6 +21,8 @@ package uk.gov.gchq.maestro.commonutil.exception;
  */
 public class LimitExceededException extends RuntimeException {
 
+    private static final long serialVersionUID = -2781889679032919265L;
+
     public LimitExceededException(final String message) {
         super(message);
     }

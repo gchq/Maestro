@@ -17,6 +17,8 @@
 package uk.gov.gchq.maestro.commonutil.exception;
 
 public class ExecutorException extends RuntimeException {
+    private static final long serialVersionUID = -7199731191702715140L;
+
     public ExecutorException() {
         super();
     }

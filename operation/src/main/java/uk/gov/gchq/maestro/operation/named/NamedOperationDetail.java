@@ -43,8 +43,8 @@ import java.util.Set;
  */
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class NamedOperationDetail implements Serializable {
-    private static final long serialVersionUID = -8831783492657131469L;
     private static final String CHARSET_NAME = CommonConstants.UTF_8;
+    private static final long serialVersionUID = -8029477157843035381L;
     private String operationName;
     private String inputType;
     private String description;

@@ -42,7 +42,8 @@ public class ToStringBuilder extends org.apache.commons.lang3.builder.ToStringBu
      * Alternative {@link ToStringStyle} to give a more concise output.
      */
     public static class MaestroShortStyle extends MaestroFullStyle {
-        private static final long serialVersionUID = 7974675454897453336L;
+
+        private static final long serialVersionUID = 4425493078861272087L;
 
         public MaestroShortStyle() {
             this.setUseShortClassName(true);
@@ -54,7 +55,8 @@ public class ToStringBuilder extends org.apache.commons.lang3.builder.ToStringBu
      * The default {@link ToStringStyle} to use in Maestro.
      */
     public static class MaestroFullStyle extends ToStringStyle {
-        private static final long serialVersionUID = -6828867877202071837L;
+
+        private static final long serialVersionUID = 552020985339603445L;
 
         @Override
         public void append(final StringBuffer buffer, final String fieldName, final Object value, final Boolean fullDetail) {

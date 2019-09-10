@@ -21,7 +21,8 @@ package uk.gov.gchq.maestro.commonutil.exception;
  * something to be overwritten.
  */
 public class OverwritingException extends IllegalArgumentException {
-    private static final long serialVersionUID = -4189349368741071943L;
+
+    private static final long serialVersionUID = 6383195371265776326L;
 
     /**
      * Constructs a new overwriting exception with null as its detail message.

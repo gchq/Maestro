@@ -23,6 +23,7 @@ import static uk.gov.gchq.maestro.commonutil.exception.Status.INTERNAL_SERVER_ER
  */
 public class MaestroCheckedException extends Exception {
 
+    private static final long serialVersionUID = 8176809926542120402L;
     private Status status = INTERNAL_SERVER_ERROR;
 
     public MaestroCheckedException(final Throwable cause, final Status status) {

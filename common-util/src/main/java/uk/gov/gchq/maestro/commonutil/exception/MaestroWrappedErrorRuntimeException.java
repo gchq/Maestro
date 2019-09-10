@@ -19,7 +19,7 @@ package uk.gov.gchq.maestro.commonutil.exception;
  * Subtype of {@link RuntimeException} that wraps an {@link Error}.
  */
 public class MaestroWrappedErrorRuntimeException extends RuntimeException {
-    private static final long serialVersionUID = 5497060484135689800L;
+    private static final long serialVersionUID = 2351755440579811419L;
     private Error error;
 
     public MaestroWrappedErrorRuntimeException(final Error error) {

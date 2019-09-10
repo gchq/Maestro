@@ -22,7 +22,8 @@ import static uk.gov.gchq.maestro.commonutil.exception.Status.INTERNAL_SERVER_ER
  * An {@code OperationException} is thrown when an operation fails.
  */
 public class OperationException extends MaestroCheckedException {
-    private static final long serialVersionUID = 3855512637690609379L;
+
+    private static final long serialVersionUID = -7470208543681985108L;
 
     public OperationException(final Throwable cause) {
         super(cause);
