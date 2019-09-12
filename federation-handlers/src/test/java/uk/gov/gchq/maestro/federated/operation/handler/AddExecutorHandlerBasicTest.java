@@ -16,50 +16,48 @@
 
 package uk.gov.gchq.maestro.federated.operation.handler;
 
-import uk.gov.gchq.maestro.Executor;
+import org.junit.Assert;
+
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.executor.helper.MaestroHandlerBasicTest;
+import uk.gov.gchq.maestro.executor.util.Config;
 import uk.gov.gchq.maestro.federated.FederatedExecutorStorage;
-import uk.gov.gchq.maestro.federated.operation.AddExecutor;
-import uk.gov.gchq.maestro.federated.util.Config;
-import uk.gov.gchq.maestro.federated.util.FederatedPropertiesUtil;
-import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
+import uk.gov.gchq.maestro.federated.handler.AddExecutorHandler;
+import uk.gov.gchq.maestro.federated.util.ExecutorStorageFederatedUtil;
+import uk.gov.gchq.maestro.operation.Operation;
 
 import java.util.Collection;
 
-public class AddExecutorHandlerBasicTest extends MaestroHandlerBasicTest<AddExecutor, AddExecutorHandler> {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class AddExecutorHandlerBasicTest extends MaestroHandlerBasicTest<AddExecutorHandler> {
 
     public static final String INNER_EXECUTOR_ID = "innerExecutorId";
 
     @Override
-    protected AddExecutor getBasicOp() {
-        return new AddExecutor()
-                .executor(getInnerExecutor("A")); //TODO Improve the complexity of whats being added + test result.
+    protected Operation getBasicOp() {
+        return new Operation("AddExecutor")
+                .operationArg(AddExecutorHandler.EXECUTOR, new Executor(getInnerConfig("A"))); //TODO Improve the complexity of whats being added + test result.
     }
 
-    public static Executor getInnerExecutor(final String s) {
-        return new Executor().config(new Config().id(INNER_EXECUTOR_ID + s));
+    public static Config getInnerConfig(final String s) {
+        return new Config(INNER_EXECUTOR_ID + s);
     }
 
     @Override
-    protected AddExecutorHandler getBasicHandler() {
+    protected AddExecutorHandler getTestHandler() {
         return new AddExecutorHandler();
     }
 
     @Override
     protected void inspectFields() throws Exception {
-        final Config config = testExecutor.getConfig();
-        Assert.assertNotNull(config);
-        final FederatedExecutorStorage value = FederatedPropertiesUtil.getDeserialisedExecutorStorage(config.getProperties());
-        Assert.assertNotNull("expected value is null", value);
+        final FederatedExecutorStorage value = ExecutorStorageFederatedUtil.getExecutorStorage(testExecutor);
+        assertNotNull("expected value is null", value);
         final Collection<Executor> all = value.getAll(testUser);
-        Assert.assertNotNull(all);
-        Assert.assertEquals(1, all.size());
-        assertEquals(INNER_EXECUTOR_ID + "A", all.iterator().next().getConfig().getId());
-    }
-
-
-    @Override
-    protected void inspectReturnFromHandler(final Object value) {
-        inspectReturnFromExecute(value);
+        assertNotNull(all);
+        assertEquals(1, all.size());
+        assertEquals(INNER_EXECUTOR_ID + "A", all.iterator().next().getId());
     }
 
     @Override
@@ -68,10 +66,24 @@ public class AddExecutorHandlerBasicTest extends MaestroHandlerBasicTest<AddExec
     }
 
     @Override
-    protected Executor getTestExecutor() throws Exception {
-        final Executor testExecutor = super.getTestExecutor();
-        testExecutor.getConfig().addOperationHandler(AddExecutor.class, getBasicHandler());
-        return testExecutor;
+    protected Class<AddExecutorHandler> getTestObjectClass() {
+        return AddExecutorHandler.class;
     }
 
+    @Override
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.federated.handler.AddExecutorHandler\",\n" +
+                "  \"fieldDeclaration\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration\",\n" +
+                "    \"fields\" : {\n" +
+                "      \"auths\" : \"java.util.Set\",\n" +
+                "      \"disabledByDefault\" : \"java.lang.Boolean\",\n" +
+                "      \"executor\" : \"uk.gov.gchq.maestro.executor.Executor\",\n" +
+                "      \"isPublic\" : \"java.lang.Boolean\",\n" +
+                "      \"parentConfigId\" : \"java.lang.String\"\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+    }
 }

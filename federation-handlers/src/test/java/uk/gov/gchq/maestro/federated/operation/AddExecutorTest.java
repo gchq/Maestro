@@ -16,107 +16,60 @@
 
 package uk.gov.gchq.maestro.federated.operation;
 
-import uk.gov.gchq.maestro.Executor;
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
-import uk.gov.gchq.maestro.federated.util.Config;
-import uk.gov.gchq.maestro.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.executor.util.Config;
+import uk.gov.gchq.maestro.federated.handler.AddExecutorHandler;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
-import static java.util.Objects.requireNonNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-public class AddExecutorTest extends MaestroObjectTest<AddExecutor> {
+public class AddExecutorTest extends MaestroObjectTest<Operation> {
 
     @Override
-    protected Class<AddExecutor> getTestObjectClass() {
-        return AddExecutor.class;
+    protected Class<Operation> getTestObjectClass() {
+        return Operation.class;
     }
 
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.federated.operation.AddExecutor\",\n" +
-                "  \"executor\" : {\n" +
-                "    \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
-                "    \"config\" : {\n" +
-                "      \"class\" : \"uk.gov.gchq.maestro.federated.util.Config\",\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"AddExecutor\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"auths\" : [ \"java.util.HashSet\", [ \"auth1\", \"auth3\", \"auth2\" ] ],\n" +
+                "    \"disabledByDefault\" : false,\n" +
+                "    \"executor\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.executor.util.Config\",\n" +
                 "      \"id\" : \"idValue1\",\n" +
                 "      \"operationHandlers\" : { },\n" +
                 "      \"properties\" : { },\n" +
+                "      \"defaultHandler\" : {\n" +
+                "        \"class\" : \"uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler\"\n" +
+                "      },\n" +
                 "      \"operationHooks\" : [ ],\n" +
                 "      \"requestHooks\" : [ ]\n" +
                 "    }\n" +
-                "  },\n" +
-                "  \"executorAuths\" : [ \"auth1\", \"auth3\", \"auth2\" ],\n" +
-                "  \"options\" : {\n" +
-                "    \"op2\" : \"val2\",\n" +
-                "    \"op1\" : \"val1\"\n" +
                 "  }\n" +
                 "}";
     }
 
     @Override
-    protected AddExecutor getTestObject() {
+    protected Operation getFullyPopulatedTestObject() throws Exception {
         final HashSet<String> auths = new HashSet<>();
         auths.add("auth1");
         auths.add("auth2");
         auths.add("auth3");
 
-        final HashMap<String, String> options = new HashMap<>();
-        options.put("op1", "val1");
-        options.put("op2", "val2");
-
-        return new AddExecutor()
-                .auths(auths)
-                .disabledByDefault(false)
-                .options(options)
-                .executor(new Executor().config(new Config().id("idValue1")));
+        return new Operation("AddExecutor")
+                .operationArg(AddExecutorHandler.AUTHS, auths)
+                .operationArg(AddExecutorHandler.DISABLED_BY_DEFAULT, false)
+                .operationArg(AddExecutorHandler.EXECUTOR, new Config("idValue1"));
     }
 
-    protected String getJSONNullString() {
-        return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.federated.operation.AddExecutor\"\n" +
-                "}";
+    protected Operation getTestNullObject() {
+        return new Operation("AddExecutor")
+                .operationArg(AddExecutorHandler.AUTHS, null)
+                .operationArg(AddExecutorHandler.EXECUTOR, null);
     }
-
-    protected AddExecutor getTestNullObject() {
-        return new AddExecutor()
-                .auths(null)
-                .options(null)
-                .executor(null);
-    }
-
-    @Override
-    public void shouldJSONSerialise() throws Exception {
-        super.shouldJSONSerialise();
-
-        final uk.gov.gchq.maestro.federated.operation.AddExecutor testObject = getTestNullObject();
-        requireNonNull(testObject);
-        final String jsonString = getJSONNullString();
-        requireNonNull(jsonString);
-
-        final byte[] serialisedTestObject = JSONSerialiser.serialise(testObject, true);
-        assertNotNull("serialised testObject is null", serialisedTestObject);
-        assertEquals("json strings are not equal, between serialisedTestObject and jsonString", jsonString, new String(serialisedTestObject));
-        final uk.gov.gchq.maestro.federated.operation.AddExecutor deserialise = JSONSerialiser.deserialise(serialisedTestObject, getTestObjectClass());
-        assertNotNull("deserialised testObject is null", deserialise);
-        assertEquals("deserialised object is not the same as testObject", testObject, deserialise);
-
-    }
-
-    @Override
-    public void shouldShallowCloneOperation() throws Exception {
-        super.shouldShallowCloneOperation();
-
-        final uk.gov.gchq.maestro.federated.operation.AddExecutor testObject = getTestNullObject();
-        if (testObject instanceof Operation) {
-            assertEquals("testObject.shallowClone() is not equal to original testObject", testObject, ((Operation) testObject).shallowClone());
-        }
-    }
-
 
 }

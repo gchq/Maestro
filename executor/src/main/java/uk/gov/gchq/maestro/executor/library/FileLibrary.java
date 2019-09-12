@@ -21,13 +21,12 @@ import org.apache.commons.io.FileUtils;
 
 import uk.gov.gchq.maestro.executor.util.ExecutorPropertiesUtil;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -101,15 +100,10 @@ public class FileLibrary extends Library {
 
     @Override
     protected void _addProperties(final String propertiesId,
-                                  final Properties properties) {
+                                  final Map<String, Object> properties) {
         if (null != properties) {
             getPropertiesPath(propertiesId).toFile().getParentFile().mkdirs();
-            try (FileOutputStream propertiesFileOutputStream = new FileOutputStream(getPropertiesPath(propertiesId).toFile())) {
-                properties.store(propertiesFileOutputStream, null);
-            } catch (final IOException e) {
-                throw new IllegalArgumentException("Could not write " +
-                        "properties to path: " + getPropertiesPath(propertiesId), e);
-            }
+            ExecutorPropertiesUtil.saveProperties(propertiesId, properties, getPropertiesPath(propertiesId));
         } else {
             throw new IllegalArgumentException("ExecutorProperties cannot be " +
                     "null");
@@ -117,7 +111,7 @@ public class FileLibrary extends Library {
     }
 
     @Override
-    protected Properties _getProperties(final String propertiesId) {
+    protected Map<String, Object> _getProperties(final String propertiesId) {
         final Path propertiesPath = getPropertiesPath(propertiesId);
         if (!propertiesPath.toFile().exists()) {
             return null;

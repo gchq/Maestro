@@ -22,11 +22,13 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
+import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiserModules;
 import uk.gov.gchq.maestro.executor.Executor;
 import uk.gov.gchq.maestro.executor.operation.declaration.OperationDeclarations;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -34,7 +36,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -73,8 +77,28 @@ public final class ExecutorPropertiesUtil {
         // All methods are static and should be called directly.
     }
 
-    public static Properties loadProperties(final Path propFileLocation) {
-        Properties properties = new Properties();
+    public static void saveProperties(final String propertiesId, final Map<String, Object> properties, final Path path) {
+        try (FileOutputStream propertiesFileOutputStream = new FileOutputStream(path.toFile())) {
+
+            //This has been added as Properties has been changed to Map<String,Object>
+            final Properties prop = new Properties();
+
+            properties.forEach((k, v) -> {
+                try {
+                    prop.put(k, new String(JSONSerialiser.serialise(v)));
+                } catch (final SerialisationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+        } catch (final Exception e) {
+            throw new IllegalArgumentException("Could not write " +
+                    "properties to path: " + path, e);
+        }
+    }
+
+    public static Map<String, Object> loadProperties(final Path propFileLocation) {
+        Map<String, Object> properties = new HashMap<>();
         if (null != propFileLocation) {
             try {
                 properties = loadProperties(null != propFileLocation ?
@@ -86,14 +110,26 @@ public final class ExecutorPropertiesUtil {
         return properties;
     }
 
-    public static Properties loadProperties(final InputStream propertiesStream) {
+    public static Map<String, Object> loadProperties(final InputStream propertiesStream) {
         if (null == propertiesStream) {
-            return new Properties();
+            return new HashMap<>();
         }
-        final Properties props = new Properties();
         try {
-            props.load(propertiesStream);
-        } catch (final IOException e) {
+            final Properties properties = new Properties();
+            properties.load(propertiesStream);
+
+            final HashMap<String, Object> rtn = new HashMap<>();
+            for (final Map.Entry<Object, Object> entry : properties.entrySet()) {
+                final String key = (String) entry.getKey();
+                Object value = entry.getValue();
+
+                if (((String) value).contains("\"class\" :")) {
+                    value = JSONSerialiser.deserialise((String) value, propertiesStream.getClass().getClassLoader());
+                }
+                rtn.put(key, value);
+            }
+            return rtn;
+        } catch (final Exception e) {
             throw new RuntimeException("Failed to load properties file : " + e.getMessage(), e);
         } finally {
             try {
@@ -102,24 +138,24 @@ public final class ExecutorPropertiesUtil {
                 LOGGER.error("Failed to close properties stream: {}", e.getMessage(), e);
             }
         }
-        return loadProperties(props);
+        // return loadProperties(props);
     }
 
-    public static Properties loadProperties(final Properties props) {
-        Properties properties = new Properties(); //Todo ?
+    public static Map<String, Object> loadProperties(final Map<String, Object> props) {
+        Map<String, Object> properties = new HashMap<>(); //Todo ?
         properties.putAll(props);
         return properties;
     }
 
-    public static Properties loadProperties(final String pathStr) {
-        Properties properties;
+    public static Map<String, Object> loadProperties(final String pathStr) {
+        Map<String, Object> properties;
         final Path path = Paths.get(pathStr);
         try {
             if (path.toFile().exists()) {
                 properties = loadProperties(Files.newInputStream(path));
             } else {
                 properties =
-                        loadProperties(StreamUtil.openStream(Properties.class,
+                        loadProperties(StreamUtil.openStream(Map.class,
                                 pathStr));
             }
         } catch (final IOException e) {
@@ -129,8 +165,8 @@ public final class ExecutorPropertiesUtil {
         return properties;
     }
 
-    public static void merge(final Properties firstProperties,
-                             final Properties secondProperties) {
+    public static void merge(final Map<String, Object> firstProperties,
+                             final Map<String, Object> secondProperties) {
         if (null != firstProperties) {
             firstProperties.putAll(secondProperties);
         }
@@ -150,7 +186,7 @@ public final class ExecutorPropertiesUtil {
     public static OperationDeclarations getOperationDeclarations(final Executor executor) {
         OperationDeclarations declarations = null;
 
-        final String declarationsPaths = executor.getProperty(OPERATION_DECLARATIONS);
+        final String declarationsPaths = (String) executor.getProperty(OPERATION_DECLARATIONS);
         if (null != declarationsPaths) {
             declarations = OperationDeclarations.fromPaths(declarationsPaths);
         }
@@ -163,7 +199,7 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static Boolean getJobTrackerEnabled(final Executor executor) {
-        return Boolean.valueOf(executor.getPropertyOrDefault(JOB_TRACKER_ENABLED, "false"));
+        return (Boolean) executor.getPropertyOrDefault(JOB_TRACKER_ENABLED, false);
     }
 
     public static void setJobTrackerEnabled(final Executor executor, final Boolean jobTrackerEnabled) {
@@ -171,11 +207,11 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static String getReflectionPackages(final Executor executor) {
-        return executor.getProperty(REFLECTION_PACKAGES);
+        return (String) executor.getProperty(REFLECTION_PACKAGES);
     }
 
     public static String getReflectionPackages(final Config config) {
-        return config.getProperty(REFLECTION_PACKAGES);
+        return (String) config.getProperty(REFLECTION_PACKAGES);
     }
 
     public static void setReflectionPackages(final Executor executor, final String packages) {
@@ -184,7 +220,7 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static Integer getJobExecutorThreadCount(final Executor executor) {
-        return Integer.parseInt(executor.getPropertyOrDefault(EXECUTOR_SERVICE_THREAD_COUNT, EXECUTOR_SERVICE_THREAD_COUNT_DEFAULT));
+        return Integer.parseInt((String) executor.getPropertyOrDefault(EXECUTOR_SERVICE_THREAD_COUNT, EXECUTOR_SERVICE_THREAD_COUNT_DEFAULT));
     }
 
     public static void addOperationDeclarationPaths(final Executor executor, final String... newPaths) {
@@ -199,11 +235,11 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static String getOperationDeclarationPaths(final Executor executor) {
-        return executor.getProperty(OPERATION_DECLARATIONS);
+        return (String) executor.getProperty(OPERATION_DECLARATIONS);
     }
 
     public static String getOperationDeclarationPaths(final Config config) {
-        return config.getProperty(OPERATION_DECLARATIONS);
+        return (String) config.getProperty(OPERATION_DECLARATIONS);
     }
 
     public static void setOperationDeclarationPaths(final Executor executor, final String paths) {
@@ -211,11 +247,11 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static String getJsonSerialiserClass(final Executor executor) {
-        return executor.getProperty(JSON_SERIALISER_CLASS);
+        return (String) executor.getProperty(JSON_SERIALISER_CLASS); //TODO return class
     }
 
     public static String getJsonSerialiserClass(final Config config) {
-        return config.getProperty(JSON_SERIALISER_CLASS);
+        return (String) config.getProperty(JSON_SERIALISER_CLASS);
     }
 
     @JsonIgnore
@@ -228,11 +264,11 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static String getJsonSerialiserModules(final Executor executor) {
-        return executor.getPropertyOrDefault(JSON_SERIALISER_MODULES, "");
+        return (String) executor.getPropertyOrDefault(JSON_SERIALISER_MODULES, "");
     }
 
     public static String getJsonSerialiserModules(final Config config) {
-        return config.getPropertyOrDefault(JSON_SERIALISER_MODULES, "");
+        return (String) config.getPropertyOrDefault(JSON_SERIALISER_MODULES, "");
     }
 
     @JsonIgnore
@@ -249,12 +285,12 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static Boolean getStrictJson(final Executor executor) {
-        final String strictJson = executor.getProperty(STRICT_JSON);
+        final String strictJson = (String) executor.getProperty(STRICT_JSON);
         return null == strictJson ? null : Boolean.parseBoolean(strictJson);
     }
 
     public static Boolean getStrictJson(final Config con) {
-        final String strictJson = con.getProperty(STRICT_JSON);
+        final String strictJson = (String) con.getProperty(STRICT_JSON);
         return null == strictJson ? null : Boolean.parseBoolean(strictJson);
     }
 
@@ -263,7 +299,7 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static String getAdminAuth(final Executor executor) {
-        return executor.getPropertyOrDefault(ADMIN_AUTH, "");
+        return (String) executor.getPropertyOrDefault(ADMIN_AUTH, "");
     }
 
     public static void setAdminAuth(final Executor executor, final String adminAuth) {
@@ -315,7 +351,7 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static String getGafferContextRoot(final Executor executor) {
-        return (String) executor.config.getPropertyOrDefault(MAESTRO_CONTEXT_ROOT, DEFAULT_MAESTRO_CONTEXT_ROOT);
+        return (String) executor.getConfig().getPropertyOrDefault(MAESTRO_CONTEXT_ROOT, DEFAULT_MAESTRO_CONTEXT_ROOT);
     }
 
     protected static String addSuffix(final String suffix, final String string) {
@@ -327,11 +363,11 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static String getMaestroHost(final Executor executor) {
-        return (String) executor.config.getPropertyOrDefault(MAESTRO_HOST, DEFAULT_MAESTRO_HOST);
+        return (String) executor.getConfig().getPropertyOrDefault(MAESTRO_HOST, DEFAULT_MAESTRO_HOST);
     }
 
     public static int getMaestroPort(final Executor executor) {
-        final String portStr = (String) executor.config.getPropertyOrDefault(MAESTRO_PORT, null);
+        final String portStr = (String) executor.getConfig().getPropertyOrDefault(MAESTRO_PORT, null);
         try {
             return null == portStr ? DEFAULT_MAESTRO_PORT : Integer.parseInt(portStr);
         } catch (final NumberFormatException e) {
@@ -344,7 +380,7 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static String getGafferHost(final Executor executor) {
-        return (String) executor.config.getPropertyOrDefault(MAESTRO_HOST, DEFAULT_MAESTRO_HOST);
+        return (String) executor.getConfig().getPropertyOrDefault(MAESTRO_HOST, DEFAULT_MAESTRO_HOST);
     }
 
     public static void setGafferPort(final int gafferPort) {
@@ -352,7 +388,7 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static int getConnectTimeout(final Executor executor) {
-        final String timeout = (String) executor.config.getPropertyOrDefault(CONNECT_TIMEOUT, null);
+        final String timeout = (String) executor.getConfig().getPropertyOrDefault(CONNECT_TIMEOUT, null);
         try {
             return null == timeout ? DEFAULT_CONNECT_TIMEOUT : Integer.parseInt(timeout);
         } catch (final NumberFormatException e) {
@@ -365,7 +401,7 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static int getReadTimeout(final Executor executor) {
-        final String timeout = (String) executor.config.getPropertyOrDefault(READ_TIMEOUT, null);
+        final String timeout = (String) executor.getConfig().getPropertyOrDefault(READ_TIMEOUT, null);
         try {
             return null == timeout ? DEFAULT_READ_TIMEOUT : Integer.parseInt(timeout);
         } catch (final NumberFormatException e) {

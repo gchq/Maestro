@@ -16,6 +16,7 @@
 
 package uk.gov.gchq.maestro.proxy.handler;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import uk.gov.gchq.maestro.executor.Executor;

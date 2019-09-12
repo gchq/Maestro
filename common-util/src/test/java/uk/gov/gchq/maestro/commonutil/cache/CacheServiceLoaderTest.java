@@ -24,7 +24,8 @@ import org.junit.rules.ExpectedException;
 import uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService;
 import uk.gov.gchq.maestro.commonutil.cache.util.CacheProperties;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -32,7 +33,7 @@ import static org.junit.Assert.fail;
 
 public class CacheServiceLoaderTest {
 
-    private Properties serviceLoaderProperties = new Properties();
+    private Map<String, Object> serviceLoaderProperties = new HashMap<>();
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -55,7 +56,7 @@ public class CacheServiceLoaderTest {
     public void shouldLoadServiceFromSystemVariable() {
 
         // given
-        serviceLoaderProperties.setProperty(CacheProperties.CACHE_SERVICE_CLASS, EmptyCacheService.class.getName());
+        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE_CLASS, EmptyCacheService.class.getName()); //TODO add class
         CacheServiceLoader.initialise(serviceLoaderProperties);
 
         // when
@@ -74,7 +75,7 @@ public class CacheServiceLoaderTest {
         exception.expectMessage(invalidClassName);
 
         // when
-        serviceLoaderProperties.setProperty(CacheProperties.CACHE_SERVICE_CLASS, invalidClassName);
+        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE_CLASS, invalidClassName);
         CacheServiceLoader.initialise(serviceLoaderProperties);
 
         // then Exception is thrown
@@ -83,7 +84,7 @@ public class CacheServiceLoaderTest {
     @Test
     public void shouldUseTheSameServiceAcrossDifferentComponents() {
         // given
-        serviceLoaderProperties.setProperty(CacheProperties.CACHE_SERVICE_CLASS, HashMapCacheService.class.getName());
+        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE_CLASS, HashMapCacheService.class.getName());
         CacheServiceLoader.initialise(serviceLoaderProperties);
 
         // when
@@ -97,7 +98,7 @@ public class CacheServiceLoaderTest {
     @Test
     public void shouldSetServiceToNullAfterCallingShutdown() {
         // given
-        serviceLoaderProperties.setProperty(CacheProperties.CACHE_SERVICE_CLASS, EmptyCacheService.class.getName());
+        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE_CLASS, EmptyCacheService.class.getName());
         CacheServiceLoader.initialise(serviceLoaderProperties);
 
         // when

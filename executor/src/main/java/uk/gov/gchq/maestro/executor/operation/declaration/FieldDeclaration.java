@@ -53,18 +53,17 @@ public class FieldDeclaration {
     }
 
     public FieldDeclaration field(final String field, final Class valueClass) {
-        fields.put(field, valueClass);
-        return this;
+        return fieldRequired(field, valueClass);
     }
 
     public FieldDeclaration fieldOptional(final String field, final Class valueClass) {
-        field(field, valueClass);
+        fieldRequired(field, valueClass);
         optionalFields.add(field);
         return this;
     }
 
     public FieldDeclaration fieldRequired(final String field, final Class valueClass) {
-        field(field, valueClass);
+        fields.put(field, valueClass);
         optionalFields.remove(field);
         return this;
     }

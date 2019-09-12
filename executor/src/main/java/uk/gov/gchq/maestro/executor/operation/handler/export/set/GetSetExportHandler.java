@@ -67,10 +67,7 @@ public class GetSetExportHandler extends GetExportHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration()
-                .field("Start", Integer.class)
-                .field("End", Integer.class)
-                .field("KeyOrDefault", String.class)
+        return new FieldDeclaration().fieldRequired("Start", Integer.class).fieldRequired("End", Integer.class).fieldRequired("KeyOrDefault", String.class)
                 .fieldOptional("Exports", HashMap.class);
     }
 }

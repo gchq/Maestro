@@ -34,15 +34,17 @@ import uk.gov.gchq.maestro.executor.hook.HookPath;
 import uk.gov.gchq.maestro.executor.library.Library;
 import uk.gov.gchq.maestro.executor.operation.declaration.OperationDeclaration;
 import uk.gov.gchq.maestro.executor.operation.declaration.OperationDeclarations;
+import uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler;
 import uk.gov.gchq.maestro.executor.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.Operation;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
 
 import static java.util.Objects.isNull;
@@ -79,7 +81,8 @@ public class Config implements Comparable<Config>, Serializable {
      * The Executor properties - contains specific configuration information for
      * the Executor - such as database connection strings.
      */
-    private Properties properties = new Properties();
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
+    private Map<String, Object> properties = new HashMap<>(); //TODO review in Config.compareTo()
 
     /**
      * The operation handlers - A Map containing all classes of operations
@@ -88,6 +91,8 @@ public class Config implements Comparable<Config>, Serializable {
      */
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     private Map<String, OperationHandler> operationHandlers = new TreeMap<>(String::compareToIgnoreCase);
+
+    private OperationHandler defaultHandler = new DefaultHandler();
 
     private Library library;
 
@@ -99,7 +104,7 @@ public class Config implements Comparable<Config>, Serializable {
     }
 
     @JsonCreator
-    public Config(@JsonProperty("id") final String id, @JsonProperty("description") final String description, @JsonProperty("requestHooks") final List<Hook> requestHooks, @JsonProperty("operationHooks") final List<Hook> operationHooks, @JsonProperty("properties") final Properties properties, @JsonProperty("operationHandlers") final Map<String, OperationHandler> operationHandlers, @JsonProperty("library") final Library library) {
+    public Config(@JsonProperty("id") final String id, @JsonProperty("description") final String description, @JsonProperty("requestHooks") final List<Hook> requestHooks, @JsonProperty("operationHooks") final List<Hook> operationHooks, @JsonProperty("properties") final Map<String, Object> properties, @JsonProperty("operationHandlers") final Map<String, OperationHandler> operationHandlers, @JsonProperty("library") final Library library, @JsonProperty("defaultHandler") final OperationHandler defaultHandler) {
         this.id = id;
         this.description = description;
         setRequestHooks(requestHooks);
@@ -107,6 +112,7 @@ public class Config implements Comparable<Config>, Serializable {
         this.properties = properties;
         setOperationHandlers(operationHandlers);
         this.library = library;
+        setDefaultHandler(defaultHandler);
     }
 
     public static Config getConfigFromPath(final Class clazz, final String configResourcePath) throws uk.gov.gchq.maestro.commonutil.exception.SerialisationException {
@@ -205,19 +211,19 @@ public class Config implements Comparable<Config>, Serializable {
     }
 
     /**
-     * Get this Executor's {@link Properties}.
+     * Get this Executor's Properties.
      *
-     * @return the instance of {@link Properties},
+     * @return the instance of Properties,
      * this may contain details such as database connection details.
      */
-    public Properties getProperties() {
-        return isNull(properties) ? null : properties; //TODO ?
+    public Map<String, Object> getProperties() {
+        return properties; //TODO ?
     }
 
-    public Config setProperties(final Properties properties) {
+    public Config setProperties(final Map<String, Object> properties) {
         if (nonNull(properties)) {
             if (isNull(this.properties)) {
-                this.properties = new Properties();
+                this.properties = new HashMap<>();
             }
             this.properties = ExecutorPropertiesUtil.loadProperties(properties);
 
@@ -227,10 +233,10 @@ public class Config implements Comparable<Config>, Serializable {
         return this;
     }
 
-    public Config addProperties(final Properties properties) {
+    public Config addProperties(final Map<String, Object> properties) {
         if (nonNull(properties)) {
             if (isNull(this.properties)) {
-                this.properties = new Properties();
+                this.properties = new HashMap<>();
             }
 
             this.properties.putAll(properties);
@@ -350,21 +356,32 @@ public class Config implements Comparable<Config>, Serializable {
             return false;
         }
 
-        final Config config = (Config) o;
+        final Config that = (Config) o;
 
-        final EqualsBuilder equalsBuilder = new EqualsBuilder()
-                .append(id, config.id)
-                .append(description, config.description)
-                .append(requestHooks, config.requestHooks)
-                .append(operationHooks, config.operationHooks)
-                .append(operationHandlers, config.operationHandlers)
-                .append(nonNull(properties), nonNull(config.properties));
+        final EqualsBuilder equalsBuilder = new EqualsBuilder();
 
-        if (equalsBuilder.isEquals() && nonNull(properties)) {
-            equalsBuilder.append(properties, config.properties);
+        equalsBuilder.append(id, that.id)
+                .append(description, that.description)
+                .append(requestHooks, that.requestHooks)
+                .append(operationHooks, that.operationHooks)
+                .append(operationHandlers, that.operationHandlers)
+                .append(defaultHandler, that.defaultHandler)
+                .append(nonNull(properties), nonNull(that.properties));
+
+        if (equalsBuilder.isEquals()
+                && nonNull(properties)
+                && equalsBuilder.append(properties.size(), that.properties.size()).isEquals()) {
+
+
+            for (final String s : properties.keySet()) {
+                if (!equalsBuilder.append(true, that.properties.containsKey(s)).isEquals()
+                        || !equalsBuilder.append(properties.get(s), that.properties.get(s)).isEquals()) {
+                    break;
+                }
+            }
         }
 
-        return equalsBuilder.isEquals();
+        return equalsBuilder.isEquals(); //TODO simplify this method
     }
 
     @Override
@@ -376,7 +393,8 @@ public class Config implements Comparable<Config>, Serializable {
                 .append(operationHooks)
                 .append(properties)
                 .append(operationHandlers)
-                .append(library)
+                .append(library) //TODO review equals library
+                .append(defaultHandler)
                 .toHashCode();
     }
 
@@ -384,15 +402,53 @@ public class Config implements Comparable<Config>, Serializable {
         return JSONSerialiser.serialise(this, true);
     }
 
-    public String getPropertyOrDefault(final String key, final String defaultValue) {
+    public Object getPropertyOrDefault(final Object key, final Object defaultValue) {
         return (String) getProperties().getOrDefault(key, defaultValue);
     }
 
-    public String getProperty(final String key) {
+    public Object getProperty(final Object key) {
         return getPropertyOrDefault(key, null);
     }
 
-    public String setProperty(final String key, final String value) {
-        return (String) properties.setProperty(key, value);
+    public String setProperty(final String key, final Object value) {
+        return (String) properties.put(key, value);
     }
+
+    public OperationHandler getDefaultHandler() {
+        return defaultHandler;
+    }
+
+    public Config setDefaultHandler(final OperationHandler defaultHandler) {
+        if (nonNull(defaultHandler)) {
+            this.defaultHandler = defaultHandler;
+        }
+        return this;
+    }
+
+    @Override
+    public int compareTo(final Config that) {
+        requireNonNull(that, "tried to compare null object");
+        // final CompareToBuilder cb = new CompareToBuilder();
+        // cb.append(this.id, that.id)
+        //         .append(this.description, that.description)
+        //         .append(this.requestHooks, that.requestHooks)
+        //         .append(this.operationHooks, that.operationHooks, (Comparator<Hook>) (o1, o2) -> {
+        //             try {
+        //                 return new String(JSONSerialiser.serialise(o1))
+        //                         .compareTo(new String(JSONSerialiser.serialise(o2)));
+        //             } catch (SerialisationException e) {
+        //                 throw new MaestroRuntimeException("Error comparing hooks", e);
+        //             }
+        //         })
+        //         .append(this.operationHandlers, that.operationHandlers)
+        //         .append(this.defaultHandler, that.defaultHandler)
+        //         .append(nonNull(this.properties), nonNull(that.properties))
+        //         .append(this.properties, that.properties);
+        // return cb.toComparison();
+
+        return this.toString().compareTo(that.toString()); //TODO improve
+
+    }
+
+
 }

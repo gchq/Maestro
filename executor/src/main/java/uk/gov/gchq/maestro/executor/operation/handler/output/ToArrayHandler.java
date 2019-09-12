@@ -89,8 +89,7 @@ public class ToArrayHandler<T> implements OutputOperationHandler<T[]> {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration()
-                .field("input", Iterable.class);
+        return new FieldDeclaration().fieldRequired("input", Iterable.class);
     }
 
 

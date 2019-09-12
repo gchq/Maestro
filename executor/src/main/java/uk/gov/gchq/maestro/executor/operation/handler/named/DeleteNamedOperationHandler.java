@@ -67,6 +67,6 @@ public class DeleteNamedOperationHandler implements OperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration().field("OperationName", String.class);
+        return new FieldDeclaration().fieldRequired("OperationName", String.class);
     }
 }

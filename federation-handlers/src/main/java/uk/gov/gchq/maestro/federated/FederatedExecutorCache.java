@@ -16,10 +16,10 @@
 
 package uk.gov.gchq.maestro.federated;
 
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.Pair;
 import uk.gov.gchq.maestro.commonutil.cache.Cache;
 import uk.gov.gchq.maestro.commonutil.exception.CacheOperationException;
+import uk.gov.gchq.maestro.executor.Executor;
 
 import java.util.Set;
 
@@ -46,7 +46,7 @@ public class FederatedExecutorCache extends Cache<Pair<Executor, FederatedAccess
     }
 
     public void addExecutorToCache(final Executor executor, final FederatedAccess access, final boolean overwrite) throws CacheOperationException {
-        String id = executor.getConfig().getId();
+        String id = executor.getId();
         Pair<Executor, FederatedAccess> pair = new Pair<>(executor, access);
         try {
             addToCache(id, pair, overwrite);

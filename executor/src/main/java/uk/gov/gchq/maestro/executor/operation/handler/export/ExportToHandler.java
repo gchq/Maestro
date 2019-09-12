@@ -75,7 +75,6 @@ public abstract class ExportToHandler extends ExportOperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration()
-                .field("input", Object.class);
+        return new FieldDeclaration().fieldRequired("input", Object.class);
     }
 }

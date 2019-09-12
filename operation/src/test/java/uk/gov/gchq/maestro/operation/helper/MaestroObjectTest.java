@@ -66,6 +66,9 @@ public abstract class MaestroObjectTest<T> {
         final T deserialise = JSONSerialiser.deserialise(serialisedTestObject, getTestObjectClass());
         assertNotNull("deserialised testObject is null", deserialise);
         assertEquals("deserialised object does not equal the original testObject", testObject, deserialise);
+
+        final T deserialiseAlt = (T) JSONSerialiser.deserialise(jsonString, this.getClass().getClassLoader());
+        assertEquals(testObject, deserialiseAlt);
     }
 
     protected Set<String> getRequiredFields() {
@@ -256,8 +259,8 @@ public abstract class MaestroObjectTest<T> {
     public void shouldHaveNewInstanceOfFullyPopulatedTestObject() throws Exception {
         final T a = getFullyPopulatedTestObject();
         final T b = getFullyPopulatedTestObject();
-        assertEquals(a, b);
-        assertFalse("getFullyPopulatedTestObject does not return a new instance, this is a sanitary practice for testing", a == b);
+        assertEquals("getFullyPopulatedTestObject() does not return equal objects", a, b);
+        assertFalse("getFullyPopulatedTestObject() does not return a new instance, this is a sanitary practice for testing", a == b);
     }
 
     protected byte[] toJson(final T testObj) {

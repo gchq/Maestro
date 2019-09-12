@@ -50,9 +50,9 @@ public class SingleProxyInitialiseHandler extends ProxyInitialiseHandler {
         }
 
         try {
-            CLIENT.reinitialiseExecutor(TEST_FOLDER, "/remoteClientConfig.json");
-        } catch (final IOException e) {
-            throw new OperationException("Unable to reinitialise delegate executor", e);
+            CLIENT.reinitialiseExecutor(TEST_FOLDER, "/remoteClientExecutorConfig.json");
+        } catch (final Exception e) {
+            throw new OperationException("Unable to re-initialise delegate executor, due to: " + e.getMessage(), e);
         }
     }
 

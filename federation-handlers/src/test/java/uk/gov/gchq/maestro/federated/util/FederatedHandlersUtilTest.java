@@ -19,67 +19,49 @@ package uk.gov.gchq.maestro.federated.util;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.executor.util.Config;
 import uk.gov.gchq.maestro.federated.FederatedAccess;
 import uk.gov.gchq.maestro.federated.FederatedExecutorStorage;
-import uk.gov.gchq.maestro.user.User;
+import uk.gov.gchq.maestro.operation.user.User;
 
-import java.util.List;
-import java.util.Properties;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class FederatedHandlersUtilTest {
     @Test
     public void shouldGetExecutor() throws MaestroCheckedException {
         //given
-        final Executor expected = new Executor().config(new Config().id("ExecutorId1"));
-        final Properties properties = new Properties();
-        final FederatedExecutorStorage storage = new FederatedExecutorStorage().put(expected, new FederatedAccess(null, "tempUser", false));
-        FederatedPropertiesUtil.putSerialisedExecutorStorage(properties, storage);
+        final Executor expectedConfig = new Executor(new Config("ExecutorId1"));
+        final Executor actualconfig = new Executor(new Config("actual"));
+        final FederatedExecutorStorage storage = new FederatedExecutorStorage().put(expectedConfig, new FederatedAccess(null, "tempUser", false));
+        ExecutorStorageFederatedUtil.setExecutorStorage(actualconfig, storage);
 
         //when
-        final List<Executor> executors = FederatedHandlersUtil.getExecutorsFrom(properties, new User("tempUser"), Lists.newArrayList("ExecutorId1"));
+        final Collection<Executor> executors = GetExecutorsFederatedUtil.getExecutorsFrom(actualconfig, new User("tempUser"), Lists.newArrayList("ExecutorId1"));
 
         //then
         assertEquals(1, executors.size());
-        assertEquals(expected, executors.get(0));
+        assertEquals(expectedConfig, executors.toArray()[0]);
     }
 
     @Test
     public void shouldNotGetExecutorWithNull() throws MaestroCheckedException {
         //given
-        final Executor expected = new Executor().config(new Config().id("ExecutorId1"));
-        final Properties properties = new Properties();
-        final FederatedExecutorStorage storage = new FederatedExecutorStorage().put(expected, new FederatedAccess(null, "tempUser", false));
-        FederatedPropertiesUtil.putSerialisedExecutorStorage(properties, storage);
+        final Executor expectedExecutor = new Executor(new Config().id("ExecutorId1"));
+        final Executor actualExecutor = new Executor(new Config("actual"));
+        final FederatedExecutorStorage storage = new FederatedExecutorStorage().put(expectedExecutor, new FederatedAccess(null, "tempUser", false));
+        ExecutorStorageFederatedUtil.setExecutorStorage(actualExecutor, storage);
 
         //when
         try {
-            final List<Executor> executors = FederatedHandlersUtil.getExecutorsFrom(properties, new User("tempUser"), null);
+            final Collection<Executor> executors = GetExecutorsFederatedUtil.getExecutorsFrom(actualExecutor, new User("tempUser"), (String) null);
             fail("exception expected");
         } catch (Exception e) {
-            assertEquals("Can't get Executors with null ids", e.getMessage());
-        }
-    }
-
-    @Test
-    public void shouldErrorWithWrongValueType() {
-        //given
-        final Integer value = 1;
-        final Properties properties = new Properties();
-        properties.put(FederatedPropertiesUtil.EXECUTOR_STORAGE, value);
-
-        try {
-            //when
-            FederatedHandlersUtil.getExecutorsFrom(properties, null, null);
-            fail("exception expected");
-        } catch (MaestroCheckedException e) {
-            //then
-            assertTrue(e.getMessage().contains(String.format(FederatedPropertiesUtil.VALUE_FOR_PROPERTY_KEY_S_EXPECTED_CLASS_S_FOUND_S, FederatedPropertiesUtil.EXECUTOR_STORAGE, String.class.getCanonicalName(), value.getClass().getCanonicalName())));
+            //    TODO improve
         }
     }
 }

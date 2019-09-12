@@ -17,32 +17,41 @@
 package uk.gov.gchq.maestro.federated.operation;
 
 import uk.gov.gchq.koryphe.impl.binaryoperator.Max;
-import uk.gov.gchq.maestro.helper.MaestroObjectTest;
-import uk.gov.gchq.maestro.helper.TestOperation;
+import uk.gov.gchq.maestro.federated.handler.FederatedOperationHandler;
+import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 
-public class FederatedOperationTest extends MaestroObjectTest<FederatedOperation> {
+public class FederatedOperationTest extends MaestroObjectTest<Operation> {
 
     @Override
-    protected Class<FederatedOperation> getTestObjectClass() {
-        return FederatedOperation.class;
+    protected Class<Operation> getTestObjectClass() {
+        return Operation.class;
     }
 
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.federated.operation.FederatedOperation\",\n" +
-                "  \"ids\" : [ \"a\", \"b\", \"c\" ],\n" +
-                "  \"operation\" : {\n" +
-                "    \"class\" : \"uk.gov.gchq.maestro.helper.TestOperation\"\n" +
-                "  },\n" +
-                "  \"mergeOperation\" : {\n" +
-                "    \"class\" : \"uk.gov.gchq.koryphe.impl.binaryoperator.Max\"\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"FederatedOperation\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"ids\" : \"a,c,b\",\n" + //TODO should this get ordered?
+                "    \"mergeOperation\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.koryphe.impl.binaryoperator.Max\"\n" +
+                "    },\n" +
+                "    \"operation\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "      \"id\" : \"TestOperation\",\n" +
+                "      \"operationArgs\" : { }\n" +
+                "    }\n" +
                 "  }\n" +
                 "}";
     }
 
     @Override
-    protected FederatedOperation getTestObject() throws Exception {
-        return new FederatedOperation().operation(new TestOperation()).ids("a", "b", "c").mergeOperation(new Max());
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("FederatedOperation")
+                .operationArg(FederatedOperationHandler.OPERATION, new Operation("TestOperation"))
+                .operationArg(FederatedOperationHandler.IDS, "a,c,b")
+                .operationArg(FederatedOperationHandler.MERGE_OPERATION, new Max());
     }
 }

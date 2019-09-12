@@ -19,7 +19,7 @@ package uk.gov.gchq.maestro.federated.operation;
 import com.google.common.collect.Sets;
 
 import uk.gov.gchq.maestro.federated.FederatedAccess;
-import uk.gov.gchq.maestro.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 
 public class FederatedAccessTest extends MaestroObjectTest<FederatedAccess> {
 
@@ -33,14 +33,14 @@ public class FederatedAccessTest extends MaestroObjectTest<FederatedAccess> {
         return "{\n" +
                 "  \"class\" : \"uk.gov.gchq.maestro.federated.FederatedAccess\",\n" +
                 "  \"addingUserId\" : \"userId\",\n" +
-                "  \"graphAuths\" : [ \"A\", \"B\", \"C\" ],\n" +
+                "  \"auths\" : [ \"A\", \"B\", \"C\" ],\n" +
                 "  \"disabledByDefault\" : false,\n" +
                 "  \"public\" : false\n" +
                 "}";
     }
 
     @Override
-    protected FederatedAccess getTestObject() throws Exception {
+    protected FederatedAccess getFullyPopulatedTestObject() throws Exception {
         return new FederatedAccess(Sets.newHashSet("A", "B", "C"), "userId");
     }
 }

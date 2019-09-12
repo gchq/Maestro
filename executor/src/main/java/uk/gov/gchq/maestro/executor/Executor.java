@@ -23,8 +23,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,43 +53,39 @@ import uk.gov.gchq.maestro.operation.jobtracker.JobStatus;
 import uk.gov.gchq.maestro.operation.jobtracker.JobTracker;
 import uk.gov.gchq.maestro.operation.user.User;
 
+import java.io.Serializable;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static java.lang.String.format;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 @Since("0.0.1")
 @JsonPropertyOrder(value = {"class", "config"}, alphabetic = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
-public class Executor {
+public class Executor implements Comparable<Executor>, Serializable {
     public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
-    public static final String DEFAULT_OPERATION = "defaultOperation";
     public static final String WRAPPED_OP = "wrappedOp";
     public static final String INITIALISER = "initialiser";
     public static final String NO_HANDLER_WAS_FOUND_FOR_OPERATION = "Error in Executor: %s No handler was found for operation type: %s, this is an illegal state because a default handler should have been selected.";
     private static final long serialVersionUID = -5566921581366812872L;
-    public Config config;
+    private Config config;
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
-
-    public Executor() {
-        this(new Config());
-    }
 
     @JsonCreator
     public Executor(@JsonProperty("config") final Config config) {
         config(config);
     }
 
-    protected void startCacheServiceLoader(final Properties properties) {
+    protected void startCacheServiceLoader(final Map<String, Object> properties) {
         if (null != properties) {
             CacheServiceLoader.initialise(properties);
         }
     }
 
-    private void addExecutorService(final Properties properties) {
+    private void addExecutorService(final Map<String, Object> properties) {
         if (null != properties) {
             ExecutorService.initialise(ExecutorPropertiesUtil.getJobExecutorThreadCount(this));
         }
@@ -164,7 +162,7 @@ public class Executor {
             }
             CloseableUtil.close(operation);
             CloseableUtil.close(result);
-            throw e;
+            throw new OperationException(e);
         }
         return new Result(result, clonedRequest.getContext());
     }
@@ -192,6 +190,11 @@ public class Executor {
     }
 
     private OperationHandler getHandler(final Operation operation) {
+        final OperationHandler operationHandler = getNonDefaultHandler(operation);
+        return (isNull(operationHandler) ? config.getDefaultHandler() : operationHandler);
+    }
+
+    private OperationHandler getNonDefaultHandler(final Operation operation) {
         return config.getOperationHandler(operation);
     }
 
@@ -234,6 +237,10 @@ public class Executor {
         return this;
     }
 
+    public Config addOperationHandler(final String opId, final OperationHandler handler) {
+        return config.addOperationHandler(opId, handler);
+    }
+
     public void startScheduledJobs() throws OperationException {
         if (JobTracker.isCacheEnabled() && ExecutorService.isEnabled()) {
             for (final JobDetail jobDetailFromCache : JobTracker.getAllJobs()) {
@@ -244,16 +251,22 @@ public class Executor {
         }
     }
 
-    private Config getConfig() {
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
+    @JsonGetter("config")
+    public Config getConfig() {
         return config;
     }
 
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
-    @JsonGetter("config")
-    public Config getConfigCopy() throws SerialisationException {
-        //TODO implement deep clone.
-        return JSONSerialiser.deserialise(JSONSerialiser.serialise(config), Config.class);
-    }
+    // @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
+    // @JsonGetter("config")
+    // public Config getConfig() throws MaestroCheckedException {
+    //TODO implement deep clone.
+    // try {
+    //     return JSONSerialiser.deserialise(JSONSerialiser.serialise(config), Config.class);
+    // } catch (final Exception e) {
+    //     throw new MaestroCheckedException("Error getting config from Executor: " + getId(), e);
+    // }
+    // }
 
     private Object handleOperation(final Operation operation,
                                    final Context context) throws OperationException {
@@ -282,15 +295,10 @@ public class Executor {
                         LOGGER.warn("Error in operationHook " + operationHook.getClass().getSimpleName() + ": " + operationHookE.getMessage(), operationHookE);
                     }
                 }
-                throw e;
+                throw new OperationException(e);
             }
-        } else if (operation.getIdComparison(DEFAULT_OPERATION)) {
-            /*Id: DEFAULT_OPERATION is acceptable because it is defined below by this handler.*/
-            result = doUnhandledOperation(operation);
         } else {
-            final Operation defaultOp = new Operation(DEFAULT_OPERATION)
-                    .operationArg(WRAPPED_OP, operation);
-            result = this.handleOperation(defaultOp, context);
+            throw new IllegalStateException(String.format(NO_HANDLER_WAS_FOUND_FOR_OPERATION, this.getId(), operation.getId()));
         }
 
         if (null == result) {
@@ -301,8 +309,8 @@ public class Executor {
     }
 
     private void runInitOperation() throws OperationException {
-        final Operation operation = new Operation("Initialiser");
-        final OperationHandler handler = getHandler(operation);
+        final Operation operation = new Operation(INITIALISER);
+        final OperationHandler handler = getNonDefaultHandler(operation);
         final Context context = new Context();
 
         if (null != handler) {
@@ -317,16 +325,11 @@ public class Executor {
                 throw e;
             }
         } else {
-            LOGGER.debug("No Initialiser Operation Handler supplied");
+            LOGGER.info("No Initialiser Operation Handler supplied");
         }
     }
 
-    private Object doUnhandledOperation(final Operation operation) {
-        final Class<? extends Operation> aClass = operation.getClass();
-        CloseableUtil.close(operation);
-        throw new UnsupportedOperationException(format("Operation %s is not supported by executor: %s. WrappedOp: %s", operation.getId(), this.getConfig().getId(), operation.get(WRAPPED_OP)));
-    }
-
+    @JsonIgnore
     public String getId() {
         return config.getId();
     }
@@ -341,10 +344,8 @@ public class Executor {
             return false;
         }
 
-        final Executor executor = (Executor) o;
-
         return new EqualsBuilder()
-                .append(config, executor.config)
+                .append(this.config, ((Executor) o).config)
                 .isEquals();
     }
 
@@ -355,19 +356,32 @@ public class Executor {
                 .toHashCode();
     }
 
-    public String getPropertyOrDefault(final String key, final String defaultValue) {
-        return config.getPropertyOrDefault(key, defaultValue);
+    public Object getPropertyOrDefault(final String key, final Object defaultValue) {
+        return config.getPropertyOrDefault(key, defaultValue); //TODO review usage and cast of this method
     }
 
-    public String getProperty(final String key) {
-        return config.getProperty(key);
+    public Object getProperty(final String key) {
+        return config.getProperty(key); //TODO review useage and cast of this method
     }
 
-    public Object setProperty(final String key, final String value) {
+    public String setProperty(final String key, final String value) {
         return config.setProperty(key, value);
     }
 
     public String getDescription() {
         return config.getDescription();
+    }
+
+    @Override
+    public int compareTo(final Executor that) {
+        requireNonNull(that, "tried to compare null object");
+        return new CompareToBuilder().append(this.config, that.config).toComparison();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("config", config)
+                .toString();
     }
 }

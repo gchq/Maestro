@@ -17,42 +17,65 @@
 package uk.gov.gchq.maestro.federated.operation.handler;
 
 import com.google.common.collect.Lists;
+import org.junit.Assert;
+import org.junit.Before;
 
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.executor.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.federated.FederatedExecutorStorage;
-import uk.gov.gchq.maestro.federated.operation.AddExecutor;
-import uk.gov.gchq.maestro.federated.operation.RemoveExecutor;
-import uk.gov.gchq.maestro.federated.util.FederatedHandlersUtil;
-import uk.gov.gchq.maestro.helper.MaestroHandlerBasicTest;
+import uk.gov.gchq.maestro.federated.handler.AddExecutorHandler;
+import uk.gov.gchq.maestro.federated.handler.RemoveExecutorHandler;
+import uk.gov.gchq.maestro.federated.util.GetExecutorsFederatedUtil;
+import uk.gov.gchq.maestro.operation.Operation;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-public class RemoveExecutorHandlerBasicTest extends MaestroHandlerBasicTest<RemoveExecutor, RemoveExecutorHandler> {
+import static java.util.Objects.requireNonNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class RemoveExecutorHandlerBasicTest extends MaestroHandlerBasicTest<RemoveExecutorHandler> {
 
     @Override
-    protected RemoveExecutorHandler getBasicHandler() throws Exception {
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        try {
+            requireNonNull(testExecutor);
+            final AddExecutorHandler addHandler = new AddExecutorHandler();
+            final Operation addExecutor = new Operation("AddExecutor");
+
+            addHandler.doOperation(addExecutor.operationArg(AddExecutorHandler.EXECUTOR, new Executor(AddExecutorHandlerBasicTest.getInnerConfig("A"))), this.context, testExecutor);
+            addHandler.doOperation(addExecutor.operationArg(AddExecutorHandler.EXECUTOR, new Executor(AddExecutorHandlerBasicTest.getInnerConfig("B"))), this.context, testExecutor);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed setUp of getTestExecutor", e);
+        }
+    }
+
+    @Override
+    protected RemoveExecutorHandler getTestHandler() throws Exception {
         return new RemoveExecutorHandler();
     }
 
     @Override
-    protected RemoveExecutor getBasicOp() {
-        return new RemoveExecutor().graphId(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + "B");
+    protected Operation getBasicOp() {
+        return new Operation("RemoveExecutor").operationArg(RemoveExecutorHandler.EXECUTOR_ID, AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + "B");
     }
 
     @Override
     protected void inspectFields() throws Exception {
         final ArrayList<String> executorIds = Lists.newArrayList(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + "A", AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + "B");
         try {
-            final List<Executor> getAandB = FederatedHandlersUtil.getExecutorsFrom(this.testExecutor, testUser, executorIds); //TODO is the use of these Utils actually testing anything or sharing failure/bugs?
+            final Collection<Executor> getAandB = GetExecutorsFederatedUtil.getExecutorsFrom(this.testExecutor, testUser, executorIds); //TODO is the use of these Utils actually testing anything or sharing failure/bugs?
             Assert.fail("exception expected");
         } catch (MaestroCheckedException e) {
-            Assert.assertTrue(e.getMessage().contains(String.format(FederatedExecutorStorage.ERROR_GETTING_S_FROM_FEDERATED_EXECUTOR_STORAGE_S, executorIds.toString(), "")));
+            assertTrue(e.getMessage().contains(String.format(FederatedExecutorStorage.ERROR_GETTING_S_FROM_FEDERATED_EXECUTOR_STORAGE_S, executorIds.toString(), "")));
         }
-        final List<Executor> getA = FederatedHandlersUtil.getExecutorsFrom(this.testExecutor, testUser, Lists.newArrayList(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + "A")); //TODO is the use of these Utils actually testing anything or sharing failure/bugs?
-        Assert.assertEquals(1, getA.size());
-        assertEquals(AddExecutorHandlerBasicTest.getInnerExecutor("A"), getA.get(0));
+        final Collection<Executor> getA = GetExecutorsFederatedUtil.getExecutorsFrom(this.testExecutor, testUser, Lists.newArrayList(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + "A")); //TODO is the use of these Utils actually testing anything or sharing failure/bugs?
+        assertEquals(1, getA.size());
+        assertEquals(new Executor(AddExecutorHandlerBasicTest.getInnerConfig("A")), getA.toArray()[0]);
     }
 
     @Override
@@ -62,25 +85,24 @@ public class RemoveExecutorHandlerBasicTest extends MaestroHandlerBasicTest<Remo
 
     @Override
     protected void inspectReturnFromExecute(final Object value) {
-        Assert.assertNull(value);
+        assertTrue((Boolean) value);
     }
 
     @Override
-    protected Executor getTestExecutor() throws Exception {
-        final Executor testExecutor = super.getTestExecutor();
-        testExecutor.getConfig().addOperationHandler(RemoveExecutor.class, new RemoveExecutorHandler());
-
-        try {
-            final AddExecutorHandler basicHandler = new AddExecutorHandler();
-            final AddExecutor addExecutor = new AddExecutor();
-
-            basicHandler.doOperation(addExecutor.executor(AddExecutorHandlerBasicTest.getInnerExecutor("A")), this.context, testExecutor);
-            basicHandler.doOperation(addExecutor.executor(AddExecutorHandlerBasicTest.getInnerExecutor("B")), this.context, testExecutor);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed setUp of getTestExecutor", e);
-        }
-
-        return testExecutor;
+    protected Class<RemoveExecutorHandler> getTestObjectClass() {
+        return RemoveExecutorHandler.class;
     }
 
+    @Override
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.federated.handler.RemoveExecutorHandler\",\n" +
+                "  \"fieldDeclaration\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration\",\n" +
+                "    \"fields\" : {\n" +
+                "      \"executorId\" : \"java.lang.String\"\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+    }
 }

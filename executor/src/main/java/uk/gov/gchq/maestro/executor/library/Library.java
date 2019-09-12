@@ -18,11 +18,11 @@ package uk.gov.gchq.maestro.executor.library;
 import uk.gov.gchq.maestro.commonutil.exception.OverwritingException;
 import uk.gov.gchq.maestro.executor.util.ExecutorPropertiesUtil;
 
-import java.util.Properties;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * A Library contains executorIds and their related {@link Properties}.
+ * A Library contains executorIds and their related  Properties.
  */
 public abstract class Library {
     protected static final Pattern ID_ALLOWED_CHARACTERS = Pattern.compile("[a-zA-Z0-9_]*");
@@ -37,12 +37,12 @@ public abstract class Library {
      * @param properties The Properties that relate to the executorId.
      * @throws OverwritingException If the executorId already has related Properties.
      */
-    public void add(final String executorId, final Properties properties) throws OverwritingException {
+    public void add(final String executorId, final Map<String, Object> properties) throws OverwritingException {
         add(executorId, executorId, properties);
     }
 
     /**
-     * Add a new relationship between a executorId and {@link Properties}.
+     * Add a new relationship between a executorId and Properties.
      *
      * @param executorId   The executorId to relate to.
      * @param propertiesId the properties id
@@ -51,7 +51,7 @@ public abstract class Library {
      *                              Properties.
      */
     public void add(final String executorId,
-                    final String propertiesId, final Properties properties) throws OverwritingException {
+                    final String propertiesId, final Map<String, Object> properties) throws OverwritingException {
         validateId(executorId);
         checkExisting(executorId, properties);
 
@@ -69,7 +69,7 @@ public abstract class Library {
      * @param executorId The executorId to relate to.
      * @param properties The Properties that relate to the executorId.
      */
-    public void addOrUpdate(final String executorId, final Properties properties) {
+    public void addOrUpdate(final String executorId, final Map<String, Object> properties) {
         addOrUpdate(executorId, executorId, properties);
     }
 
@@ -82,7 +82,7 @@ public abstract class Library {
      * @param properties   The Properties that relate to the executorId.
      */
     public void addOrUpdate(final String executorId, final String propertiesId,
-                            final Properties properties) {
+                            final Map<String, Object> properties) {
         validateId(executorId);
 
         nullCheck(executorId, properties);
@@ -99,7 +99,7 @@ public abstract class Library {
      * @param executorId The executorId.
      * @return Properties.
      */
-    public Properties getPropertiesUsingExecutorId(final String executorId) {
+    public Map<String, Object> getPropertiesUsingExecutorId(final String executorId) {
         validateId(executorId);
 
         final String propsId = getPropertiesId(executorId);
@@ -122,10 +122,10 @@ public abstract class Library {
      * Gets the Properties given the Properties Id.
      *
      * @param propertiesId The Properties Id
-     * @return The {@link Properties} related to the
+     * @return The Properties related to the
      * Properties id.
      */
-    public Properties getPropertiesUsingPropertiesId(final String propertiesId) {
+    public Map<String, Object> getPropertiesUsingPropertiesId(final String propertiesId) {
         validateId(propertiesId);
 
         return _getProperties(propertiesId);
@@ -149,7 +149,7 @@ public abstract class Library {
      * @param properties the Properties.
      * @throws OverwritingException If there is already a relationship.
      */
-    public void addProperties(final String id, final Properties properties) throws OverwritingException {
+    public void addProperties(final String id, final Map<String, Object> properties) throws OverwritingException {
         if (null != properties) {
             validateId(id);
             if (!checkPropertiesExist(id, properties)) {
@@ -166,16 +166,16 @@ public abstract class Library {
      * @param id         the properties ID.
      * @param properties the Properties.
      */
-    public void addOrUpdateProperties(final String id, final Properties properties) {
+    public void addOrUpdateProperties(final String id, final Map<String, Object> properties) {
         if (null != properties) {
             validateId(id);
             _addProperties(id, properties);
         }
     }
 
-    public Properties resolveProperties(final Properties properties,
-                                        final String parentPropertiesId) {
-        Properties resultProps = null;
+    public Map<String, Object> resolveProperties(final Map<String, Object> properties,
+                                                 final String parentPropertiesId) {
+        Map<String, Object> resultProps = null;
         if (null != parentPropertiesId) {
             resultProps = this.getPropertiesUsingPropertiesId(parentPropertiesId);
         }
@@ -191,9 +191,9 @@ public abstract class Library {
 
     protected abstract void _addId(final String executorId, final String propsId);
 
-    protected abstract void _addProperties(final String propertiesId, final Properties properties);
+    protected abstract void _addProperties(final String propertiesId, final Map<String, Object> properties);
 
-    protected abstract Properties _getProperties(final String propertiesId);
+    protected abstract Map<String, Object> _getProperties(final String propertiesId);
 
     private void validateId(final String id) {
         if (null == id || !ID_ALLOWED_CHARACTERS.matcher(id).matches()) {
@@ -201,8 +201,8 @@ public abstract class Library {
         }
     }
 
-    private void checkExisting(final String executorId, final Properties properties) {
-        final Properties existingExecutorProps =
+    private void checkExisting(final String executorId, final Map<String, Object> properties) {
+        final Map<String, Object> existingExecutorProps =
                 getPropertiesUsingExecutorId(executorId);
 
         if (null != existingExecutorProps) {
@@ -216,8 +216,8 @@ public abstract class Library {
         }
     }
 
-    private boolean checkPropertiesExist(final String id, final Properties properties) {
-        final Properties existingProperties = _getProperties(id);
+    private boolean checkPropertiesExist(final String id, final Map<String, Object> properties) {
+        final Map<String, Object> existingProperties = _getProperties(id);
         final boolean exists = null != existingProperties;
         if (exists) {
             if (!existingProperties.equals(properties)) {
@@ -230,9 +230,9 @@ public abstract class Library {
         return exists;
     }
 
-    private void nullCheck(final String executorId, final Properties properties) {
+    private void nullCheck(final String executorId, final Map<String, Object> properties) {
         if (null == properties) {
-            throw new IllegalArgumentException(String.format(A_LIBRARY_CAN_T_BE_ADDED_WITH_A_NULL_S_ID_S, Properties.class.getSimpleName(), executorId));
+            throw new IllegalArgumentException(String.format(A_LIBRARY_CAN_T_BE_ADDED_WITH_A_NULL_S_ID_S, properties, executorId));
         }
     }
 }

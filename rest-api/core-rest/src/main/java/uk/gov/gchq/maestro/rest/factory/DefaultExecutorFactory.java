@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * Default implementation of the {@link ExecutorFactory} interface, used by HK2 to
@@ -104,12 +104,12 @@ public class DefaultExecutorFactory implements ExecutorFactory {
             }
             rtn = new Executor(deserialisedConfig);
         } else {
-            rtn = new Executor();
+            rtn = new Executor(new Config("ExecutorFromDefaultExecutorFactory"));
         }
         return rtn;
     }
 
-    public Properties getProperties() {
+    public Map<String, Object> getProperties() {
         final String storePropertiesPath = System.getProperty(SystemProperty.MAESTRO_PROPERTIES_PATH);
         if (null == storePropertiesPath) {
             throw new MaestroRuntimeException("The path to the Store Properties was not found in system properties for key: " + SystemProperty.MAESTRO_PROPERTIES_PATH);

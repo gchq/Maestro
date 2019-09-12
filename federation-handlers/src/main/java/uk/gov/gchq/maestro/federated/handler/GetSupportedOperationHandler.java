@@ -14,29 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.federated.operation;
+package uk.gov.gchq.maestro.federated.handler;
 
+import uk.gov.gchq.maestro.commonutil.exception.OperationException;
+import uk.gov.gchq.maestro.executor.Context;
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration;
+import uk.gov.gchq.maestro.executor.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 
-public class GetAllExecutorIdsTest extends MaestroObjectTest<Operation> {
-
+public class GetSupportedOperationHandler implements OperationHandler {
     @Override
-    protected Class<Operation> getTestObjectClass() {
-        return Operation.class;
+    public Object _doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
+        return null;
     }
 
     @Override
-    protected String getJSONString() {
-        return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
-                "  \"id\" : \"GetAllExecutorIds\",\n" +
-                "  \"operationArgs\" : { }\n" +
-                "}";
-    }
-
-    @Override
-    protected Operation getFullyPopulatedTestObject() throws Exception {
-        return new Operation("GetAllExecutorIds");
+    public FieldDeclaration getFieldDeclaration() {
+        return new FieldDeclaration();
     }
 }

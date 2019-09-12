@@ -23,6 +23,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.rules.TemporaryFolder;
 
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
+import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
 import uk.gov.gchq.maestro.executor.Executor;
 import uk.gov.gchq.maestro.executor.util.Config;
 import uk.gov.gchq.maestro.operation.Operation;
@@ -74,7 +75,12 @@ public abstract class RestApiTestClient {
     }
 
     public void reinitialiseExecutor(final TemporaryFolder testFolder, final String configResourcePath) throws IOException {
-        final Config configFromPath = Config.getConfigFromPath(RestApiTestClient.class, configResourcePath);
+        final Config configFromPath;
+        try {
+            configFromPath = Config.getConfigFromPath(RestApiTestClient.class, configResourcePath);
+        } catch (Exception e) {
+            throw new MaestroRuntimeException(String.format("Error building Config from file: %s due to %s", configResourcePath, e.getMessage()), e);
+        }
         reinitialiseExecutor(testFolder, configFromPath);
     }
 

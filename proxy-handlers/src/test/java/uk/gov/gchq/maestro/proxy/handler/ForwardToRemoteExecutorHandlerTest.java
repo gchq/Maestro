@@ -20,12 +20,11 @@ import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.commonutil.exception.MaestroWrappedErrorRuntimeException;
+import uk.gov.gchq.maestro.commonutil.exception.OperationException;
 import uk.gov.gchq.maestro.executor.Executor;
 import uk.gov.gchq.maestro.executor.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.executor.util.Config;
 import uk.gov.gchq.maestro.operation.Operation;
-import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 
 
 public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<ForwardToRemoteExecutorHandler> {
@@ -37,14 +36,14 @@ public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<
 
     @Override
     protected Operation getBasicOp() throws Exception {
-        return new Operation("DefaultOperation").operationArg(Executor.WRAPPED_OP, new Operation("test")
-                .operationArg(ForwardToRemoteExecutorHandler.OUTPUT_TYPE_REFERENCE, new TypeReferenceImpl.Integer()));
+        return new Operation("test");
     }
 
     @Override
     protected Config getExecutorConfig() throws Exception {
-        final Config config = super.getExecutorConfig();
-        config.addOperationHandler(Executor.DEFAULT_OPERATION, new ForwardToRemoteExecutorHandler());
+        final Config config = super.getExecutorConfig()
+                .addOperationHandler(getBasicOp().getId(), null)
+                .setDefaultHandler(getTestHandler());
         config.addOperationHandler(Executor.INITIALISER, new SingleProxyInitialiseHandler());
         return config;
     }
@@ -72,14 +71,14 @@ public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<
     }
 
     @Override
-    @Test(expected = MaestroWrappedErrorRuntimeException.class)
+    @Test(expected = OperationException.class)
     public void shouldHandleABasicExample() throws Exception {
         super.shouldHandleABasicExample();
         //TODO improve
     }
 
     @Override
-    @Test(expected = MaestroWrappedErrorRuntimeException.class)
+    @Test(expected = OperationException.class)
     public void shouldExecuteABasicExample() throws Exception {
         super.shouldExecuteABasicExample();
         //TODO improve

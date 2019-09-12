@@ -46,7 +46,7 @@ public class GetJobDetailsHandler implements OutputOperationHandler<JobDetail> {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration().field("JobId", String.class);
+        return new FieldDeclaration().fieldRequired("JobId", String.class);
     }
 
 }

@@ -18,18 +18,21 @@ package uk.gov.gchq.maestro.federated;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
-import uk.gov.gchq.maestro.federated.util.Config;
-import uk.gov.gchq.maestro.federated.util.FederatedHandlersUtil;
-import uk.gov.gchq.maestro.federated.util.FederatedPropertiesUtil;
-import uk.gov.gchq.maestro.helper.MaestroObjectTest;
-import uk.gov.gchq.maestro.user.User;
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.executor.util.Config;
+import uk.gov.gchq.maestro.federated.util.ExecutorStorageFederatedUtil;
+import uk.gov.gchq.maestro.federated.util.GetExecutorsFederatedUtil;
+import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.operation.user.User;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class FederatedExecutorTest extends MaestroObjectTest<Executor> {
 
@@ -41,12 +44,46 @@ public class FederatedExecutorTest extends MaestroObjectTest<Executor> {
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.executor.Executor\",\n" +
                 "  \"config\" : {\n" +
-                "    \"class\" : \"uk.gov.gchq.maestro.federated.util.Config\",\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.executor.util.Config\",\n" +
                 "    \"operationHandlers\" : { },\n" +
                 "    \"properties\" : {\n" +
-                "      \"ExecutorStorage\" : \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federated.FederatedExecutorStorage\\\",\\\"storage\\\":{\\\"{\\\\\\\"class\\\\\\\":\\\\\\\"uk.gov.gchq.maestro.federated.FederatedAccess\\\\\\\",\\\\\\\"addingUserId\\\\\\\":\\\\\\\"user1\\\\\\\",\\\\\\\"graphAuths\\\\\\\":[],\\\\\\\"disabledByDefault\\\\\\\":false,\\\\\\\"public\\\\\\\":false}\\\":[\\\"java.util.HashSet\\\",[{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.federated.util.Config\\\",\\\"id\\\":\\\"ExecutorId2\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}},{\\\"class\\\":\\\"uk.gov.gchq.maestro.Executor\\\",\\\"config\\\":{\\\"class\\\":\\\"uk.gov.gchq.maestro.federated.util.Config\\\",\\\"id\\\":\\\"ExecutorId1\\\",\\\"operationHandlers\\\":{},\\\"properties\\\":{},\\\"operationHooks\\\":[],\\\"requestHooks\\\":[]}}]]}}\"\n" +
+                "      \"executorStorage\" : {\n" +
+                "        \"class\" : \"uk.gov.gchq.maestro.federated.FederatedExecutorStorage\",\n" +
+                "        \"storage\" : {\n" +
+                "          \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federated.FederatedAccess\\\",\\\"addingUserId\\\":\\\"user1\\\",\\\"auths\\\":[],\\\"disabledByDefault\\\":false,\\\"public\\\":false}\" : [ \"java.util.TreeSet\", [ {\n" +
+                "            \"class\" : \"uk.gov.gchq.maestro.executor.Executor\",\n" +
+                "            \"config\" : {\n" +
+                "              \"class\" : \"uk.gov.gchq.maestro.executor.util.Config\",\n" +
+                "              \"id\" : \"ExecutorId1\",\n" +
+                "              \"operationHandlers\" : { },\n" +
+                "              \"properties\" : { },\n" +
+                "              \"defaultHandler\" : {\n" +
+                "                \"class\" : \"uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler\"\n" +
+                "              },\n" +
+                "              \"operationHooks\" : [ ],\n" +
+                "              \"requestHooks\" : [ ]\n" +
+                "            }\n" +
+                "          }, {\n" +
+                "            \"class\" : \"uk.gov.gchq.maestro.executor.Executor\",\n" +
+                "            \"config\" : {\n" +
+                "              \"class\" : \"uk.gov.gchq.maestro.executor.util.Config\",\n" +
+                "              \"id\" : \"ExecutorId2\",\n" +
+                "              \"operationHandlers\" : { },\n" +
+                "              \"properties\" : { },\n" +
+                "              \"defaultHandler\" : {\n" +
+                "                \"class\" : \"uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler\"\n" +
+                "              },\n" +
+                "              \"operationHooks\" : [ ],\n" +
+                "              \"requestHooks\" : [ ]\n" +
+                "            }\n" +
+                "          } ] ]\n" +
+                "        }\n" +
+                "      }\n" +
+                "    },\n" +
+                "    \"defaultHandler\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler\"\n" +
                 "    },\n" +
                 "    \"operationHooks\" : [ ],\n" +
                 "    \"requestHooks\" : [ ]\n" +
@@ -56,27 +93,28 @@ public class FederatedExecutorTest extends MaestroObjectTest<Executor> {
 
     @Test
     public void shouldGetStoredExecutor() throws Exception {
-        final Executor testObject = getTestObject();
-        List<Executor> actual = FederatedHandlersUtil.getExecutorsFrom(testObject, new User("user1"), Lists.newArrayList("ExecutorId1", "ExecutorId2"));
+        final Executor testObject = getFullyPopulatedTestObject();
+        Collection<Executor> actual = GetExecutorsFederatedUtil.getExecutorsFrom(testObject, new User("user1"), Lists.newArrayList("ExecutorId1", "ExecutorId2"));
 
-        final List<Executor> expected = new ArrayList<>();
-        expected.add(new Executor().config(new Config().id("ExecutorId1")));
-        expected.add(new Executor().config(new Config().id("ExecutorId2")));
+        final Collection<Executor> expected = new ArrayList<>();
+        expected.add(new Executor(new Config().id("ExecutorId1")));
+        expected.add(new Executor(new Config().id("ExecutorId2")));
 
-        assertEquals(expected, actual);
+        assertEquals(expected.size(), actual.size());
+        assertTrue(Arrays.equals(expected.toArray(), actual.toArray()));
+
     }
 
-
     @Override
-    protected Executor getTestObject() throws Exception {
-        final Properties properties = new Properties();
-        final Executor executor1 = new Executor().config(new Config().id("ExecutorId1"));
-        final Executor executor2 = new Executor().config(new Config().id("ExecutorId2"));
+    protected Executor getFullyPopulatedTestObject() throws Exception {
+        final Map<String, Object> properties = new HashMap<>();
+        final Executor executor1 = new Executor(new Config().id("ExecutorId1"));
+        final Executor executor2 = new Executor(new Config().id("ExecutorId2"));
         final FederatedExecutorStorage federatedExecutorStorage = new FederatedExecutorStorage();
         federatedExecutorStorage.put(executor1, new FederatedAccess(null, "user1"));
         federatedExecutorStorage.put(executor2, new FederatedAccess(null, "user1"));
-        properties.put(FederatedPropertiesUtil.EXECUTOR_STORAGE, new String(JSONSerialiser.serialise(federatedExecutorStorage)));
+        properties.put(ExecutorStorageFederatedUtil.EXECUTOR_STORAGE, federatedExecutorStorage);
 
-        return new Executor().config(new Config().setProperties(properties));
+        return new Executor(new Config().setProperties(properties));
     }
 }

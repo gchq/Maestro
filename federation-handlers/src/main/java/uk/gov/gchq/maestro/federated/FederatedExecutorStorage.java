@@ -28,30 +28,35 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import uk.gov.gchq.maestro.Executor;
 import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.CacheOperationException;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
 import uk.gov.gchq.maestro.commonutil.exception.OverwritingException;
-import uk.gov.gchq.maestro.user.User;
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.operation.user.User;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 
 @JsonPropertyOrder(value = {"class", "storage"}, alphabetic = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
-public class FederatedExecutorStorage {
+public class FederatedExecutorStorage implements Serializable {
     public static final boolean DEFAULT_DISABLED_BY_DEFAULT = false;
     public static final String ERROR_ADDING_GRAPH_TO_CACHE = "Error adding executor, ExecutorId is known within the cache, but %s is different. ExecutorId: %s";
     public static final String USER_IS_ATTEMPTING_TO_OVERWRITE = "User is attempting to overwrite a executor within FederatedStore. ExecutorId: %s";
@@ -59,10 +64,11 @@ public class FederatedExecutorStorage {
     public static final String GRAPH_IDS_NOT_VISIBLE = "The following executorIds are not visible or do not exist: %s";
     public static final String UNABLE_TO_MERGE_THE_SCHEMAS_FOR_ALL_OF_YOUR_FEDERATED_GRAPHS = "Unable to merge the schemas for all of your federated executors: %s. You can limit which executors to query for using the operation option: %s";
     public static final String ERROR_GETTING_S_FROM_FEDERATED_EXECUTOR_STORAGE_S = "Error getting: %s from FederatedExecutorStorage -> %s";
+    private static final long serialVersionUID = -306891755744655032L;
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
     @JsonSerialize(keyUsing = MapStorageSerialiser.class)
     @JsonDeserialize(keyUsing = MapStorageDeserialiser.class)
-    private final Map<FederatedAccess, Set<Executor>> storage = new HashMap<>();
+    private final TreeMap<FederatedAccess, TreeSet<Executor>> storage = new TreeMap<>(); //TODO set might need to be ordered for serialisation tests
     private FederatedExecutorCache federatedStoreCache = new FederatedExecutorCache();
     private Boolean isCacheEnabled = false;
     // private ExecutorLibrary executorLibrary; TODO
@@ -72,12 +78,12 @@ public class FederatedExecutorStorage {
     }
 
     @JsonCreator
-    public FederatedExecutorStorage(@JsonProperty("storage") final Map<FederatedAccess, Set<Executor>> storage) {
+    public FederatedExecutorStorage(@JsonProperty("storage") final Map<FederatedAccess, TreeSet<Executor>> storage) {
         this.storage.putAll(storage);
     }
 
     @JsonGetter("storage")
-    public Map<FederatedAccess, Set<Executor>> getStorage() {
+    public Map<FederatedAccess, TreeSet<Executor>> getStorage() {
         // return Collections.unmodifiableMap(storage);
         return storage;
     }
@@ -96,9 +102,9 @@ public class FederatedExecutorStorage {
     }
 
     public FederatedExecutorStorage put(final Executor executor, final FederatedAccess access) throws MaestroCheckedException {
-        if (executor != null) {
+        if (nonNull(executor)) {
             try {
-                if (null == access) {
+                if (isNull(access)) {
                     throw new IllegalArgumentException(ACCESS_IS_NULL);
                 }
 
@@ -107,20 +113,20 @@ public class FederatedExecutorStorage {
                 // }
 
                 validateExisting(executor);
-                final Executor builtExecutor = executor;
                 if (isCacheEnabled()) {
-                    addToCache(builtExecutor, access);
+                    addToCache(executor, access);
                 }
 
-                Set<Executor> existingExecutors = storage.get(access);
+                TreeSet<Executor> existingExecutors = storage.get(access);
                 if (null == existingExecutors) {
-                    existingExecutors = Sets.newHashSet(builtExecutor);
+                    existingExecutors = new TreeSet<>();
+                    existingExecutors.add(executor);
                     storage.put(access, existingExecutors);
                 } else {
-                    existingExecutors.add(builtExecutor);
+                    existingExecutors.add(executor);
                 }
             } catch (final Exception e) {
-                throw new MaestroCheckedException("Error adding executor id: " + executor.getConfig().getId() + " to storage", e);
+                throw new MaestroCheckedException("Error adding executor id: " + executor.getId() + " to storage", e);
             }
         } else {
             throw new MaestroCheckedException("Executor cannot be null");
@@ -137,7 +143,7 @@ public class FederatedExecutorStorage {
      */
     public Collection<String> getAllIds(final User user) {
         final Set<String> rtn = getAllStream(user)
-                .map(e -> e.getConfig().getId())
+                .map(Executor::getId)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
         return Collections.unmodifiableSet(rtn);
@@ -167,13 +173,13 @@ public class FederatedExecutorStorage {
      */
     public boolean remove(final String executorId, final User user) {
         boolean isRemoved = false;
-        for (final Map.Entry<FederatedAccess, Set<Executor>> entry : storage.entrySet()) {
+        for (final Map.Entry<FederatedAccess, TreeSet<Executor>> entry : storage.entrySet()) {
             if (isValidToView(user, entry.getKey())) {
                 final Set<Executor> executors = entry.getValue();
                 if (null != executors) {
                     HashSet<Executor> remove = Sets.newHashSet();
                     for (final Executor executor : executors) {
-                        if (executor.getConfig().getId().equals(executorId)) {
+                        if (executor.getId().equals(executorId)) {
                             remove.add(executor);
                             deleteFromCache(executorId);
                             isRemoved = true;
@@ -203,11 +209,11 @@ public class FederatedExecutorStorage {
         } catch (final MaestroCheckedException e) {
             throw new MaestroCheckedException(String.format(ERROR_GETTING_S_FROM_FEDERATED_EXECUTOR_STORAGE_S, executorIds.toString(), e.getMessage()), e);
         }
-        Stream<Executor> executors = getStream(user, executorIds);
+        Stream<Executor> configs = getStream(user, executorIds);
         if (null != executorIds) {
-            executors = executors.sorted(Comparator.comparingInt(g -> executorIds.indexOf(g.getConfig().getId())));
+            configs = configs.sorted(Comparator.comparingInt(g -> executorIds.indexOf(g.getId())));
         }
-        final LinkedHashSet<Executor> rtn = executors.collect(Collectors.toCollection(LinkedHashSet::new));
+        final LinkedHashSet<Executor> rtn = configs.collect(Collectors.toCollection(LinkedHashSet::new));
         return Collections.unmodifiableSet(rtn);
     }
 
@@ -224,12 +230,12 @@ public class FederatedExecutorStorage {
         }
     }
 
-    private void validateExisting(final Executor executor) {
-        final String executorId = executor.getConfig().getId();
+    private void validateExisting(final Executor addingConfig) {
+        final String addingConfigId = addingConfig.getId();
         for (final Set<Executor> executors : storage.values()) {
-            for (final Executor g : executors) {
-                if (g.getConfig().getId().equals(executorId)) {
-                    throw new OverwritingException((String.format(USER_IS_ATTEMPTING_TO_OVERWRITE, executorId)));
+            for (final Executor e : executors) {
+                if (e.getId().equals(addingConfigId)) {
+                    throw new OverwritingException((String.format(USER_IS_ATTEMPTING_TO_OVERWRITE, addingConfigId)));
                 }
             }
         }
@@ -265,7 +271,7 @@ public class FederatedExecutorStorage {
                 .stream()
                 .filter(entry -> isValidToView(user, entry.getKey()))
                 .flatMap(entry -> entry.getValue().stream())
-                .filter(executor -> executorIds.contains(executor.getConfig().getId()));
+                .filter(config -> executorIds.contains(config.getId()));
     }
 
     /**
@@ -287,13 +293,13 @@ public class FederatedExecutorStorage {
                 .flatMap(entry -> entry.getValue().stream());
     }
 
-    private void addToCache(final Executor newExecutor, final FederatedAccess access) {
-        final String executorId = newExecutor.getConfig().getId();
+    private void addToCache(final Executor executor, final FederatedAccess access) {
+        final String executorId = executor.getId();
         if (federatedStoreCache.contains(executorId)) {
-            validateSameAsFromCache(newExecutor, executorId);
+            validateSameAsFromCache(executor, executorId);
         } else {
             try {
-                federatedStoreCache.addExecutorToCache(newExecutor, access, false);
+                federatedStoreCache.addExecutorToCache(executor, access, false);
             } catch (final OverwritingException e) {
                 throw new OverwritingException((String.format("User is attempting to overwrite a executor within the cacheService. ExecutorId: %s", executorId)));
             } catch (final CacheOperationException e) {
@@ -378,11 +384,34 @@ public class FederatedExecutorStorage {
 
         final FederatedExecutorStorage that = (FederatedExecutorStorage) o;
 
-        return new EqualsBuilder()
-                .append(storage, that.storage)
+        final EqualsBuilder eb = new EqualsBuilder();
+
+        // eb.append(this.storage, that.storage);
+
+        if (eb.append(this.storage.size(), that.storage.size()).isEquals()) {
+            for (final FederatedAccess thisAccess : storage.keySet()) {
+                if (!eb.append(true, that.storage.containsKey(thisAccess)).isEquals()) {
+                    break;
+                }
+
+                final TreeSet<Executor> thisValue = storage.get(thisAccess);
+                final TreeSet<Executor> thatValue = that.storage.get(thisAccess);
+
+                if (!eb.append(thisValue.size(), thatValue.size()).isEquals()) {
+                    break;
+                }
+                for (final Executor thisExecutor : thisValue) {
+                    if (!eb.append(true, thatValue.contains(thisExecutor)).isEquals()) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return eb.append(isCacheEnabled, that.isCacheEnabled)
                 // .append(federatedStoreCache, that.federatedStoreCache) TODO Examine if/when this is required/used
-                .append(isCacheEnabled, that.isCacheEnabled)
                 .isEquals();
+
     }
 
     @Override

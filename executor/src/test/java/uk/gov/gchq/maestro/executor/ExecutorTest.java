@@ -27,7 +27,8 @@ import uk.gov.gchq.maestro.executor.util.Config;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -57,6 +58,9 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
                 "    \"properties\" : {\n" +
                 "      \"configKey\" : \"configValue\"\n" +
                 "    },\n" +
+                "    \"defaultHandler\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler\"\n" +
+                "    },\n" +
                 "    \"operationHooks\" : [ ],\n" +
                 "    \"requestHooks\" : [ ]\n" +
                 "  }\n" +
@@ -66,7 +70,7 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
     @Override
     protected Executor getFullyPopulatedTestObject() {
         final Config config = new Config();
-        final Properties properties = new Properties();
+        final Map<String, Object> properties = new HashMap<>();
         properties.put("configKey", "configValue");
         config.setProperties(properties);
         config.addOperationHandler("testOperation", new TestHandler().handlerField("handlerFieldValue1"));
@@ -91,7 +95,11 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
             new Executor(config);
             fail("Exception expected");
         } catch (final Exception e) {
-            assertTrue(e.getCause().getMessage().equals("Thrown within InitialiserHandlerImpl"));
+            try {
+                assertTrue(e.getCause().getMessage().contains("Thrown within InitialiserHandlerImpl"));
+            } catch (final Exception e2) {
+                throw e;
+            }
         }
     }
 
@@ -106,7 +114,11 @@ public class ExecutorTest extends MaestroObjectTest<Executor> {
             new Executor(config);
             fail("Exception expected");
         } catch (final Exception e) {
-            assertTrue(e.getCause().getMessage().equals("Thrown within InitialiserHandlerImpl"));
+            try {
+                assertTrue(e.getCause().getMessage().contains("Thrown within InitialiserHandlerImpl"));
+            } catch (final Exception e2) {
+                throw e;
+            }
         }
     }
 

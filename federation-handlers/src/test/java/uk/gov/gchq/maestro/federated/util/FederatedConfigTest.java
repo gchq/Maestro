@@ -18,11 +18,14 @@ package uk.gov.gchq.maestro.federated.util;
 
 import com.google.common.collect.Sets;
 
-import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.executor.util.Config;
+import uk.gov.gchq.maestro.executor.util.ConfigTest;
 import uk.gov.gchq.maestro.federated.FederatedAccess;
 import uk.gov.gchq.maestro.federated.FederatedExecutorStorage;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertNull;
 
@@ -31,15 +34,25 @@ public class FederatedConfigTest extends ConfigTest {
     @Override
     protected String getJSONString() {
         return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.executor.util.Config\",\n" +
                 "  \"id\" : \"configIdValue\",\n" +
                 "  \"operationHandlers\" : {\n" +
-                "    \"uk.gov.gchq.maestro.helper.TestOperation\" : {\n" +
-                "      \"class\" : \"uk.gov.gchq.maestro.helper.TestHandler\",\n" +
+                "    \"testOperation\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.executor.helper.TestHandler\",\n" +
+                "      \"fieldDeclaration\" : {\n" +
+                "        \"class\" : \"uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration\",\n" +
+                "        \"fields\" : {\n" +
+                "          \"field\" : \"java.lang.String\"\n" +
+                "        }\n" +
+                "      },\n" +
                 "      \"handlerField\" : \"handlerFieldValue1\"\n" +
                 "    }\n" +
                 "  },\n" +
                 "  \"properties\" : {\n" +
                 "    \"configKey\" : \"configValue\"\n" +
+                "  },\n" +
+                "  \"defaultHandler\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler\"\n" +
                 "  },\n" +
                 "  \"operationHooks\" : [ ],\n" +
                 "  \"requestHooks\" : [ ]\n" +
@@ -47,16 +60,15 @@ public class FederatedConfigTest extends ConfigTest {
     }
 
     @Override
-    protected Config getTestObject() throws Exception {
-
-        final Config testObject = super.getTestObject();
-        final Properties properties = new Properties();
-        final Object o = properties.get(FederatedPropertiesUtil.EXECUTOR_STORAGE);
-        assertNull("parent class should not be dealing with property calues of federated " + FederatedPropertiesUtil.EXECUTOR_STORAGE, o);
+    protected Config getFullyPopulatedTestObject() throws Exception {
+        final Config testObject = super.getFullyPopulatedTestObject();
+        final Map<String, Object> properties = new HashMap<>();
+        final Object o = properties.get(ExecutorStorageFederatedUtil.EXECUTOR_STORAGE);
+        assertNull("parent class should not be dealing with property calues of federated " + ExecutorStorageFederatedUtil.EXECUTOR_STORAGE, o);
         final FederatedExecutorStorage federatedExecutorStorage = new FederatedExecutorStorage();
-        federatedExecutorStorage.put(new Executor().config(new Config().id("inner")), new FederatedAccess(Sets.newHashSet("valueA"), "addingUser"));
+        federatedExecutorStorage.put(new Executor(new Config().id("inner")), new FederatedAccess(Sets.newHashSet("valueA"), "addingUser"));
 
-        properties.put(FederatedPropertiesUtil.EXECUTOR_STORAGE, federatedExecutorStorage);
+        properties.put(ExecutorStorageFederatedUtil.EXECUTOR_STORAGE, federatedExecutorStorage);
         return testObject;
     }
 }

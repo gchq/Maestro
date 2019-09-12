@@ -19,12 +19,13 @@ package uk.gov.gchq.maestro.rest;
 import uk.gov.gchq.maestro.commonutil.DebugUtil;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.executor.util.ExecutorPropertiesUtil;
 import uk.gov.gchq.maestro.rest.factory.DefaultExecutorFactory;
 import uk.gov.gchq.maestro.rest.factory.UnknownUserFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * System property keys and default values.
@@ -86,7 +87,7 @@ public abstract class SystemProperty {
     public static final String LOGO_LINK_DEFAULT = "https://github.com/gchq/Maestro";
     public static final String LOGO_IMAGE_URL_DEFAULT = "images/logo.png";
 
-    private static Properties versionProperties;
+    private static Map<String, Object> versionProperties;
 
     private SystemProperty() {
         // Private constructor to prevent instantiation.
@@ -96,16 +97,14 @@ public abstract class SystemProperty {
         if (versionProperties == null) {
             loadVersionProperties();
         }
-        return versionProperties.getProperty(propertyKey);
+        return (String) versionProperties.get(propertyKey);
     }
 
     private static void loadVersionProperties() {
         try {
-            Properties prop = new Properties();
             InputStream input = StreamUtil.openStream(SystemProperty.class, "version.properties");
-            prop.load(input);
-            versionProperties = prop;
-        } catch (final IOException e) {
+            versionProperties = new HashMap<>(ExecutorPropertiesUtil.loadProperties(input));
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }

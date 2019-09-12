@@ -27,10 +27,12 @@ import uk.gov.gchq.maestro.executor.helper.TestHook;
 import uk.gov.gchq.maestro.executor.hook.Hook;
 import uk.gov.gchq.maestro.executor.library.NoLibrary;
 import uk.gov.gchq.maestro.executor.operation.declaration.OperationDeclaration;
+import uk.gov.gchq.maestro.executor.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 
 import java.util.Arrays;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -57,6 +59,9 @@ public class ConfigTest extends MaestroObjectTest<Config> {
                 "  \"properties\" : {\n" +
                 "    \"configKey\" : \"configValue\"\n" +
                 "  },\n" +
+                "  \"defaultHandler\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler\"\n" +
+                "  },\n" +
                 "  \"operationHooks\" : [ ],\n" +
                 "  \"requestHooks\" : [ ]\n" +
                 "}";
@@ -66,7 +71,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     protected Config getFullyPopulatedTestObject() throws Exception {
         final Config config = new Config();
         config.addOperationHandler("testOperation", new TestHandler().handlerField("handlerFieldValue1"));
-        final Properties properties = new Properties();
+        final Map<String, Object> properties = new HashMap<>();
         properties.put("configKey", "configValue");
         config.setProperties(properties);
         config.id("configIdValue");
@@ -75,7 +80,7 @@ public class ConfigTest extends MaestroObjectTest<Config> {
 
     @Test
     public void shouldJsonSerialiseAndDeserialise() throws SerialisationException {
-        final Properties properties = new Properties();
+        final Map<String, Object> properties = new HashMap<>();
         properties.put("configKey", "configValue");
         final Config config = new Config()
                 .id("testId")
@@ -100,11 +105,11 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     @Test
     public void shouldBuildConfigCorrectly() {
         // Given
-        final Properties mergedProperties = new Properties();
+        final Map<String, Object> mergedProperties = new HashMap<>();
         mergedProperties.put("key1", "value1");
         mergedProperties.put("key2", "value2");
         mergedProperties.put("testKey", "value1");
-        final Properties testProperties = new Properties();
+        final Map<String, Object> testProperties = new HashMap<>();
         testProperties.put("key2", "value2");
         final Hook testOpHook = new TestHook("field1Val1");
         final Hook testReqHook = new TestHook("field1Val2");
@@ -132,4 +137,14 @@ public class ConfigTest extends MaestroObjectTest<Config> {
     protected Class<Config> getTestObjectClass() {
         return Config.class;
     }
+
+    @Test
+    public void shouldNotSetDefaultHandlerToNull() throws Exception {
+        final Config fullyPopulatedTestObject = getFullyPopulatedTestObject();
+        final OperationHandler before = fullyPopulatedTestObject.getDefaultHandler();
+        fullyPopulatedTestObject.setDefaultHandler(null);
+        final OperationHandler after = fullyPopulatedTestObject.getDefaultHandler();
+        assertEquals(before, after);
+    }
+
 }

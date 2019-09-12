@@ -19,14 +19,13 @@ import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * A {@code HashMapLibrary} stores a {@link Library} within a HashMap.
  */
 public class HashMapLibrary extends Library {
     private static final Map<String, String> EXECUTORS = new HashMap<>();
-    private static final Map<String, Properties> PROPERTIES = new HashMap<>();
+    private static final Map<String, Map<String, Object>> PROPERTIES = new HashMap<>();
 
     public static void clear() {
         EXECUTORS.clear();
@@ -49,14 +48,15 @@ public class HashMapLibrary extends Library {
     }
 
     @Override
-    protected void _addProperties(final String propertiesId, final Properties properties) {
+    protected void _addProperties(final String propertiesId, final Map<String, Object> properties) {
         PROPERTIES.put(propertiesId, properties);
     }
 
     @Override
-    protected Properties _getProperties(final String propertiesId) {
-        final Properties properties = PROPERTIES.get(propertiesId);
-        return (null == properties) ? null : (Properties) properties.clone();
+    protected Map<String, Object> _getProperties(final String propertiesId) {
+        final Map<String, Object> properties = PROPERTIES.get(propertiesId);
+        final Map<String, Object> clone = (null == properties) ? null : new HashMap<>(properties);
+        return clone;
     }
 
     @Override

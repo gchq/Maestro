@@ -18,7 +18,7 @@ package uk.gov.gchq.maestro.executor.library;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Properties;
+import java.util.Map;
 
 public class NoLibrary extends Library {
     private static final Logger LOGGER = LoggerFactory.getLogger(NoLibrary.class);
@@ -45,12 +45,12 @@ public class NoLibrary extends Library {
 
     @Override
     protected void _addProperties(final String propertiesId,
-                                  final Properties properties) {
+                                  final Map<String, Object> properties) {
         // do nothing
     }
 
     @Override
-    protected Properties _getProperties(final String propertiesId) {
+    protected Map<String, Object> _getProperties(final String propertiesId) {
         return null;
     }
 }

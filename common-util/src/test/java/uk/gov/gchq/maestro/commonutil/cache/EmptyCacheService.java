@@ -19,12 +19,12 @@ package uk.gov.gchq.maestro.commonutil.cache;
 import uk.gov.gchq.maestro.commonutil.exception.CacheOperationException;
 
 import java.util.Collection;
-import java.util.Properties;
+import java.util.Map;
 import java.util.Set;
 
 public class EmptyCacheService implements ICacheService {
     @Override
-    public void initialise(final Properties properties) {
+    public void initialise(final Map<String, Object> properties) {
 
     }
 

@@ -16,10 +16,14 @@
 
 package uk.gov.gchq.maestro.proxy.handler;
 
+import org.junit.Assert;
+
 import uk.gov.gchq.maestro.executor.helper.MaestroHandlerBasicTest;
 import uk.gov.gchq.maestro.operation.Operation;
 
 import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
 
 public class HashMapHandlerTest extends MaestroHandlerBasicTest<HashMapHandler> {
 
@@ -73,7 +77,7 @@ public class HashMapHandlerTest extends MaestroHandlerBasicTest<HashMapHandler> 
 
         final Object o = getTestHandler().doOperation(operation, context, testExecutor);
 
-        Assert.assertEquals(VALUE_FROM_TEST, o);
+        assertEquals(VALUE_FROM_TEST, o);
     }
 
     @Override

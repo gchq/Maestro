@@ -83,8 +83,7 @@ public class HashMapHandler implements OperationHandler {
         return new FieldDeclaration()
                 .fieldOptional(MAP_KEY, Object.class)
                 .fieldOptional(MAP_VALUE, Object.class)
-                .fieldOptional(MAP_GET_KEY, Object.class)
-                .field(MAP_COMMAND, String.class);
+                .fieldOptional(MAP_GET_KEY, Object.class).fieldRequired(MAP_COMMAND, String.class);
     }
 
     @Override

@@ -15,8 +15,9 @@
  */
 package uk.gov.gchq.maestro.federated;
 
-import uk.gov.gchq.maestro.federated.util.Config;
-import uk.gov.gchq.maestro.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.executor.util.Config;
+import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 
 public class FederationTest extends MaestroObjectTest<Executor> {
 
@@ -28,12 +29,15 @@ public class FederationTest extends MaestroObjectTest<Executor> {
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.executor.Executor\",\n" +
                 "  \"config\" : {\n" +
-                "    \"class\" : \"uk.gov.gchq.maestro.federated.util.Config\",\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.executor.util.Config\",\n" +
                 "    \"id\" : \"ExecutorId1\",\n" +
                 "    \"operationHandlers\" : { },\n" +
                 "    \"properties\" : { },\n" +
+                "    \"defaultHandler\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler\"\n" +
+                "    },\n" +
                 "    \"operationHooks\" : [ ],\n" +
                 "    \"requestHooks\" : [ ]\n" +
                 "  }\n" +
@@ -41,9 +45,8 @@ public class FederationTest extends MaestroObjectTest<Executor> {
     }
 
     @Override
-    protected Executor getTestObject() {
-        final Executor executor = new Executor()
-                .config(new Config().id("ExecutorId1"));
+    protected Executor getFullyPopulatedTestObject() throws Exception {
+        final Executor executor = new Executor(new Config().id("ExecutorId1"));
         return executor;
     }
 }

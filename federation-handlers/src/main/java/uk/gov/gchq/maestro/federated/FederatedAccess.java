@@ -20,21 +20,24 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import uk.gov.gchq.maestro.user.User;
+import uk.gov.gchq.maestro.operation.user.User;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
+
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 
 /**
- * Conditions required for a {@link User} to have access to a graph within the
- * {@link uk.gov.gchq.maestro.Executor} via {@link FederatedAccess}
+ * Conditions required for a {@link uk.gov.gchq.maestro.operation.user.User} to have access to a graph within the
+ * {@link uk.gov.gchq.maestro.executor.Executor} via {@link FederatedAccess}
  * <table summary="FederatedAccess truth table">
  * <tr><td> User Ops</td><td> AccessHook Ops</td><td> User added graph
  * </td><td> hasAccess?</td></tr>
@@ -60,29 +63,28 @@ import java.util.Set;
  *
  * @see #isValidToExecute(User)
  */
-@JsonPropertyOrder(value = {"class", "addingUserId", "graphAuths"}, alphabetic = true)
+@JsonPropertyOrder(value = {"class", "addingUserId", "auths"}, alphabetic = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
-public class FederatedAccess implements Serializable {
-    private static final long serialVersionUID = 1399629017857618033L;
-
+public class FederatedAccess implements Serializable, Comparable<FederatedAccess> {
+    private static final long serialVersionUID = -8052273833606211340L;
     private boolean isPublic = Boolean.valueOf(FederatedStoreConstants.DEFAULT_VALUE_IS_PUBLIC);
-    private Set<String> graphAuths = new HashSet<>();
+    private Set<String> auths = new HashSet<>();
     private String addingUserId;
     private boolean disabledByDefault;
 
-    public FederatedAccess(final Set<String> graphAuths, final String addingUserId) {
-        setGraphAuths(graphAuths);
+    public FederatedAccess(final Set<String> auths, final String addingUserId) {
+        setAuths(auths);
         setAddingUserId(addingUserId);
     }
 
-    public FederatedAccess(final Set<String> graphAuths, final String addingUser, final boolean isPublic) {
-        this(graphAuths, addingUser);
+    public FederatedAccess(final Set<String> auths, final String addingUser, final boolean isPublic) {
+        this(auths, addingUser);
         this.isPublic = isPublic;
     }
 
     @JsonCreator
-    public FederatedAccess(@JsonProperty("graphAuths") final Set<String> graphAuths, @JsonProperty("addingUser") final String addingUser, @JsonProperty("isPublic") final boolean isPublic, @JsonProperty("disabledByDefault") final boolean disabledByDefault) {
-        this(graphAuths, addingUser, isPublic);
+    public FederatedAccess(@JsonProperty("auths") final Set<String> auths, @JsonProperty("addingUser") final String addingUser, @JsonProperty("isPublic") final boolean isPublic, @JsonProperty("disabledByDefault") final boolean disabledByDefault) {
+        this(auths, addingUser, isPublic);
         this.disabledByDefault = disabledByDefault;
     }
 
@@ -122,7 +124,7 @@ public class FederatedAccess implements Serializable {
     }
 
     private boolean isUserHasASharedAuth(final User user) {
-        return !Collections.disjoint(user.getOpAuths(), this.graphAuths);
+        return !Collections.disjoint(user.getOpAuths(), this.auths);
     }
 
     private boolean isAddingUser(final User user) {
@@ -130,14 +132,14 @@ public class FederatedAccess implements Serializable {
     }
 
     private boolean isAuthsNullOrEmpty() {
-        return (null == this.graphAuths || this.graphAuths.isEmpty());
+        return (null == this.auths || this.auths.isEmpty());
     }
 
-    public FederatedAccess setGraphAuths(final Set<String> graphAuths) {
-        if (Objects.nonNull(graphAuths)) {
-            this.graphAuths = graphAuths;
+    public FederatedAccess setAuths(final Set<String> auths) {
+        if (nonNull(auths)) {
+            this.auths = auths;
         } else {
-            this.graphAuths.clear();
+            this.auths.clear();
         }
         return this;
     }
@@ -146,8 +148,8 @@ public class FederatedAccess implements Serializable {
         return isPublic;
     }
 
-    public Set<String> getGraphAuths() {
-        return Collections.unmodifiableSet(graphAuths);
+    public Set<String> getAuths() {
+        return Collections.unmodifiableSet(auths);
     }
 
     @Override
@@ -164,7 +166,7 @@ public class FederatedAccess implements Serializable {
 
         return new EqualsBuilder()
                 .append(isPublic, that.isPublic)
-                .append(graphAuths, that.graphAuths)
+                .append(auths, that.auths)
                 .append(addingUserId, that.addingUserId)
                 .append(disabledByDefault, that.disabledByDefault)
                 .isEquals();
@@ -174,9 +176,34 @@ public class FederatedAccess implements Serializable {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(isPublic)
-                .append(graphAuths)
+                .append(auths)
                 .append(addingUserId)
                 .append(disabledByDefault)
                 .toHashCode();
+    }
+
+    @Override
+    public int compareTo(final FederatedAccess that) {
+        requireNonNull(that, "tried to compare null object");
+        final CompareToBuilder cb = new CompareToBuilder()
+                .append(this.disabledByDefault, that.disabledByDefault)
+                .append(this.isPublic, that.isPublic);
+
+        if (0 == cb.append(this.addingUserId, that.addingUserId)
+                .append(this.auths.size(), that.auths.size()).toComparison()) {
+
+            final String[] thisAuths = this.auths.toArray(new String[0]);
+            final String[] thatAuths = that.auths.toArray(new String[0]);
+
+            for (int i = 0; i < thisAuths.length && 0 == cb.toComparison(); i++) {
+                final String thisAuth = thisAuths[i];
+                final String thatAuth = thatAuths[i];
+                if (0 != cb.append(thisAuth, thatAuth).toComparison()) {
+                    break;
+                }
+            }
+        }
+
+        return cb.toComparison();
     }
 }

@@ -16,24 +16,29 @@
 
 package uk.gov.gchq.maestro.federated.operation;
 
-import uk.gov.gchq.maestro.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.federated.handler.RemoveExecutorHandler;
+import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 
-public class RemoveExecutorTest extends MaestroObjectTest<RemoveExecutor> {
+public class RemoveExecutorTest extends MaestroObjectTest<Operation> {
     @Override
-    protected Class<RemoveExecutor> getTestObjectClass() {
-        return RemoveExecutor.class;
+    protected Class<Operation> getTestObjectClass() {
+        return Operation.class;
     }
 
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.federated.operation.RemoveExecutor\",\n" +
-                "  \"graphId\" : \"innerGraph1\"\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"RemoveExecutor\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"executorId\" : \"innerGraph1\"\n" +
+                "  }\n" +
                 "}";
     }
 
     @Override
-    protected RemoveExecutor getTestObject() {
-        return new RemoveExecutor().graphId("innerGraph1");
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("RemoveExecutor").operationArg(RemoveExecutorHandler.EXECUTOR_ID, "innerGraph1");
     }
 }

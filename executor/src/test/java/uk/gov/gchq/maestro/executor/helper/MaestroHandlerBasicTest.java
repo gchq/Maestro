@@ -27,6 +27,7 @@ import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 import uk.gov.gchq.maestro.operation.user.User;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -107,5 +108,10 @@ public abstract class MaestroHandlerBasicTest<H extends OperationHandler> extend
     @Override
     protected H getFullyPopulatedTestObject() throws Exception {
         return getTestHandler();
+    }
+
+    @Test
+    public void shouldGetNonNullFieldDeclaration() throws Exception {
+        assertNotNull(getTestHandler().getFieldDeclaration());
     }
 }

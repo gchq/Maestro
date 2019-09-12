@@ -17,14 +17,14 @@ package uk.gov.gchq.maestro.federated.operation;
 
 import com.google.common.collect.Sets;
 
-import uk.gov.gchq.maestro.Executor;
+import uk.gov.gchq.maestro.executor.Executor;
+import uk.gov.gchq.maestro.executor.util.Config;
 import uk.gov.gchq.maestro.federated.FederatedAccess;
 import uk.gov.gchq.maestro.federated.FederatedExecutorStorage;
 import uk.gov.gchq.maestro.federated.operation.handler.AddExecutorHandlerBasicTest;
-import uk.gov.gchq.maestro.federated.util.Config;
-import uk.gov.gchq.maestro.helper.MaestroObjectTest;
+import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 
-import java.util.Set;
+import java.util.HashSet;
 
 
 public class FederatedExecutorStorageTest extends MaestroObjectTest<FederatedExecutorStorage> {
@@ -39,24 +39,43 @@ public class FederatedExecutorStorageTest extends MaestroObjectTest<FederatedExe
         return "{\n" +
                 "  \"class\" : \"uk.gov.gchq.maestro.federated.FederatedExecutorStorage\",\n" +
                 "  \"storage\" : {\n" +
-                "    \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federated.FederatedAccess\\\",\\\"addingUserId\\\":\\\"testUser1\\\",\\\"graphAuths\\\":[\\\"one\\\"],\\\"disabledByDefault\\\":false,\\\"public\\\":false}\" : [ \"java.util.HashSet\", [ {\n" +
-                "      \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
+                "    \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federated.FederatedAccess\\\",\\\"addingUserId\\\":\\\"testUser1\\\",\\\"auths\\\":[\\\"one\\\"],\\\"disabledByDefault\\\":false,\\\"public\\\":false}\" : [ \"java.util.TreeSet\", [ {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.executor.Executor\",\n" +
                 "      \"config\" : {\n" +
-                "        \"class\" : \"uk.gov.gchq.maestro.federated.util.Config\",\n" +
+                "        \"class\" : \"uk.gov.gchq.maestro.executor.util.Config\",\n" +
                 "        \"id\" : \"innerExecutorId1\",\n" +
                 "        \"operationHandlers\" : { },\n" +
                 "        \"properties\" : { },\n" +
+                "        \"defaultHandler\" : {\n" +
+                "          \"class\" : \"uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler\"\n" +
+                "        },\n" +
                 "        \"operationHooks\" : [ ],\n" +
                 "        \"requestHooks\" : [ ]\n" +
                 "      }\n" +
                 "    } ] ],\n" +
-                "    \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federated.FederatedAccess\\\",\\\"addingUserId\\\":\\\"testUser2\\\",\\\"graphAuths\\\":[\\\"one\\\"],\\\"disabledByDefault\\\":false,\\\"public\\\":false}\" : [ \"java.util.HashSet\", [ {\n" +
-                "      \"class\" : \"uk.gov.gchq.maestro.Executor\",\n" +
+                "    \"{\\\"class\\\":\\\"uk.gov.gchq.maestro.federated.FederatedAccess\\\",\\\"addingUserId\\\":\\\"testUser2\\\",\\\"auths\\\":[\\\"one\\\"],\\\"disabledByDefault\\\":false,\\\"public\\\":false}\" : [ \"java.util.TreeSet\", [ {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.executor.Executor\",\n" +
                 "      \"config\" : {\n" +
-                "        \"class\" : \"uk.gov.gchq.maestro.federated.util.Config\",\n" +
+                "        \"class\" : \"uk.gov.gchq.maestro.executor.util.Config\",\n" +
                 "        \"id\" : \"innerExecutorId2\",\n" +
                 "        \"operationHandlers\" : { },\n" +
                 "        \"properties\" : { },\n" +
+                "        \"defaultHandler\" : {\n" +
+                "          \"class\" : \"uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler\"\n" +
+                "        },\n" +
+                "        \"operationHooks\" : [ ],\n" +
+                "        \"requestHooks\" : [ ]\n" +
+                "      }\n" +
+                "    }, {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.executor.Executor\",\n" +
+                "      \"config\" : {\n" +
+                "        \"class\" : \"uk.gov.gchq.maestro.executor.util.Config\",\n" +
+                "        \"id\" : \"innerExecutorId3\",\n" +
+                "        \"operationHandlers\" : { },\n" +
+                "        \"properties\" : { },\n" +
+                "        \"defaultHandler\" : {\n" +
+                "          \"class\" : \"uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler\"\n" +
+                "        },\n" +
                 "        \"operationHooks\" : [ ],\n" +
                 "        \"requestHooks\" : [ ]\n" +
                 "      }\n" +
@@ -66,13 +85,19 @@ public class FederatedExecutorStorageTest extends MaestroObjectTest<FederatedExe
     }
 
     @Override
-    protected FederatedExecutorStorage getTestObject() throws Exception {
+    protected FederatedExecutorStorage getFullyPopulatedTestObject() throws Exception {
         final FederatedExecutorStorage federatedExecutorStorage = new FederatedExecutorStorage();
-        final FederatedAccess access1 = new FederatedAccess((Set<String>) Sets.newHashSet("one"), "testUser1", false);
-        federatedExecutorStorage.put(new Executor().config(new Config().id(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + 1)), access1);
+        final HashSet<String> graphAuths = Sets.newHashSet("one");
 
-        final FederatedAccess access2 = new FederatedAccess((Set<String>) Sets.newHashSet("one"), "testUser2", false);
-        federatedExecutorStorage.put(new Executor().config(new Config().id(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + 2)), access2);
+        final FederatedAccess access1 = new FederatedAccess(graphAuths, "testUser1", false);
+        final Executor executor1 = new Executor(new Config().id(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + 1));
+        federatedExecutorStorage.put(executor1, access1);
+
+        final FederatedAccess access2 = new FederatedAccess(graphAuths, "testUser2", false);
+        final Executor executor2 = new Executor(new Config().id(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + 2));
+        final Executor executor3 = new Executor(new Config().id(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + 3));
+        federatedExecutorStorage.put(executor2, access2);
+        federatedExecutorStorage.put(executor3, access2);
 
         return federatedExecutorStorage;
     }

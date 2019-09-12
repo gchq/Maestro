@@ -17,16 +17,17 @@ package uk.gov.gchq.maestro.executor.hook;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
 import uk.gov.gchq.maestro.executor.util.Request;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 public interface Hook {
 
-    default void preExecute(final Request request) {
+    default void preExecute(final Request request) throws MaestroCheckedException {
     }
 
     default <T> T postExecute(final T result,
-                              final Request request) {
+                              final Request request) throws MaestroCheckedException {
         return result;
     }
 

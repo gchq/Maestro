@@ -22,7 +22,8 @@ import org.junit.Test;
 
 import uk.gov.gchq.maestro.executor.util.Config;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -37,8 +38,8 @@ public abstract class AbstractLibraryTest {
 
     private static final String EXCEPTION_EXPECTED = "Exception expected";
 
-    private Properties executorProperties = new Properties();
-    private Properties executorProperties1 = new Properties();
+    private Map<String, Object> executorProperties = new HashMap<>();
+    private Map<String, Object> executorProperties1 = new HashMap<>();
     private Config config =
             new Config().setProperties(executorProperties);
     private Config config1 =

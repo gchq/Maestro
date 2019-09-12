@@ -328,6 +328,24 @@ public class JSONSerialiser {
         }
     }
 
+    public static <T> T deserialise(final String json, final ClassLoader classLoader) throws SerialisationException {
+        final String classStart = "\"class\" : \"";
+        final String classEnd = "\"";
+        final int start = json.indexOf(classStart);
+
+        final int i1 = json.indexOf(classEnd, start + classStart.length());
+        final String substring = json.substring(start + classStart.length(), i1);
+
+        final Class<T> aClass;
+        try {
+            aClass = (Class<T>) classLoader.loadClass(substring);
+        } catch (final ClassNotFoundException e) {
+            throw new SerialisationException("Unable to detect class from json string");
+        }
+
+        return deserialise(json, aClass);
+    }
+
     /**
      * @param bytes the bytes of the object to deserialise
      * @param clazz the class of the object to deserialise
