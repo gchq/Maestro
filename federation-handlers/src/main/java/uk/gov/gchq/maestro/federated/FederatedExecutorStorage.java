@@ -27,6 +27,8 @@ import com.google.common.collect.Sets;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.maestro.commonutil.cache.CacheServiceLoader;
 import uk.gov.gchq.maestro.commonutil.exception.CacheOperationException;
@@ -57,6 +59,7 @@ import static java.util.Objects.nonNull;
 @JsonPropertyOrder(value = {"class", "storage"}, alphabetic = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
 public class FederatedExecutorStorage implements Serializable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FederatedExecutorStorage.class);
     public static final boolean DEFAULT_DISABLED_BY_DEFAULT = false;
     public static final String ERROR_ADDING_GRAPH_TO_CACHE = "Error adding executor, ExecutorId is known within the cache, but %s is different. ExecutorId: %s";
     public static final String USER_IS_ATTEMPTING_TO_OVERWRITE = "User is attempting to overwrite a executor within FederatedStore. ExecutorId: %s";
@@ -101,35 +104,39 @@ public class FederatedExecutorStorage implements Serializable {
         }
     }
 
-    public FederatedExecutorStorage put(final Executor executor, final FederatedAccess access) throws MaestroCheckedException {
-        if (nonNull(executor)) {
+    public FederatedExecutorStorage put(final Executor addingExecutor, final FederatedAccess access) throws MaestroCheckedException {
+        if (nonNull(addingExecutor)) {
             try {
                 if (isNull(access)) {
                     throw new IllegalArgumentException(ACCESS_IS_NULL);
                 }
 
                 // if (null != executorLibrary) {
-                //     executorLibrary.checkExisting(executorId, executor.getDeserialisedSchema(), executor.getDeserialisedProperties());
+                //     executorLibrary.checkExisting(executorId, addingExecutor.getDeserialisedSchema(), addingExecutor.getDeserialisedProperties());
                 // }
 
-                validateExisting(executor);
+                validateExisting(addingExecutor);
                 if (isCacheEnabled()) {
-                    addToCache(executor, access);
+                    addToCache(addingExecutor, access);
                 }
 
                 TreeSet<Executor> existingExecutors = storage.get(access);
                 if (null == existingExecutors) {
                     existingExecutors = new TreeSet<>();
-                    existingExecutors.add(executor);
+                    existingExecutors.add(addingExecutor);
                     storage.put(access, existingExecutors);
                 } else {
-                    existingExecutors.add(executor);
+                    existingExecutors.add(addingExecutor);
                 }
             } catch (final Exception e) {
-                throw new MaestroCheckedException("Error adding executor id: " + executor.getId() + " to storage", e);
+                final String message = "Error adding addingExecutor id: " + addingExecutor.getId() + " to storage";
+                LOGGER.error(message);
+                throw new MaestroCheckedException(message, e);
             }
         } else {
-            throw new MaestroCheckedException("Executor cannot be null");
+            final String message = "The executor to be added to the FederatedExecutorStorage cannot be null";
+            LOGGER.error(message);
+            throw new MaestroCheckedException(message);
         }
         return this;
     }

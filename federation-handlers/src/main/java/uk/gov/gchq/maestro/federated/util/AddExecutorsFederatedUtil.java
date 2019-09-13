@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
+import uk.gov.gchq.maestro.commonutil.exception.MaestroObjectsUtil;
 import uk.gov.gchq.maestro.executor.Context;
 import uk.gov.gchq.maestro.executor.Executor;
 import uk.gov.gchq.maestro.federated.FederatedAccess;
@@ -29,34 +30,65 @@ import uk.gov.gchq.maestro.operation.Operation;
 
 import java.util.Set;
 
+import static java.util.Objects.isNull;
+import static uk.gov.gchq.maestro.commonutil.exception.MaestroObjectsUtil.requireNonNull;
+
+
 public final class AddExecutorsFederatedUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddExecutorsFederatedUtil.class);
+    public static final String ERROR_ADDING_EXECUTOR = "Error adding executor";
+    public static final String DUE_TO = MaestroObjectsUtil.DUE_TO;
 
     private AddExecutorsFederatedUtil() {
         //No instance
     }
 
-    public static void addExecutorTo(final Executor executor, final Operation operation, final Context context) throws MaestroCheckedException {
-        final Set<String> graphAuths = (Set<String>) operation.get(AddExecutorHandler.AUTHS);
-        final Boolean isPublic = (Boolean) operation.getOrDefault(AddExecutorHandler.IS_PUBLIC, false);
-        final Boolean disabledByDefault = (Boolean) operation.getOrDefault(AddExecutorHandler.DISABLED_BY_DEFAULT, false);
-        final Executor subExecutor = (Executor) operation.get(AddExecutorHandler.EXECUTOR);
+    public static Executor addExecutorTo(final Executor receivingExecutor,
+                                         final Operation addExecutorOperation,
+                                         final Context context) throws MaestroCheckedException {
+        requireNonNull(addExecutorOperation, "operation", ERROR_ADDING_EXECUTOR);
+        requireNonNull(context, "context", ERROR_ADDING_EXECUTOR);
+        final Set<String> auths = (Set<String>) addExecutorOperation.get(AddExecutorHandler.AUTHS);
+        final boolean isPublic = (boolean) addExecutorOperation.getOrDefault(AddExecutorHandler.IS_PUBLIC, false);
+        final boolean disabledByDefault = (boolean) addExecutorOperation.getOrDefault(AddExecutorHandler.DISABLED_BY_DEFAULT, false);
+        final Executor subExecutor = (Executor) addExecutorOperation.get(AddExecutorHandler.EXECUTOR);
 
-        addExecutorTo(executor, context.getUser().getUserId(), graphAuths, isPublic, disabledByDefault, subExecutor);
+        return addExecutorTo(receivingExecutor, context.getUser().getUserId(), auths, isPublic, disabledByDefault, subExecutor);
     }
 
-    public static Executor addExecutorTo(final Executor parent,
-                                         final String userId, final Set<String> graphAuths,
-                                         final Boolean isPublic, final Boolean disabledByDefault,
+    public static Executor addExecutorTo(final Executor receivingExecutor,
+                                         final String userId,
+                                         final Set<String> auths,
+                                         final boolean isPublic,
+                                         final boolean disabledByDefault,
                                          final Executor subExecutor) throws MaestroCheckedException {
-        final FederatedAccess federatedAccess = new FederatedAccess(graphAuths, userId, isPublic, disabledByDefault);
+        requireNonNull(receivingExecutor, "executor", ERROR_ADDING_EXECUTOR);
+        requireNonNull(userId, "userId", ERROR_ADDING_EXECUTOR);
+        if (isNull(subExecutor)) {
+            LOGGER.warn("Executor to be added is null");
+        }
 
-        final FederatedExecutorStorage storage = new FederatedExecutorStorage()
-                .put(subExecutor, federatedAccess);
+        final FederatedAccess federatedAccess = new FederatedAccess(auths, userId, isPublic, disabledByDefault);
 
-        ExecutorStorageFederatedUtil.addExecutorStorage(parent.getConfig(), storage);
+        final FederatedExecutorStorage storage = getStorage(subExecutor, federatedAccess);
 
-        return parent;
+        ExecutorStorageFederatedUtil.addExecutorStorage(receivingExecutor, storage);
+
+        return receivingExecutor;
+    }
+
+
+    private static FederatedExecutorStorage getStorage(final Executor subExecutor, final FederatedAccess federatedAccess) throws MaestroCheckedException {
+        final FederatedExecutorStorage storage;
+        try {
+            storage = new FederatedExecutorStorage()
+                    .put(subExecutor, federatedAccess);
+        } catch (final Exception e) {
+            final String newMessage = ERROR_ADDING_EXECUTOR + DUE_TO + "Error adding executor to federatedExecutorStorage";
+            LOGGER.error(newMessage);
+            throw new MaestroCheckedException(newMessage + DUE_TO + e.getMessage(), e);
+        }
+        return storage;
     }
 
 

@@ -27,12 +27,16 @@ import uk.gov.gchq.maestro.federated.handler.RemoveExecutorHandler;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.user.User;
 
-import java.util.Map;
+import java.util.function.Supplier;
 
-import static java.util.Objects.requireNonNull;
+import static java.util.Objects.isNull;
+import static uk.gov.gchq.maestro.commonutil.exception.MaestroObjectsUtil.DUE_TO;
+import static uk.gov.gchq.maestro.commonutil.exception.MaestroObjectsUtil.requireNonNull;
 
 public final class RemoveExecutorsFederatedUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RemoveExecutorsFederatedUtil.class);
+    public static final String ERROR_REMOVING_EXECUTORS = "Error removing executors";
+    public static final String OPERATION_DID_HAVE_THE_REQUIRED_FIELD = "Operation did have the required field: %s found: %s";
 
     private RemoveExecutorsFederatedUtil() {
         //No instance
@@ -40,25 +44,55 @@ public final class RemoveExecutorsFederatedUtil {
 
     public static boolean removeExecutorsFrom(final Executor executor,
                                               final Operation op, final User user) throws MaestroCheckedException {
-        requireNonNull(op);
-        return removeExecutorsFrom(executor, (String) op.get(RemoveExecutorHandler.EXECUTOR_ID), user);
+
+        requireNonNull(op, "operation", ERROR_REMOVING_EXECUTORS);
+        final String executorId;
+        final Object o = op.get(RemoveExecutorHandler.EXECUTOR_ID);
+        try {
+            executorId = (String) o;
+        } catch (final ClassCastException e) {
+            final String message = String.format(OPERATION_DID_HAVE_THE_REQUIRED_FIELD, RemoveExecutorHandler.EXECUTOR_ID, o);
+            LOGGER.error(message);
+            throw new MaestroCheckedException(message + DUE_TO + e.getMessage());
+        }
+        return removeExecutorsFrom(executor, executorId, user);
     }
 
-    public static boolean removeExecutorsFrom(final Executor executor,
-                                              final String executorId, final User user) throws MaestroCheckedException {
-        requireNonNull(executor);
+    private static boolean removeExecutorsFrom(final Executor executor,
+                                               final String executorId, final User user) throws MaestroCheckedException {
+        requireNonNull(executor, "Executor", getErrorPrefix(executorId));
         return removeExecutorsFrom(executor.getConfig(), executorId, user);
     }
 
-    public static boolean removeExecutorsFrom(final Config config, final String executorId, final User user) throws MaestroCheckedException {
-        requireNonNull(config);
-        return removeExecutorsFrom(config.getProperties(), executorId, user);
+    private static boolean removeExecutorsFrom(final Config config, final String executorId, final User user) throws MaestroCheckedException {
+        requireNonNull(config, "config", getErrorPrefix(executorId));
+        final FederatedExecutorStorage executorStorage;
+        try {
+            executorStorage = ExecutorStorageFederatedUtil.getExecutorStorage(config.getProperties());
+        } catch (final Exception e) {
+            final String message = getErrorPrefix(executorId).get();
+            LOGGER.error(message);
+            throw new MaestroCheckedException(message + DUE_TO + e.getMessage(), e);
+        }
+
+        final boolean hasRemoved;
+
+        if (isNull(executorStorage)) {
+            LOGGER.warn("Trying to removing Executor:" + config.getId() + " from null executorStorage belonging to: " + executorId);
+            hasRemoved = false;
+        } else {
+            requireNonNull(executorStorage, "executorStorage", getErrorPrefix(executorId));
+
+            if (isNull(executorId) || executorId.isEmpty()) {
+                LOGGER.warn("removing executorId that is: " + executorId);
+            }
+
+            hasRemoved = executorStorage.remove(executorId, user);
+        }
+        return hasRemoved;
     }
 
-    public static boolean removeExecutorsFrom(final Map<String, Object> properties, final String executorId, final User user) throws MaestroCheckedException {
-        final FederatedExecutorStorage executorStorage = ExecutorStorageFederatedUtil.getExecutorStorage(properties);
-        requireNonNull(executorStorage);
-        final boolean isRemoved = executorStorage.remove(executorId, user);
-        return isRemoved;
+    public static Supplier<String> getErrorPrefix(final String executorId) {
+        return () -> String.format("%sids: %s", ERROR_REMOVING_EXECUTORS, executorId);
     }
 }

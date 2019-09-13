@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.maestro.operation.user.User;
 
@@ -66,6 +68,7 @@ import static java.util.Objects.requireNonNull;
 @JsonPropertyOrder(value = {"class", "addingUserId", "auths"}, alphabetic = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
 public class FederatedAccess implements Serializable, Comparable<FederatedAccess> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FederatedAccess.class);
     private static final long serialVersionUID = -8052273833606211340L;
     private boolean isPublic = Boolean.valueOf(FederatedStoreConstants.DEFAULT_VALUE_IS_PUBLIC);
     private Set<String> auths = new HashSet<>();
@@ -74,7 +77,15 @@ public class FederatedAccess implements Serializable, Comparable<FederatedAccess
 
     public FederatedAccess(final Set<String> auths, final String addingUserId) {
         setAuths(auths);
-        setAddingUserId(addingUserId);
+        final String creatorUserId;
+        if (nonNull(addingUserId)) {
+            creatorUserId = addingUserId;
+        } else {
+            //This line will return the default value for userID if null.
+            LOGGER.warn("creatorUserId was null, so getting default value from User");
+            creatorUserId = new User().getUserId();
+        }
+        setAddingUserId(creatorUserId);
     }
 
     public FederatedAccess(final Set<String> auths, final String addingUser, final boolean isPublic) {

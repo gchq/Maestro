@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.maestro.commonutil.exception.MaestroCheckedException;
-import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
 import uk.gov.gchq.maestro.executor.Executor;
 import uk.gov.gchq.maestro.executor.util.Config;
 import uk.gov.gchq.maestro.federated.FederatedExecutorStorage;
@@ -28,44 +27,37 @@ import uk.gov.gchq.maestro.operation.user.User;
 
 import java.util.Collection;
 
-import static java.util.Objects.nonNull;
+import static uk.gov.gchq.maestro.commonutil.exception.MaestroObjectsUtil.DUE_TO;
+import static uk.gov.gchq.maestro.commonutil.exception.MaestroObjectsUtil.requireNonNull;
 
 public final class GetAllExecutorsFederatedUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(Executor.class);
-    public static final String ERROR_GETTING_S_FROM_S_S = "Error getting: %s from: %s -> %s";
-    public static final String FROM_A_NULL = "Can't get Executors with a null %s";
+    public static final String ERROR_GETTING_ALL_EXECUTORS = "Error getting all executors";
 
     private GetAllExecutorsFederatedUtil() {
         //No instance
     }
 
     public static Collection<Executor> getAllExecutorsFrom(final Executor executor, final User user) throws MaestroCheckedException {
-        if (nonNull(executor)) {
-            final Config config = executor.getConfig();
-            return getAllExecutorsFrom(config, user);
-        } else {
-            throw new MaestroRuntimeException(String.format(FROM_A_NULL, "Executor"));
-        }
+        requireNonNull(executor, "Executor", ERROR_GETTING_ALL_EXECUTORS);
+        final Config config = executor.getConfig();
+        return getAllExecutorsFrom(config, user);
     }
 
-    public static Collection<Executor> getAllExecutorsFrom(final Config config, final User user) throws MaestroCheckedException {
-        if (nonNull(config)) {
-            try {
-                final FederatedExecutorStorage executorStorage = ExecutorStorageFederatedUtil.getExecutorStorage(config.getProperties());
-                return getAllExecutorsFrom(user, executorStorage);
-            } catch (final Exception e) {
-                throw new MaestroCheckedException(String.format(ERROR_GETTING_S_FROM_S_S, config.getId(), config.getId(), e.getMessage()), e);
-            }
-        } else {
-            throw new MaestroRuntimeException(String.format(FROM_A_NULL, "config"));
+    private static Collection<Executor> getAllExecutorsFrom(final Config config, final User user) throws MaestroCheckedException {
+        requireNonNull(config, "Config", ERROR_GETTING_ALL_EXECUTORS);
+        final FederatedExecutorStorage executorStorage;
+        try {
+            executorStorage = ExecutorStorageFederatedUtil.getExecutorStorage(config.getProperties());
+        } catch (final Exception e) {
+            LOGGER.error(ERROR_GETTING_ALL_EXECUTORS);
+            throw new MaestroCheckedException(ERROR_GETTING_ALL_EXECUTORS + DUE_TO + e.getMessage(), e);
         }
+        return getAllExecutorsFrom(user, executorStorage);
     }
 
-    public static Collection<Executor> getAllExecutorsFrom(final User user, final FederatedExecutorStorage executorStorage) throws MaestroCheckedException {
-        if (nonNull(executorStorage)) {
-            return executorStorage.getAll(user);
-        } else {
-            throw new MaestroRuntimeException(String.format(FROM_A_NULL, "FederatedExecutorStorage"));
-        }
+    private static Collection<Executor> getAllExecutorsFrom(final User user, final FederatedExecutorStorage executorStorage) {
+        requireNonNull(executorStorage, "FederatedExecutorStorage", ERROR_GETTING_ALL_EXECUTORS);
+        return executorStorage.getAll(user);
     }
 }

@@ -87,13 +87,13 @@ public class FederatedExecutorStorageTest extends MaestroObjectTest<FederatedExe
     @Override
     protected FederatedExecutorStorage getFullyPopulatedTestObject() throws Exception {
         final FederatedExecutorStorage federatedExecutorStorage = new FederatedExecutorStorage();
-        final HashSet<String> graphAuths = Sets.newHashSet("one");
+        final HashSet<String> auths = Sets.newHashSet("one");
 
-        final FederatedAccess access1 = new FederatedAccess(graphAuths, "testUser1", false);
+        final FederatedAccess access1 = new FederatedAccess(auths, "testUser1", false);
         final Executor executor1 = new Executor(new Config().id(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + 1));
         federatedExecutorStorage.put(executor1, access1);
 
-        final FederatedAccess access2 = new FederatedAccess(graphAuths, "testUser2", false);
+        final FederatedAccess access2 = new FederatedAccess(auths, "testUser2", false);
         final Executor executor2 = new Executor(new Config().id(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + 2));
         final Executor executor3 = new Executor(new Config().id(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + 3));
         federatedExecutorStorage.put(executor2, access2);
