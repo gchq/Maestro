@@ -15,16 +15,19 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>uk.gov.gchq.maestro</groupId>
         <artifactId>example</artifactId>
+        <groupId>uk.gov.gchq.maestro</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>executor-demo</artifactId>
+    <artifactId>federated-demo</artifactId>
     <packaging>war</packaging>
+
 
     <properties>
         <standalone-path>rest</standalone-path>
@@ -40,6 +43,15 @@
             <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>core-rest</artifactId>
             <classifier>classes</classifier>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>federation-handlers</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>proxy-handlers</artifactId>
         </dependency>
     </dependencies>
 
@@ -96,7 +108,7 @@
 
     <profiles>
         <profile>
-            <id>executor-demo</id>
+            <id>federated-demo</id>
             <properties>
                 <maven.test.skip>true</maven.test.skip>
             </properties>
@@ -111,10 +123,10 @@
                             <port>${standalone-port}</port>
                             <systemProperties>
                                 <maestro.properties.app.title>
-                                    Maestro Executor Example
+                                    Maestro Federated Executor Example
                                 </maestro.properties.app.title>
                                 <maestro.properties.app.description>
-                                    Example of a Maestro Executor
+                                    Example of a Federated Maestro Executor
                                 </maestro.properties.app.description>
                                 <maestro.rest-api.basePath>${standalone-path}
                                 </maestro.rest-api.basePath>
@@ -143,4 +155,5 @@
             </build>
         </profile>
     </profiles>
+
 </project>

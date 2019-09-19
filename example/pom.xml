@@ -28,6 +28,7 @@
 
     <modules>
         <module>executor-demo</module>
+        <module>federated-demo</module>
     </modules>
 
     <build>
