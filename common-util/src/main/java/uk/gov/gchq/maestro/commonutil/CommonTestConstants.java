@@ -28,7 +28,7 @@ public final class CommonTestConstants {
 
     static {
         final String tmpDirectoryProperty = System.getProperty("java.io.tmpdir");
-
+        LOGGER.info("TmpDirectory = {}", tmpDirectoryProperty);
         if (null != tmpDirectoryProperty) {
             TMP_DIRECTORY = new File(tmpDirectoryProperty);
         } else {

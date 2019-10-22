@@ -37,7 +37,7 @@ import java.util.Set;
 import static java.util.Objects.nonNull;
 
 public class LimitUserToConfigLibrary implements Hook {
-    public static final String USER_IS_LIMITED_TO_ONLY_USING_PARENT_PROPERTIES_ID_FROM_GRAPHLIBRARY_BUT_FOUND_STORE_PROPERTIES_S = "User is limited to only using parentConfigId from the executorLibrary, but found storeProperties: %s";
+    public static final String USER_IS_LIMITED_TO_ONLY_USING_PARENT_PROPERTIES_ID_FROM_GRAPHLIBRARY_BUT_FOUND_STORE_PROPERTIES_S = "User is limited to only using parentConfigId from the executorLibrary, but found Properties: %s";
 
     @Override
     public void preExecute(final Request request) throws MaestroCheckedException {

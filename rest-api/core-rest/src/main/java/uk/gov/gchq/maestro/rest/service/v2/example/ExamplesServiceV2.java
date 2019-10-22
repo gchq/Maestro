@@ -29,13 +29,13 @@ public class ExamplesServiceV2 implements IExamplesServiceV2 {
     @Override
     public Operation execute() throws InstantiationException, IllegalAccessException {
         final Operation testExample = examplesFactory.generateExample("testExample");
-        return new OperationChain(testExample.getId(), testExample);
+        return new OperationChain(testExample.getId(), testExample, null, null);
     }
 
     @Override
     public Operation executeChunked() throws InstantiationException, IllegalAccessException {
         final Operation testExample = examplesFactory.generateExample("testExample");
-        return new OperationChain(testExample.getId(), testExample);
+        return new OperationChain(testExample.getId(), testExample, null, null);
     }
 
 }

@@ -29,7 +29,7 @@ public class ScoreOperationChainTest extends OperationTest {
                 "  \"operationArgs\" : {\n" +
                 "    \"operationChain\" : {\n" +
                 "      \"class\" : \"uk.gov.gchq.maestro.operation.OperationChain\",\n" +
-                "      \"id\" : \"operationChainToScoreChain\",\n" +
+                "      \"id\" : \"operationChainToScore\",\n" +
                 "      \"operations\" : [ {\n" +
                 "        \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
                 "        \"id\" : \"innerOperation\",\n" +
@@ -46,6 +46,6 @@ public class ScoreOperationChainTest extends OperationTest {
         return new Operation("ScoreOperationChain")
                 .operationArg("operationChain",
                         new OperationChain("operationChainToScore",
-                                new Operation("innerOperation")));
+                                new Operation("innerOperation"), null, null));
     }
 }

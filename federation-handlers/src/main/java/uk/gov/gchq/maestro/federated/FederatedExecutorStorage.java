@@ -61,11 +61,9 @@ import static java.util.Objects.nonNull;
 public class FederatedExecutorStorage implements Serializable {
     private static final Logger LOGGER = LoggerFactory.getLogger(FederatedExecutorStorage.class);
     public static final boolean DEFAULT_DISABLED_BY_DEFAULT = false;
-    public static final String ERROR_ADDING_GRAPH_TO_CACHE = "Error adding executor, ExecutorId is known within the cache, but %s is different. ExecutorId: %s";
     public static final String USER_IS_ATTEMPTING_TO_OVERWRITE = "User is attempting to overwrite a executor within FederatedStore. ExecutorId: %s";
     public static final String ACCESS_IS_NULL = "Can not put executor into storage without a FederatedAccess key.";
     public static final String GRAPH_IDS_NOT_VISIBLE = "The following executorIds are not visible or do not exist: %s";
-    public static final String UNABLE_TO_MERGE_THE_SCHEMAS_FOR_ALL_OF_YOUR_FEDERATED_GRAPHS = "Unable to merge the schemas for all of your federated executors: %s. You can limit which executors to query for using the operation option: %s";
     public static final String ERROR_GETTING_S_FROM_FEDERATED_EXECUTOR_STORAGE_S = "Error getting: %s from FederatedExecutorStorage -> %s";
     private static final long serialVersionUID = -306891755744655032L;
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")

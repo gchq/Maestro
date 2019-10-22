@@ -18,6 +18,8 @@ package uk.gov.gchq.maestro.proxy.handler;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.maestro.commonutil.CommonTestConstants;
 import uk.gov.gchq.maestro.commonutil.exception.OperationException;
@@ -33,12 +35,12 @@ import java.io.IOException;
 public class SingleProxyInitialiseHandler extends ProxyInitialiseHandler {
     public static final TemporaryFolder TEST_FOLDER = new TemporaryFolder(CommonTestConstants.TMP_DIRECTORY);
     private static final RestApiTestClient CLIENT = new RestApiV2TestClient();
+    private static final Logger LOGGER = LoggerFactory.getLogger(SingleProxyInitialiseHandler.class);
 
     @Override
     public Object _doOperation(final Operation ignore, final Context context, final Executor executor) throws OperationException {
         startMapStoreRestApi();
-        super._doOperation(ignore, context, executor);
-        return null;
+        return super._doOperation(ignore, context, executor);
     }
 
     public void startMapStoreRestApi() throws OperationException { //TODO RENAME

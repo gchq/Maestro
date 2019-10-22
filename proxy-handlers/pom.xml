@@ -27,6 +27,8 @@
 
     <artifactId>proxy-handlers</artifactId>
 
+    <!--<packaging>war</packaging>-->
+
     <dependencies>
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
@@ -36,14 +38,14 @@
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-http</artifactId>
         </dependency>
+
+        <!--Test Dependency-->
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>executor</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-
-        <!--Test Dependency-->
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>operation</artifactId>
@@ -74,5 +76,18 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
+    <!--<build>-->
+    <!--<sourceDirectory>src/main/java</sourceDirectory>-->
+    <!--<plugins>-->
+    <!--<plugin>-->
+    <!--<groupId>org.apache.maven.plugins</groupId>-->
+    <!--<artifactId>maven-war-plugin</artifactId>-->
+    <!--<version>${maven-war-plugin.version}</version>-->
+    <!--<configuration>-->
+    <!--<attachClasses>true</attachClasses>-->
+    <!--<classesClassifier>classes</classesClassifier>-->
+    <!--</configuration>-->
+    <!--</plugin>-->
+    <!--</plugins>-->
+    <!--</build>-->
 </project>

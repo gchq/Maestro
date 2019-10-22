@@ -62,29 +62,30 @@ import java.util.stream.Collectors;
 public class OperationChain extends Operation implements Operations {
     private List<Operation> operations;
 
-    public OperationChain(final String id) {
-        this(id, new ArrayList<>());
+    public OperationChain(final String id, final Map<String, String> options, final Map<String, Object> operationArgs) {
+        this(id, new ArrayList<>(), operationArgs, options);
     }
 
-    public OperationChain(final String id, final Operation operation) {
-        this(id, new ArrayList<>(1));
+    public OperationChain(final String id, final Operation operation, final Map<String, Object> operationArgs, final Map<String, String> options) {
+        this(id, new ArrayList<>(1), operationArgs, options);
         operations.add(operation);
     }
 
     @JsonCreator
-    public OperationChain(@JsonProperty("id") final String id, @JsonProperty("operations") final Operation... operations) {
-        this(id, new ArrayList<>(operations.length));
+    public OperationChain(@JsonProperty("id") final String id, @JsonProperty("operationArgs") final Map<String, Object> operationArgs, @JsonProperty("options") final Map<String, String> options, @JsonProperty("operations") final Operation... operations) {
+        this(id, new ArrayList<>(operations.length), operationArgs, options);
         for (final Operation operation : operations) {
             this.operations.add(operation);
         }
     }
 
-    public OperationChain(final String id, final List<Operation> operations) {
-        this(id, operations, false);
+    public OperationChain(final String id, final List<Operation> operations, final Map<String, Object> operationArgs, final Map<String, String> options) {
+        this(id, operations, false, operationArgs, options);
     }
 
-    public OperationChain(final String id, final List<Operation> operations, final boolean flatten) {
-        super((id.toLowerCase(LOCALE).endsWith("chain") ? id : id + "Chain"));
+    public OperationChain(final String id, final List<Operation> operations, final boolean flatten, final Map<String, Object> operationArgs, final Map<String, String> options) {
+        super(id, operationArgs, options);
+        // super((id.toLowerCase(LOCALE).endsWith("chain") ? id : id + "Chain"));
         if (null == operations) {
             this.operations = new ArrayList<>();
         } else {
@@ -99,12 +100,12 @@ public class OperationChain extends Operation implements Operations {
     public static OperationChain wrap(final String id, final Operation operation) {
         final OperationChain opChain;
         if (null == operation) {
-            opChain = new OperationChain(id);
+            opChain = new OperationChain(id, null, null);
         } else {
             if (operation instanceof OperationChain) {
                 opChain = ((OperationChain) operation);
             } else {
-                opChain = new OperationChain(id, operation);
+                opChain = new OperationChain(id, operation, operation.getOperationArgs(), operation.getOptions());
                 opChain.options(operation.getOptions());
             }
         }
@@ -146,7 +147,6 @@ public class OperationChain extends Operation implements Operations {
     }
 
 
-
     @Override
     public OperationChain addOperationArgs(final Map<String, Object> operationsArgs) {
         return (OperationChain) super.addOperationArgs(operationsArgs);
@@ -158,9 +158,7 @@ public class OperationChain extends Operation implements Operations {
     }
 
     public static OperationChain cast(final Operation operation) {
-        return new OperationChain(operation.getId())
-                .addOperationArgs(operation.getOperationArgs())
-                .options(operation.getOptions());
+        return new OperationChain(operation.getId(), operation.getOptions(), operation.getOperationArgs());
     }
 
     public OperationChain shallowClone() throws CloneFailedException {

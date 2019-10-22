@@ -42,7 +42,8 @@ public class GetJobResultsHandler implements OutputOperationHandler<CloseableIte
         // Delegates the operation to the GetResultCacheExport operation handler.
         return executor.execute(new OperationChain("GetResultCacheExport", new Operation("GetResultCacheExport")
                 .operationArg("jobId", operation.get("JobId"))
-                .operationArg("key", operation.get("KeyOrDefault"))
+                .operationArg("key", operation.get("KeyOrDefault")),
+                operation.getOperationArgs(), operation.getOptions()
         ), context);
     }
 

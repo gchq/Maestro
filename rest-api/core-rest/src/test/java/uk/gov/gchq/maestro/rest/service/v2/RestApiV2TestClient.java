@@ -16,6 +16,9 @@
 
 package uk.gov.gchq.maestro.rest.service.v2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
@@ -35,9 +38,15 @@ public class RestApiV2TestClient extends RestApiTestClient {
     public static final String HTTP_LOCALHOST_8080 = "http://localhost:8080/";
     public static final String REST = "rest/";
     public static final String VERSION = ApplicationConfigV2.VERSION;
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestApiV2TestClient.class);
 
     public RestApiV2TestClient() {
-        super(HTTP_LOCALHOST_8080, REST, VERSION, new ApplicationConfigV2());
+        this(HTTP_LOCALHOST_8080);
+    }
+
+    public RestApiV2TestClient(final String httpLocalhost8080) {
+        super(httpLocalhost8080, REST, VERSION, new ApplicationConfigV2());
+        LOGGER.info("Rest will be using {}", httpLocalhost8080);
     }
 
     @Override

@@ -56,7 +56,7 @@ public interface OperationHandler {
                 throw new IllegalArgumentException(errorMessage.toString());
             }
         } catch (final Exception e) {
-            throw new OperationException(String.format("Error handling operation: %s with handler: %s due to: %s", operation.getId(), this.getClass().getCanonicalName(), e.getMessage()), e);
+            throw new OperationException(String.format("Error with Executor: %s handling operation: %s with handler: %s due to: %s", executor.getId(), operation.getId(), this.getClass().getCanonicalName(), e.getMessage()), e);
         }
     }
 

@@ -144,7 +144,7 @@ public class AddNamedOperationHandlerTest {
                 "\"input\" : \"${param1}\"}] }";
 
         addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, (OPERATION_NAME));
-        addNamedOperation.operationArg(OPERATION_CHAIN, new OperationChain("opchain", new Operation("ToSingletonList")));
+        addNamedOperation.operationArg(OPERATION_CHAIN, new OperationChain("opchain", new Operation("ToSingletonList"), null, null));
         addNamedOperation.operationArg(OPERATION_NAME, "namedop");
         addNamedOperation.operationArg(DESCRIPTION, "test");
 
@@ -196,7 +196,7 @@ public class AddNamedOperationHandlerTest {
     @Test
     public void shouldAddNamedOperationWithScoreCorrectly() throws OperationException, CacheOperationException {
         OperationChain opChain =
-                new OperationChain(OPERATION_CHAIN, new Operation("ToArray"));
+                new OperationChain(OPERATION_CHAIN, new Operation("ToArray"), null, null);
         addNamedOperation.operationArg(OPERATION_CHAIN, opChain);
         addNamedOperation.operationArg("Score", 2);
         addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, "testOp");

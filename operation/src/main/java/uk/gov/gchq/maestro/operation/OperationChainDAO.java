@@ -27,7 +27,6 @@ import java.util.List;
 
 /**
  * Simple data access object which enables the serialisation and deserialisation
- *
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 @Since("0.0.1")
@@ -35,19 +34,19 @@ import java.util.List;
 public class OperationChainDAO extends OperationChain {
 
     public OperationChainDAO(final String id) {
-        super(id);
+        super(id, null, null);
     }
 
     public OperationChainDAO(final String id, final Operation operation) {
-        super(id, operation);
+        super(id, operation, operation.getOperationArgs(), operation.getOptions());
     }
 
     public OperationChainDAO(final String id, final List<Operation> operations) {
-        super(id, operations);
+        super(id, operations, null, null);
     }
 
     public OperationChainDAO(final String id, final OperationChain operationChain) {
-        super(id, operationChain.getOperations());
+        super(id, operationChain.getOperations(), operationChain.getOperationArgs(), operationChain.getOptions());
         options(operationChain.getOptions());
     }
 

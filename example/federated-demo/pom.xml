@@ -31,14 +31,10 @@
 
     <properties>
         <standalone-path>rest</standalone-path>
-        <standalone-port>8080</standalone-port>
+        <standalone-port>8383</standalone-port>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>uk.gov.gchq.maestro</groupId>
-            <artifactId>jcs-cache-service</artifactId>
-        </dependency>
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>core-rest</artifactId>
@@ -48,10 +44,14 @@
             <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>federation-handlers</artifactId>
         </dependency>
-
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>proxy-handlers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>executor-demo</artifactId>
+            <classifier>classes</classifier>
         </dependency>
     </dependencies>
 
@@ -131,7 +131,7 @@
                                 <maestro.rest-api.basePath>${standalone-path}
                                 </maestro.rest-api.basePath>
                                 <maestro.executor.config>
-                                    ${project.build.outputDirectory}/executorConfig.json <!--TODO examine-->
+                                    ${project.build.outputDirectory}/demoExampleFederatedExecutorCConfig.json
                                 </maestro.executor.config>
                                 <maestro.storeProperties>
                                     ${project.build.outputDirectory}/exampleExecutor.properties <!--TODO examine-->

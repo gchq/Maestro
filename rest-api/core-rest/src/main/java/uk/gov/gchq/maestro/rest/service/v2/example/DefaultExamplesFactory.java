@@ -64,7 +64,7 @@ public class DefaultExamplesFactory implements ExamplesFactory {
     }
 
     public OperationChain operationChain() {
-        return new OperationChain(EXAMPLE_OP_CHAIN);
+        return new OperationChain(EXAMPLE_OP_CHAIN, null, null);
     }
 
 }

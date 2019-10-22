@@ -16,6 +16,8 @@
 
 package uk.gov.gchq.maestro.federated.operation;
 
+import com.google.common.collect.Lists;
+
 import uk.gov.gchq.koryphe.impl.binaryoperator.Max;
 import uk.gov.gchq.maestro.federated.handler.FederatedOperationHandler;
 import uk.gov.gchq.maestro.operation.Operation;
@@ -34,7 +36,7 @@ public class FederatedOperationTest extends MaestroObjectTest<Operation> {
                 "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
                 "  \"id\" : \"FederatedOperation\",\n" +
                 "  \"operationArgs\" : {\n" +
-                "    \"ids\" : \"a,c,b\",\n" + //TODO should this get ordered?
+                "    \"ids\" : [ \"java.util.ArrayList\", [ \"a\", \"c\", \"b\" ] ],\n" + //TODO should this get ordered?
                 "    \"mergeOperation\" : {\n" +
                 "      \"class\" : \"uk.gov.gchq.koryphe.impl.binaryoperator.Max\"\n" +
                 "    },\n" +
@@ -51,7 +53,7 @@ public class FederatedOperationTest extends MaestroObjectTest<Operation> {
     protected Operation getFullyPopulatedTestObject() throws Exception {
         return new Operation("FederatedOperation")
                 .operationArg(FederatedOperationHandler.OPERATION, new Operation("TestOperation"))
-                .operationArg(FederatedOperationHandler.IDS, "a,c,b")
+                .operationArg(FederatedOperationHandler.IDS, Lists.newArrayList("a", "c", "b"))
                 .operationArg(FederatedOperationHandler.MERGE_OPERATION, new Max());
     }
 }

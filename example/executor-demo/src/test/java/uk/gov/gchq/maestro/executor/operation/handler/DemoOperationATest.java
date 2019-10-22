@@ -14,41 +14,29 @@
  * limitations under the License.
  */
 
-package uk.gov.gchq.maestro.operation.impl;
-
-import com.google.common.collect.ImmutableSet;
+package uk.gov.gchq.maestro.executor.operation.handler;
 
 import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import java.util.Set;
-
-public class DefaultOperationTest extends OperationTest {
-
+public class DemoOperationATest extends OperationTest {
     @Override
     protected String getJSONString() {
         return "{\n" +
                 "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
-                "  \"id\" : \"DefaultOperation\",\n" +
+                "  \"id\" : \"operationA\",\n" +
                 "  \"operationArgs\" : {\n" +
-                "    \"wrappedOp\" : {\n" +
-                "      \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
-                "      \"id\" : \"innerOp\",\n" +
-                "      \"operationArgs\" : { }\n" +
-                "    }\n" +
+                "    \"outputTypeReference\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl$Map\",\n" +
+                "      \"type\" : \"java.util.LinkedHashMap\"\n" +
+                "    },\n" +
+                "    \"value\" : 2\n" +
                 "  }\n" +
                 "}";
     }
 
     @Override
     protected Operation getFullyPopulatedTestObject() throws Exception {
-        return new Operation("DefaultOperation")
-                .operationArg("wrappedOp",
-                        new Operation("innerOp"));
-    }
-
-    @Override
-    protected Set<String> getRequiredFields() {
-        return ImmutableSet.of("wrappedOp");
+        return new DemoOperationHandlerTest().getBasicOp();
     }
 }

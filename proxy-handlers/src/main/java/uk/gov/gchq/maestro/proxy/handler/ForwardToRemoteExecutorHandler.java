@@ -33,6 +33,7 @@ import uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration;
 import uk.gov.gchq.maestro.executor.operation.handler.OperationHandler;
 import uk.gov.gchq.maestro.executor.util.ExecutorPropertiesUtil;
 import uk.gov.gchq.maestro.operation.Operation;
+import uk.gov.gchq.maestro.operation.serialisation.TypeReferenceImpl;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -65,9 +66,9 @@ public class ForwardToRemoteExecutorHandler implements OperationHandler {
         }
 
 
-        final URL url = (URL) ExecutorPropertiesUtil.getMaestroUrl(executor, "executor/operations/execute");
+        final URL url = ExecutorPropertiesUtil.getMaestroUrl(executor, "executor/operations/execute");
         try {
-            return doPost(url, opChainJson, (TypeReference) operation.get(OUTPUT_TYPE_REFERENCE), context);
+            return doPost(url, opChainJson, (TypeReference) operation.getOrDefault(OUTPUT_TYPE_REFERENCE, new TypeReferenceImpl.Map()), context); //TODO DEMO CHEAT
         } catch (final OperationException e) {
             throw new OperationException(e.getMessage(), e);
         }
@@ -92,8 +93,8 @@ public class ForwardToRemoteExecutorHandler implements OperationHandler {
 
     @Override
     public FieldDeclaration getFieldDeclaration() {
-        return new FieldDeclaration();
-        // .fieldRequired(OUTPUT_TYPE_REFERENCE, TypeReference.class); //TODO check review
+        return new FieldDeclaration()
+                .fieldOptional(OUTPUT_TYPE_REFERENCE, TypeReference.class); //TODO check review
     }
 
     @Override

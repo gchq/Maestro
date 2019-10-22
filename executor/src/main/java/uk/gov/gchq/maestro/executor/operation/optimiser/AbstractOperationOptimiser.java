@@ -60,7 +60,7 @@ public abstract class AbstractOperationOptimiser implements OperationOptimiser {
             optimisedOps.addAll(addPostOperations(currentOp, nextOp));
         }
 
-        return new OperationChain(operation.getId(), optimiseAll(optimisedOps));
+        return new OperationChain(operation.getId(), optimiseAll(optimisedOps), operation.getOperationArgs(), operation.getOptions());
     }
 
     /**

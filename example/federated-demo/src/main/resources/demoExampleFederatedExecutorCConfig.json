@@ -1,0 +1,104 @@
+{
+  "class": "uk.gov.gchq.maestro.executor.util.Config",
+  "id": "demoExampleFederatedExecutorC",
+  "operationHandlers": {
+    "operationC": {
+      "class": "uk.gov.gchq.maestro.executor.operation.handler.DemoOperationHandler",
+      "multiply": 100,
+      "fieldDeclaration": {
+        "class": "uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration",
+        "fields": {
+          "value": "java.lang.Integer"
+        }
+      }
+    },
+    "federatedOperation": {
+      "class": "uk.gov.gchq.maestro.federated.handler.FederatedOperationHandler",
+      "fieldDeclaration": {
+        "class": "uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration",
+        "fields": {
+          "ids": "java.util.List",
+          "mergeOperation": "uk.gov.gchq.koryphe.binaryoperator.KorypheBinaryOperator",
+          "operation": "uk.gov.gchq.maestro.operation.Operation"
+        }
+      }
+    }
+  },
+  "properties": {
+    "executorStorage": {
+      "class": "uk.gov.gchq.maestro.federated.FederatedExecutorStorage",
+      "storage": {
+        "{\"class\":\"uk.gov.gchq.maestro.federated.FederatedAccess\",\"addingUserId\":\"UNKNOWN\",\"auths\":[],\"disabledByDefault\":false,\"public\":false}": [
+          "java.util.TreeSet",
+          [
+            {
+              "class": "uk.gov.gchq.maestro.executor.Executor",
+              "config": {
+                "class": "uk.gov.gchq.maestro.executor.util.Config",
+                "id": "innerExecutorProxyToA",
+                "operationHandlers": {
+                  "initialiser": {
+                    "class": "uk.gov.gchq.maestro.proxy.handler.ProxyInitialiseHandler"
+                  },
+                  "operationB": {
+                    "class": "uk.gov.gchq.maestro.executor.operation.handler.DemoOperationHandler",
+                    "multiply": 11,
+                    "fieldDeclaration": {
+                      "class": "uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration",
+                      "fields": {
+                        "value": "java.lang.Integer"
+                      }
+                    }
+                  }
+                },
+                "properties": {
+                  "maestro.port": "8080"
+                },
+                "defaultHandler": {
+                  "class": "uk.gov.gchq.maestro.proxy.handler.ForwardToRemoteExecutorHandler"
+                },
+                "operationHooks": [],
+                "requestHooks": []
+              }
+            },
+            {
+              "class": "uk.gov.gchq.maestro.executor.Executor",
+              "config": {
+                "class": "uk.gov.gchq.maestro.executor.util.Config",
+                "id": "innerExecutorProxyToB",
+                "operationHandlers": {
+                  "initialiser": {
+                    "class": "uk.gov.gchq.maestro.proxy.handler.ProxyInitialiseHandler"
+                  },
+                  "operationC": {
+                    "class": "uk.gov.gchq.maestro.executor.operation.handler.DemoOperationHandler",
+                    "multiply": 22,
+                    "fieldDeclaration": {
+                      "class": "uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration",
+                      "fields": {
+                        "value": "java.lang.Integer"
+                      }
+                    }
+                  }
+                },
+                "properties": {
+                  "maestro.port": "8181"
+                },
+                "defaultHandler": {
+                  "class": "uk.gov.gchq.maestro.proxy.handler.ForwardToRemoteExecutorHandler"
+                },
+                "operationHooks": [],
+                "requestHooks": []
+              }
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "defaultHandler": {
+    "class": "uk.gov.gchq.maestro.executor.operation.handler.DefaultHandler"
+  },
+  "operationHooks": [],
+  "requestHooks": []
+}

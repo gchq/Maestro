@@ -34,7 +34,7 @@ import static org.junit.Assert.assertNotNull;
 public class AddNamedOperationTest extends OperationTest {
     public static final String USER = "User";
     private static final OperationChain OPERATION_CHAIN =
-            new OperationChain("ToList", new Operation("ToList").input(4));
+            new OperationChain("ToList", new Operation("ToList").input(4), null, null);
 
     @Test
     public void shouldJsonSerialiseAndDeserialiseWithNoOptions() throws Exception {
@@ -57,7 +57,7 @@ public class AddNamedOperationTest extends OperationTest {
                 "    \"description\" : \"Test Named Operation\",\n" +
                 "    \"operationChain\" : {\n" +
                 "      \"class\" : \"uk.gov.gchq.maestro.operation.OperationChain\",\n" +
-                "      \"id\" : \"ToListChain\",\n" +
+                "      \"id\" : \"ToList\",\n" +
                 "      \"operations\" : [ {\n" +
                 "        \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
                 "        \"id\" : \"ToList\",\n" +

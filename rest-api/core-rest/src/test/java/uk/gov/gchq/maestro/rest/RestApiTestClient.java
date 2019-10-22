@@ -21,6 +21,8 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
 import uk.gov.gchq.maestro.commonutil.exception.MaestroRuntimeException;
@@ -38,6 +40,7 @@ import java.io.IOException;
 import java.net.URI;
 
 public abstract class RestApiTestClient {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestApiTestClient.class);
     protected final Client client = ClientBuilder.newClient();
     protected final ResourceConfig config;
     protected final String fullPath;
@@ -88,7 +91,9 @@ public abstract class RestApiTestClient {
         FileUtils.writeByteArrayToFile(testFolder.newFile(StreamUtil.EXECUTOR_CONFIG), config.serialise());
 
         // set properties for REST service
+        LOGGER.debug("{} was {}", SystemProperty.EXECUTOR_CONFIG_PATH, System.getProperty(SystemProperty.EXECUTOR_CONFIG_PATH));
         System.setProperty(SystemProperty.EXECUTOR_CONFIG_PATH, testFolder.getRoot() + StreamUtil.EXECUTOR_CONFIG);
+        LOGGER.debug("{} now {}", SystemProperty.EXECUTOR_CONFIG_PATH, System.getProperty(SystemProperty.EXECUTOR_CONFIG_PATH));
 
         reinitialiseExecutor();
     }

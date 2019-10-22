@@ -22,15 +22,17 @@ public class OperationChainWrapTest extends OperationTest {
     protected String getJSONString() {
         return "{\n" +
                 "  \"class\" : \"uk.gov.gchq.maestro.operation.OperationChain\",\n" +
-                "  \"id\" : \"chainWrapChain\",\n" +
+                "  \"id\" : \"chainWrap\",\n" +
                 "  \"operations\" : [ {\n" +
                 "    \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
                 "    \"id\" : \"innerOperation\",\n" +
                 "    \"operationArgs\" : {\n" +
-                "      \"input\" : [ \"[Ljava.lang.Object;\", [ \"value1\", \"value2\" ] ]\n" + //TODO [L
+                "      \"input\" : [ \"[Ljava.lang.Object;\", [ \"value1\", \"value2\" ] ]\n" +
                 "    }\n" +
                 "  } ],\n" +
-                "  \"operationArgs\" : { }\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"value1\", \"value2\" ] ]\n" + //TODO review this duplication
+                "  }\n" +
                 "}";
     }
 

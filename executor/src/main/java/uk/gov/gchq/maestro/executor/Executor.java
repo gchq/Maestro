@@ -67,7 +67,6 @@ import static java.util.Objects.requireNonNull;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 public class Executor implements Comparable<Executor>, Serializable {
     public static final String ERROR_DESERIALISE_EXECUTOR = "Could not deserialise Executor from given byte[]";
-    public static final String WRAPPED_OP = "wrappedOp";
     public static final String INITIALISER = "initialiser";
     public static final String NO_HANDLER_WAS_FOUND_FOR_OPERATION = "Error in Executor: %s No handler was found for operation type: %s, this is an illegal state because a default handler should have been selected.";
     private static final long serialVersionUID = -5566921581366812872L;
@@ -164,7 +163,10 @@ public class Executor implements Comparable<Executor>, Serializable {
             CloseableUtil.close(result);
             throw new OperationException(e);
         }
-        return new Result(result, clonedRequest.getContext());
+
+        final Result<O> rtn = new Result(result, clonedRequest.getContext());
+        LOGGER.debug("Rtn will returned: {}", rtn);
+        return rtn;
     }
 
     /**
@@ -284,6 +286,7 @@ public class Executor implements Comparable<Executor>, Serializable {
                     operationHook.preExecute(opAsRequest);
                 }
                 result = handler.doOperation(operation, context, this);
+                LOGGER.debug("operation: {} returned: {}", operation.getId(), result);
                 for (final Hook operationHook : getConfig().getRequestHooks()) {
                     result = operationHook.postExecute(result, opAsRequest);
                 }
@@ -304,7 +307,7 @@ public class Executor implements Comparable<Executor>, Serializable {
         if (null == result) {
             CloseableUtil.close(operation);
         }
-
+        LOGGER.debug("operation: {} returned: {}", operation.getId(), result);
         return result;
     }
 
@@ -319,7 +322,8 @@ public class Executor implements Comparable<Executor>, Serializable {
                         context, this);
             }
             try {
-                handler.doOperation(operation, context, this);
+                final Object o = handler.doOperation(operation, context, this);
+                LOGGER.info("Initialise operation returned: {}", o);
             } catch (final Exception e) {
                 LOGGER.error("InitialiseOp failed");
                 throw e;

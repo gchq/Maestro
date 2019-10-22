@@ -219,16 +219,16 @@ public class JSONSerialiser {
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         mapper.configure(SerializationFeature.CLOSE_CLOSEABLE, true);
         mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
-//        mapper.registerModule(CloseableIterableDeserializer.getModule()); //TODO THIS Should go in config not code
+        // mapper.registerModule(CloseableIterableDeserializer.getModule()); //TODO THIS Should go in config not code
 
         // Allow unknown properties. This will help to avoid conflicts between Maestro versions.
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, STRICT_JSON_DEFAULT);
 
         // Using the deprecated version for compatibility with older versions of jackson
-        mapper.registerModule(new JSR310Module());
+        mapper.registerModule(new JSR310Module()); //TODO needed?
 
         // Use the 'setFilters' method so it is compatible with older versions of jackson
-        mapper.setFilters(getFilterProvider());
+        mapper.setFilters(getFilterProvider()); //TODO needed?
 
         // Allow simple class names or full class names to be used in JSON.
         // We must set this to true to ensure serialisation into json uses the
@@ -356,7 +356,7 @@ public class JSONSerialiser {
     public static <T> T deserialise(final byte[] bytes, final Class<T> clazz) throws SerialisationException {
         try {
             return getInstance().mapper.readValue(bytes, clazz);
-        } catch (final IOException e) {
+        } catch (final Exception e) {
             throw new SerialisationException(e.getMessage(), e);
         }
     }
@@ -372,7 +372,7 @@ public class JSONSerialiser {
         try (final InputStream stream2 = stream) {
             final byte[] bytes = IOUtils.toByteArray(stream2);
             return deserialise(bytes, clazz);
-        } catch (final IOException e) {
+        } catch (final Exception e) {
             throw new SerialisationException(e.getMessage(), e);
         }
     }

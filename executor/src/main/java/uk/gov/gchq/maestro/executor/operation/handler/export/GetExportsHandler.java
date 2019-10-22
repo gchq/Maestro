@@ -37,7 +37,7 @@ public class GetExportsHandler implements OutputOperationHandler<Map<String, Clo
     public Map<String, CloseableIterable<?>> _doOperation(final Operation operation, final Context context, final Executor executor) throws OperationException {
         final Map<String, CloseableIterable<?>> exports = new LinkedHashMap<>();
         for (final Operation getExport : (List<Operation>) operation.get("GetExports")) {
-            final CloseableIterable<?> export = executor.execute(new OperationChain(getExport.getId(), getExport), context);
+            final CloseableIterable<?> export = executor.execute(new OperationChain(getExport.getId(), getExport, operation.getOperationArgs(), operation.getOptions()), context);
             exports.put(getExport.getClass().getName() + ": " + getExport.get("KeyOrDefault"), export);
         }
 

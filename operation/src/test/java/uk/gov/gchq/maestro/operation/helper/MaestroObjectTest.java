@@ -21,6 +21,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.koryphe.Since;
 import uk.gov.gchq.koryphe.Summary;
@@ -52,6 +54,7 @@ import static org.junit.Assert.assertTrue;
 import static uk.gov.gchq.maestro.operation.Operation.LOCALE;
 
 public abstract class MaestroObjectTest<T> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MaestroObjectTest.class);
 
     @Test
     public final void shouldJSONSerialise() throws Exception {
@@ -69,6 +72,7 @@ public abstract class MaestroObjectTest<T> {
 
         final T deserialiseAlt = (T) JSONSerialiser.deserialise(jsonString, this.getClass().getClassLoader());
         assertEquals(testObject, deserialiseAlt);
+        LOGGER.info("{}{}", System.getProperty("line.separator"), jsonString);
     }
 
     protected Set<String> getRequiredFields() {

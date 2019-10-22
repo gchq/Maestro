@@ -90,7 +90,7 @@ public class Operation {
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
     @JsonPropertyOrder(value = {"class"}, alphabetic = true)
     private Map<String, Object> operationArgs = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    private Map<String, String> options = new HashMap<>();
+    private Map<String, String> options = new HashMap<>(); //TODO ? remove and replace with operationArgs?
 
     public Operation(final String id) {
         this.id = id;

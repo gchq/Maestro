@@ -18,7 +18,10 @@ package uk.gov.gchq.maestro.executor.helper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.executor.Context;
 import uk.gov.gchq.maestro.executor.Executor;
 import uk.gov.gchq.maestro.executor.operation.handler.OperationHandler;
@@ -37,6 +40,7 @@ import static org.junit.Assert.fail;
  * @see OperationHandler
  */
 public abstract class MaestroHandlerBasicTest<H extends OperationHandler> extends MaestroObjectTest<H> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MaestroHandlerBasicTest.class);
     public static final String EXECUTOR_ID = "testExecutorId";
     protected Executor testExecutor;
     protected Context context;
@@ -47,6 +51,7 @@ public abstract class MaestroHandlerBasicTest<H extends OperationHandler> extend
         testUser = new User("testUser");
         context = getContext();
         testExecutor = getTestExecutor();
+        LOGGER.warn("Executing with {}", new String(JSONSerialiser.serialise(testExecutor)));
     }
 
     @Test

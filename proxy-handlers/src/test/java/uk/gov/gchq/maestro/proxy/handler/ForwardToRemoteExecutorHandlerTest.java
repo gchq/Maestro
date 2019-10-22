@@ -66,7 +66,13 @@ public class ForwardToRemoteExecutorHandlerTest extends MaestroHandlerBasicTest<
     @Override
     protected String getJSONString() {
         return "{\n" +
-                "  \"class\" : \"uk.gov.gchq.maestro.proxy.handler.ForwardToRemoteExecutorHandler\"\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.proxy.handler.ForwardToRemoteExecutorHandler\",\n" +
+                "  \"fieldDeclaration\" : {\n" +
+                "    \"class\" : \"uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration\",\n" +
+                "    \"fields\" : {\n" +
+                "      \"outputTypeReference\" : \"com.fasterxml.jackson.core.type.TypeReference\"\n" +
+                "    }\n" +
+                "  }\n" +
                 "}";
     }
 

@@ -49,6 +49,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -69,7 +70,7 @@ import static uk.gov.gchq.maestro.rest.ServiceConstants.MAESTRO_MEDIA_TYPE_HEADE
  */
 public class OperationServiceV2 implements IOperationServiceV2 {
     private static final Logger LOGGER = LoggerFactory.getLogger(OperationServiceV2.class);
-    public static final String OUTPUT_TYPE_REFERENCE = "OutputTypeReference"; //TODO move to OperationHandler
+    public static final String OUTPUT_TYPE_REFERENCE = "outputTypeReference"; //TODO move to operationHandler
 
     @Inject
     private ExecutorFactory executorFactory;
@@ -107,10 +108,14 @@ public class OperationServiceV2 implements IOperationServiceV2 {
     @Override
     public Response execute(final Operation operation) {
         final Pair<Object, String> resultAndJobId = _execute(operation, userFactory.createContext());
-        return Response.ok(resultAndJobId.getFirst())
+        final HashMap<String, Object> newResult = new HashMap<>(); //TODO Demo cheat
+        newResult.put("result", resultAndJobId.getFirst());
+        final Response rtn = Response.ok(newResult)
                 .header(MAESTRO_MEDIA_TYPE_HEADER, MAESTRO_MEDIA_TYPE)
                 .header(JOB_ID_HEADER, resultAndJobId.getSecond())
                 .build();
+        LOGGER.debug("Response = {}, entity = {}", rtn, rtn.getEntity());
+        return rtn;
     }
 
     @Override
@@ -163,7 +168,6 @@ public class OperationServiceV2 implements IOperationServiceV2 {
     protected <O> Pair<O, String> _execute(final Operation operation, final Context context) {
 
         OperationChain opChain = OperationChain.wrap(operation.getId(), operation);
-
         preOperationHook(opChain, context);
 
         Result<O> result;
@@ -185,7 +189,9 @@ public class OperationServiceV2 implements IOperationServiceV2 {
             }
         }
 
-        return new Pair<>(result.getResult(), result.getContext().getJobId());
+        final Pair<O, String> rtn = new Pair<>(result.getResult(), result.getContext().getJobId());
+        LOGGER.debug("will rtn: {}", rtn);
+        return rtn;
     }
 
     protected void chunkResult(final Object result, final ChunkedOutput<String> output) {

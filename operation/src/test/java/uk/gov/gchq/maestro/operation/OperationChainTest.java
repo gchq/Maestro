@@ -38,6 +38,6 @@ public class OperationChainTest extends OperationTest {
 
     @Override
     protected Operation getFullyPopulatedTestObject() throws Exception {
-        return new OperationChain("testChain", new Operation("innerOp1"), new Operation("innerOp2"));
+        return new OperationChain("testChain", null, null, new Operation("innerOp1"), new Operation("innerOp2"));
     }
 }

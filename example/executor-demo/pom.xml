@@ -15,7 +15,9 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>uk.gov.gchq.maestro</groupId>
         <artifactId>example</artifactId>
@@ -34,12 +36,22 @@
     <dependencies>
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
-            <artifactId>jcs-cache-service</artifactId>
+            <artifactId>core-rest</artifactId>
+            <classifier>classes</classifier>
+        </dependency>
+
+        <!--test dependency-->
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>executor</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
-            <artifactId>core-rest</artifactId>
-            <classifier>classes</classifier>
+            <artifactId>operation</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -61,7 +73,7 @@
                 <version>2.10</version>
                 <dependencies>
                     <dependency>
-                        <groupId>uk.gov.gchq.maestro</groupId>
+                        <groupId>${project.parent.groupId}</groupId>
                         <artifactId>core-rest</artifactId>
                         <version>${project.parent.version}</version>
                         <type>war</type>
@@ -116,14 +128,15 @@
                                 <maestro.properties.app.description>
                                     Example of a Maestro Executor
                                 </maestro.properties.app.description>
-                                <maestro.rest-api.basePath>${standalone-path}
+                                <maestro.rest-api.basePath>
+                                    ${standalone-path}
                                 </maestro.rest-api.basePath>
                                 <maestro.executor.config>
-                                    ${project.build.outputDirectory}/executorConfig.json <!--TODO examine-->
+                                    ${project.build.outputDirectory}/demoExampleExecutorAConfig.json
                                 </maestro.executor.config>
-                                <maestro.storeProperties>
+                                <maestro.properties>
                                     ${project.build.outputDirectory}/exampleExecutor.properties <!--TODO examine-->
-                                </maestro.storeProperties>
+                                </maestro.properties>
                                 <maestro.error-mode.debug>
                                     false
                                 </maestro.error-mode.debug>

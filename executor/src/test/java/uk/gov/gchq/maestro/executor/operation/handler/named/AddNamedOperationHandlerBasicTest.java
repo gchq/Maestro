@@ -48,9 +48,10 @@ public class AddNamedOperationHandlerBasicTest extends MaestroHandlerBasicTest<A
 
     @Override
     protected Operation getBasicOp() throws Exception {
-        OperationChain parent = new OperationChain("opchain", Lists.newArrayList(
-                new Operation("AddNamedOperation").operationArg("name", "child"),
-                new Operation("ToArray")));
+        OperationChain parent = new OperationChain("opchain",
+                Lists.newArrayList(
+                        new Operation("AddNamedOperation").operationArg("name", "child"),
+                        new Operation("ToArray")), null, null);
 
         return new Operation(NAMED_OPERATION)
                 .operationArg(OPERATION_NAME, "testName")
