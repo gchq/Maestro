@@ -48,7 +48,7 @@ public final class CacheServiceLoader {
             LOGGER.warn("received null properties - exiting initialise method without creating service");
             return;
         }
-        final String cacheClass = (String) properties.get(CacheProperties.CACHE_SERVICE_CLASS); ////TODO get class
+        final String cacheClass = (String) properties.get(CacheProperties.CACHE_SERVICE);
 
         if (null == cacheClass) {
             if (null == service) {

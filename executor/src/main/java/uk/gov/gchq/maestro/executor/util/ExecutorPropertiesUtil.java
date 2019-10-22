@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.koryphe.util.ReflectionUtil;
 import uk.gov.gchq.maestro.commonutil.StreamUtil;
+import uk.gov.gchq.maestro.commonutil.cache.util.CacheProperties;
 import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiserModules;
@@ -46,7 +47,7 @@ import static com.sun.scenario.Settings.set;
 
 public final class ExecutorPropertiesUtil {
     public static final String ADMIN_AUTH = "maestro.executor.admin.auth";
-    public static final String CACHE_CLASS = "maestro.cache.service.class";
+    public static final String CACHE_CLASS = CacheProperties.CACHE_SERVICE;
     public static final String CONNECT_TIMEOUT = "gaffer.connect-timeout";
     public static final int DEFAULT_CONNECT_TIMEOUT = 10000;
     public static final String DEFAULT_MAESTRO_CONTEXT_ROOT = "/rest";
@@ -247,7 +248,7 @@ public final class ExecutorPropertiesUtil {
     }
 
     public static String getJsonSerialiserClass(final Executor executor) {
-        return (String) executor.getProperty(JSON_SERIALISER_CLASS); //TODO return class
+        return (String) executor.getProperty(JSON_SERIALISER_CLASS); //TODO return instance object not String.
     }
 
     public static String getJsonSerialiserClass(final Config config) {

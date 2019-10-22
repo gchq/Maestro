@@ -36,7 +36,7 @@ public class FederatedOperationTest extends MaestroObjectTest<Operation> {
                 "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
                 "  \"id\" : \"FederatedOperation\",\n" +
                 "  \"operationArgs\" : {\n" +
-                "    \"ids\" : [ \"java.util.ArrayList\", [ \"a\", \"c\", \"b\" ] ],\n" + //TODO should this get ordered?
+                "    \"ids\" : [ \"java.util.ArrayList\", [ \"a\", \"c\", \"b\" ] ],\n" + //TODO review should this get ordered?
                 "    \"mergeOperation\" : {\n" +
                 "      \"class\" : \"uk.gov.gchq.koryphe.impl.binaryoperator.Max\"\n" +
                 "    },\n" +

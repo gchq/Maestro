@@ -202,7 +202,6 @@ public class AddNamedOperationHandlerTest {
         addNamedOperation.operationArg(AddNamedOperationHandler.OPERATION_NAME, "testOp");
         addNamedOperation.operationArg(DESCRIPTION, "test");
 
-        //TODO mock Executor needs to know return a handlerMap
         handler.doOperation(addNamedOperation, context, executor);
 
         final NamedOperationDetail result = mockCache.getNamedOperation("testOp", new User(), EMPTY_ADMIN_AUTH);

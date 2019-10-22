@@ -256,19 +256,8 @@ public class Executor implements Comparable<Executor>, Serializable {
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
     @JsonGetter("config")
     public Config getConfig() {
-        return config;
+        return config; //TODO review, implement a deep clone?
     }
-
-    // @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
-    // @JsonGetter("config")
-    // public Config getConfig() throws MaestroCheckedException {
-    //TODO implement deep clone.
-    // try {
-    //     return JSONSerialiser.deserialise(JSONSerialiser.serialise(config), Config.class);
-    // } catch (final Exception e) {
-    //     throw new MaestroCheckedException("Error getting config from Executor: " + getId(), e);
-    // }
-    // }
 
     private Object handleOperation(final Operation operation,
                                    final Context context) throws OperationException {
@@ -361,11 +350,11 @@ public class Executor implements Comparable<Executor>, Serializable {
     }
 
     public Object getPropertyOrDefault(final String key, final Object defaultValue) {
-        return config.getPropertyOrDefault(key, defaultValue); //TODO review usage and cast of this method
+        return config.getPropertyOrDefault(key, defaultValue);
     }
 
     public Object getProperty(final String key) {
-        return config.getProperty(key); //TODO review useage and cast of this method
+        return config.getProperty(key);
     }
 
     public String setProperty(final String key, final String value) {

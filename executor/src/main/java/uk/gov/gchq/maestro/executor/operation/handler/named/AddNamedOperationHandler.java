@@ -114,7 +114,7 @@ public class AddNamedOperationHandler implements OperationHandler {
             }
         }
 
-        if (null != namedOperationDetail.getParameters()) { //TODO Review test this logic
+        if (null != namedOperationDetail.getParameters()) { //TODO Review & test this logic
             String operationString = namedOperationDetail.getOperations();
             for (final Map.Entry<String, ParameterDetail> parameterDetail : namedOperationDetail.getParameters().entrySet()) {
                 String varName = "${" + parameterDetail.getKey() + "}";

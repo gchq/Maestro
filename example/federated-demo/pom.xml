@@ -134,7 +134,7 @@
                                     ${project.build.outputDirectory}/demoExampleFederatedExecutorCConfig.json
                                 </maestro.executor.config>
                                 <maestro.storeProperties>
-                                    ${project.build.outputDirectory}/exampleExecutor.properties <!--TODO examine-->
+                                    ${project.build.outputDirectory}/exampleExecutor.properties <!--TODO examine what goes here that can't go in Executor Config-->
                                 </maestro.storeProperties>
                                 <maestro.error-mode.debug>
                                     false

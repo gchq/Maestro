@@ -82,7 +82,7 @@ public class Config implements Comparable<Config>, Serializable {
      * the Executor - such as database connection strings.
      */
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
-    private Map<String, Object> properties = new HashMap<>(); //TODO review in Config.compareTo()
+    private Map<String, Object> properties = new HashMap<>();
 
     /**
      * The operation handlers - A Map containing all classes of operations
@@ -393,7 +393,7 @@ public class Config implements Comparable<Config>, Serializable {
                 .append(operationHooks)
                 .append(properties)
                 .append(operationHandlers)
-                .append(library) //TODO review equals library
+                .append(library) //TODO review library in equals()
                 .append(defaultHandler)
                 .toHashCode();
     }

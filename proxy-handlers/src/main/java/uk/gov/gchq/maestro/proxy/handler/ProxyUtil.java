@@ -70,7 +70,7 @@ public final class ProxyUtil {
         O output = null;
         if (null != outputJson) {
             try {
-                output = deserialise(outputJson, outputTypeReference); //TODO outputTypeReference requirements
+                output = deserialise(outputJson, outputTypeReference); //TODO outputTypeReference high priority
             } catch (final SerialisationException e) {
                 throw new OperationException(e.getMessage(), e);
             }

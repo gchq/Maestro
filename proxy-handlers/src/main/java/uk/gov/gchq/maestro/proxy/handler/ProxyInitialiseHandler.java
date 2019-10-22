@@ -48,12 +48,12 @@ public class ProxyInitialiseHandler implements InitialiserHandler {
     @Override
     public Object _doOperation(final Operation ignore, final Context context, final Executor executor) throws OperationException {
         client = ProxyUtil.createClient(executor);
-        checkDelegateStoreStatus(executor);
+        checkDelegateExecutorStatus(executor);
         return null;
     }
 
 
-    protected void checkDelegateStoreStatus(final Executor executor) throws OperationException { //TODO rename
+    protected void checkDelegateExecutorStatus(final Executor executor) throws OperationException {
         final URL url = ExecutorPropertiesUtil.getMaestroUrl(executor, "/executor/status");
         final LinkedHashMap status = doGet(url, new TypeReferenceImpl.Map(), null);
         LOGGER.info("ProxyUtil REST API status: {}", status.get("description"));

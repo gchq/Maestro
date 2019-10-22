@@ -39,11 +39,11 @@ public class SingleProxyInitialiseHandler extends ProxyInitialiseHandler {
 
     @Override
     public Object _doOperation(final Operation ignore, final Context context, final Executor executor) throws OperationException {
-        startMapStoreRestApi();
+        startMapExecutorRestApi();
         return super._doOperation(ignore, context, executor);
     }
 
-    public void startMapStoreRestApi() throws OperationException { //TODO RENAME
+    public void startMapExecutorRestApi() throws OperationException {
         try {
             TEST_FOLDER.delete();
             TEST_FOLDER.create();

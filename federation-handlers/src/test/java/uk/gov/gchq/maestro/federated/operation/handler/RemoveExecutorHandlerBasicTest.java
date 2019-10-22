@@ -68,12 +68,12 @@ public class RemoveExecutorHandlerBasicTest extends MaestroHandlerBasicTest<Remo
     protected void inspectFields() throws Exception {
         final ArrayList<String> executorIds = Lists.newArrayList(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + "A", AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + "B");
         try {
-            final Collection<Executor> getAandB = GetExecutorsFederatedUtil.getExecutorsFrom(this.testExecutor, testUser, executorIds); //TODO is the use of these Utils actually testing anything or sharing failure/bugs?
+            final Collection<Executor> getAandB = GetExecutorsFederatedUtil.getExecutorsFrom(this.testExecutor, testUser, executorIds); //TODO Is this testing anything further than what Util is testing?
             Assert.fail("exception expected");
         } catch (MaestroCheckedException e) {
             assertTrue(e.getMessage().contains(String.format(FederatedExecutorStorage.ERROR_GETTING_S_FROM_FEDERATED_EXECUTOR_STORAGE_S, executorIds.toString(), "")));
         }
-        final Collection<Executor> getA = GetExecutorsFederatedUtil.getExecutorsFrom(this.testExecutor, testUser, Lists.newArrayList(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + "A")); //TODO is the use of these Utils actually testing anything or sharing failure/bugs?
+        final Collection<Executor> getA = GetExecutorsFederatedUtil.getExecutorsFrom(this.testExecutor, testUser, Lists.newArrayList(AddExecutorHandlerBasicTest.INNER_EXECUTOR_ID + "A")); //TODO Is this testing anything further than what Util is testing?
         assertEquals(1, getA.size());
         assertEquals(new Executor(AddExecutorHandlerBasicTest.getInnerConfig("A")), getA.toArray()[0]);
     }

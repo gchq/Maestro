@@ -28,7 +28,7 @@ public final class CacheProperties {
     /**
      * Name of the system property to use in order to define the cache service class.
      */
-    public static final String CACHE_SERVICE_CLASS = "maestro.cache.service.class";
+    public static final String CACHE_SERVICE = "maestro.cache.service";
 
     /**
      * Name of the system property to use in order to locate the cache config file.

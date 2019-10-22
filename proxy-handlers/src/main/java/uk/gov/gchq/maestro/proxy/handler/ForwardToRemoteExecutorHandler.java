@@ -68,7 +68,7 @@ public class ForwardToRemoteExecutorHandler implements OperationHandler {
 
         final URL url = ExecutorPropertiesUtil.getMaestroUrl(executor, "executor/operations/execute");
         try {
-            return doPost(url, opChainJson, (TypeReference) operation.getOrDefault(OUTPUT_TYPE_REFERENCE, new TypeReferenceImpl.Map()), context); //TODO DEMO CHEAT
+            return doPost(url, opChainJson, (TypeReference) operation.getOrDefault(OUTPUT_TYPE_REFERENCE, new TypeReferenceImpl.Map()), context); //TODO outputTypeReference DEMO CHEAT High priority
         } catch (final OperationException e) {
             throw new OperationException(e.getMessage(), e);
         }
@@ -94,7 +94,7 @@ public class ForwardToRemoteExecutorHandler implements OperationHandler {
     @Override
     public FieldDeclaration getFieldDeclaration() {
         return new FieldDeclaration()
-                .fieldOptional(OUTPUT_TYPE_REFERENCE, TypeReference.class); //TODO check review
+                .fieldOptional(OUTPUT_TYPE_REFERENCE, TypeReference.class); //TODO outputTypeReference High priority
     }
 
     @Override

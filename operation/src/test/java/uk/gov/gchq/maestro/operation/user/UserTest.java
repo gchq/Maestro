@@ -17,6 +17,8 @@ package uk.gov.gchq.maestro.operation.user;
 
 import org.junit.Test;
 
+import java.util.HashSet;
+
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -36,14 +38,16 @@ public class UserTest {
         final String opAuth1 = "opAuth 1";
         final String opAuth2 = "opAuth 2";
 
+        final HashSet<String> dataAuths = new HashSet<>();
+        dataAuths.add(dataAuth1);
+        dataAuths.add(dataAuth2);
+
+        final HashSet<String> opAuths = new HashSet<>();
+        opAuths.add(opAuth1);
+        opAuths.add(opAuth2);
+
         // When
-        final User user = new User.Builder()
-                .userId(userId)
-                .dataAuth(dataAuth1)
-                .dataAuth(dataAuth2)
-                .opAuth(opAuth1)
-                .opAuth(opAuth2)
-                .build();
+        final User user = new User(userId, dataAuths, opAuths);
 
         // Then
         assertEquals(userId, user.getUserId());
@@ -63,9 +67,7 @@ public class UserTest {
         final String userId = null;
 
         // When
-        final User user = new User.Builder()
-                .userId(userId)
-                .build();
+        final User user = new User(userId);
 
         // Then
         assertEquals(User.UNKNOWN_USER_ID, user.getUserId());
@@ -77,9 +79,7 @@ public class UserTest {
         final String userId = "";
 
         // When
-        final User user = new User.Builder()
-                .userId(userId)
-                .build();
+        final User user = new User(userId);
 
         // Then
         assertEquals(User.UNKNOWN_USER_ID, user.getUserId());
@@ -89,8 +89,7 @@ public class UserTest {
     public void shouldSetUnknownIdWhenBuildingUser() {
         // Given
         // When
-        final User user = new User.Builder()
-                .build();
+        final User user = new User();
 
         // Then
         assertEquals(User.UNKNOWN_USER_ID, user.getUserId());
@@ -103,11 +102,12 @@ public class UserTest {
         final String dataAuth1 = "dataAuth 1";
         final String dataAuth2 = "dataAuth 2";
         final String newDataAuth = "new dataAuth";
-        final User user = new User.Builder()
-                .userId(userId)
-                .dataAuth(dataAuth1)
-                .dataAuth(dataAuth2)
-                .build();
+
+        final HashSet<String> dataAuths = new HashSet<>();
+        dataAuths.add(dataAuth1);
+        dataAuths.add(dataAuth2);
+
+        final User user = new User(userId, dataAuths);
 
         // When
         try {
@@ -128,11 +128,12 @@ public class UserTest {
         final String opAuth1 = "opAuth 1";
         final String opAuth2 = "opAuth 2";
         final String newOpAuth = "new opAuth";
-        final User user = new User.Builder()
-                .userId(userId)
-                .opAuth(opAuth1)
-                .opAuth(opAuth2)
-                .build();
+
+        final HashSet<String> opAuths = new HashSet<>();
+        opAuths.add(opAuth1);
+        opAuths.add(opAuth2);
+
+        final User user = new User(userId, null, opAuths);
 
         // When
         try {
@@ -155,21 +156,17 @@ public class UserTest {
         final String opAuth1 = "opAuth 1";
         final String opAuth2 = "opAuth 2";
 
-        final User userLocked = new User.Builder()
-                .userId(userId)
-                .dataAuth(dataAuth1)
-                .dataAuth(dataAuth2)
-                .opAuth(opAuth1)
-                .opAuth(opAuth2)
-                .build();
+        final HashSet<String> dataAuths = new HashSet<>();
+        dataAuths.add(dataAuth1);
+        dataAuths.add(dataAuth2);
 
-        final User userUnlocked = new User.Builder()
-                .userId(userId)
-                .dataAuth(dataAuth1)
-                .dataAuth(dataAuth2)
-                .opAuth(opAuth1)
-                .opAuth(opAuth2)
-                .build();
+        final HashSet<String> opAuths = new HashSet<>();
+        opAuths.add(opAuth1);
+        opAuths.add(opAuth2);
+
+        final User userLocked = new User(userId, dataAuths, opAuths);
+
+        final User userUnlocked = new User(userId, dataAuths, opAuths);
 
         // When
         final boolean isEqual = userLocked.equals(userUnlocked);
@@ -189,21 +186,17 @@ public class UserTest {
         final String opAuth1 = "opAuth 1";
         final String opAuth2 = "opAuth 2";
 
-        final User user1 = new User.Builder()
-                .userId(userId1)
-                .dataAuth(dataAuth1)
-                .dataAuth(dataAuth2)
-                .opAuth(opAuth1)
-                .opAuth(opAuth2)
-                .build();
+        final HashSet<String> dataAuths = new HashSet<>();
+        dataAuths.add(dataAuth1);
+        dataAuths.add(dataAuth2);
 
-        final User user2 = new User.Builder()
-                .userId(userId2)
-                .dataAuth(dataAuth1)
-                .dataAuth(dataAuth2)
-                .opAuth(opAuth1)
-                .opAuth(opAuth2)
-                .build();
+        final HashSet<String> opAuths = new HashSet<>();
+        opAuths.add(opAuth1);
+        opAuths.add(opAuth2);
+
+        final User user1 = new User(userId1, dataAuths, opAuths);
+
+        final User user2 = new User(userId2, dataAuths, opAuths);
 
         // When
         final boolean isEqual = user1.equals(user2);
@@ -220,17 +213,18 @@ public class UserTest {
         final String dataAuth1 = "dataAuth 1";
         final String dataAuth2a = "dataAuth 2a";
         final String dataAuth2b = "dataAuth 2b";
-        final User user1 = new User.Builder()
-                .userId(userId)
-                .dataAuth(dataAuth1)
-                .dataAuth(dataAuth2a)
-                .build();
 
-        final User user2 = new User.Builder()
-                .userId(userId)
-                .dataAuth(dataAuth1)
-                .dataAuth(dataAuth2b)
-                .build();
+        final HashSet<String> dataAuthsA = new HashSet<>();
+        dataAuthsA.add(dataAuth1);
+        dataAuthsA.add(dataAuth2a);
+
+        final User user1 = new User(userId, dataAuthsA);
+
+        final HashSet<String> dataAuthsB = new HashSet<>();
+        dataAuthsB.add(dataAuth1);
+        dataAuthsB.add(dataAuth2b);
+
+        final User user2 = new User(userId, dataAuthsB);
 
         // When
         final boolean isEqual = user1.equals(user2);
@@ -247,17 +241,19 @@ public class UserTest {
         final String opAuth1 = "opAuth 1";
         final String opAuth2a = "opAuth 2a";
         final String opAuth2b = "opAuth 2b";
-        final User user1 = new User.Builder()
-                .userId(userId)
-                .opAuth(opAuth1)
-                .opAuth(opAuth2a)
-                .build();
 
-        final User user2 = new User.Builder()
-                .userId(userId)
-                .opAuth(opAuth1)
-                .opAuth(opAuth2b)
-                .build();
+        final HashSet<String> opAuthsA = new HashSet<>();
+        opAuthsA.add(opAuth1);
+        opAuthsA.add(opAuth2a);
+
+        final User user1 = new User(userId, null, opAuthsA);
+
+
+        final HashSet<String> opAuthsB = new HashSet<>();
+        opAuthsB.add(opAuth1);
+        opAuthsB.add(opAuth2b);
+
+        final User user2 = new User(userId, null, opAuthsB);
 
         // When
         final boolean isEqual = user1.equals(user2);

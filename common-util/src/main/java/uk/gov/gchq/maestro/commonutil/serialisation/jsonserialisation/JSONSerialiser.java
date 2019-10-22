@@ -219,16 +219,16 @@ public class JSONSerialiser {
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         mapper.configure(SerializationFeature.CLOSE_CLOSEABLE, true);
         mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
-        // mapper.registerModule(CloseableIterableDeserializer.getModule()); //TODO THIS Should go in config not code
+        // mapper.registerModule(CloseableIterableDeserializer.getModule()); //TODO This should go in config not code.
 
         // Allow unknown properties. This will help to avoid conflicts between Maestro versions.
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, STRICT_JSON_DEFAULT);
 
         // Using the deprecated version for compatibility with older versions of jackson
-        mapper.registerModule(new JSR310Module()); //TODO needed?
+        mapper.registerModule(new JSR310Module()); //TODO is this needed?
 
         // Use the 'setFilters' method so it is compatible with older versions of jackson
-        mapper.setFilters(getFilterProvider()); //TODO needed?
+        mapper.setFilters(getFilterProvider()); //TODO is this needed?
 
         // Allow simple class names or full class names to be used in JSON.
         // We must set this to true to ensure serialisation into json uses the

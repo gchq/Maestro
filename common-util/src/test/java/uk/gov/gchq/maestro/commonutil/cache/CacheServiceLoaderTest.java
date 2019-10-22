@@ -56,7 +56,7 @@ public class CacheServiceLoaderTest {
     public void shouldLoadServiceFromSystemVariable() {
 
         // given
-        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE_CLASS, EmptyCacheService.class.getName()); //TODO add class
+        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE, EmptyCacheService.class.getName());
         CacheServiceLoader.initialise(serviceLoaderProperties);
 
         // when
@@ -75,7 +75,7 @@ public class CacheServiceLoaderTest {
         exception.expectMessage(invalidClassName);
 
         // when
-        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE_CLASS, invalidClassName);
+        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE, invalidClassName);
         CacheServiceLoader.initialise(serviceLoaderProperties);
 
         // then Exception is thrown
@@ -84,7 +84,7 @@ public class CacheServiceLoaderTest {
     @Test
     public void shouldUseTheSameServiceAcrossDifferentComponents() {
         // given
-        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE_CLASS, HashMapCacheService.class.getName());
+        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE, HashMapCacheService.class.getName());
         CacheServiceLoader.initialise(serviceLoaderProperties);
 
         // when
@@ -98,7 +98,7 @@ public class CacheServiceLoaderTest {
     @Test
     public void shouldSetServiceToNullAfterCallingShutdown() {
         // given
-        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE_CLASS, EmptyCacheService.class.getName());
+        serviceLoaderProperties.put(CacheProperties.CACHE_SERVICE, EmptyCacheService.class.getName());
         CacheServiceLoader.initialise(serviceLoaderProperties);
 
         // when

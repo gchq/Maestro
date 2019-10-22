@@ -70,7 +70,7 @@ import static uk.gov.gchq.maestro.rest.ServiceConstants.MAESTRO_MEDIA_TYPE_HEADE
  */
 public class OperationServiceV2 implements IOperationServiceV2 {
     private static final Logger LOGGER = LoggerFactory.getLogger(OperationServiceV2.class);
-    public static final String OUTPUT_TYPE_REFERENCE = "outputTypeReference"; //TODO move to operationHandler
+    public static final String OUTPUT_TYPE_REFERENCE = "outputTypeReference"; //TODO outputTypeReference, review move to operationHandler
 
     @Inject
     private ExecutorFactory executorFactory;
@@ -108,7 +108,7 @@ public class OperationServiceV2 implements IOperationServiceV2 {
     @Override
     public Response execute(final Operation operation) {
         final Pair<Object, String> resultAndJobId = _execute(operation, userFactory.createContext());
-        final HashMap<String, Object> newResult = new HashMap<>(); //TODO Demo cheat
+        final HashMap<String, Object> newResult = new HashMap<>(); //TODO Demo cheat high priority
         newResult.put("result", resultAndJobId.getFirst());
         final Response rtn = Response.ok(newResult)
                 .header(MAESTRO_MEDIA_TYPE_HEADER, MAESTRO_MEDIA_TYPE)
@@ -149,7 +149,7 @@ public class OperationServiceV2 implements IOperationServiceV2 {
             LOGGER.info("Unable to create example JSON for class: {}.", operationType, e);
             throw e;
             /*
-            return Response.status(TODO Is a response more suitable?)
+            return Response.status(TODO review Is a response more suitable?)
                     .header(MAESTRO_MEDIA_TYPE_HEADER, MAESTRO_MEDIA_TYPE)
                     .build();
              */

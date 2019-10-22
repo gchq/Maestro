@@ -31,7 +31,7 @@ public class OperationChainWrapTest extends OperationTest {
                 "    }\n" +
                 "  } ],\n" +
                 "  \"operationArgs\" : {\n" +
-                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"value1\", \"value2\" ] ]\n" + //TODO review this duplication
+                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"value1\", \"value2\" ] ]\n" + //TODO review this duplication of Operation Args in JsonString. See OperationChain#wrap
                 "  }\n" +
                 "}";
     }

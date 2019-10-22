@@ -38,7 +38,7 @@ public class CacheTest {
 
     @BeforeClass
     public static void setUp() {
-        properties.put(CacheProperties.CACHE_SERVICE_CLASS, CACHE_SERVICE_CLASS_STRING);
+        properties.put(CacheProperties.CACHE_SERVICE, CACHE_SERVICE_CLASS_STRING);
         CacheServiceLoader.initialise(properties);
         cache = new Cache<>("serviceName1");
     }

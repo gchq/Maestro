@@ -105,7 +105,7 @@ public class OperationChain extends Operation implements Operations {
             if (operation instanceof OperationChain) {
                 opChain = ((OperationChain) operation);
             } else {
-                opChain = new OperationChain(id, operation, operation.getOperationArgs(), operation.getOptions());
+                opChain = new OperationChain(id, operation, operation.getOperationArgs(), operation.getOptions()); //TODO review the wrapping of operations in operation chains.
                 opChain.options(operation.getOptions());
             }
         }

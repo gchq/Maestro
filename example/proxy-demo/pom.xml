@@ -143,7 +143,7 @@
                                     ${project.build.outputDirectory}/demoExampleProxyExecutorBConfig.json
                                 </maestro.executor.config>
                                 <maestro.properties>
-                                    ${project.build.outputDirectory}/exampleExecutor.properties <!--TODO examine-->
+                                    ${project.build.outputDirectory}/exampleExecutor.properties <!--TODO examine what goes here that can't go in Executor Config-->
                                 </maestro.properties>
                                 <maestro.error-mode.debug>
                                     false

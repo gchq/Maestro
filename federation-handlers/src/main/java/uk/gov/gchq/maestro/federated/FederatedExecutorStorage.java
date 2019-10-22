@@ -69,7 +69,7 @@ public class FederatedExecutorStorage implements Serializable {
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
     @JsonSerialize(keyUsing = MapStorageSerialiser.class)
     @JsonDeserialize(keyUsing = MapStorageDeserialiser.class)
-    private final TreeMap<FederatedAccess, TreeSet<Executor>> storage = new TreeMap<>(); //TODO set might need to be ordered for serialisation tests
+    private final TreeMap<FederatedAccess, TreeSet<Executor>> storage = new TreeMap<>();
     private FederatedExecutorCache federatedStoreCache = new FederatedExecutorCache();
     private Boolean isCacheEnabled = false;
     // private ExecutorLibrary executorLibrary; TODO

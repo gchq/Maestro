@@ -21,7 +21,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import uk.gov.gchq.maestro.commonutil.ToStringBuilder;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -111,50 +110,4 @@ public class User {
                 .toString();
     }
 
-    public static class Builder {
-        //TODO remove builder
-        private String userId;
-        private final Set<String> dataAuths = new HashSet<>();
-        private final Set<String> opAuths = new HashSet<>();
-
-
-        public Builder userId(final String userId) {
-            this.userId = userId;
-            return this;
-        }
-
-        public Builder dataAuth(final String dataAuth) {
-            this.dataAuths.add(dataAuth);
-            return this;
-        }
-
-        public Builder dataAuths(final String... dataAuths) {
-            Collections.addAll(this.dataAuths, dataAuths);
-            return this;
-        }
-
-        public Builder dataAuths(final Collection<String> dataAuths) {
-            this.dataAuths.addAll(dataAuths);
-            return this;
-        }
-
-        public Builder opAuth(final String opAuth) {
-            this.opAuths.add(opAuth);
-            return this;
-        }
-
-        public Builder opAuths(final String... opAuths) {
-            Collections.addAll(this.opAuths, opAuths);
-            return this;
-        }
-
-        public Builder opAuths(final Collection<String> opAuths) {
-            this.opAuths.addAll(opAuths);
-            return this;
-        }
-
-        public User build() {
-            return new User(userId, dataAuths, opAuths);
-        }
-    }
 }
