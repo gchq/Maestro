@@ -114,7 +114,7 @@ public enum Status {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this) //TODO examine cyclic dependency on common-utils mondule
+        return new ToStringBuilder(this)
                 .append(reason)
                 .build();
     }

@@ -23,7 +23,8 @@ import org.junit.Test;
 import uk.gov.gchq.maestro.commonutil.cache.util.CacheProperties;
 import uk.gov.gchq.maestro.commonutil.exception.CacheOperationException;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -33,11 +34,11 @@ import static org.junit.Assert.fail;
 public class CacheTest {
     private static final String CACHE_SERVICE_CLASS_STRING = "uk.gov.gchq.maestro.commonutil.cache.impl.HashMapCacheService";
     private static Cache<Integer> cache;
-    private static Properties properties = new Properties();
+    private static Map<String, Object> properties = new HashMap<>();
 
     @BeforeClass
     public static void setUp() {
-        properties.setProperty(CacheProperties.CACHE_SERVICE_CLASS, CACHE_SERVICE_CLASS_STRING);
+        properties.put(CacheProperties.CACHE_SERVICE, CACHE_SERVICE_CLASS_STRING);
         CacheServiceLoader.initialise(properties);
         cache = new Cache<>("serviceName1");
     }

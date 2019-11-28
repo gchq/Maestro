@@ -16,99 +16,13 @@
 
 package uk.gov.gchq.maestro.operation;
 
-import com.google.common.collect.Maps;
-import org.junit.Assert;
-import org.junit.AssumptionViolatedException;
-import org.junit.Test;
+import uk.gov.gchq.maestro.operation.helper.MaestroObjectTest;
 
-import uk.gov.gchq.koryphe.Since;
-import uk.gov.gchq.koryphe.Summary;
-import uk.gov.gchq.koryphe.ValidationResult;
-import uk.gov.gchq.koryphe.util.SummaryUtil;
-import uk.gov.gchq.koryphe.util.VersionUtil;
-import uk.gov.gchq.maestro.commonutil.serialisation.JSONSerialisationTest;
+public abstract class OperationTest extends MaestroObjectTest<Operation> {
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assume.assumeTrue;
-
-public abstract class OperationTest<T extends Operation> extends JSONSerialisationTest<T> {
-    protected Set<String> getRequiredFields() {
-        return Collections.emptySet();
-    }
-
-    @Test
-    public abstract void builderShouldCreatePopulatedOperation();
-
-    @Test
-    public abstract void shouldShallowCloneOperation();
-
-    @Test
-    public void shouldValidateRequiredFields() throws Exception {
-        // Given
-        final Operation op = getTestObject();
-
-        // When
-        final ValidationResult validationResult = op.validate();
-
-        // Then
-        final Set<String> requiredFields = getRequiredFields();
-        final Set<String> requiredFieldsErrors = requiredFields.stream()
-                .map(f -> f + " is required for: " + op.getClass().getSimpleName())
-                .collect(Collectors.toSet());
-
-        assertEquals(
-                requiredFieldsErrors,
-                validationResult.getErrors()
-        );
-    }
-
-    @Test
-    public void shouldSetGetOption() throws Exception {
-        final Operation testObject = getTestObject();
-        final HashMap<String, String> expected = Maps.newHashMap();
-        expected.put("one", "two");
-        testObject.options(expected);
-        final Map<String, String> actual = testObject.getOptions();
-        Assert.assertEquals(expected, actual);
-        assertEquals("two", testObject.getOption("one"));
-    }
-
-    @Test
-    public void shouldHaveSinceAnnotation() {
-        // Given
-        final T instance = getTestObject();
-
-        // When
-        final Since annotation = instance.getClass().getAnnotation(Since.class);
-
-        // Then
-        if (null == annotation || null == annotation.value()) {
-            throw new AssumptionViolatedException("Missing Since annotation on class " + instance.getClass().getName());
-        }
-        assumeTrue(annotation.value() + " is not a valid value string.",
-                VersionUtil.validateVersionString(annotation.value()));
-    }
-
-    @Test
-    public void shouldHaveSummaryAnnotation() {
-        // Given
-        final T instance = getTestObject();
-
-        // When
-        final Summary annotation = instance.getClass().getAnnotation(Summary.class);
-
-        // Then
-        if (null == annotation || null == annotation.value()) {
-            throw new AssumptionViolatedException("Missing Summary annotation on class " + instance.getClass().getName());
-        }
-        assumeTrue(annotation.value() + " is not a valid value string.",
-                SummaryUtil.validateSummaryString(annotation.value()));
+    @Override
+    public final Class<Operation> getTestObjectClass() {
+        return Operation.class;
     }
 }
 

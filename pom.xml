@@ -30,8 +30,10 @@
         <module>data</module>
         <module>operation</module>
         <module>executor</module>
-        <module>proxy-executor</module>
-        <module>federation-executor</module>
+        <module>rest-api</module>
+        <module>proxy-handlers</module>
+        <module>federation-handlers</module>
+        <module>example</module>
     </modules>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -53,16 +55,28 @@
         <!-- Dependency version properties -->
         <failsafe.version>2.18.1</failsafe.version>
 
-        <koryphe.version>1.6.0</koryphe.version>
+        <koryphe.version>1.7.0</koryphe.version>
+        <javassist.version>3.19.0-GA</javassist.version>
+        <scala.minor.version>2.11.12</scala.minor.version>
         <jackson.compile.version>2.6.5</jackson.compile.version>
         <jackson.max.version>2.9.6</jackson.max.version>
         <jackson.min.version>2.3.1</jackson.min.version>
         <jackson.version>${jackson.compile.version}</jackson.version>
+        <jcs.version>2.1</jcs.version>
 
         <commons-io.version>2.4</commons-io.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <reflections.version>0.9.10</reflections.version>
+        <jersey.version>2.25</jersey.version>
+        <swagger.version>1.5.15</swagger.version>
+        <scala.version>2.11</scala.version>
+        <jersey.version>2.25</jersey.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
+        <maven-war-plugin.version>3.0.0</maven-war-plugin.version>
+        <json4s.version>3.2.11</json4s.version>
+        <swagger.version>1.5.15</swagger.version>
+
 
         <!-- Maven plugins -->
         <checkstyle.plugin.version>2.17</checkstyle.plugin.version>
@@ -72,6 +86,7 @@
         <jar.plugin.version>2.4</jar.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <surefire.plugin.version>2.19.1</surefire.plugin.version>
+        <maven-war-plugin.version>3.0.0</maven-war-plugin.version>
 
         <!-- Define SCM properties for use with Release Plugin -->
         <scm.url>
@@ -132,14 +147,30 @@
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
-                <artifactId>common-util</artifactId>
+                <artifactId>executor</artifactId>
                 <version>${project.parent.version}</version>
                 <type>test-jar</type>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
-                <artifactId>federation-executor</artifactId>
+                <artifactId>federation-handlers</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>proxy-handlers</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>executor-demo</artifactId>
+                <classifier>classes</classifier>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>proxy-handlers</artifactId>
+                <type>test-jar</type>
                 <version>${project.parent.version}</version>
             </dependency>
             <dependency>
@@ -149,8 +180,44 @@
             </dependency>
             <dependency>
                 <groupId>uk.gov.gchq.maestro</groupId>
-                <artifactId>proxy-executor</artifactId>
+                <artifactId>operation</artifactId>
                 <version>${project.parent.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>core-rest</artifactId>
+                <version>${project.parent.version}</version>
+                <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>rest-api</artifactId>
+                <version>${project.parent.version}</version>
+                <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>core-rest</artifactId>
+                <classifier>classes</classifier>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.maestro</groupId>
+                <artifactId>executor-demo</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.koryphe</groupId>
+                <artifactId>core</artifactId>
+                <version>${koryphe.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.gov.gchq.koryphe</groupId>
+                <artifactId>core</artifactId>
+                <version>${koryphe.version}</version>
+                <type>test-jar</type>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -163,15 +230,19 @@
                 <version>${slf4j.api.version}</version>
             </dependency>
             <dependency>
-                <groupId>uk.gov.gchq.koryphe</groupId>
-                <artifactId>core</artifactId>
-                <version>${koryphe.version}</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-jcs-core</artifactId>
+                <version>${jcs.version}</version>
             </dependency>
             <dependency>
-                <groupId>uk.gov.gchq.koryphe</groupId>
-                <artifactId>core</artifactId>
-                <version>${koryphe.version}</version>
-                <type>test-jar</type>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-library</artifactId>
+                <version>${scala.minor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -222,6 +293,97 @@
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
                 <version>${commons-collections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+                <artifactId>jersey-server</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-servlet</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-multipart</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-json-jackson</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json4s</groupId>
+                <artifactId>json4s-core_2.10</artifactId>
+                <version>${json4s.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json4s</groupId>
+                <artifactId>json4s-ext_2.10</artifactId>
+                <version>${json4s.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json4s</groupId>
+                <artifactId>json4s-jackson_2.10</artifactId>
+                <version>${json4s.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json4s</groupId>
+                <artifactId>json4s-native_2.10</artifactId>
+                <version>${json4s.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json4s</groupId>
+                <artifactId>json4s-ast_2.10</artifactId>
+                <version>${json4s.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-json-provider</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-json-org</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-base</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-jersey2-jaxrs</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.test-framework</groupId>
+                <artifactId>jersey-test-framework-core</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+                <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-grizzly2-http</artifactId>
+                <version>${jersey.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

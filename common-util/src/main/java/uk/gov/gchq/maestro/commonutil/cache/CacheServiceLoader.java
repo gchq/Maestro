@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.gchq.maestro.commonutil.cache.util.CacheProperties;
 
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * Initialised when the executor is initialised. Looks at a system property to
@@ -43,12 +43,12 @@ public final class CacheServiceLoader {
      * @param properties the cache service properties
      * @throws IllegalArgumentException if an invalid cache class is specified in the system property
      */
-    public static void initialise(final Properties properties) {
+    public static void initialise(final Map<String, Object> properties) {
         if (null == properties) {
             LOGGER.warn("received null properties - exiting initialise method without creating service");
             return;
         }
-        final String cacheClass = properties.getProperty(CacheProperties.CACHE_SERVICE_CLASS);
+        final String cacheClass = (String) properties.get(CacheProperties.CACHE_SERVICE);
 
         if (null == cacheClass) {
             if (null == service) {

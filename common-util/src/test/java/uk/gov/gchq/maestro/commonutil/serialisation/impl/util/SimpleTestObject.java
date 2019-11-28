@@ -25,7 +25,6 @@ import java.io.Serializable;
 @JsonFilter(JSONSerialiser.FILTER_FIELDS_BY_NAME)
 public class SimpleTestObject implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     private String x = "TEST";
 
     public String getX() {

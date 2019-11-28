@@ -21,7 +21,8 @@ package uk.gov.gchq.maestro.commonutil.exception;
  * will be when an unauthorised action is attempted.
  */
 public class UnauthorisedException extends RuntimeException {
-    private static final long serialVersionUID = -7137572738792227437L;
+
+    private static final long serialVersionUID = -1576589869160970494L;
 
     public UnauthorisedException(final String message) {
         super(message);

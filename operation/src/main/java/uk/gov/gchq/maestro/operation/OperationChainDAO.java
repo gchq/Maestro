@@ -27,31 +27,26 @@ import java.util.List;
 
 /**
  * Simple data access object which enables the serialisation and deserialisation
- *
- * @param <OUT> the output type of the {@code OperationChainDAO}. This should
- *              match the output type of the last
- *              {@link uk.gov.gchq.maestro.operation.Operation}
- *              in the chain.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Simple data access object, enabling (de)serialisation of an OperationChain")
-public class OperationChainDAO<OUT> extends OperationChain<OUT> {
+public class OperationChainDAO extends OperationChain {
 
-    public OperationChainDAO() {
-        super();
+    public OperationChainDAO(final String id) {
+        super(id, null, null);
     }
 
-    public OperationChainDAO(final Operation operation) {
-        super(operation);
+    public OperationChainDAO(final String id, final Operation operation) {
+        super(id, operation, operation.getOperationArgs(), operation.getOptions());
     }
 
-    public OperationChainDAO(final List<Operation> operations) {
-        super(operations);
+    public OperationChainDAO(final String id, final List<Operation> operations) {
+        super(id, operations, null, null);
     }
 
-    public OperationChainDAO(final OperationChain<?> operationChain) {
-        super(operationChain.getOperations());
+    public OperationChainDAO(final String id, final OperationChain operationChain) {
+        super(id, operationChain.getOperations(), operationChain.getOperationArgs(), operationChain.getOptions());
         options(operationChain.getOptions());
     }
 

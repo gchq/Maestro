@@ -16,89 +16,28 @@
 
 package uk.gov.gchq.maestro.operation.impl.job;
 
-import org.junit.Test;
-
-import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
-import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
-import uk.gov.gchq.maestro.operation.export.Export;
-
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
 
 
-public class GetJobResultsTest extends OperationTest<GetJobResults> {
+public class GetJobResultsTest extends OperationTest {
+
     @Override
-    public void shouldJsonSerialiseAndDeserialise() throws SerialisationException {
-        // Given
-        final GetJobResults operation = new GetJobResults.Builder()
-                .jobId("jobId")
-                .build();
-
-        // When
-        byte[] json = JSONSerialiser.serialise(operation, true);
-        final GetJobResults deserialisedOp = JSONSerialiser.deserialise(json, GetJobResults.class);
-
-        // Then
-        assertEquals("jobId", deserialisedOp.getJobId());
-    }
-
-    @Test
-    public void shouldReturnNullIfSetKey() {
-        // When
-        final GetJobResults jobResults = new GetJobResults.Builder()
-                .key(Export.DEFAULT_KEY)
-                .build();
-
-        // Then
-        assertThat(jobResults.getKey(), is(nullValue()));
-    }
-
-
-    @Test
-    @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // When
-        final GetJobResults op = new GetJobResults.Builder()
-                .jobId("jobId")
-                .build();
-
-        // Then
-        assertEquals("jobId", op.getJobId());
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"GetJobResults\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"jobId\" : \"jobId\"\n" +
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final GetJobResults getJobResults = new GetJobResults.Builder()
-                .jobId("id1")
-                .build();
-
-        // When
-        final GetJobResults clone = getJobResults.shallowClone();
-
-        // Then
-        assertNotSame(getJobResults, clone);
-        assertNotNull(clone);
-        assertEquals(getJobResults.getJobId(), clone.getJobId());
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("GetJobResults")
+                .operationArg("jobId", "jobId");
     }
 
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
 
-        // Then
-        assertEquals(CloseableIterable.class, outputClass);
-    }
-
-    @Override
-    protected GetJobResults getTestObject() {
-        return new GetJobResults();
-    }
 }

@@ -23,7 +23,12 @@ import static uk.gov.gchq.maestro.commonutil.exception.Status.INTERNAL_SERVER_ER
  */
 public class MaestroRuntimeException extends RuntimeException {
 
+    private static final long serialVersionUID = -5759090076112387259L;
     private Status status = INTERNAL_SERVER_ERROR;
+
+    public MaestroRuntimeException(final Throwable cause) {
+        super(cause);
+    }
 
     public MaestroRuntimeException(final String message) {
         super(message);

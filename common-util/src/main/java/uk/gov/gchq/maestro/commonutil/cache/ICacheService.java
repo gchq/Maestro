@@ -19,7 +19,7 @@ package uk.gov.gchq.maestro.commonutil.cache;
 import uk.gov.gchq.maestro.commonutil.exception.CacheOperationException;
 
 import java.util.Collection;
-import java.util.Properties;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -30,11 +30,11 @@ import java.util.Set;
 public interface ICacheService {
 
     /**
-     * Initialise the cache service based on the supplied {@link Properties} object.
+     * Initialise the cache service based on the supplied Properties object.
      *
      * @param properties the Properties object to apply to the cache service
      */
-    void initialise(final Properties properties);
+    void initialise(final Map<String, Object> properties);
 
     /**
      * Shutdown the cache service.

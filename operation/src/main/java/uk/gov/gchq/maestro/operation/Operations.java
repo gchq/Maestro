@@ -26,14 +26,14 @@ import java.util.List;
  *
  * @param <T> the type of the {@link Operation}s
  */
-public interface Operations<T extends Operation> {
+public interface Operations {
     /**
      * Should return a {@link Collection} of all operations contained within the {@link Operations} impl.
      * The collection of operations may be modified by Maestro.
      *
      * @return A {@link Collection} of {@link Operation}s.
      */
-    Collection<T> getOperations();
+    Collection<Operation> getOperations();
 
     /**
      * Updates the operations using the provided collection.
@@ -42,7 +42,7 @@ public interface Operations<T extends Operation> {
      *
      * @param operations the new operations.
      */
-    default void updateOperations(final Collection<T> operations) {
+    default void updateOperations(final Collection operations) {
         try {
             getOperations().clear();
             getOperations().addAll(operations);
@@ -58,7 +58,7 @@ public interface Operations<T extends Operation> {
      * @return the class of the operations
      */
     @JsonIgnore
-    default Class<T> getOperationsClass() {
+    default Class getOperationsClass() {
         return (Class) Operation.class;
     }
 

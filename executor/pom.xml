@@ -61,6 +61,12 @@
         <dependency>
             <groupId>uk.gov.gchq.maestro</groupId>
             <artifactId>operation</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>operation</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>

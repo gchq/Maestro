@@ -20,7 +20,7 @@ import uk.gov.gchq.maestro.commonutil.cache.ICache;
 import uk.gov.gchq.maestro.commonutil.cache.ICacheService;
 
 import java.util.HashMap;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * Simple impl of the {@link ICacheService} interface which uses a
@@ -36,12 +36,12 @@ public class HashMapCacheService implements ICacheService {
     private HashMap<String, HashMapCache> caches = nonStaticCaches;
 
     @Override
-    public void initialise(final Properties properties) {
+    public void initialise(final Map<String, Object> properties) {
         if (properties != null) {
-            useJavaSerialisation = Boolean.parseBoolean(properties.getProperty(JAVA_SERIALISATION_CACHE));
+            useJavaSerialisation = (boolean) properties.getOrDefault(JAVA_SERIALISATION_CACHE, false);
         }
 
-        if (properties != null && Boolean.parseBoolean(properties.getProperty(STATIC_CACHE))) {
+        if (properties != null && (boolean) properties.getOrDefault(STATIC_CACHE, false)) {
             caches = STATIC_CACHES;
         } else {
             caches = nonStaticCaches;

@@ -16,42 +16,23 @@
 
 package uk.gov.gchq.maestro.operation.impl;
 
-import org.junit.Test;
-
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
 
+public class DiscardOutputTest extends OperationTest {
 
-public class DiscardOutputTest extends OperationTest<DiscardOutput> {
-
-    @Test
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // Given
-        final DiscardOutput discardOutput = new DiscardOutput.Builder().input("1").build();
-
-        // Then
-        assertThat(discardOutput.getInput(), is(nullValue()));
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"DiscardOutput\",\n" +
+                "  \"operationArgs\" : { }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final DiscardOutput op = getTestObject();
-
-        // When
-        final DiscardOutput clone = op.shallowClone();
-
-        // Then
-        assertNotSame(op, clone);
-    }
-
-    @Override
-    protected DiscardOutput getTestObject() {
-        return new DiscardOutput();
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("DiscardOutput");
     }
 }

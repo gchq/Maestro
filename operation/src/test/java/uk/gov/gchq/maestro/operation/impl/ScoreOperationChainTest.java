@@ -16,73 +16,36 @@
 
 package uk.gov.gchq.maestro.operation.impl;
 
-import org.junit.Test;
-
-import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationChain;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
-
-public class ScoreOperationChainTest extends OperationTest<ScoreOperationChain> {
-    @Test
-    public void shouldJSONSerialiseAndDeserialise() throws SerialisationException {
-        // Given
-        final ScoreOperationChain op = new ScoreOperationChain();
-
-        // When
-        byte[] json = JSONSerialiser.serialise(op, true);
-        final ScoreOperationChain deserialisedOp = JSONSerialiser.deserialise(json, ScoreOperationChain.class);
-
-        // Then
-        assertNotNull(deserialisedOp);
+public class ScoreOperationChainTest extends OperationTest {
+    @Override
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"ScoreOperationChain\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"operationChain\" : {\n" +
+                "      \"class\" : \"uk.gov.gchq.maestro.operation.OperationChain\",\n" +
+                "      \"id\" : \"operationChainToScore\",\n" +
+                "      \"operations\" : [ {\n" +
+                "        \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "        \"id\" : \"innerOperation\",\n" +
+                "        \"operationArgs\" : { }\n" +
+                "      } ],\n" +
+                "      \"operationArgs\" : { }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // Given
-        final OperationChain opChain = new OperationChain();
-        final ScoreOperationChain scoreOperationChain = new ScoreOperationChain.Builder()
-                .operationChain(opChain)
-                .build();
-
-        // Then
-        assertThat(scoreOperationChain.getOperationChain(), is(notNullValue()));
-    }
-
-    @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final OperationChain opChain = new OperationChain();
-        final ScoreOperationChain scoreOperationChain = new ScoreOperationChain.Builder()
-                .operationChain(opChain)
-                .build();
-
-        // When
-        ScoreOperationChain clone = scoreOperationChain.shallowClone();
-
-        // Then
-        assertNotSame(scoreOperationChain, clone);
-        assertEquals(opChain, clone.getOperationChain());
-    }
-
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(Integer.class, outputClass);
-    }
-
-    @Override
-    protected ScoreOperationChain getTestObject() {
-        return new ScoreOperationChain();
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("ScoreOperationChain")
+                .operationArg("operationChain",
+                        new OperationChain("operationChainToScore",
+                                new Operation("innerOperation"), null, null));
     }
 }

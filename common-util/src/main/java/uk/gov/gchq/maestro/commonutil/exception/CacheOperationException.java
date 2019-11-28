@@ -21,6 +21,8 @@ package uk.gov.gchq.maestro.commonutil.exception;
  */
 public class CacheOperationException extends MaestroCheckedException {
 
+    private static final long serialVersionUID = -941887722725123614L;
+
     public CacheOperationException(final String message) {
         super(message);
     }

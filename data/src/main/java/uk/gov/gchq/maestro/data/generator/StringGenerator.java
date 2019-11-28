@@ -23,7 +23,7 @@ import uk.gov.gchq.maestro.commonutil.iterable.TransformIterable;
 /**
  * Generates a string for each object.
  */
-@Since("1.0.0")
+@Since("0.0.1")
 @Summary("Generates a string for each object")
 public abstract class StringGenerator<INPUT> implements ObjectGenerator<INPUT, String> {
 

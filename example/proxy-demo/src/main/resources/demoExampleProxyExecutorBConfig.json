@@ -1,0 +1,27 @@
+{
+  "class": "uk.gov.gchq.maestro.executor.util.Config",
+  "id": "demoExampleProxyExecutorB",
+  "operationHandlers": {
+    "initialiser": {
+      "class": "uk.gov.gchq.maestro.proxy.handler.ProxyInitialiseHandler"
+    },
+    "operationB": {
+      "class": "uk.gov.gchq.maestro.executor.operation.handler.DemoOperationHandler",
+      "multiply": 3,
+      "fieldDeclaration": {
+        "class": "uk.gov.gchq.maestro.executor.operation.declaration.FieldDeclaration",
+        "fields": {
+          "value": "java.lang.Integer"
+        }
+      }
+    }
+  },
+  "properties": {
+    "maestro.port": "8080"
+  },
+  "defaultHandler": {
+    "class": "uk.gov.gchq.maestro.proxy.handler.ForwardToRemoteExecutorHandler"
+  },
+  "operationHooks": [],
+  "requestHooks": []
+}

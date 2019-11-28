@@ -16,60 +16,27 @@
 
 package uk.gov.gchq.maestro.operation.impl.output;
 
-import org.junit.Test;
-
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.iterableWithSize;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
 
+public class ToArrayTest extends OperationTest {
 
-public class ToArrayTest extends OperationTest<ToArray> {
-
-    @Test
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // Given
-        final ToArray<String> toArray = new ToArray.Builder<String>().input("1", "2").build();
-
-        // Then
-        assertThat(toArray.getInput(), is(notNullValue()));
-        assertThat(toArray.getInput(), iterableWithSize(2));
-        assertThat(toArray.getInput(), containsInAnyOrder("1", "2"));
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"ToArray\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"1\", \"2\" ] ]\n" + //TODO [L
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final String input = "input";
-        final ToArray toArray = new ToArray.Builder<>()
-                .input(input)
-                .build();
-
-        //When
-        final ToArray clone = toArray.shallowClone();
-
-        // Then
-        assertNotSame(toArray, clone);
-        assertEquals(input, clone.getInput().iterator().next());
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("ToArray")
+                .operationArg("input", new Object[]{"1", "2"});
     }
 
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(Object.class, outputClass);
-    }
-
-    @Override
-    protected ToArray getTestObject() {
-        return new ToArray();
-    }
 }

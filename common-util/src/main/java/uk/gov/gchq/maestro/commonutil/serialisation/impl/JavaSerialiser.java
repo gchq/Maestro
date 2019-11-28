@@ -34,9 +34,9 @@ import java.io.Serializable;
  * This class is used to serialise and deserialise objects in java.
  */
 public class JavaSerialiser implements ToBytesSerialiser<Object> {
-    private static final long serialVersionUID = 2073581763875104361L;
     private static final Class<Serializable> SERIALISABLE = Serializable.class;
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaSerialiser.class);
+    private static final long serialVersionUID = 3304435151099053026L;
 
     @Override
     public byte[] serialise(final Object object) throws SerialisationException {

@@ -20,7 +20,6 @@ import java.io.Serializable;
 
 public class ParameterisedTestObject<K> implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     private String x = "TEST";
     private K k = null;
 

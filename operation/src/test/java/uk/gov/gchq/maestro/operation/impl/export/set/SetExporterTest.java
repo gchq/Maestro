@@ -18,10 +18,12 @@ package uk.gov.gchq.maestro.operation.impl.export.set;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.gov.gchq.maestro.commonutil.iterable.ChainedIterable;
 import uk.gov.gchq.maestro.commonutil.iterable.CloseableIterable;
+import uk.gov.gchq.maestro.operation.Operation;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,20 +33,21 @@ import static org.junit.Assert.assertEquals;
 
 public class SetExporterTest {
 
+    @Ignore("Operation is POJO with no addition to arguments map.")
     @Test
     public void shouldAddIterablesToSet() {
         // Given
         final List<String> valuesA = Arrays.asList("1", "2", "3");
         final List<String> valuesB = Arrays.asList("4", "5", "6");
         final List<String> valuesCombined = Lists.newArrayList(new ChainedIterable<>(valuesA, valuesB));
-        final SetExporter exporter = new SetExporter();
+        final Operation exporter = new Operation("SetExporter");
 
         // When
-        exporter.add("key", valuesA);
-        exporter.add("key", valuesB);
+        // exporter.add("key", valuesA);
+        // exporter.add("key", valuesB);
 
         // Then
-        final CloseableIterable<?> export = exporter.get("key");
+        final CloseableIterable<?> export = (CloseableIterable<?>) exporter.get("key");
         assertEquals(Sets.newHashSet(valuesCombined), Sets.newHashSet(export));
     }
 
@@ -53,34 +56,19 @@ public class SetExporterTest {
         // Given
         final List<String> valuesA = Arrays.asList("1", "2", "3");
         final List<String> valuesB = Arrays.asList("4", "5", "6");
-        final SetExporter exporter = new SetExporter();
+        final Operation exporter = new Operation("SetExporter");
 
         // When
-        exporter.add("key1", valuesA);
-        exporter.add("key2", valuesB);
+        exporter.operationArg("key1", valuesA);
+        exporter.operationArg("key2", valuesB);
 
         // Then
-        final CloseableIterable<?> export1 = exporter.get("key1");
+        final List key1 = (List) exporter.get("key1");
+        final CloseableIterable<?> export1 = new ChainedIterable<>(key1);
         assertEquals(valuesA, Lists.newArrayList(export1));
 
-        final CloseableIterable<?> export2 = exporter.get("key2");
+        final List key2 = (List) exporter.get("key2");
+        final CloseableIterable<?> export2 = new ChainedIterable<>(key2);
         assertEquals(valuesB, Lists.newArrayList(export2));
-    }
-
-    @Test
-    public void shouldGetSubsetOfValuesFromMap() {
-        // Given
-        final List<Integer> values1 = Arrays.asList(1, 2, 3, 4, 5);
-        final SetExporter exporter = new SetExporter();
-        final int start = 2;
-        final int end = 3;
-        exporter.add("key", values1);
-
-        // When
-        try (CloseableIterable<?> results = exporter.get("key", start, end)) {
-
-            // Then
-            assertEquals(values1.subList(start, end), Lists.newArrayList(results));
-        }
     }
 }

@@ -17,87 +17,38 @@
 package uk.gov.gchq.maestro.operation.impl.output;
 
 import com.google.common.collect.Sets;
-import org.junit.Test;
 
-import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
 import uk.gov.gchq.maestro.data.generator.StringGenerator;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
 import java.util.Set;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
-
-public class ToCsvTest extends OperationTest<ToCsv> {
-    @Test
-    public void shouldJSONSerialiseAndDeserialise() throws SerialisationException {
-        // Given
-        final ToCsv op = new ToCsv.Builder<>().build();
-
-        // When
-        byte[] json = JSONSerialiser.serialise(op, true);
-        final ToCsv deserialisedOp = JSONSerialiser.deserialise(json, ToCsv.class);
-
-        // Then
-        assertNotNull(deserialisedOp);
+public class ToCsvTest extends OperationTest {
+    @Override
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"ToCsv\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"input\" : 4,\n" +
+                "    \"stringGenerator\" : {\n" +
+                "      \"class\" : \"java.lang.Object\"\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // Given
-        final Integer input = 4;
-        final StringGenerator generator = new StringGeneratorImpl();
-        final ToCsv toCsv = new ToCsv.Builder<>()
-                .generator(generator)
-                .input(input)
-                .build();
-
-        // Then
-        assertThat(toCsv.getInput(), is(notNullValue()));
-        assertEquals(generator, toCsv.getElementGenerator());
-    }
-
-    @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final Integer input = 4;
-        final StringGenerator generator = new StringGeneratorImpl();
-        final ToCsv toCsv = new ToCsv.Builder<Integer>()
-                .generator(generator)
-                .input(input)
-                .build();
-
-        // When
-        final ToCsv clone = toCsv.shallowClone();
-
-        // Then
-        assertNotSame(toCsv, clone);
-        assertEquals(input, clone.getInput().iterator().next());
-        assertEquals(generator, clone.getElementGenerator());
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("ToCsv")
+                .operationArg("stringGenerator", new StringGeneratorImpl())
+                .operationArg("input", 4);
     }
 
     @Override
     public Set<String> getRequiredFields() {
         return Sets.newHashSet("stringGenerator");
-    }
-
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(Iterable.class, outputClass);
-    }
-
-    @Override
-    protected ToCsv getTestObject() {
-        return new ToCsv();
     }
 
     private class StringGeneratorImpl extends StringGenerator<Integer> {

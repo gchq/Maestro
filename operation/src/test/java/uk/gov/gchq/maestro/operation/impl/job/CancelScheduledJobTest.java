@@ -16,50 +16,35 @@
 
 package uk.gov.gchq.maestro.operation.impl.job;
 
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
 import java.util.Collections;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-
-public class CancelScheduledJobTest extends OperationTest<CancelScheduledJob> {
+public class CancelScheduledJobTest extends OperationTest {
     private final String testJobId = "testJobId";
 
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // Given
-        CancelScheduledJob op = new CancelScheduledJob.Builder()
-                .jobId(testJobId)
-                .option("testOp", "testOpVal")
-                .build();
-
-        // Then
-        assertEquals(testJobId, op.getJobId());
-        assertEquals(Collections.singletonMap("testOp", "testOpVal"), op.getOptions());
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"CancelScheduledJob\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"jobId\" : \"testJobId\"\n" +
+                "  },\n" +
+                "  \"options\" : {\n" +
+                "    \"testOp\" : \"testOpVal\"\n" +
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        CancelScheduledJob op = new CancelScheduledJob.Builder()
-                .jobId(testJobId)
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("CancelScheduledJob")
                 .option("testOp", "testOpVal")
-                .build();
+                .operationArg("jobId", testJobId);
 
-        // When
-        CancelScheduledJob clonedOp = op.shallowClone();
-
-        // Then
-        assertNotSame(clonedOp, op);
-        assertEquals(clonedOp.getJobId(), op.getJobId());
-        assertEquals(clonedOp.getOptions(), op.getOptions());
-    }
-
-    @Override
-    protected CancelScheduledJob getTestObject() {
-        return new CancelScheduledJob();
     }
 
     @Override

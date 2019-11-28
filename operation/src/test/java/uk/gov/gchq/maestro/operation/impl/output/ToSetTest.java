@@ -16,63 +16,28 @@
 
 package uk.gov.gchq.maestro.operation.impl.output;
 
-import com.google.common.collect.Lists;
-import org.junit.Test;
-
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import java.util.Set;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.iterableWithSize;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
+public class ToSetTest extends OperationTest {
 
-
-public class ToSetTest extends OperationTest<ToSet> {
-
-    @Test
     @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // Given
-        final ToSet<String> toSet = new ToSet.Builder<String>().input("1", "2").build();
-
-        // Then
-        assertThat(toSet.getInput(), is(notNullValue()));
-        assertThat(toSet.getInput(), iterableWithSize(2));
-        assertThat(toSet.getInput(), containsInAnyOrder("1", "2"));
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"ToSet\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"input\" : [ \"[Ljava.lang.Object;\", [ \"1\", \"2\" ] ]\n" + //TODO [L
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final String input = "1";
-        final ToSet toSet = new ToSet.Builder<>()
-                .input(input)
-                .build();
-
-        // When
-        final ToSet clone = toSet.shallowClone();
-
-        // Then
-        assertNotSame(toSet, clone);
-        assertEquals(Lists.newArrayList(input), clone.getInput());
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("ToSet")
+                .input(new Object[]{"1", "2"});
     }
 
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
 
-        // Then
-        assertEquals(Set.class, outputClass);
-    }
-
-    @Override
-    protected ToSet getTestObject() {
-        return new ToSet();
-    }
 }

@@ -16,72 +16,26 @@
 
 package uk.gov.gchq.maestro.operation.impl.job;
 
-import org.junit.Test;
-
-import uk.gov.gchq.maestro.commonutil.exception.SerialisationException;
-import uk.gov.gchq.maestro.commonutil.serialisation.jsonserialisation.JSONSerialiser;
-import uk.gov.gchq.maestro.jobtracker.JobDetail;
+import uk.gov.gchq.maestro.operation.Operation;
 import uk.gov.gchq.maestro.operation.OperationTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
 
+public class GetJobDetailsTest extends OperationTest {
 
-public class GetJobDetailsTest extends OperationTest<GetJobDetails> {
     @Override
-    public void shouldJsonSerialiseAndDeserialise() throws SerialisationException {
-        // Given
-        final GetJobDetails operation = new GetJobDetails.Builder()
-                .jobId("jobId")
-                .build();
-
-        // When
-        byte[] json = JSONSerialiser.serialise(operation, true);
-        final GetJobDetails deserialisedOp = JSONSerialiser.deserialise(json, GetJobDetails.class);
-
-        // Then
-        assertEquals("jobId", deserialisedOp.getJobId());
-    }
-
-    @Test
-    @Override
-    public void builderShouldCreatePopulatedOperation() {
-        // When
-        final GetJobDetails op = new GetJobDetails.Builder()
-                .jobId("jobId")
-                .build();
-
-        // Then
-        assertEquals("jobId", op.getJobId());
+    protected String getJSONString() {
+        return "{\n" +
+                "  \"class\" : \"uk.gov.gchq.maestro.operation.Operation\",\n" +
+                "  \"id\" : \"GetJobDetails\",\n" +
+                "  \"operationArgs\" : {\n" +
+                "    \"jobId\" : \"jobId\"\n" +
+                "  }\n" +
+                "}";
     }
 
     @Override
-    public void shouldShallowCloneOperation() {
-        // Given
-        final String jobId = "jobId";
-        final GetJobDetails getJobDetails = new GetJobDetails.Builder()
-                .jobId(jobId)
-                .build();
-
-        // When
-        GetJobDetails clone = getJobDetails.shallowClone();
-
-        // Then
-        assertNotSame(getJobDetails, clone);
-        assertEquals(jobId, clone.getJobId());
-    }
-
-    @Test
-    public void shouldGetOutputClass() {
-        // When
-        final Class<?> outputClass = getTestObject().getOutputClass();
-
-        // Then
-        assertEquals(JobDetail.class, outputClass);
-    }
-
-    @Override
-    protected GetJobDetails getTestObject() {
-        return new GetJobDetails();
+    protected Operation getFullyPopulatedTestObject() throws Exception {
+        return new Operation("GetJobDetails")
+                .operationArg("jobId", "jobId");
     }
 }

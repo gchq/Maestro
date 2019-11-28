@@ -32,8 +32,8 @@ import java.io.Serializable;
  */
 @JsonSimpleClassName
 public class Pair<F, S> implements Serializable {
-    private static final long serialVersionUID = 4769405415756562347L;
 
+    private static final long serialVersionUID = -6969090238874964770L;
     private F first;
     private S second;
 

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2019 Crown Copyright
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>uk.gov.gchq.maestro</groupId>
+        <artifactId>example</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>proxy-demo</artifactId>
+    <packaging>war</packaging>
+
+    <properties>
+        <standalone-path>rest</standalone-path>
+        <standalone-port>8181</standalone-port>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>core-rest</artifactId>
+            <classifier>classes</classifier>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>proxy-handlers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>executor-demo</artifactId>
+            <classifier>classes</classifier>
+        </dependency>
+
+        <!--test dependency-->
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>executor</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.gchq.maestro</groupId>
+            <artifactId>operation</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven-war-plugin.version}</version>
+                <configuration>
+                    <attachClasses>true</attachClasses>
+                    <classesClassifier>classes</classesClassifier>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>${project.parent.groupId}</groupId>
+                        <artifactId>core-rest</artifactId>
+                        <version>${project.parent.version}</version>
+                        <type>war</type>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.parent.groupId}</groupId>
+                                    <artifactId>core-rest</artifactId>
+                                    <version>${project.parent.version}</version>
+                                    <type>war</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${project.build.directory}/${project.artifactId}-${project.version}
+                                    </outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>proxy-demo</id>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <version>2.0</version>
+                        <configuration>
+                            <path>/${standalone-path}</path>
+                            <port>${standalone-port}</port>
+                            <systemProperties>
+                                <maestro.properties.app.title>
+                                    Maestro Proxy Executor Example
+                                </maestro.properties.app.title>
+                                <maestro.properties.app.description>
+                                    Example of a Maestro Proxy Executor
+                                </maestro.properties.app.description>
+                                <maestro.rest-api.basePath>${standalone-path}
+                                </maestro.rest-api.basePath>
+                                <maestro.executor.config>
+                                    ${project.build.outputDirectory}/demoExampleProxyExecutorBConfig.json
+                                </maestro.executor.config>
+                                <maestro.properties>
+                                    ${project.build.outputDirectory}/exampleExecutor.properties <!--TODO examine what goes here that can't go in Executor Config-->
+                                </maestro.properties>
+                                <maestro.error-mode.debug>
+                                    false
+                                </maestro.error-mode.debug>
+                            </systemProperties>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>deploy</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>run-war</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
