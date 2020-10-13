@@ -40,7 +40,7 @@
     <description>A framework for configurable operation executors</description>
     <url>https://github.com/gchq/Maestro</url>
     <properties>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <slf4j.api.version>1.7.25</slf4j.api.version>
         <guava.version>13.0.1</guava.version>
