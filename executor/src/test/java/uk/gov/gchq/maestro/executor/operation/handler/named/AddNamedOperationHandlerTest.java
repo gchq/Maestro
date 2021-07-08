@@ -57,9 +57,7 @@ public class AddNamedOperationHandlerTest {
     private final NamedOperationCache mockCache = mock(NamedOperationCache.class);
     private final AddNamedOperationHandler handler = new AddNamedOperationHandler(mockCache);
     public static final String USER = "User";
-    private Context context = new Context(new User.Builder()
-            .userId("test user")
-            .build());
+    private Context context = new Context(new User("test user"));
     private Executor executor = mock(Executor.class);
 
     private Operation addNamedOperation = new Operation("addNamedOperation")

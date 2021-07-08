@@ -43,7 +43,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import static com.sun.scenario.Settings.set;
 
 public final class ExecutorPropertiesUtil {
     public static final String ADMIN_AUTH = "maestro.executor.admin.auth";
@@ -376,16 +375,16 @@ public final class ExecutorPropertiesUtil {
         }
     }
 
-    public static void setMeastroHost(final String gafferHost) {
-        set(MAESTRO_HOST, gafferHost);
+    public static void setMeastroHost(final Properties properties, final String gafferHost) {
+        properties.setProperty(MAESTRO_HOST, gafferHost);
     }
 
     public static String getGafferHost(final Executor executor) {
         return (String) executor.getConfig().getPropertyOrDefault(MAESTRO_HOST, DEFAULT_MAESTRO_HOST);
     }
 
-    public static void setGafferPort(final int gafferPort) {
-        set(MAESTRO_PORT, String.valueOf(gafferPort));
+    public static void setGafferPort(final Properties properties, final int gafferPort) {
+        properties.setProperty(MAESTRO_PORT, String.valueOf(gafferPort));
     }
 
     public static int getConnectTimeout(final Executor executor) {
