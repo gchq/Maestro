@@ -20,19 +20,19 @@
     |          FederatedOperation  --.              |   |    |
     | default: Error                 |              |   |    |
     |                                |              |   |    |
-    | Executors: {                   V              |   |    |
+    | executorStorage: {             V              |   |    |
     |     .......................................   |   |    |
     |     | Executor: innerExecutorProxyToA     |   |   |    |
     |     | Handler: OperationB  --> x11        |   |   |    |
     |     | default: ForwardTo--------------------- | --'    |
-    |     |                                     |   |        |
+    |     | (things accessible by FedExecutor)  |   |        |
     |     .......................................   |        |
     |                                               |        |
     |     .......................................   |        |
     |     | Executor: innerExecutorProxyToB     |   |        |
     |     | Handler: OperationC  --> x22        |   |        |
-    |     | default: ForwardTo----------------------| -------.
-    |     |                                     |   |
+    |     | default: ForwardTo----------------------| -------'
+    |     | (things accessible by FedExecutor)  |   |
     |     .......................................   |
     |                                               |
     .................................................
