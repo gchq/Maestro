@@ -1,0 +1,6 @@
+
+    ..................................
+    | Executor: demoExampleExecutorA |
+    | Handler: operationA  -->  x2   |
+    | default: error                 |
+    ..................................

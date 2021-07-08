@@ -1,0 +1,23 @@
+{
+  "class": "uk.gov.gchq.maestro.operation.Operation",
+  "id": "FederatedOperation",
+  "operationArgs": {
+    "ids": [
+      "java.util.ArrayList",
+      [
+        "innerExecutorProxyToA",
+        "innerExecutorProxyToB"
+      ]
+    ],
+    "mergeOperation": {
+      "class": "uk.gov.gchq.koryphe.impl.binaryoperator.First"
+    },
+    "operation": {
+      "class": "uk.gov.gchq.maestro.operation.Operation",
+      "id": "operationA",
+      "operationArgs": {
+        "value": 2
+      }
+    }
+  }
+}

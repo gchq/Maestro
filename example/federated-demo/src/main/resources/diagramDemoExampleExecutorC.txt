@@ -1,0 +1,38 @@
+
+    ..................................
+    | Executor: demoExampleExecutorA |
+    | Handler: OperationA  -->  x2   |  <-------. <-----.
+    | default: Error                 |          |       |
+    ..................................          |       |
+                                                |       |
+                                                |       |
+    .......................................     |       |
+    | Executor: demoExampleProxyExecutorB | <-- | ----- | ---.
+    | Handler: OperationB  --> x3         |     |       |    |
+    | default: ForwardTo------------------------'       |    |
+    |                                     |             |    |
+    .......................................             |    |
+                                                        |    |
+                                                        |    |
+    .................................................   |    |
+    | Executor: demoExampleFederatedExecutorC       |   |    |
+    | Handler: OperationC  --> x100                 |   |    |
+    |          FederatedOperation  --.              |   |    |
+    | default: Error                 |              |   |    |
+    |                                |              |   |    |
+    | Executors: {                   V              |   |    |
+    |     .......................................   |   |    |
+    |     | Executor: innerExecutorProxyToA     |   |   |    |
+    |     | Handler: OperationB  --> x11        |   |   |    |
+    |     | default: ForwardTo--------------------- | --'    |
+    |     |                                     |   |        |
+    |     .......................................   |        |
+    |                                               |        |
+    |     .......................................   |        |
+    |     | Executor: innerExecutorProxyToB     |   |        |
+    |     | Handler: OperationC  --> x22        |   |        |
+    |     | default: ForwardTo----------------------| -------.
+    |     |                                     |   |
+    |     .......................................   |
+    |                                               |
+    .................................................
